@@ -91,7 +91,23 @@
     "invalidCredentials": "Noto'g'ri telefon raqami yoki parol",
     "accountCreated": "Hisob muvaffaqiyatli yaratildi",
     "loginSuccess": "Kirish muvaffaqiyatli",
-    "logoutSuccess": "Chiqish muvaffaqiyatli"
+    "logoutSuccess": "Chiqish muvaffaqiyatli",
+    "validation": {
+      "phoneRequired": "Telefon raqami kiritish shart",
+      "phoneInvalid": "To'g'ri O'zbek telefon raqamini kiriting (masalan, +998901234567)",
+      "passwordRequired": "Parol kiritish shart",
+      "passwordMinLength": "Parol kamida 6 ta belgidan iborat bo'lishi kerak",
+      "passwordPattern": "Parol kamida bitta katta harf, bitta kichik harf va bitta raqamdan iborat bo'lishi kerak",
+      "confirmPasswordRequired": "Parolni tasdiqlang",
+      "passwordsNotMatch": "Parollar mos kelmaydi",
+      "firstNameRequired": "Ism kiritish shart",
+      "firstNameMinLength": "Ism kamida 2 ta belgidan iborat bo'lishi kerak",
+      "lastNameRequired": "Familiya kiritish shart",
+      "lastNameMinLength": "Familiya kamida 2 ta belgidan iborat bo'lishi kerak",
+      "otpRequired": "Tasdiqlash kodi kiritish shart",
+      "otpLength": "Tasdiqlash kodi 6 ta raqamdan iborat bo'lishi kerak",
+      "otpPattern": "Tasdiqlash kodi faqat raqamlardan iborat bo'lishi kerak"
+    }
   },
   "navigation": {
     "dashboard": "Boshqaruv paneli",

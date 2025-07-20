@@ -59,7 +59,7 @@
     },
     "phone": {
       "label": "Phone Number",
-      "placeholder": "+1234567890"
+      "placeholder": "+998901234567"
     },
     "password": {
       "label": "Password",
@@ -91,7 +91,23 @@
     "invalidCredentials": "Invalid phone number or password",
     "accountCreated": "Account created successfully",
     "loginSuccess": "Login successful",
-    "logoutSuccess": "Logout successful"
+    "logoutSuccess": "Logout successful",
+    "validation": {
+      "phoneRequired": "Phone number is required",
+      "phoneInvalid": "Please enter a valid Uzbek phone number (e.g., +998901234567)",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 6 characters",
+      "passwordPattern": "Password must contain at least one uppercase letter, one lowercase letter, and one number",
+      "confirmPasswordRequired": "Please confirm your password",
+      "passwordsNotMatch": "Passwords don't match",
+      "firstNameRequired": "First name is required",
+      "firstNameMinLength": "First name must be at least 2 characters",
+      "lastNameRequired": "Last name is required",
+      "lastNameMinLength": "Last name must be at least 2 characters",
+      "otpRequired": "Verification code is required",
+      "otpLength": "Verification code must be 6 digits",
+      "otpPattern": "Verification code must contain only numbers"
+    }
   },
   "navigation": {
     "dashboard": "Dashboard",

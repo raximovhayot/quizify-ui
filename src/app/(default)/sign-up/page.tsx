@@ -24,44 +24,6 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthService } from '@/lib/auth-service';
 
-// Phone validation schema
-const phoneSchema = z.object({
-  phone: z.string()
-    .min(1, 'Phone number is required')
-    .regex(/^\+?[1-9]\d{1,14}$/, 'Please enter a valid phone number'),
-});
-
-// OTP verification schema
-const verificationSchema = z.object({
-  otp: z.string()
-    .min(1, 'Verification code is required')
-    .length(6, 'Verification code must be 6 digits')
-    .regex(/^\d{6}$/, 'Verification code must contain only numbers'),
-});
-
-// User details schema
-const userDetailsSchema = z.object({
-  firstName: z.string()
-    .min(1, 'First name is required')
-    .min(2, 'First name must be at least 2 characters'),
-  lastName: z.string()
-    .min(1, 'Last name is required')
-    .min(2, 'Last name must be at least 2 characters'),
-  password: z.string()
-    .min(1, 'Password is required')
-    .min(6, 'Password must be at least 6 characters')
-    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'Password must contain at least one uppercase letter, one lowercase letter, and one number'),
-  confirmPassword: z.string()
-    .min(1, 'Please confirm your password'),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-});
-
-type PhoneFormData = z.infer<typeof phoneSchema>;
-type VerificationFormData = z.infer<typeof verificationSchema>;
-type UserDetailsFormData = z.infer<typeof userDetailsSchema>;
-
 type SignUpStep = 'phone' | 'verification' | 'details' | 'completed';
 
 export default function SignUpPage() {
@@ -73,6 +35,44 @@ export default function SignUpPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const t = useTranslations();
+
+  // Phone validation schema with localized messages
+  const phoneSchema = z.object({
+    phone: z.string()
+      .min(1, t('auth.validation.phoneRequired'))
+      .regex(/^\+998(90|91|93|94|95|97|98|99|77|88|33|55|61|62|65|66|67|69|71|73|74|75|76|78|79)[0-9]{7}$/, t('auth.validation.phoneInvalid')),
+  });
+
+  // OTP verification schema with localized messages
+  const verificationSchema = z.object({
+    otp: z.string()
+      .min(1, t('auth.validation.otpRequired'))
+      .length(6, t('auth.validation.otpLength'))
+      .regex(/^\d{6}$/, t('auth.validation.otpPattern')),
+  });
+
+  // User details schema with localized messages
+  const userDetailsSchema = z.object({
+    firstName: z.string()
+      .min(1, t('auth.validation.firstNameRequired'))
+      .min(2, t('auth.validation.firstNameMinLength')),
+    lastName: z.string()
+      .min(1, t('auth.validation.lastNameRequired'))
+      .min(2, t('auth.validation.lastNameMinLength')),
+    password: z.string()
+      .min(1, t('auth.validation.passwordRequired'))
+      .min(6, t('auth.validation.passwordMinLength'))
+      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, t('auth.validation.passwordPattern')),
+    confirmPassword: z.string()
+      .min(1, t('auth.validation.confirmPasswordRequired')),
+  }).refine((data) => data.password === data.confirmPassword, {
+    message: t('auth.validation.passwordsNotMatch'),
+    path: ["confirmPassword"],
+  });
+
+  type PhoneFormData = z.infer<typeof phoneSchema>;
+  type VerificationFormData = z.infer<typeof verificationSchema>;
+  type UserDetailsFormData = z.infer<typeof userDetailsSchema>;
 
   const phoneForm = useForm<PhoneFormData>({
     resolver: zodResolver(phoneSchema),
@@ -504,14 +504,16 @@ export default function SignUpPage() {
             {renderStepContent()}
 
             {currentStep === 'phone' && (
-              <div className="mt-6 text-center text-sm text-gray-600">
-                {t('auth.signIn.prompt', { default: 'Already have an account?' })}{' '}
-                <Link
-                  href="/sign-in"
-                  className="text-blue-600 hover:text-blue-800 underline font-medium"
-                >
-                  {t('auth.signIn.link', { default: 'Sign in' })}
-                </Link>
+              <div className="mt-6 text-center">
+                <div className="text-sm text-muted-foreground">
+                  {t('auth.signIn.prompt', { default: 'Already have an account?' })}{' '}
+                  <Link
+                    href="/sign-in"
+                    className="text-primary hover:underline"
+                  >
+                    {t('auth.signIn.link', { default: 'Sign in' })}
+                  </Link>
+                </div>
               </div>
             )}
           </CardContent>

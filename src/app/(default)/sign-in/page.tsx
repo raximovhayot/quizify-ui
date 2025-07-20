@@ -23,24 +23,24 @@ import { toast } from 'sonner';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 
-// Sign-in validation schema
-const signInSchema = z.object({
-  phone: z.string()
-    .min(1, 'Phone number is required')
-    .regex(/^\+?[1-9]\d{1,14}$/, 'Please enter a valid phone number'),
-  password: z.string()
-    .min(1, 'Password is required')
-    .min(6, 'Password must be at least 6 characters'),
-});
-
-type SignInFormData = z.infer<typeof signInSchema>;
-
 export default function SignInPage() {
   const { login, isAuthenticated, isLoading: authLoading } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const t = useTranslations();
+
+  // Sign-in validation schema with localized messages
+  const signInSchema = z.object({
+    phone: z.string()
+      .min(1, t('auth.validation.phoneRequired'))
+      .regex(/^(?:\+?998|0)?\d{9}$/, t('auth.validation.phoneInvalid')),
+    password: z.string()
+      .min(1, t('auth.validation.passwordRequired'))
+      .min(6, t('auth.validation.passwordMinLength')),
+  });
+
+  type SignInFormData = z.infer<typeof signInSchema>;
 
   const form = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
@@ -182,22 +182,26 @@ export default function SignInPage() {
 
             <div className="mt-6 space-y-4">
               <div className="text-center">
-                <Link
-                  href="/forgot-password"
-                  className="text-sm text-blue-600 hover:text-blue-800 underline"
-                >
-                  {t('auth.forgotPassword.link', { default: 'Forgot your password?' })}
-                </Link>
+                <div className="text-sm text-muted-foreground">
+                  <Link
+                    href="/forgot-password"
+                    className="text-primary hover:underline"
+                  >
+                    {t('auth.forgotPassword.link', { default: 'Forgot your password?' })}
+                  </Link>
+                </div>
               </div>
 
-              <div className="text-center text-sm text-gray-600">
-                {t('auth.signUp.prompt', { default: "Don't have an account?" })}{' '}
-                <Link
-                  href="/sign-up"
-                  className="text-blue-600 hover:text-blue-800 underline font-medium"
-                >
-                  {t('auth.signUp.link', { default: 'Sign up' })}
-                </Link>
+              <div className="text-center">
+                <div className="text-sm text-muted-foreground">
+                  {t('auth.signUp.prompt', { default: "Don't have an account?" })}{' '}
+                  <Link
+                    href="/sign-up"
+                    className="text-primary hover:underline"
+                  >
+                    {t('auth.signUp.link', { default: 'Sign up' })}
+                  </Link>
+                </div>
               </div>
             </div>
           </CardContent>
