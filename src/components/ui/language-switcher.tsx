@@ -82,10 +82,11 @@ export function LanguageSwitcher({
           <Button 
             variant="ghost" 
             size="sm" 
-            className={cn("h-9 w-9 p-0", className)}
+            className={cn("h-9 px-3 flex items-center space-x-2", className)}
             disabled={isChanging}
           >
-            <Globe className="h-4 w-4" />
+            <span className="text-lg">{currentLanguage.flag}</span>
+            <span className="text-sm font-medium">{currentLanguage.nativeName}</span>
             <span className="sr-only">Change language</span>
           </Button>
         </DropdownMenuTrigger>
