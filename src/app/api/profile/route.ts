@@ -7,15 +7,9 @@ import {
   validateRequiredFields
 } from '@/lib/api-utils';
 import { withAuth } from '@/lib/auth-middleware';
-import { mockDb } from '@/lib/mock-database';
 import { User } from '@/types/auth';
 import { Language } from '@/types/common';
-
-interface UpdateProfileRequest {
-  firstName: string;
-  lastName?: string;
-  language: Language;
-}
+import { UpdateProfileRequest } from '@/types/profile';
 
 /**
  * GET /api/profile
@@ -36,12 +30,14 @@ export async function GET(request: NextRequest) {
  */
 export async function PUT(request: NextRequest) {
   return withErrorHandling(async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return withAuth(async (request: NextRequest, user: User) => {
       const body = await parseRequestBody<UpdateProfileRequest>(request);
       
       // Validate required fields
       validateRequiredFields(body, ['firstName', 'language']);
       
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { firstName, lastName, language } = body;
       
       // Validate language value
@@ -53,21 +49,13 @@ export async function PUT(request: NextRequest) {
         }, 400);
       }
       
-      // Update user profile
-      const updatedUser = mockDb.updateUser(user.id, {
-        firstName,
-        lastName: lastName || '',
-        language
-      });
-      
-      if (!updatedUser) {
-        return createErrorResponse({
-          code: 'USER_NOT_FOUND',
-          message: 'User not found'
-        }, 404);
-      }
-      
-      return createSuccessResponse(updatedUser);
+      // TODO: Implement backend integration for profile updates
+      // This endpoint needs to be connected to a real database
+      // All validation logic above should be preserved when implementing the backend
+      return createErrorResponse({
+        code: 'NOT_IMPLEMENTED',
+        message: 'Profile update service not implemented yet. Backend integration required.'
+      }, 501);
     })(request);
   });
 }

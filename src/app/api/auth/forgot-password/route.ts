@@ -6,10 +6,7 @@ import {
   validateRequiredFields
 } from '@/lib/api-utils';
 import { mockDb } from '@/lib/mock-database';
-
-interface ForgotPasswordRequest {
-  phone: string;
-}
+import { ForgotPasswordRequest } from '@/types/auth';
 
 // Mock storage for password reset codes
 const resetCodes = new Map<string, { code: string; expiresAt: Date; userId: string }>();

@@ -1,52 +1,136 @@
-import {Language} from "@/types/common";
+import { Language, UserState } from "@/types/common";
 
-export enum UserRole {
-  STUDENT,
-  INSTRUCTOR
+// Role DTO based on backend-filesystem MCP server
+export interface RoleDTO {
+  id: number;
+  name: string;
+  description: string;
 }
 
-export enum UserState {
-  NEW,
-  ACTIVE,
-  BLOCKED
-}
-
-export interface User {
-  id: string;
-  phone: string;
+// Account DTO based on backend-filesystem MCP server (matches backend AccountDTO)
+export interface AccountDTO {
+  id: number;
   firstName: string;
   lastName: string;
-  roles: UserRole[];
+  roles: RoleDTO[];
+  phone: string;
   state: UserState;
   language: Language;
+}
+
+// Alias for backward compatibility
+export type User = AccountDTO;
+
+// Helper functions for role checking
+export function hasRole(user: User | null, roleName: string): boolean {
+  return user?.roles?.some(role => role.name === roleName) ?? false;
+}
+
+export function hasAnyRole(user: User | null, roleNames: string[]): boolean {
+  return user?.roles?.some(role => roleNames.includes(role.name)) ?? false;
 }
 
 export interface AuthContextType {
   user: User | null;
   login: (phone: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  hasRole: (role: UserRole) => boolean;
-  hasAnyRole: (roles: UserRole[]) => boolean;
+  hasRole: (roleName: string) => boolean;
+  hasAnyRole: (roleNames: string[]) => boolean;
   isLoading: boolean;
   isAuthenticated: boolean;
 }
+
+// Authentication request/response types based on backend-filesystem MCP server
 
 export interface SignInRequest {
   phone: string;
   password: string;
 }
 
-// we use this as a sign in response, sign up verify response, refresh token response
-export interface JWTToken {
+export interface JWTToken<T = AccountDTO> {
   accessToken: string;
   refreshToken: string;
-  user: User;
+  user: T;
 }
 
 export interface SignUpPrepareRequest {
-    phone: string;
+  phone: string;
 }
 
-export interface SignUpPrepareResponse {
+export interface SignInPrepareResponse {
+  phone: string;
+  otpValidityPeriod: number;
+}
 
+export interface SignUpVerifyRequest {
+  phone: string;
+  otp: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+}
+
+export interface ForgotPasswordPrepareRequest {
+  phone: string;
+}
+
+export interface ForgotPasswordVerifyRequest {
+  phone: string;
+  otp: string;
+}
+
+export interface ForgotPasswordVerifyResponse {
+  verificationToken: string;
+}
+
+export interface ForgotPasswordUpdateRequest {
+  verificationToken: string;
+  newPassword: string;
+}
+
+export interface RefreshTokenRequest {
+  refreshToken: string;
+}
+
+// Legacy types for backward compatibility
+export interface RegisterRequest {
+  phone: string;
+  password: string;
+  firstName: string;
+  lastName?: string;
+}
+
+export interface LoginRequest {
+  phone: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  user: User;
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface RefreshTokenResponse {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface ForgotPasswordRequest {
+  phone: string;
+}
+
+export interface LogoutRequest {
+  accessToken: string;
+}
+
+export interface ResetPasswordRequest {
+  phone: string;
+  code: string;
+  newPassword: string;
+}
+
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
 }

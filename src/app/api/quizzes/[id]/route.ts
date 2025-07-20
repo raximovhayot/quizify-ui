@@ -8,22 +8,7 @@ import {
 import { withRole } from '@/lib/auth-middleware';
 import { mockDb, Question } from '@/lib/mock-database';
 import { User, UserRole } from '@/types/auth';
-
-interface UpdateQuizRequest {
-  title?: string;
-  description?: string;
-  subject?: string;
-  timeLimit?: number;
-  status?: 'draft' | 'published' | 'archived';
-  questions?: Array<{
-    id?: string;
-    type: 'multiple_choice' | 'true_false' | 'short_answer';
-    question: string;
-    options?: string[];
-    correctAnswer: string;
-    points: number;
-  }>;
-}
+import { UpdateQuizRequest } from '@/types/quizzes';
 
 /**
  * GET /api/quizzes/[id]

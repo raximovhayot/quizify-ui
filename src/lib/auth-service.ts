@@ -1,31 +1,6 @@
 import { apiClient } from './api';
-import { User } from '@/types/auth';
+import { User, LoginResponse, RefreshTokenResponse } from '@/types/auth';
 import { ApiResponse, hasApiErrors, extractApiData } from '@/types/api';
-
-/**
- * Login request payload
- */
-export interface LoginRequest {
-  phone: string;
-  password: string;
-}
-
-/**
- * Login response data
- */
-export interface LoginResponse {
-  user: User;
-  accessToken: string;
-  refreshToken: string;
-}
-
-/**
- * Token refresh response
- */
-export interface RefreshTokenResponse {
-  accessToken: string;
-  refreshToken: string;
-}
 
 /**
  * Authentication service for handling all auth-related API calls
