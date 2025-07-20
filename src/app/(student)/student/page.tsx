@@ -1,188 +1,416 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useAuth } from '@/contexts/AuthContext';
-import { UserRole } from '@/types/auth';
+import { DashboardLayout } from '@/components/layouts/AppLayout';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { InlineLoading } from '@/components/ui/loading-spinner';
+import { 
+  BookOpen, 
+  ClipboardList, 
+  Clock, 
+  Award,
+  TrendingUp,
+  Calendar,
+  Play,
+  CheckCircle,
+  AlertCircle
+} from 'lucide-react';
+import Link from 'next/link';
 
-export default function StudentDashboardPage() {
-    const { user, hasRole } = useAuth();
+interface DashboardStats {
+  totalAssignments: number;
+  completedAssignments: number;
+  pendingAssignments: number;
+  averageScore: number;
+  totalQuizzesTaken: number;
+  upcomingDeadlines: number;
+}
 
-    const studentAssignments = [
+interface UpcomingItem {
+  id: string;
+  type: 'assignment' | 'quiz';
+  title: string;
+  subject: string;
+  dueDate: string;
+  status: 'pending' | 'in-progress' | 'completed';
+  score?: number;
+}
+
+interface RecentResult {
+  id: string;
+  title: string;
+  subject: string;
+  score: number;
+  maxScore: number;
+  completedAt: string;
+  status: 'passed' | 'failed';
+}
+
+export default function StudentDashboard() {
+  const { user, hasRole, isAuthenticated, isLoading } = useAuth();
+  const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
+  const [upcomingItems, setUpcomingItems] = useState<UpcomingItem[]>([]);
+  const [recentResults, setRecentResults] = useState<RecentResult[]>([]);
+  const [isLoadingData, setIsLoadingData] = useState(true);
+  const router = useRouter();
+  const t = useTranslations();
+
+  useEffect(() => {
+    // Check if user is authenticated and has student role
+    if (!isLoading && (!isAuthenticated || !hasRole('STUDENT'))) {
+      router.push('/sign-in');
+      return;
+    }
+
+    // Load dashboard data
+    if (isAuthenticated && hasRole('STUDENT')) {
+      loadDashboardData();
+    }
+  }, [isAuthenticated, hasRole, isLoading, router]);
+
+  const loadDashboardData = async () => {
+    setIsLoadingData(true);
+
+    try {
+      // TODO: Replace with actual API calls
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Mock data
+      setDashboardStats({
+        totalAssignments: 8,
+        completedAssignments: 5,
+        pendingAssignments: 3,
+        averageScore: 85.2,
+        totalQuizzesTaken: 12,
+        upcomingDeadlines: 2,
+      });
+
+      setUpcomingItems([
         {
-            id: '1',
-            title: 'Math Quiz - Basic Algebra',
-            dueDate: '2024-07-15',
-            status: 'pending',
-            progress: 0
+          id: '1',
+          type: 'assignment',
+          title: 'Mathematics Assignment #2',
+          subject: 'Mathematics',
+          dueDate: '2024-07-25T23:59:00Z',
+          status: 'pending',
         },
         {
-            id: '2',
-            title: 'Advanced Physics Assignment',
-            dueDate: '2024-07-20',
-            status: 'in-progress',
-            progress: 65
+          id: '2',
+          type: 'assignment',
+          title: 'Physics Assignment - Motion',
+          subject: 'Physics',
+          dueDate: '2024-07-30T23:59:00Z',
+          status: 'in-progress',
         },
         {
-            id: '3',
-            title: 'Chemistry Lab Report',
-            dueDate: '2024-07-10',
-            status: 'completed',
-            progress: 100
-        }
-    ];
+          id: '3',
+          type: 'quiz',
+          title: 'Chemistry Quiz #3',
+          subject: 'Chemistry',
+          dueDate: '2024-08-02T23:59:00Z',
+          status: 'pending',
+        },
+      ]);
 
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case 'completed':
-                return 'bg-green-100 text-green-800';
-            case 'in-progress':
-                return 'bg-yellow-100 text-yellow-800';
-            case 'pending':
-                return 'bg-gray-100 text-gray-800';
-            default:
-                return 'bg-gray-100 text-gray-800';
-        }
-    };
+      setRecentResults([
+        {
+          id: '1',
+          title: 'Mathematics Quiz #1',
+          subject: 'Mathematics',
+          score: 18,
+          maxScore: 20,
+          completedAt: '2024-07-20T14:30:00Z',
+          status: 'passed',
+        },
+        {
+          id: '2',
+          title: 'Physics Assignment #1',
+          subject: 'Physics',
+          score: 15,
+          maxScore: 18,
+          completedAt: '2024-07-18T16:45:00Z',
+          status: 'passed',
+        },
+        {
+          id: '3',
+          title: 'Chemistry Quiz #1',
+          subject: 'Chemistry',
+          score: 12,
+          maxScore: 20,
+          completedAt: '2024-07-15T11:20:00Z',
+          status: 'failed',
+        },
+      ]);
+    } catch (error) {
+      console.error('Error loading dashboard data:', error);
+    } finally {
+      setIsLoadingData(false);
+    }
+  };
 
+  const formatDueDate = (dateString: string) => {
+    const dueDate = new Date(dateString);
+    const now = new Date();
+    const diffTime = dueDate.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays < 0) {
+      return `Overdue by ${Math.abs(diffDays)} days`;
+    } else if (diffDays === 0) {
+      return 'Due today';
+    } else if (diffDays === 1) {
+      return 'Due tomorrow';
+    } else {
+      return `Due in ${diffDays} days`;
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  const getStatusIcon = (status: UpcomingItem['status']) => {
+    switch (status) {
+      case 'completed':
+        return <CheckCircle className="w-4 h-4 text-green-600" />;
+      case 'in-progress':
+        return <Clock className="w-4 h-4 text-yellow-600" />;
+      case 'pending':
+        return <AlertCircle className="w-4 h-4 text-blue-600" />;
+      default:
+        return <Clock className="w-4 h-4 text-muted-foreground" />;
+    }
+  };
+
+  const getScoreColor = (score: number, maxScore: number) => {
+    const percentage = (score / maxScore) * 100;
+    if (percentage >= 80) return 'text-green-600';
+    if (percentage >= 60) return 'text-yellow-600';
+    return 'text-red-600';
+  };
+
+  if (isLoading || !user) {
     return (
-        <div className="p-6">
-            <div className="max-w-7xl mx-auto">
-                <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                        Student Dashboard
-                    </h1>
-                    <p className="text-gray-600">
-                        Welcome back, {user?.firstName}! Here's your learning progress.
-                    </p>
-                </div>
-
-                {/* Quick Stats */}
-                <div className="grid gap-6 md:grid-cols-3 mb-8">
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <div className="flex items-center">
-                            <div className="flex-shrink-0">
-                                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                                    <span className="text-white text-sm font-medium">3</span>
-                                </div>
-                            </div>
-                            <div className="ml-4">
-                                <p className="text-sm font-medium text-gray-500">Total Assignments</p>
-                                <p className="text-2xl font-semibold text-gray-900">3</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <div className="flex items-center">
-                            <div className="flex-shrink-0">
-                                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                                    <span className="text-white text-sm font-medium">1</span>
-                                </div>
-                            </div>
-                            <div className="ml-4">
-                                <p className="text-sm font-medium text-gray-500">Completed</p>
-                                <p className="text-2xl font-semibold text-gray-900">1</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <div className="flex items-center">
-                            <div className="flex-shrink-0">
-                                <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
-                                    <span className="text-white text-sm font-medium">55%</span>
-                                </div>
-                            </div>
-                            <div className="ml-4">
-                                <p className="text-sm font-medium text-gray-500">Average Progress</p>
-                                <p className="text-2xl font-semibold text-gray-900">55%</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Assignments */}
-                <div className="bg-white rounded-lg shadow">
-                    <div className="px-6 py-4 border-b border-gray-200">
-                        <h2 className="text-lg font-medium text-gray-900">My Assignments</h2>
-                    </div>
-                    <div className="divide-y divide-gray-200">
-                        {studentAssignments.map((assignment) => (
-                            <div key={assignment.id} className="px-6 py-4">
-                                <div className="flex items-center justify-between">
-                                    <div className="flex-1">
-                                        <h3 className="text-sm font-medium text-gray-900">
-                                            {assignment.title}
-                                        </h3>
-                                        <p className="text-sm text-gray-500">
-                                            Due: {new Date(assignment.dueDate).toLocaleDateString()}
-                                        </p>
-                                    </div>
-                                    <div className="flex items-center space-x-4">
-                                        <div className="flex-shrink-0">
-                                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(assignment.status)}`}>
-                                                {assignment.status.replace('-', ' ')}
-                                            </span>
-                                        </div>
-                                        <div className="flex-shrink-0 w-24">
-                                            <div className="bg-gray-200 rounded-full h-2">
-                                                <div
-                                                    className="bg-blue-600 h-2 rounded-full"
-                                                    style={{ width: `${assignment.progress}%` }}
-                                                ></div>
-                                            </div>
-                                            <p className="text-xs text-gray-500 mt-1">{assignment.progress}%</p>
-                                        </div>
-                                        <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                                            {assignment.status === 'completed' ? 'Review' : 'Continue'}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Quick Actions */}
-                <div className="mt-8 grid gap-6 md:grid-cols-2">
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <h3 className="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
-                        <div className="space-y-3">
-                            <a
-                                href="/join"
-                                className="block w-full text-center bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
-                            >
-                                Join New Assignment
-                            </a>
-                            {hasRole(UserRole.INSTRUCTOR) && (
-                                <a
-                                    href="/instructor"
-                                    className="block w-full text-center bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors"
-                                >
-                                    Switch to Instructor View
-                                </a>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <h3 className="text-lg font-medium text-gray-900 mb-4">Recent Activity</h3>
-                        <div className="space-y-3">
-                            <div className="flex items-center text-sm">
-                                <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
-                                <span className="text-gray-600">Completed Chemistry Lab Report</span>
-                            </div>
-                            <div className="flex items-center text-sm">
-                                <div className="w-2 h-2 bg-yellow-500 rounded-full mr-3"></div>
-                                <span className="text-gray-600">Started Advanced Physics Assignment</span>
-                            </div>
-                            <div className="flex items-center text-sm">
-                                <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-                                <span className="text-gray-600">Joined Math Quiz - Basic Algebra</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <DashboardLayout title="Student Dashboard">
+        <div className="flex items-center justify-center py-12">
+          <InlineLoading text={t('common.loading')} />
         </div>
+      </DashboardLayout>
     );
+  }
+
+  return (
+    <DashboardLayout title="Student Dashboard">
+      <div className="space-y-6">
+        {/* Welcome Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">
+              Welcome back, {user.firstName}!
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              Here&apos;s your learning progress and upcoming tasks.
+            </p>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Button asChild>
+              <Link href="/join">
+                <Play className="w-4 h-4 mr-2" />
+                Join Assignment
+              </Link>
+            </Button>
+          </div>
+        </div>
+
+        {/* Quick Stats Cards */}
+        {isLoadingData ? (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {[...Array(4)].map((_, i) => (
+              <Card key={i}>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    <div className="h-4 bg-muted rounded animate-pulse" />
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-8 bg-muted rounded animate-pulse mb-2" />
+                  <div className="h-3 bg-muted rounded animate-pulse w-2/3" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : dashboardStats ? (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Assignments</CardTitle>
+                <ClipboardList className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{dashboardStats.totalAssignments}</div>
+                <p className="text-xs text-muted-foreground">
+                  {dashboardStats.completedAssignments} completed
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Pending Tasks</CardTitle>
+                <AlertCircle className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{dashboardStats.pendingAssignments}</div>
+                <p className="text-xs text-muted-foreground">
+                  {dashboardStats.upcomingDeadlines} due soon
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Quizzes Taken</CardTitle>
+                <BookOpen className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{dashboardStats.totalQuizzesTaken}</div>
+                <p className="text-xs text-muted-foreground">
+                  This semester
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Average Score</CardTitle>
+                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{dashboardStats.averageScore}%</div>
+                <p className="text-xs text-muted-foreground">
+                  +5.2% from last month
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        ) : null}
+
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* Upcoming Assignments & Quizzes */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Calendar className="w-5 h-5" />
+                <span>Upcoming Tasks</span>
+              </CardTitle>
+              <CardDescription>
+                Your assignments and quizzes due soon
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {isLoadingData ? (
+                <div className="space-y-4">
+                  {[...Array(3)].map((_, i) => (
+                    <div key={i} className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-muted rounded-full animate-pulse" />
+                      <div className="flex-1 space-y-2">
+                        <div className="h-4 bg-muted rounded animate-pulse" />
+                        <div className="h-3 bg-muted rounded animate-pulse w-2/3" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {upcomingItems.map((item) => (
+                    <div key={item.id} className="flex items-center space-x-3 p-3 rounded-lg border">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10">
+                        {item.type === 'assignment' ? (
+                          <ClipboardList className="w-4 h-4 text-primary" />
+                        ) : (
+                          <BookOpen className="w-4 h-4 text-primary" />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center space-x-2">
+                          <p className="text-sm font-medium truncate">{item.title}</p>
+                          {getStatusIcon(item.status)}
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          {item.subject} • {formatDueDate(item.dueDate)}
+                        </p>
+                      </div>
+                      <Button size="sm" variant="outline" asChild>
+                        <Link href={`/${item.type}s/${item.id}`}>
+                          {item.status === 'completed' ? 'View' : 'Start'}
+                        </Link>
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Recent Results */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Award className="w-5 h-5" />
+                <span>Recent Results</span>
+              </CardTitle>
+              <CardDescription>
+                Your latest quiz and assignment scores
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {isLoadingData ? (
+                <div className="space-y-4">
+                  {[...Array(3)].map((_, i) => (
+                    <div key={i} className="flex items-center justify-between p-3 rounded-lg border">
+                      <div className="flex-1 space-y-2">
+                        <div className="h-4 bg-muted rounded animate-pulse" />
+                        <div className="h-3 bg-muted rounded animate-pulse w-1/2" />
+                      </div>
+                      <div className="h-6 w-12 bg-muted rounded animate-pulse" />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {recentResults.map((result) => (
+                    <div key={result.id} className="flex items-center justify-between p-3 rounded-lg border">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate">{result.title}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {result.subject} • {formatDate(result.completedAt)}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className={`text-sm font-bold ${getScoreColor(result.score, result.maxScore)}`}>
+                          {result.score}/{result.maxScore}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {Math.round((result.score / result.maxScore) * 100)}%
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </DashboardLayout>
+  );
 }

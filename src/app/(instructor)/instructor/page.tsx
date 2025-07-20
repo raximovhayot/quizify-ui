@@ -1,275 +1,322 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useAuth } from '@/contexts/AuthContext';
-import { UserRole } from '@/types/auth';
+import { DashboardLayout } from '@/components/layouts/AppLayout';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { InlineLoading } from '@/components/ui/loading-spinner';
+import { 
+  BookOpen, 
+  Users, 
+  ClipboardList, 
+  TrendingUp, 
+  Plus,
+  Eye,
+  Calendar,
+  Award,
+  Activity
+} from 'lucide-react';
+import Link from 'next/link';
 
-export default function InstructorDashboardPage() {
-    const { user, hasRole } = useAuth();
+interface DashboardStats {
+  totalQuizzes: number;
+  totalAssignments: number;
+  totalStudents: number;
+  totalAttempts: number;
+  averageScore: number;
+  activeAssignments: number;
+}
 
-    const instructorAssignments = [
+interface RecentActivity {
+  id: string;
+  type: 'quiz_created' | 'assignment_created' | 'student_joined' | 'quiz_completed';
+  title: string;
+  description: string;
+  timestamp: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+export default function InstructorDashboard() {
+  const { user, hasRole, isAuthenticated, isLoading } = useAuth();
+  const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
+  const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
+  const [isLoadingData, setIsLoadingData] = useState(true);
+  const router = useRouter();
+  const t = useTranslations();
+
+  useEffect(() => {
+    // Check if user is authenticated and has instructor role
+    if (!isLoading && (!isAuthenticated || !hasRole('INSTRUCTOR'))) {
+      router.push('/sign-in');
+      return;
+    }
+
+    // Load dashboard data
+    if (isAuthenticated && hasRole('INSTRUCTOR')) {
+      loadDashboardData();
+    }
+  }, [isAuthenticated, hasRole, isLoading, router]);
+
+  const loadDashboardData = async () => {
+    setIsLoadingData(true);
+
+    try {
+      // TODO: Replace with actual API calls
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Mock data
+      setDashboardStats({
+        totalQuizzes: 12,
+        totalAssignments: 8,
+        totalStudents: 45,
+        totalAttempts: 234,
+        averageScore: 78.5,
+        activeAssignments: 3,
+      });
+
+      setRecentActivity([
         {
-            id: '1',
-            title: 'Math Quiz - Basic Algebra',
-            students: 25,
-            submitted: 18,
-            pending: 7,
-            dueDate: '2024-07-15',
-            status: 'active'
+          id: '1',
+          type: 'quiz_created',
+          title: 'Mathematics Quiz #5',
+          description: 'Created a new quiz with 15 questions',
+          timestamp: '2 hours ago',
+          icon: BookOpen,
         },
         {
-            id: '2',
-            title: 'Advanced Physics Assignment',
-            students: 30,
-            submitted: 22,
-            pending: 8,
-            dueDate: '2024-07-20',
-            status: 'active'
+          id: '2',
+          type: 'student_joined',
+          title: 'New Student Joined',
+          description: 'John Doe joined Assignment #3',
+          timestamp: '4 hours ago',
+          icon: Users,
         },
         {
-            id: '3',
-            title: 'Chemistry Lab Report',
-            students: 28,
-            submitted: 28,
-            pending: 0,
-            dueDate: '2024-07-10',
-            status: 'completed'
-        }
-    ];
-
-    const recentSubmissions = [
-        {
-            id: '1',
-            studentName: 'Alice Johnson',
-            assignment: 'Math Quiz - Basic Algebra',
-            submittedAt: '2024-07-08 14:30',
-            status: 'pending-review'
+          id: '3',
+          type: 'quiz_completed',
+          title: 'Quiz Completed',
+          description: '5 students completed Physics Quiz #2',
+          timestamp: '6 hours ago',
+          icon: Award,
         },
         {
-            id: '2',
-            studentName: 'Bob Smith',
-            assignment: 'Advanced Physics Assignment',
-            submittedAt: '2024-07-08 13:15',
-            status: 'reviewed'
+          id: '4',
+          type: 'assignment_created',
+          title: 'Chemistry Assignment',
+          description: 'Created new assignment for Chapter 5',
+          timestamp: '1 day ago',
+          icon: ClipboardList,
         },
-        {
-            id: '3',
-            studentName: 'Carol Davis',
-            assignment: 'Chemistry Lab Report',
-            submittedAt: '2024-07-08 11:45',
-            status: 'graded'
-        }
-    ];
+      ]);
+    } catch (error) {
+      console.error('Error loading dashboard data:', error);
+    } finally {
+      setIsLoadingData(false);
+    }
+  };
 
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case 'active':
-                return 'bg-green-100 text-green-800';
-            case 'completed':
-                return 'bg-blue-100 text-blue-800';
-            case 'pending-review':
-                return 'bg-yellow-100 text-yellow-800';
-            case 'reviewed':
-                return 'bg-purple-100 text-purple-800';
-            case 'graded':
-                return 'bg-green-100 text-green-800';
-            default:
-                return 'bg-gray-100 text-gray-800';
-        }
-    };
-
+  if (isLoading || !user) {
     return (
-        <div className="p-6">
-            <div className="max-w-7xl mx-auto">
-                <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                        Instructor Dashboard
-                    </h1>
-                    <p className="text-gray-600">
-                        Welcome back, {user?.firstName}! Manage your assignments and review student progress.
-                    </p>
-                </div>
-
-                {/* Quick Stats */}
-                <div className="grid gap-6 md:grid-cols-4 mb-8">
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <div className="flex items-center">
-                            <div className="flex-shrink-0">
-                                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                                    <span className="text-white text-sm font-medium">3</span>
-                                </div>
-                            </div>
-                            <div className="ml-4">
-                                <p className="text-sm font-medium text-gray-500">Total Assignments</p>
-                                <p className="text-2xl font-semibold text-gray-900">3</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <div className="flex items-center">
-                            <div className="flex-shrink-0">
-                                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                                    <span className="text-white text-sm font-medium">83</span>
-                                </div>
-                            </div>
-                            <div className="ml-4">
-                                <p className="text-sm font-medium text-gray-500">Total Students</p>
-                                <p className="text-2xl font-semibold text-gray-900">83</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <div className="flex items-center">
-                            <div className="flex-shrink-0">
-                                <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
-                                    <span className="text-white text-sm font-medium">68</span>
-                                </div>
-                            </div>
-                            <div className="ml-4">
-                                <p className="text-sm font-medium text-gray-500">Submissions</p>
-                                <p className="text-2xl font-semibold text-gray-900">68</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <div className="flex items-center">
-                            <div className="flex-shrink-0">
-                                <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
-                                    <span className="text-white text-sm font-medium">15</span>
-                                </div>
-                            </div>
-                            <div className="ml-4">
-                                <p className="text-sm font-medium text-gray-500">Pending Review</p>
-                                <p className="text-2xl font-semibold text-gray-900">15</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Assignments */}
-                <div className="bg-white rounded-lg shadow mb-8">
-                    <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                        <h2 className="text-lg font-medium text-gray-900">My Assignments</h2>
-                        <button className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors text-sm">
-                            Create New Assignment
-                        </button>
-                    </div>
-                    <div className="divide-y divide-gray-200">
-                        {instructorAssignments.map((assignment) => (
-                            <div key={assignment.id} className="px-6 py-4">
-                                <div className="flex items-center justify-between">
-                                    <div className="flex-1">
-                                        <h3 className="text-sm font-medium text-gray-900">
-                                            {assignment.title}
-                                        </h3>
-                                        <p className="text-sm text-gray-500">
-                                            Due: {new Date(assignment.dueDate).toLocaleDateString()} • 
-                                            {assignment.students} students enrolled
-                                        </p>
-                                    </div>
-                                    <div className="flex items-center space-x-4">
-                                        <div className="text-center">
-                                            <p className="text-sm font-medium text-green-600">{assignment.submitted}</p>
-                                            <p className="text-xs text-gray-500">Submitted</p>
-                                        </div>
-                                        <div className="text-center">
-                                            <p className="text-sm font-medium text-yellow-600">{assignment.pending}</p>
-                                            <p className="text-xs text-gray-500">Pending</p>
-                                        </div>
-                                        <div className="flex-shrink-0">
-                                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(assignment.status)}`}>
-                                                {assignment.status}
-                                            </span>
-                                        </div>
-                                        <button className="text-green-600 hover:text-green-800 text-sm font-medium">
-                                            Manage
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Recent Submissions and Quick Actions */}
-                <div className="grid gap-6 md:grid-cols-2">
-                    <div className="bg-white rounded-lg shadow">
-                        <div className="px-6 py-4 border-b border-gray-200">
-                            <h3 className="text-lg font-medium text-gray-900">Recent Submissions</h3>
-                        </div>
-                        <div className="divide-y divide-gray-200">
-                            {recentSubmissions.map((submission) => (
-                                <div key={submission.id} className="px-6 py-4">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex-1">
-                                            <h4 className="text-sm font-medium text-gray-900">
-                                                {submission.studentName}
-                                            </h4>
-                                            <p className="text-sm text-gray-500">
-                                                {submission.assignment}
-                                            </p>
-                                            <p className="text-xs text-gray-400">
-                                                {submission.submittedAt}
-                                            </p>
-                                        </div>
-                                        <div className="flex items-center space-x-2">
-                                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(submission.status)}`}>
-                                                {submission.status.replace('-', ' ')}
-                                            </span>
-                                            <button className="text-green-600 hover:text-green-800 text-sm font-medium">
-                                                Review
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <h3 className="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
-                        <div className="space-y-3">
-                            <button className="block w-full text-center bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors">
-                                Create New Assignment
-                            </button>
-                            <a
-                                href="/join"
-                                className="block w-full text-center bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 transition-colors"
-                            >
-                                Join Assignment
-                            </a>
-                            {hasRole(UserRole.STUDENT) && (
-                                <a
-                                    href="/student"
-                                    className="block w-full text-center bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
-                                >
-                                    Switch to Student View
-                                </a>
-                            )}
-                        </div>
-
-                        <div className="mt-6">
-                            <h4 className="text-sm font-medium text-gray-900 mb-3">Recent Activity</h4>
-                            <div className="space-y-2">
-                                <div className="flex items-center text-sm">
-                                    <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
-                                    <span className="text-gray-600">Graded 5 submissions</span>
-                                </div>
-                                <div className="flex items-center text-sm">
-                                    <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-                                    <span className="text-gray-600">Created Chemistry Lab Report</span>
-                                </div>
-                                <div className="flex items-center text-sm">
-                                    <div className="w-2 h-2 bg-yellow-500 rounded-full mr-3"></div>
-                                    <span className="text-gray-600">Updated Math Quiz deadline</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <DashboardLayout title="Instructor Dashboard">
+        <div className="flex items-center justify-center py-12">
+          <InlineLoading text={t('common.loading')} />
         </div>
+      </DashboardLayout>
     );
+  }
+
+  return (
+    <DashboardLayout title="Instructor Dashboard">
+      <div className="space-y-6">
+        {/* Welcome Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">
+              Welcome back, {user.firstName}!
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              Here&apos;s what&apos;s happening with your courses today.
+            </p>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Button asChild>
+              <Link href="/instructor/quizzes/create">
+                <Plus className="w-4 h-4 mr-2" />
+                Create Quiz
+              </Link>
+            </Button>
+          </div>
+        </div>
+
+        {/* Quick Stats Cards */}
+        {isLoadingData ? (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {[...Array(4)].map((_, i) => (
+              <Card key={i}>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    <div className="h-4 bg-muted rounded animate-pulse" />
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-8 bg-muted rounded animate-pulse mb-2" />
+                  <div className="h-3 bg-muted rounded animate-pulse w-2/3" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : dashboardStats ? (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Quizzes</CardTitle>
+                <BookOpen className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{dashboardStats.totalQuizzes}</div>
+                <p className="text-xs text-muted-foreground">
+                  +2 from last month
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Active Assignments</CardTitle>
+                <ClipboardList className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{dashboardStats.activeAssignments}</div>
+                <p className="text-xs text-muted-foreground">
+                  {dashboardStats.totalAssignments} total assignments
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Students</CardTitle>
+                <Users className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{dashboardStats.totalStudents}</div>
+                <p className="text-xs text-muted-foreground">
+                  Across all assignments
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Average Score</CardTitle>
+                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{dashboardStats.averageScore}%</div>
+                <p className="text-xs text-muted-foreground">
+                  +2.5% from last week
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        ) : null}
+
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* Recent Activity */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Activity className="w-5 h-5" />
+                <span>Recent Activity</span>
+              </CardTitle>
+              <CardDescription>
+                Your latest actions and updates
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {isLoadingData ? (
+                <div className="space-y-4">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-muted rounded-full animate-pulse" />
+                      <div className="flex-1 space-y-2">
+                        <div className="h-4 bg-muted rounded animate-pulse" />
+                        <div className="h-3 bg-muted rounded animate-pulse w-2/3" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {recentActivity.map((activity) => {
+                    const Icon = activity.icon;
+                    return (
+                      <div key={activity.id} className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                          <Icon className="w-4 h-4 text-primary" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate">
+                            {activity.title}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {activity.description} • {activity.timestamp}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Quick Actions */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Calendar className="w-5 h-5" />
+                <span>Quick Actions</span>
+              </CardTitle>
+              <CardDescription>
+                Common tasks and shortcuts
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Button asChild variant="outline" className="w-full justify-start">
+                <Link href="/instructor/quizzes/create">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Create New Quiz
+                </Link>
+              </Button>
+              
+              <Button asChild variant="outline" className="w-full justify-start">
+                <Link href="/instructor/assignments/create">
+                  <ClipboardList className="w-4 h-4 mr-2" />
+                  Create Assignment
+                </Link>
+              </Button>
+              
+              <Button asChild variant="outline" className="w-full justify-start">
+                <Link href="/instructor/quizzes">
+                  <Eye className="w-4 h-4 mr-2" />
+                  View All Quizzes
+                </Link>
+              </Button>
+              
+              <Button asChild variant="outline" className="w-full justify-start">
+                <Link href="/instructor/analytics">
+                  <TrendingUp className="w-4 h-4 mr-2" />
+                  View Analytics
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </DashboardLayout>
+  );
 }

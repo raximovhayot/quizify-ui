@@ -1,8 +1,32 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import createIntlMiddleware from 'next-intl/middleware';
+import { locales } from './src/i18n/config';
+
+const intlMiddleware = createIntlMiddleware({
+  locales,
+  defaultLocale: 'en',
+  localePrefix: 'as-needed'
+});
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // Extract locale from pathname
+  const pathnameIsMissingLocale = locales.every(
+    (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
+  );
+
+  // Get the actual pathname without locale prefix for route matching
+  let actualPathname = pathname;
+  let currentLocale = 'en'; // default locale
+  
+  if (!pathnameIsMissingLocale) {
+    const segments = pathname.split('/');
+    currentLocale = segments[1] as string;
+    actualPathname = '/' + segments.slice(2).join('/');
+    if (actualPathname === '/') actualPathname = '/';
+  }
 
   // Get user data and access token from cookies (in a real app, you'd validate JWT tokens)
   const userCookie = request.cookies.get('user');
@@ -36,16 +60,16 @@ export function middleware(request: NextRequest) {
     return routeConfig['/'] || [];
   };
 
-  const requiredRoles = getRequiredRoles(pathname);
+  const requiredRoles = getRequiredRoles(actualPathname);
 
-  // If no roles required, allow access
+  // If no roles required, handle internationalization and allow access
   if (requiredRoles.length === 0) {
-    return NextResponse.next();
+    return intlMiddleware(request);
   }
 
   // If roles required but user not authenticated, redirect to sign-in
   if (!user || !accessTokenCookie) {
-    const signInUrl = new URL('/sign-in', request.url);
+    const signInUrl = new URL(`/${currentLocale}/sign-in`, request.url);
     signInUrl.searchParams.set('redirect', pathname);
     return NextResponse.redirect(signInUrl);
   }
@@ -55,21 +79,21 @@ export function middleware(request: NextRequest) {
   const hasRequiredRole = requiredRoles.some((role: string) => userRoles.includes(role));
 
   if (!hasRequiredRole) {
-    // Redirect based on user's roles
+    // Redirect based on user's roles with locale prefix
     if (userRoles.includes('STUDENT') && userRoles.includes('INSTRUCTOR')) {
       // User has both roles, redirect to a role selection page or default
-      return NextResponse.redirect(new URL('/', request.url));
+      return NextResponse.redirect(new URL(`/${currentLocale}`, request.url));
     } else if (userRoles.includes('STUDENT')) {
-      return NextResponse.redirect(new URL('/student', request.url));
+      return NextResponse.redirect(new URL(`/${currentLocale}/student`, request.url));
     } else if (userRoles.includes('INSTRUCTOR')) {
-      return NextResponse.redirect(new URL('/instructor', request.url));
+      return NextResponse.redirect(new URL(`/${currentLocale}/instructor`, request.url));
     } else {
       // No valid roles, redirect to sign-in
-      return NextResponse.redirect(new URL('/sign-in', request.url));
+      return NextResponse.redirect(new URL(`/${currentLocale}/sign-in`, request.url));
     }
   }
 
-  return NextResponse.next();
+  return intlMiddleware(request);
 }
 
 export const config = {
