@@ -1,16 +1,59 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { UserRole } from '@/types/auth';
 
 export default function Home() {
-  const { user, logout, hasRole, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isLoading, hasRole, logout } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    // Don't redirect while still loading authentication state
+    if (isLoading) return;
+
+    if (!isAuthenticated) {
+      // Redirect unauthenticated users to sign-in page
+      router.push('/sign-in');
+      return;
+    }
+
+    // Redirect authenticated users to their default dashboard based on roles
+    if (hasRole('STUDENT') && hasRole('INSTRUCTOR')) {
+      // User has both roles, redirect to role selection or stay on home
+      return;
+    } else if (hasRole('INSTRUCTOR')) {
+      router.push('/instructor');
+      return;
+    } else if (hasRole('STUDENT')) {
+      router.push('/student');
+      return;
+    }
+    // If user has no recognized roles, stay on home page
+  }, [isAuthenticated, isLoading, hasRole, router]);
+
+  // Show loading state while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render content if user should be redirected
+  if (!isAuthenticated) {
+    return null;
+  }
 
   const getRoleBasedDashboard = () => {
     if (!isAuthenticated) return null;
 
     const dashboards = [];
-    if (hasRole(UserRole.STUDENT)) {
+    if (hasRole('STUDENT')) {
       dashboards.push({
         title: 'Student Dashboard',
         href: '/student',
@@ -18,7 +61,7 @@ export default function Home() {
         description: 'Access your assignments and quizzes'
       });
     }
-    if (hasRole(UserRole.INSTRUCTOR)) {
+    if (hasRole('INSTRUCTOR')) {
       dashboards.push({
         title: 'Instructor Dashboard',
         href: '/instructor',
@@ -46,7 +89,7 @@ export default function Home() {
                     Welcome, {user?.firstName}
                   </span>
                   <span className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-full">
-                    {user?.roles?.join(', ')}
+                    {user?.roles?.map(role => role.name).join(', ')}
                   </span>
                   <button
                     onClick={logout}

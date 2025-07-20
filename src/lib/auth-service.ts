@@ -1,31 +1,84 @@
 import { apiClient } from './api';
-import { User, LoginResponse, RefreshTokenResponse } from '@/types/auth';
+import { 
+  User, 
+  JWTToken,
+  SignInRequest,
+  SignUpPrepareRequest,
+  SignInPrepareResponse,
+  SignUpVerifyRequest,
+  ForgotPasswordPrepareRequest,
+  ForgotPasswordVerifyRequest,
+  ForgotPasswordVerifyResponse,
+  ForgotPasswordUpdateRequest,
+  RefreshTokenRequest,
+  RefreshTokenResponse
+} from '@/types/auth';
 import { ApiResponse, hasApiErrors, extractApiData } from '@/types/api';
 
 /**
  * Authentication service for handling all auth-related API calls
+ * Updated to support OTP-based authentication flows
  */
 export class AuthService {
   /**
    * Authenticate user with phone and password
    */
-  static async login(phone: string, password: string): Promise<LoginResponse> {
-    const response: ApiResponse<LoginResponse> = await apiClient.post('/auth/login', {
-      phone,
-      password
-    });
-
+  static async login(phone: string, password: string): Promise<JWTToken> {
+    const request: SignInRequest = { phone, password };
+    const response: ApiResponse<JWTToken> = await apiClient.post('/auth/login', request);
     return extractApiData(response);
+  }
+
+  /**
+   * Prepare sign-up by sending OTP to phone
+   */
+  static async signUpPrepare(phone: string): Promise<SignInPrepareResponse> {
+    const request: SignUpPrepareRequest = { phone };
+    const response: ApiResponse<SignInPrepareResponse> = await apiClient.post('/auth/signup/prepare', request);
+    return extractApiData(response);
+  }
+
+  /**
+   * Verify sign-up with OTP and complete registration
+   */
+  static async signUpVerify(data: SignUpVerifyRequest): Promise<JWTToken> {
+    const response: ApiResponse<JWTToken> = await apiClient.post('/auth/signup/verify', data);
+    return extractApiData(response);
+  }
+
+  /**
+   * Prepare forgot password by sending OTP to phone
+   */
+  static async forgotPasswordPrepare(phone: string): Promise<SignInPrepareResponse> {
+    const request: ForgotPasswordPrepareRequest = { phone };
+    const response: ApiResponse<SignInPrepareResponse> = await apiClient.post('/auth/forgot-password/prepare', request);
+    return extractApiData(response);
+  }
+
+  /**
+   * Verify forgot password OTP
+   */
+  static async forgotPasswordVerify(phone: string, otp: string): Promise<ForgotPasswordVerifyResponse> {
+    const request: ForgotPasswordVerifyRequest = { phone, otp };
+    const response: ApiResponse<ForgotPasswordVerifyResponse> = await apiClient.post('/auth/forgot-password/verify', request);
+    return extractApiData(response);
+  }
+
+  /**
+   * Update password with verification token
+   */
+  static async forgotPasswordUpdate(verificationToken: string, newPassword: string): Promise<void> {
+    const request: ForgotPasswordUpdateRequest = { verificationToken, newPassword };
+    const response: ApiResponse<void> = await apiClient.post('/auth/forgot-password/update', request);
+    extractApiData(response);
   }
 
   /**
    * Refresh access token using refresh token
    */
   static async refreshToken(refreshToken: string): Promise<RefreshTokenResponse> {
-    const response: ApiResponse<RefreshTokenResponse> = await apiClient.post('/auth/refresh', {
-      refreshToken
-    });
-
+    const request: RefreshTokenRequest = { refreshToken };
+    const response: ApiResponse<RefreshTokenResponse> = await apiClient.post('/auth/refresh', request);
     return extractApiData(response);
   }
 
@@ -49,21 +102,22 @@ export class AuthService {
     return extractApiData(response);
   }
 
+  // Legacy methods for backward compatibility
   /**
-   * Register new user
+   * @deprecated Use signUpPrepare and signUpVerify instead
    */
   static async register(userData: {
     phone: string;
     password: string;
     firstName: string;
     lastName?: string;
-  }): Promise<LoginResponse> {
-    const response: ApiResponse<LoginResponse> = await apiClient.post('/auth/register', userData);
+  }): Promise<JWTToken> {
+    const response: ApiResponse<JWTToken> = await apiClient.post('/auth/register', userData);
     return extractApiData(response);
   }
 
   /**
-   * Request password reset
+   * @deprecated Use forgotPasswordPrepare, forgotPasswordVerify, and forgotPasswordUpdate instead
    */
   static async requestPasswordReset(phone: string): Promise<void> {
     const response: ApiResponse<void> = await apiClient.post('/auth/forgot-password', { phone });
@@ -71,7 +125,7 @@ export class AuthService {
   }
 
   /**
-   * Reset password with code
+   * @deprecated Use forgotPasswordPrepare, forgotPasswordVerify, and forgotPasswordUpdate instead
    */
   static async resetPassword(phone: string, code: string, newPassword: string): Promise<void> {
     const response: ApiResponse<void> = await apiClient.post('/auth/reset-password', {

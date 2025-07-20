@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, UserRole, AuthContextType } from '@/types/auth';
+import { User, AuthContextType } from '@/types/auth';
 import { AuthService } from '@/lib/auth-service';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -25,7 +25,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           // Verify token with backend
           const userData = await AuthService.verifyToken(accessToken);
           setUser(userData);
-        } catch (error) {
+        } catch {
           // Token is invalid, try to refresh
           const refreshToken = localStorage.getItem('refreshToken');
           if (refreshToken) {
@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               // Verify new token
               const userData = await AuthService.verifyToken(tokens.accessToken);
               setUser(userData);
-            } catch (refreshError) {
+            } catch {
               // Refresh failed, clear stored data
               localStorage.removeItem('user');
               localStorage.removeItem('accessToken');
@@ -61,16 +61,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     try {
       // Use AuthService to authenticate user
-      const loginResponse = await AuthService.login(phone, password);
+      const jwtToken = await AuthService.login(phone, password);
 
       // Extract user data and tokens from response
-      const userData: User = loginResponse.user;
+      const userData: User = jwtToken.user;
 
       // Store user data and tokens
       setUser(userData);
       localStorage.setItem('user', JSON.stringify(userData));
-      localStorage.setItem('accessToken', loginResponse.accessToken);
-      localStorage.setItem('refreshToken', loginResponse.refreshToken);
+      localStorage.setItem('accessToken', jwtToken.accessToken);
+      localStorage.setItem('refreshToken', jwtToken.refreshToken);
     } catch (error) {
       console.error('Login error:', error);
       throw error;
@@ -98,12 +98,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const hasRole = (role: UserRole): boolean => {
-    return user?.roles.includes(role) ?? false;
+  const hasRole = (roleName: string): boolean => {
+    return user?.roles?.some(role => role.name === roleName) ?? false;
   };
 
-  const hasAnyRole = (roles: UserRole[]): boolean => {
-    return roles.some(role => hasRole(role));
+  const hasAnyRole = (roleNames: string[]): boolean => {
+    return user?.roles?.some(role => roleNames.includes(role.name)) ?? false;
   };
 
   const value: AuthContextType = {

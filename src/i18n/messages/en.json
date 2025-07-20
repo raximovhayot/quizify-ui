@@ -22,19 +22,72 @@
     "info": "Information"
   },
   "auth": {
-    "signIn": "Sign In",
-    "signUp": "Sign Up",
-    "signOut": "Sign Out",
-    "phone": "Phone Number",
-    "password": "Password",
-    "confirmPassword": "Confirm Password",
-    "forgotPassword": "Forgot Password?",
-    "rememberMe": "Remember Me",
-    "loginButton": "Login",
-    "registerButton": "Register",
-    "verificationCode": "Verification Code",
-    "sendCode": "Send Code",
-    "resendCode": "Resend Code",
+    "signIn": {
+      "title": "Sign In",
+      "description": "Enter your phone number and password to access your account",
+      "submit": "Sign In",
+      "submitting": "Signing In..."
+    },
+    "signUp": {
+      "title": "Sign Up",
+      "prompt": "Don't have an account?",
+      "link": "Sign up",
+      "phone": {
+        "title": "Sign Up",
+        "description": "Enter your phone number to get started"
+      },
+      "verification": {
+        "title": "Verify Phone Number",
+        "description": "We sent a verification code to your phone"
+      },
+      "details": {
+        "title": "Complete Your Profile",
+        "description": "Tell us a bit about yourself"
+      },
+      "completed": {
+        "title": "Welcome!",
+        "description": "Your account is ready to use"
+      },
+      "sendCode": "Send Verification Code",
+      "sendingCode": "Sending Code...",
+      "creating": "Creating Account...",
+      "create": "Create Account",
+      "success": {
+        "title": "Account Created Successfully!",
+        "message": "Your account has been created. You will be redirected to the sign-in page shortly."
+      }
+    },
+    "phone": {
+      "label": "Phone Number",
+      "placeholder": "+1234567890"
+    },
+    "password": {
+      "label": "Password",
+      "placeholder": "Enter your password"
+    },
+    "confirmPassword": {
+      "label": "Confirm Password",
+      "placeholder": "Confirm your password"
+    },
+    "firstName": {
+      "label": "First Name",
+      "placeholder": "John"
+    },
+    "lastName": {
+      "label": "Last Name",
+      "placeholder": "Doe"
+    },
+    "verification": {
+      "label": "Verification Code",
+      "instruction": "Enter the 6-digit code sent to",
+      "verify": "Verify Code",
+      "verifying": "Verifying...",
+      "resend": "Resend Code",
+      "resendIn": "Resend in {seconds}s"
+    },
+    "forgotPassword": {
+      "link": "Forgot your password?"
+    },
     "invalidCredentials": "Invalid phone number or password",
     "accountCreated": "Account created successfully",
     "loginSuccess": "Login successful",
