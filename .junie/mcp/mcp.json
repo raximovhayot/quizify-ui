@@ -1,0 +1,11 @@
+{
+  "servers": [
+    {
+      "name": "backend-filesystem",
+      "command": "mcp-server-filesystem",
+      "args": [
+        "/home/xmpl/Idea/Quizify/quizify-backend"
+      ]
+    }
+  ]
+}

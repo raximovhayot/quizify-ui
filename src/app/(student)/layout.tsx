@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { AuthProvider } from "@/contexts/AuthContext";
+import StudentProtectedRoute from "@/components/StudentProtectedRoute";
 import "../globals.css";
 
 const geistSans = Geist({
@@ -27,14 +29,25 @@ export default function StudentLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="student-layout">
-          <header className="student-header">
-            {/* Student navigation will go here */}
-          </header>
-          <main className="student-main">
-            {children}
-          </main>
-        </div>
+        <AuthProvider>
+          <StudentProtectedRoute>
+            <div className="student-layout">
+              <header className="student-header bg-blue-600 text-white p-4">
+                <div className="max-w-7xl mx-auto flex justify-between items-center">
+                  <h1 className="text-xl font-semibold">Student Dashboard</h1>
+                  <nav className="flex space-x-4">
+                    <a href="/student" className="hover:text-blue-200">Dashboard</a>
+                    <a href="/join" className="hover:text-blue-200">Join Assignment</a>
+                    <a href="/" className="hover:text-blue-200">Home</a>
+                  </nav>
+                </div>
+              </header>
+              <main className="student-main min-h-screen bg-gray-50">
+                {children}
+              </main>
+            </div>
+          </StudentProtectedRoute>
+        </AuthProvider>
       </body>
     </html>
   );
