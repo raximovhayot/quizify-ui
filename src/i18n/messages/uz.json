@@ -22,19 +22,72 @@
     "info": "Ma'lumot"
   },
   "auth": {
-    "signIn": "Kirish",
-    "signUp": "Ro'yxatdan o'tish",
-    "signOut": "Chiqish",
-    "phone": "Telefon raqami",
-    "password": "Parol",
-    "confirmPassword": "Parolni tasdiqlang",
-    "forgotPassword": "Parolni unutdingizmi?",
-    "rememberMe": "Meni eslab qol",
-    "loginButton": "Kirish",
-    "registerButton": "Ro'yxatdan o'tish",
-    "verificationCode": "Tasdiqlash kodi",
-    "sendCode": "Kod yuborish",
-    "resendCode": "Kodni qayta yuborish",
+    "signIn": {
+      "title": "Kirish",
+      "description": "Hisobingizga kirish uchun telefon raqami va parolni kiriting",
+      "submit": "Kirish",
+      "submitting": "Kirilmoqda..."
+    },
+    "signUp": {
+      "title": "Ro'yxatdan o'tish",
+      "prompt": "Hisobingiz yo'qmi?",
+      "link": "Ro'yxatdan o'ting",
+      "phone": {
+        "title": "Ro'yxatdan o'tish",
+        "description": "Boshlash uchun telefon raqamingizni kiriting"
+      },
+      "verification": {
+        "title": "Telefon raqamini tasdiqlang",
+        "description": "Telefoningizga tasdiqlash kodi yubordik"
+      },
+      "details": {
+        "title": "Profilingizni to'ldiring",
+        "description": "O'zingiz haqingizda ma'lumot bering"
+      },
+      "completed": {
+        "title": "Xush kelibsiz!",
+        "description": "Hisobingiz foydalanishga tayyor"
+      },
+      "sendCode": "Tasdiqlash kodini yuborish",
+      "sendingCode": "Kod yuborilmoqda...",
+      "creating": "Hisob yaratilmoqda...",
+      "create": "Hisob yaratish",
+      "success": {
+        "title": "Hisob muvaffaqiyatli yaratildi!",
+        "message": "Hisobingiz yaratildi. Tez orada kirish sahifasiga yo'naltirilasiz."
+      }
+    },
+    "phone": {
+      "label": "Telefon raqami",
+      "placeholder": "+998901234567"
+    },
+    "password": {
+      "label": "Parol",
+      "placeholder": "Parolni kiriting"
+    },
+    "confirmPassword": {
+      "label": "Parolni tasdiqlang",
+      "placeholder": "Parolni tasdiqlang"
+    },
+    "firstName": {
+      "label": "Ism",
+      "placeholder": "Ahmadjon"
+    },
+    "lastName": {
+      "label": "Familiya",
+      "placeholder": "Ahmedov"
+    },
+    "verification": {
+      "label": "Tasdiqlash kodi",
+      "instruction": "Quyidagi raqamga yuborilgan 6 xonali kodni kiriting",
+      "verify": "Kodni tasdiqlash",
+      "verifying": "Tasdiqlanmoqda...",
+      "resend": "Kodni qayta yuborish",
+      "resendIn": "{seconds}s ichida qayta yuborish"
+    },
+    "forgotPassword": {
+      "link": "Parolni unutdingizmi?"
+    },
     "invalidCredentials": "Noto'g'ri telefon raqami yoki parol",
     "accountCreated": "Hisob muvaffaqiyatli yaratildi",
     "loginSuccess": "Kirish muvaffaqiyatli",

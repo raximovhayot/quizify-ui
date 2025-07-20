@@ -11,6 +11,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { InlineLoading } from '@/components/ui/loading-spinner';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
@@ -193,37 +201,42 @@ export default function ForgotPasswordPage() {
       </CardHeader>
 
       <CardContent className="space-y-4">
-        <form onSubmit={phoneForm.handleSubmit(onPhoneSubmit)} className="space-y-4">
-          <div className="space-y-2">
-            <label htmlFor="phone" className="text-sm font-medium">
-              {t('auth.phone')}
-            </label>
-            <Input
-              id="phone"
-              type="tel"
-              placeholder="+998901234567"
-              {...phoneForm.register('phone')}
-              className={phoneForm.formState.errors.phone ? 'border-red-500' : ''}
+        <Form {...phoneForm}>
+          <form onSubmit={phoneForm.handleSubmit(onPhoneSubmit)} className="space-y-4">
+            <FormField
+              control={phoneForm.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    {t('auth.phone')}
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="tel"
+                      placeholder="+998901234567"
+                      disabled={isSubmitting}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {phoneForm.formState.errors.phone && (
-              <p className="text-sm text-red-500">
-                {phoneForm.formState.errors.phone.message}
-              </p>
-            )}
-          </div>
 
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <InlineLoading text="Sending Code..." />
-            ) : (
-              t('auth.sendCode')
-            )}
-          </Button>
-        </form>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <InlineLoading text="Sending Code..." />
+              ) : (
+                t('auth.sendCode')
+              )}
+            </Button>
+          </form>
+        </Form>
 
         <div className="text-center">
           <div className="text-sm text-muted-foreground">
@@ -249,38 +262,43 @@ export default function ForgotPasswordPage() {
       </CardHeader>
 
       <CardContent className="space-y-4">
-        <form onSubmit={verificationForm.handleSubmit(onVerificationSubmit)} className="space-y-4">
-          <div className="space-y-2">
-            <label htmlFor="verificationCode" className="text-sm font-medium">
-              {t('auth.verificationCode')}
-            </label>
-            <Input
-              id="verificationCode"
-              type="text"
-              placeholder="123456"
-              maxLength={6}
-              {...verificationForm.register('verificationCode')}
-              className={verificationForm.formState.errors.verificationCode ? 'border-red-500' : ''}
+        <Form {...verificationForm}>
+          <form onSubmit={verificationForm.handleSubmit(onVerificationSubmit)} className="space-y-4">
+            <FormField
+              control={verificationForm.control}
+              name="verificationCode"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    {t('auth.verificationCode')}
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="123456"
+                      maxLength={6}
+                      disabled={isSubmitting}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {verificationForm.formState.errors.verificationCode && (
-              <p className="text-sm text-red-500">
-                {verificationForm.formState.errors.verificationCode.message}
-              </p>
-            )}
-          </div>
 
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <InlineLoading text="Verifying..." />
-            ) : (
-              'Verify Code'
-            )}
-          </Button>
-        </form>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <InlineLoading text="Verifying..." />
+              ) : (
+                'Verify Code'
+              )}
+            </Button>
+          </form>
+        </Form>
 
         <div className="text-center space-y-2">
           <Button
@@ -324,53 +342,61 @@ export default function ForgotPasswordPage() {
       </CardHeader>
 
       <CardContent className="space-y-4">
-        <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4">
-          <div className="space-y-2">
-            <label htmlFor="password" className="text-sm font-medium">
-              {t('auth.password')}
-            </label>
-            <Input
-              id="password"
-              type="password"
-              {...passwordForm.register('password')}
-              className={passwordForm.formState.errors.password ? 'border-red-500' : ''}
+        <Form {...passwordForm}>
+          <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4">
+            <FormField
+              control={passwordForm.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    {t('auth.password')}
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      disabled={isSubmitting}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {passwordForm.formState.errors.password && (
-              <p className="text-sm text-red-500">
-                {passwordForm.formState.errors.password.message}
-              </p>
-            )}
-          </div>
 
-          <div className="space-y-2">
-            <label htmlFor="confirmPassword" className="text-sm font-medium">
-              {t('auth.confirmPassword')}
-            </label>
-            <Input
-              id="confirmPassword"
-              type="password"
-              {...passwordForm.register('confirmPassword')}
-              className={passwordForm.formState.errors.confirmPassword ? 'border-red-500' : ''}
+            <FormField
+              control={passwordForm.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    {t('auth.confirmPassword')}
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      disabled={isSubmitting}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {passwordForm.formState.errors.confirmPassword && (
-              <p className="text-sm text-red-500">
-                {passwordForm.formState.errors.confirmPassword.message}
-              </p>
-            )}
-          </div>
 
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <InlineLoading text="Resetting Password..." />
-            ) : (
-              'Reset Password'
-            )}
-          </Button>
-        </form>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <InlineLoading text="Resetting Password..." />
+              ) : (
+                'Reset Password'
+              )}
+            </Button>
+          </form>
+        </Form>
       </CardContent>
     </Card>
   );

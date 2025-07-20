@@ -11,6 +11,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { InlineLoading } from '@/components/ui/loading-spinner';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
@@ -210,193 +218,211 @@ export default function SignUpPage() {
     switch (currentStep) {
       case 'phone':
         return (
-          <form onSubmit={phoneForm.handleSubmit(onPhoneSubmit)} className="space-y-4">
-            <div className="space-y-2">
-              <label htmlFor="phone" className="text-sm font-medium">
-                {t('auth.phone.label', { default: 'Phone Number' })}
-              </label>
-              <Input
-                id="phone"
-                type="tel"
-                placeholder={t('auth.phone.placeholder', { default: '+1234567890' })}
-                {...phoneForm.register('phone')}
-                disabled={isSubmitting}
-                className={phoneForm.formState.errors.phone ? 'border-red-500' : ''}
+          <Form {...phoneForm}>
+            <form onSubmit={phoneForm.handleSubmit(onPhoneSubmit)} className="space-y-4">
+              <FormField
+                control={phoneForm.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('auth.phone.label', { default: 'Phone Number' })}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="tel"
+                        placeholder={t('auth.phone.placeholder', { default: '+1234567890' })}
+                        disabled={isSubmitting}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              {phoneForm.formState.errors.phone && (
-                <p className="text-sm text-red-500">
-                  {phoneForm.formState.errors.phone.message}
-                </p>
-              )}
-            </div>
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <InlineLoading />
-                  {t('auth.signUp.sendingCode', { default: 'Sending Code...' })}
-                </>
-              ) : (
-                t('auth.signUp.sendCode', { default: 'Send Verification Code' })
-              )}
-            </Button>
-          </form>
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    <InlineLoading />
+                    {t('auth.signUp.sendingCode', { default: 'Sending Code...' })}
+                  </>
+                ) : (
+                  t('auth.signUp.sendCode', { default: 'Send Verification Code' })
+                )}
+              </Button>
+            </form>
+          </Form>
         );
 
       case 'verification':
         return (
-          <form onSubmit={verificationForm.handleSubmit(onVerificationSubmit)} className="space-y-4">
-            <div className="text-center mb-4">
-              <p className="text-sm text-gray-600">
-                {t('auth.verification.instruction', { 
-                  default: 'Enter the 6-digit code sent to' 
-                })} <strong>{phoneNumber}</strong>
-              </p>
-            </div>
-
-            <div className="space-y-2">
-              <label htmlFor="otp" className="text-sm font-medium">
-                {t('auth.verification.label', { default: 'Verification Code' })}
-              </label>
-              <Input
-                id="otp"
-                type="text"
-                placeholder="123456"
-                maxLength={6}
-                {...verificationForm.register('otp')}
-                disabled={isSubmitting}
-                className={verificationForm.formState.errors.otp ? 'border-red-500' : ''}
-              />
-              {verificationForm.formState.errors.otp && (
-                <p className="text-sm text-red-500">
-                  {verificationForm.formState.errors.otp.message}
+          <Form {...verificationForm}>
+            <form onSubmit={verificationForm.handleSubmit(onVerificationSubmit)} className="space-y-4">
+              <div className="text-center mb-4">
+                <p className="text-sm text-gray-600">
+                  {t('auth.verification.instruction', { 
+                    default: 'Enter the 6-digit code sent to' 
+                  })} <strong>{phoneNumber}</strong>
                 </p>
-              )}
-            </div>
+              </div>
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <InlineLoading />
-                  {t('auth.verification.verifying', { default: 'Verifying...' })}
-                </>
-              ) : (
-                t('auth.verification.verify', { default: 'Verify Code' })
-              )}
-            </Button>
+              <FormField
+                control={verificationForm.control}
+                name="otp"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('auth.verification.label', { default: 'Verification Code' })}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="123456"
+                        maxLength={6}
+                        disabled={isSubmitting}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <div className="text-center">
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={handleResendOTP}
-                disabled={resendCooldown > 0 || isSubmitting}
-                className="text-sm"
-              >
-                {resendCooldown > 0 
-                  ? t('auth.verification.resendIn', { 
-                      default: `Resend in ${resendCooldown}s`,
-                      seconds: resendCooldown 
-                    })
-                  : t('auth.verification.resend', { default: 'Resend Code' })
-                }
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    <InlineLoading />
+                    {t('auth.verification.verifying', { default: 'Verifying...' })}
+                  </>
+                ) : (
+                  t('auth.verification.verify', { default: 'Verify Code' })
+                )}
               </Button>
-            </div>
-          </form>
+
+              <div className="text-center">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={handleResendOTP}
+                  disabled={resendCooldown > 0 || isSubmitting}
+                  className="text-sm"
+                >
+                  {resendCooldown > 0 
+                    ? t('auth.verification.resendIn', { 
+                        default: `Resend in ${resendCooldown}s`,
+                        seconds: resendCooldown 
+                      })
+                    : t('auth.verification.resend', { default: 'Resend Code' })
+                  }
+                </Button>
+              </div>
+            </form>
+          </Form>
         );
 
       case 'details':
         return (
-          <form onSubmit={userDetailsForm.handleSubmit(onUserDetailsSubmit)} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label htmlFor="firstName" className="text-sm font-medium">
-                  {t('auth.firstName.label', { default: 'First Name' })}
-                </label>
-                <Input
-                  id="firstName"
-                  type="text"
-                  placeholder={t('auth.firstName.placeholder', { default: 'John' })}
-                  {...userDetailsForm.register('firstName')}
-                  disabled={isSubmitting}
-                  className={userDetailsForm.formState.errors.firstName ? 'border-red-500' : ''}
+          <Form {...userDetailsForm}>
+            <form onSubmit={userDetailsForm.handleSubmit(onUserDetailsSubmit)} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={userDetailsForm.control}
+                  name="firstName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('auth.firstName.label', { default: 'First Name' })}
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder={t('auth.firstName.placeholder', { default: 'John' })}
+                          disabled={isSubmitting}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-                {userDetailsForm.formState.errors.firstName && (
-                  <p className="text-sm text-red-500">
-                    {userDetailsForm.formState.errors.firstName.message}
-                  </p>
-                )}
+
+                <FormField
+                  control={userDetailsForm.control}
+                  name="lastName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('auth.lastName.label', { default: 'Last Name' })}
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder={t('auth.lastName.placeholder', { default: 'Doe' })}
+                          disabled={isSubmitting}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
-              <div className="space-y-2">
-                <label htmlFor="lastName" className="text-sm font-medium">
-                  {t('auth.lastName.label', { default: 'Last Name' })}
-                </label>
-                <Input
-                  id="lastName"
-                  type="text"
-                  placeholder={t('auth.lastName.placeholder', { default: 'Doe' })}
-                  {...userDetailsForm.register('lastName')}
-                  disabled={isSubmitting}
-                  className={userDetailsForm.formState.errors.lastName ? 'border-red-500' : ''}
-                />
-                {userDetailsForm.formState.errors.lastName && (
-                  <p className="text-sm text-red-500">
-                    {userDetailsForm.formState.errors.lastName.message}
-                  </p>
+              <FormField
+                control={userDetailsForm.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('auth.password.label', { default: 'Password' })}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder={t('auth.password.placeholder', { default: 'Enter your password' })}
+                        disabled={isSubmitting}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium">
-                {t('auth.password.label', { default: 'Password' })}
-              </label>
-              <Input
-                id="password"
-                type="password"
-                placeholder={t('auth.password.placeholder', { default: 'Enter your password' })}
-                {...userDetailsForm.register('password')}
-                disabled={isSubmitting}
-                className={userDetailsForm.formState.errors.password ? 'border-red-500' : ''}
               />
-              {userDetailsForm.formState.errors.password && (
-                <p className="text-sm text-red-500">
-                  {userDetailsForm.formState.errors.password.message}
-                </p>
-              )}
-            </div>
 
-            <div className="space-y-2">
-              <label htmlFor="confirmPassword" className="text-sm font-medium">
-                {t('auth.confirmPassword.label', { default: 'Confirm Password' })}
-              </label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                placeholder={t('auth.confirmPassword.placeholder', { default: 'Confirm your password' })}
-                {...userDetailsForm.register('confirmPassword')}
-                disabled={isSubmitting}
-                className={userDetailsForm.formState.errors.confirmPassword ? 'border-red-500' : ''}
+              <FormField
+                control={userDetailsForm.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('auth.confirmPassword.label', { default: 'Confirm Password' })}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder={t('auth.confirmPassword.placeholder', { default: 'Confirm your password' })}
+                        disabled={isSubmitting}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              {userDetailsForm.formState.errors.confirmPassword && (
-                <p className="text-sm text-red-500">
-                  {userDetailsForm.formState.errors.confirmPassword.message}
-                </p>
-              )}
-            </div>
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <InlineLoading />
-                  {t('auth.signUp.creating', { default: 'Creating Account...' })}
-                </>
-              ) : (
-                t('auth.signUp.create', { default: 'Create Account' })
-              )}
-            </Button>
-          </form>
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    <InlineLoading />
+                    {t('auth.signUp.creating', { default: 'Creating Account...' })}
+                  </>
+                ) : (
+                  t('auth.signUp.create', { default: 'Create Account' })
+                )}
+              </Button>
+            </form>
+          </Form>
         );
 
       case 'completed':

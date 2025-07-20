@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import {
@@ -50,8 +49,6 @@ export function LanguageSwitcher({
   variant = 'default', 
   className 
 }: LanguageSwitcherProps) {
-  const router = useRouter();
-  const pathname = usePathname();
   const currentLocale = useLocale();
   const [isChanging, setIsChanging] = useState(false);
 
@@ -63,30 +60,18 @@ export function LanguageSwitcher({
     setIsChanging(true);
 
     try {
-      // Store the language preference
+      // Store the language preference in both localStorage and cookies
       localStorage.setItem('preferredLanguage', newLocale);
-
-      // Get the current pathname without the locale prefix
-      const segments = pathname.split('/');
-      const locales = ['en', 'ru', 'uz'];
       
-      let pathWithoutLocale = pathname;
-      if (segments.length > 1 && locales.includes(segments[1])) {
-        pathWithoutLocale = '/' + segments.slice(2).join('/');
-      }
-
-      // Construct the new URL with the selected locale
-      const newPath = newLocale === 'en' 
-        ? pathWithoutLocale || '/'
-        : `/${newLocale}${pathWithoutLocale || ''}`;
-
-      // Navigate to the new URL
-      router.push(newPath);
+      // Set cookie that can be read by server-side rendering
+      document.cookie = `preferredLanguage=${newLocale}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
+      
+      // Since we don't use locale-based routing anymore, 
+      // we need to reload the page to apply the new language
+      window.location.reload();
     } catch (error) {
       console.error('Error changing language:', error);
-    } finally {
-      // Reset the changing state after a brief delay
-      setTimeout(() => setIsChanging(false), 500);
+      setIsChanging(false);
     }
   };
 

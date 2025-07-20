@@ -11,6 +11,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { InlineLoading } from '@/components/ui/loading-spinner';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
@@ -111,60 +119,66 @@ export default function SignInPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <div className="space-y-2">
-                <label htmlFor="phone" className="text-sm font-medium">
-                  {t('auth.phone.label', { default: 'Phone Number' })}
-                </label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  placeholder={t('auth.phone.placeholder', { default: '+1234567890' })}
-                  {...form.register('phone')}
-                  disabled={isSubmitting}
-                  className={form.formState.errors.phone ? 'border-red-500' : ''}
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('auth.phone.label', { default: 'Phone Number' })}
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="tel"
+                          placeholder={t('auth.phone.placeholder', { default: '+1234567890' })}
+                          disabled={isSubmitting}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-                {form.formState.errors.phone && (
-                  <p className="text-sm text-red-500">
-                    {form.formState.errors.phone.message}
-                  </p>
-                )}
-              </div>
 
-              <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium">
-                  {t('auth.password.label', { default: 'Password' })}
-                </label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder={t('auth.password.placeholder', { default: 'Enter your password' })}
-                  {...form.register('password')}
-                  disabled={isSubmitting}
-                  className={form.formState.errors.password ? 'border-red-500' : ''}
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('auth.password.label', { default: 'Password' })}
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder={t('auth.password.placeholder', { default: 'Enter your password' })}
+                          disabled={isSubmitting}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-                {form.formState.errors.password && (
-                  <p className="text-sm text-red-500">
-                    {form.formState.errors.password.message}
-                  </p>
-                )}
-              </div>
 
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  <>
-                    <InlineLoading />
-                    {t('auth.signIn.submitting', { default: 'Signing In...' })}
-                  </>
-                ) : (
-                  t('auth.signIn.submit', { default: 'Sign In' })
-                )}
-              </Button>
-            </form>
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <InlineLoading />
+                      {t('auth.signIn.submitting', { default: 'Signing In...' })}
+                    </>
+                  ) : (
+                    t('auth.signIn.submit', { default: 'Sign In' })
+                  )}
+                </Button>
+              </form>
+            </Form>
 
             <div className="mt-6 space-y-4">
               <div className="text-center">
