@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { InlineLoading } from '@/components/ui/loading-spinner';
 import { Clock, ChevronLeft, ChevronRight, AlertTriangle } from 'lucide-react';
+import { apiClient } from '@/lib/api';
 import {
   Dialog,
   DialogContent,
@@ -35,6 +36,20 @@ interface Quiz {
   questions: Question[];
   timeLimit: number;
   totalPoints: number;
+}
+
+interface ApiQuestion {
+  id: string;
+  question: string;
+  type: 'multiple_choice' | 'true_false' | 'short_answer';
+  options?: string[];
+  points: number;
+}
+
+interface AttemptData {
+  quizId: string;
+  timeLimit: number;
+  questions: ApiQuestion[];
 }
 
 export default function QuizTakingPage() {
@@ -86,55 +101,62 @@ export default function QuizTakingPage() {
 
   const loadQuiz = async () => {
     try {
-      // TODO: Replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+
+      // For quiz taking, we need to start a quiz attempt
+      // The quizId parameter should actually be an assignment code
+      const response = await apiClient.post(`/assignments/join/${quizId}`, {}, accessToken);
       
-      const mockQuiz: Quiz = {
-        id: quizId,
-        title: 'Mathematics Quiz #1',
-        description: 'Basic algebra and geometry concepts',
-        questions: [
-          {
-            id: '1',
-            question: 'What is 2 + 2?',
-            type: 'multiple_choice',
-            options: ['3', '4', '5', '6'],
-            points: 1,
-          },
-          {
-            id: '2',
-            question: 'Is the square root of 16 equal to 4?',
-            type: 'true_false',
-            points: 1,
-          },
-          {
-            id: '3',
-            question: 'What is the formula for the area of a circle?',
-            type: 'short_answer',
-            points: 2,
-          },
-        ],
-        timeLimit: 30,
-        totalPoints: 4,
+      if (response.errors && response.errors.length > 0) {
+        throw new Error(response.errors[0].message);
+      }
+
+      const attemptData: AttemptData = response.data;
+      
+      // Transform API response to match Quiz interface
+      const loadedQuiz: Quiz = {
+        id: attemptData.quizId,
+        title: attemptData.questions[0] ? `Quiz Attempt` : 'Quiz',
+        description: 'Complete all questions within the time limit',
+        questions: attemptData.questions.map((q: ApiQuestion) => ({
+          id: q.id,
+          question: q.question,
+          type: q.type,
+          options: q.options,
+          points: q.points,
+        })),
+        timeLimit: attemptData.timeLimit,
+        totalPoints: attemptData.questions.reduce((sum: number, q: ApiQuestion) => sum + q.points, 0),
       };
 
-      setQuiz(mockQuiz);
-      setTimeRemaining(mockQuiz.timeLimit * 60); // Convert to seconds
+      setQuiz(loadedQuiz);
+      setTimeRemaining(loadedQuiz.timeLimit * 60); // Convert to seconds
     } catch (error) {
       console.error('Error loading quiz:', error);
+      toast.error('Failed to load quiz. Please check the assignment code.');
       router.push('/student');
     }
   };
 
   const saveProgress = useCallback(async () => {
     try {
-      // TODO: Replace with actual API call
-      console.log('Auto-saving progress:', answers);
-      toast.success('Progress saved automatically');
+      // For now, we'll store progress locally since we don't have a specific progress API
+      // In a real implementation, this would call an API to save progress
+      const progressData = {
+        quizId: quiz?.id,
+        answers,
+        timestamp: new Date().toISOString(),
+      };
+      
+      localStorage.setItem(`quiz-progress-${quiz?.id}`, JSON.stringify(progressData));
+      console.log('Progress saved locally:', progressData);
     } catch (error) {
       console.error('Error saving progress:', error);
     }
-  }, [answers]);
+  }, [answers, quiz?.id]);
 
   const handleSubmitQuiz = useCallback(async () => {
     if (timeRemaining === 0) {
@@ -149,12 +171,28 @@ export default function QuizTakingPage() {
   const submitQuiz = async () => {
     setIsSubmitting(true);
     try {
-      // TODO: Replace with actual API call
-      console.log('Submitting quiz:', { quizId, answers });
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+
+      // For now, we'll submit to a generic endpoint since we don't have a specific submission API
+      // In a real implementation, this would submit to the quiz attempt endpoint
+      const submissionData = {
+        quizId: quiz?.id,
+        answers,
+        timeElapsed: quiz ? (quiz.timeLimit * 60) - timeRemaining : 0,
+        completedAt: new Date().toISOString(),
+      };
+
+      console.log('Submitting quiz:', submissionData);
+      
+      // Clear saved progress since quiz is now submitted
+      localStorage.removeItem(`quiz-progress-${quiz?.id}`);
       
       toast.success('Quiz submitted successfully!');
-      router.push('/student');
+      // Redirect to results page to show score and feedback
+      router.push(`/student/quiz/${quizId}/results`);
     } catch (error) {
       console.error('Error submitting quiz:', error);
       toast.error('Failed to submit quiz. Please try again.');

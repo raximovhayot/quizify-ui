@@ -8,6 +8,7 @@ import { DashboardLayout } from '@/components/layouts/AppLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { InlineLoading } from '@/components/ui/loading-spinner';
+import { apiClient } from '@/lib/api';
 import { 
   BookOpen, 
   ClipboardList, 
@@ -28,6 +29,22 @@ interface DashboardStats {
   averageScore: number;
   totalQuizzesTaken: number;
   upcomingDeadlines: number;
+}
+
+interface StudentAssignment {
+  id: string;
+  title: string;
+  subject: string;
+  dueDate: string;
+  status: string;
+  bestScore?: number;
+  canStartNewAttempt: boolean;
+  isExpired: boolean;
+  latestAttempt?: {
+    status: string;
+    endTime?: string;
+    startTime: string;
+  };
 }
 
 interface UpcomingItem {
@@ -76,77 +93,85 @@ export default function StudentDashboard() {
     setIsLoadingData(true);
 
     try {
-      // TODO: Replace with actual API calls
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
 
-      // Mock data
+      // Load student assignments from API
+      const response = await apiClient.get('/student/assignments', accessToken);
+      
+      if (response.errors && response.errors.length > 0) {
+        throw new Error(response.errors[0].message);
+      }
+
+      const assignments: StudentAssignment[] = response.data || [];
+      
+      // Calculate dashboard stats from assignments
+      const totalAssignments = assignments.length;
+      const completedAssignments = assignments.filter((a: StudentAssignment) => a.latestAttempt?.status === 'completed').length;
+      const pendingAssignments = assignments.filter((a: StudentAssignment) => a.canStartNewAttempt && !a.isExpired).length;
+      const averageScore = assignments
+        .filter((a: StudentAssignment) => a.bestScore !== null)
+        .reduce((sum: number, a: StudentAssignment, _, arr: StudentAssignment[]) => sum + (a.bestScore || 0) / arr.length, 0);
+
       setDashboardStats({
-        totalAssignments: 8,
-        completedAssignments: 5,
-        pendingAssignments: 3,
-        averageScore: 85.2,
-        totalQuizzesTaken: 12,
-        upcomingDeadlines: 2,
+        totalAssignments,
+        completedAssignments,
+        pendingAssignments,
+        averageScore: Math.round(averageScore * 10) / 10,
+        totalQuizzesTaken: assignments.filter((a: StudentAssignment) => a.latestAttempt).length,
+        upcomingDeadlines: assignments.filter((a: StudentAssignment) => {
+          const dueDate = new Date(a.dueDate);
+          const now = new Date();
+          const diffDays = Math.ceil((dueDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+          return diffDays >= 0 && diffDays <= 7;
+        }).length,
       });
 
-      setUpcomingItems([
-        {
-          id: '1',
-          type: 'assignment',
-          title: 'Mathematics Assignment #2',
-          subject: 'Mathematics',
-          dueDate: '2024-07-25T23:59:00Z',
-          status: 'pending',
-        },
-        {
-          id: '2',
-          type: 'assignment',
-          title: 'Physics Assignment - Motion',
-          subject: 'Physics',
-          dueDate: '2024-07-30T23:59:00Z',
-          status: 'in-progress',
-        },
-        {
-          id: '3',
-          type: 'quiz',
-          title: 'Chemistry Quiz #3',
-          subject: 'Chemistry',
-          dueDate: '2024-08-02T23:59:00Z',
-          status: 'pending',
-        },
-      ]);
+      // Transform assignments to upcoming items
+      const upcomingItems = assignments
+        .filter((a: StudentAssignment) => a.canStartNewAttempt && !a.isExpired)
+        .slice(0, 5)
+        .map((assignment: StudentAssignment) => ({
+          id: assignment.id,
+          type: 'assignment' as const,
+          title: assignment.title,
+          subject: assignment.subject,
+          dueDate: assignment.dueDate,
+          status: assignment.latestAttempt ? 'in-progress' as const : 'pending' as const,
+        }));
 
-      setRecentResults([
-        {
-          id: '1',
-          title: 'Mathematics Quiz #1',
-          subject: 'Mathematics',
-          score: 18,
-          maxScore: 20,
-          completedAt: '2024-07-20T14:30:00Z',
-          status: 'passed',
-        },
-        {
-          id: '2',
-          title: 'Physics Assignment #1',
-          subject: 'Physics',
-          score: 15,
-          maxScore: 18,
-          completedAt: '2024-07-18T16:45:00Z',
-          status: 'passed',
-        },
-        {
-          id: '3',
-          title: 'Chemistry Quiz #1',
-          subject: 'Chemistry',
-          score: 12,
-          maxScore: 20,
-          completedAt: '2024-07-15T11:20:00Z',
-          status: 'failed',
-        },
-      ]);
+      setUpcomingItems(upcomingItems);
+
+      // Transform completed assignments to recent results
+      const recentResults = assignments
+        .filter((a: StudentAssignment) => a.latestAttempt?.status === 'completed')
+        .slice(0, 5)
+        .map((assignment: StudentAssignment) => ({
+          id: assignment.id,
+          title: assignment.title,
+          subject: assignment.subject,
+          score: assignment.bestScore || 0,
+          maxScore: 100, // Assuming percentage-based scoring
+          completedAt: assignment.latestAttempt?.endTime || assignment.latestAttempt?.startTime,
+          status: (assignment.bestScore || 0) >= 60 ? 'passed' as const : 'failed' as const,
+        }));
+
+      setRecentResults(recentResults);
     } catch (error) {
       console.error('Error loading dashboard data:', error);
+      // Set empty data on error
+      setDashboardStats({
+        totalAssignments: 0,
+        completedAssignments: 0,
+        pendingAssignments: 0,
+        averageScore: 0,
+        totalQuizzesTaken: 0,
+        upcomingDeadlines: 0,
+      });
+      setUpcomingItems([]);
+      setRecentResults([]);
     } finally {
       setIsLoadingData(false);
     }

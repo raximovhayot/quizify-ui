@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { InlineLoading } from '@/components/ui/loading-spinner';
 import { toast } from 'sonner';
+import { apiClient } from '@/lib/api';
 import { 
   ChevronLeft,
   ChevronRight,
@@ -99,17 +100,30 @@ export default function CreateAssignmentPage() {
 
   const loadAvailableQuizzes = async () => {
     try {
-      // TODO: Replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 500));
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+
+      // Load quizzes from API
+      const response = await apiClient.get('/quizzes', accessToken);
       
-      // Mock quiz data
-      setAvailableQuizzes([
-        { id: '1', title: 'Mathematics Quiz #1', questionsCount: 15 },
-        { id: '2', title: 'Physics Quiz - Motion', questionsCount: 12 },
-        { id: '3', title: 'Chemistry Basics', questionsCount: 20 },
-      ]);
+      if (response.errors && response.errors.length > 0) {
+        throw new Error(response.errors[0].message);
+      }
+
+      // Transform quiz data to match the expected format
+      const quizzes = (response.data || []).map((quiz: { id: string; title: string; questionsCount: number }) => ({
+        id: quiz.id,
+        title: quiz.title,
+        questionsCount: quiz.questionsCount
+      }));
+
+      setAvailableQuizzes(quizzes);
     } catch (error) {
       console.error('Error loading quizzes:', error);
+      toast.error('Failed to load available quizzes');
+      setAvailableQuizzes([]);
     }
   };
 
@@ -170,11 +184,28 @@ export default function CreateAssignmentPage() {
     setIsSubmitting(true);
 
     try {
-      // TODO: Replace with actual API call
-      console.log('Creating assignment:', assignmentData);
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+
+      // Transform assignment data to match API format
+      const assignmentPayload = {
+        title: assignmentData.basicInfo.title,
+        description: assignmentData.basicInfo.description,
+        subject: assignmentData.basicInfo.subject,
+        quizId: assignmentData.selectedQuizId,
+        attemptsAllowed: assignmentData.settings.attemptsAllowed,
+        dueDate: assignmentData.basicInfo.dueDate,
+        status: 'active' as const
+      };
+
+      // Create assignment via API
+      const response = await apiClient.post('/assignments', assignmentPayload, accessToken);
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      if (response.errors && response.errors.length > 0) {
+        throw new Error(response.errors[0].message);
+      }
       
       toast.success('Assignment created successfully!');
       router.push('/instructor/assignments');

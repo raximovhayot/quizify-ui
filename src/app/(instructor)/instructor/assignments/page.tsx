@@ -31,6 +31,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import { apiClient } from '@/lib/api';
 
 interface Assignment {
   id: string;
@@ -120,64 +121,24 @@ export default function AssignmentsPage() {
     setIsLoadingAssignments(true);
 
     try {
-      // TODO: Replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
 
-      // Mock data
-      const mockAssignments: Assignment[] = [
-        {
-          id: '1',
-          title: 'Mathematics Assignment #1',
-          description: 'Basic algebra and geometry quiz assignment',
-          subject: 'Mathematics',
-          assignmentCode: 'MATH01',
-          quizTitle: 'Mathematics Quiz #1',
-          studentsCount: 25,
-          submissionsCount: 18,
-          attemptsAllowed: 2,
-          dueDate: '2024-07-25T23:59:00Z',
-          status: 'active',
-          createdAt: '2024-07-15T10:00:00Z',
-          updatedAt: '2024-07-16T14:30:00Z',
-          averageScore: 78.5,
-        },
-        {
-          id: '2',
-          title: 'Physics Assignment - Motion',
-          description: 'Understanding motion, velocity, and acceleration',
-          subject: 'Physics',
-          assignmentCode: 'PHYS01',
-          quizTitle: 'Physics Quiz - Motion',
-          studentsCount: 18,
-          submissionsCount: 15,
-          attemptsAllowed: 1,
-          dueDate: '2024-07-30T23:59:00Z',
-          status: 'active',
-          createdAt: '2024-07-14T09:00:00Z',
-          updatedAt: '2024-07-14T09:00:00Z',
-          averageScore: 82.3,
-        },
-        {
-          id: '3',
-          title: 'Chemistry Assignment',
-          description: 'Introduction to chemical elements and compounds',
-          subject: 'Chemistry',
-          assignmentCode: 'CHEM01',
-          quizTitle: 'Chemistry Basics',
-          studentsCount: 0,
-          submissionsCount: 0,
-          attemptsAllowed: 1,
-          dueDate: '2024-08-05T23:59:00Z',
-          status: 'draft',
-          createdAt: '2024-07-18T16:00:00Z',
-          updatedAt: '2024-07-18T16:00:00Z',
-        },
-      ];
+      // Load assignments from API
+      const response = await apiClient.get('/assignments', accessToken);
+      
+      if (response.errors && response.errors.length > 0) {
+        throw new Error(response.errors[0].message);
+      }
 
-      setAssignments(mockAssignments);
+      setAssignments(response.data || []);
     } catch (error) {
       console.error('Error loading assignments:', error);
       toast.error('Failed to load assignments');
+      // Set empty array on error
+      setAssignments([]);
     } finally {
       setIsLoadingAssignments(false);
     }
@@ -185,9 +146,19 @@ export default function AssignmentsPage() {
 
   const handleDeleteAssignment = async (assignmentId: string) => {
     try {
-      // TODO: Replace with actual API call
-      console.log('Deleting assignment:', assignmentId);
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+
+      // Delete assignment via API
+      const response = await apiClient.delete(`/assignments/${assignmentId}`, accessToken);
       
+      if (response.errors && response.errors.length > 0) {
+        throw new Error(response.errors[0].message);
+      }
+
+      // Remove from local state on successful deletion
       setAssignments(prev => prev.filter(assignment => assignment.id !== assignmentId));
       toast.success('Assignment deleted successfully');
     } catch (error) {
@@ -198,26 +169,42 @@ export default function AssignmentsPage() {
 
   const handleDuplicateAssignment = async (assignmentId: string) => {
     try {
-      // TODO: Replace with actual API call
-      console.log('Duplicating assignment:', assignmentId);
-      
-      const originalAssignment = assignments.find(a => a.id === assignmentId);
-      if (originalAssignment) {
-        const duplicatedAssignment: Assignment = {
-          ...originalAssignment,
-          id: Date.now().toString(),
-          title: `${originalAssignment.title} (Copy)`,
-          assignmentCode: Math.random().toString(36).substring(2, 8).toUpperCase(),
-          status: 'draft',
-          studentsCount: 0,
-          submissionsCount: 0,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-        
-        setAssignments(prev => [duplicatedAssignment, ...prev]);
-        toast.success('Assignment duplicated successfully');
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token available');
       }
+
+      // First, get the original assignment details
+      const originalAssignmentResponse = await apiClient.get(`/assignments/${assignmentId}`, accessToken);
+      
+      if (originalAssignmentResponse.errors && originalAssignmentResponse.errors.length > 0) {
+        throw new Error(originalAssignmentResponse.errors[0].message);
+      }
+
+      const originalAssignment = originalAssignmentResponse.data;
+      
+      // Create duplicate assignment data
+      const duplicateAssignmentData = {
+        title: `${originalAssignment.title} (Copy)`,
+        description: originalAssignment.description,
+        subject: originalAssignment.subject,
+        quizId: originalAssignment.quizId,
+        attemptsAllowed: originalAssignment.attemptsAllowed,
+        dueDate: originalAssignment.dueDate,
+        status: 'draft' as const
+      };
+
+      // Create the duplicate assignment via API
+      const createResponse = await apiClient.post('/assignments', duplicateAssignmentData, accessToken);
+      
+      if (createResponse.errors && createResponse.errors.length > 0) {
+        throw new Error(createResponse.errors[0].message);
+      }
+
+      // Add the new assignment to local state
+      const newAssignment = createResponse.data;
+      setAssignments(prev => [newAssignment, ...prev]);
+      toast.success('Assignment duplicated successfully');
     } catch (error) {
       console.error('Error duplicating assignment:', error);
       toast.error('Failed to duplicate assignment');

@@ -31,6 +31,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import { apiClient } from '@/lib/api';
 
 interface Quiz {
   id: string;
@@ -117,58 +118,24 @@ export default function QuizzesPage() {
     setIsLoadingQuizzes(true);
 
     try {
-      // TODO: Replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
 
-      // Mock data
-      const mockQuizzes: Quiz[] = [
-        {
-          id: '1',
-          title: 'Mathematics Quiz #1',
-          description: 'Basic algebra and geometry concepts',
-          subject: 'Mathematics',
-          questionsCount: 15,
-          studentsCount: 25,
-          attemptsCount: 45,
-          timeLimit: 30,
-          status: 'published',
-          createdAt: '2024-07-15T10:00:00Z',
-          updatedAt: '2024-07-16T14:30:00Z',
-          averageScore: 78.5,
-        },
-        {
-          id: '2',
-          title: 'Physics Quiz - Motion',
-          description: 'Understanding motion, velocity, and acceleration',
-          subject: 'Physics',
-          questionsCount: 12,
-          studentsCount: 18,
-          attemptsCount: 32,
-          timeLimit: 25,
-          status: 'published',
-          createdAt: '2024-07-14T09:00:00Z',
-          updatedAt: '2024-07-14T09:00:00Z',
-          averageScore: 82.3,
-        },
-        {
-          id: '3',
-          title: 'Chemistry Basics',
-          description: 'Introduction to chemical elements and compounds',
-          subject: 'Chemistry',
-          questionsCount: 20,
-          studentsCount: 0,
-          attemptsCount: 0,
-          timeLimit: 45,
-          status: 'draft',
-          createdAt: '2024-07-18T16:00:00Z',
-          updatedAt: '2024-07-18T16:00:00Z',
-        },
-      ];
+      // Fetch quizzes from API
+      const response = await apiClient.get('/quizzes', accessToken);
+      
+      if (response.errors && response.errors.length > 0) {
+        throw new Error(response.errors[0].message);
+      }
 
-      setQuizzes(mockQuizzes);
+      setQuizzes(response.data || []);
     } catch (error) {
       console.error('Error loading quizzes:', error);
       toast.error('Failed to load quizzes');
+      // Set empty array on error
+      setQuizzes([]);
     } finally {
       setIsLoadingQuizzes(false);
     }
@@ -176,9 +143,19 @@ export default function QuizzesPage() {
 
   const handleDeleteQuiz = async (quizId: string) => {
     try {
-      // TODO: Replace with actual API call
-      console.log('Deleting quiz:', quizId);
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+
+      // Delete quiz via API
+      const response = await apiClient.delete(`/quizzes/${quizId}`, accessToken);
       
+      if (response.errors && response.errors.length > 0) {
+        throw new Error(response.errors[0].message);
+      }
+
+      // Remove from local state on successful deletion
       setQuizzes(prev => prev.filter(quiz => quiz.id !== quizId));
       toast.success('Quiz deleted successfully');
     } catch (error) {
@@ -189,25 +166,41 @@ export default function QuizzesPage() {
 
   const handleDuplicateQuiz = async (quizId: string) => {
     try {
-      // TODO: Replace with actual API call
-      console.log('Duplicating quiz:', quizId);
-      
-      const originalQuiz = quizzes.find(q => q.id === quizId);
-      if (originalQuiz) {
-        const duplicatedQuiz: Quiz = {
-          ...originalQuiz,
-          id: Date.now().toString(),
-          title: `${originalQuiz.title} (Copy)`,
-          status: 'draft',
-          studentsCount: 0,
-          attemptsCount: 0,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-        
-        setQuizzes(prev => [duplicatedQuiz, ...prev]);
-        toast.success('Quiz duplicated successfully');
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token available');
       }
+
+      // First, get the original quiz details with questions
+      const originalQuizResponse = await apiClient.get(`/quizzes/${quizId}`, accessToken);
+      
+      if (originalQuizResponse.errors && originalQuizResponse.errors.length > 0) {
+        throw new Error(originalQuizResponse.errors[0].message);
+      }
+
+      const originalQuiz = originalQuizResponse.data;
+      
+      // Create duplicate quiz data
+      const duplicateQuizData = {
+        title: `${originalQuiz.title} (Copy)`,
+        description: originalQuiz.description,
+        subject: originalQuiz.subject,
+        timeLimit: originalQuiz.timeLimit,
+        status: 'draft' as const,
+        questions: originalQuiz.questions || []
+      };
+
+      // Create the duplicate quiz via API
+      const createResponse = await apiClient.post('/quizzes', duplicateQuizData, accessToken);
+      
+      if (createResponse.errors && createResponse.errors.length > 0) {
+        throw new Error(createResponse.errors[0].message);
+      }
+
+      // Add the new quiz to local state
+      const newQuiz = createResponse.data;
+      setQuizzes(prev => [newQuiz, ...prev]);
+      toast.success('Quiz duplicated successfully');
     } catch (error) {
       console.error('Error duplicating quiz:', error);
       toast.error('Failed to duplicate quiz');

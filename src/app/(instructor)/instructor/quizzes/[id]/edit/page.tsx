@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { InlineLoading } from '@/components/ui/loading-spinner';
 import { toast } from 'sonner';
+import { apiClient } from '@/lib/api';
 import { 
   ChevronLeft,
   Save,
@@ -125,55 +126,50 @@ export default function EditQuizPage() {
     setIsLoadingQuiz(true);
 
     try {
-      // TODO: Replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
 
-      // Mock quiz data
-      const mockQuiz: Quiz = {
-        id: quizId,
-        title: 'Mathematics Quiz #1',
-        description: 'Basic algebra and geometry concepts for beginners',
-        subject: 'Mathematics',
-        questions: [
-          {
-            id: '1',
-            question: 'What is 2 + 2?',
-            type: 'multiple_choice',
-            options: ['3', '4', '5', '6'],
-            correctAnswer: '4',
-            points: 1,
-          },
-          {
-            id: '2',
-            question: 'Is the square root of 16 equal to 4?',
-            type: 'true_false',
-            correctAnswer: 'true',
-            points: 1,
-          },
-        ],
-        timeLimit: 30,
-        attemptsAllowed: 1,
-        shuffleQuestions: false,
-        showResults: true,
-        allowReview: true,
-        status: 'draft',
+      // Load quiz data from API
+      const response = await apiClient.get(`/quizzes/${quizId}`, accessToken);
+      
+      if (response.errors && response.errors.length > 0) {
+        throw new Error(response.errors[0].message);
+      }
+
+      const quizData = response.data;
+      
+      // Transform API response to match local Quiz interface
+      const loadedQuiz: Quiz = {
+        id: quizData.id,
+        title: quizData.title,
+        description: quizData.description,
+        subject: quizData.subject,
+        questions: quizData.questions || [],
+        timeLimit: quizData.timeLimit,
+        attemptsAllowed: 1, // Default value, can be extended later
+        shuffleQuestions: false, // Default value, can be extended later
+        showResults: true, // Default value, can be extended later
+        allowReview: true, // Default value, can be extended later
+        status: quizData.status,
       };
 
-      setQuiz(mockQuiz);
+      setQuiz(loadedQuiz);
 
       // Populate forms with quiz data
       basicInfoForm.reset({
-        title: mockQuiz.title,
-        description: mockQuiz.description,
-        subject: mockQuiz.subject,
+        title: loadedQuiz.title,
+        description: loadedQuiz.description,
+        subject: loadedQuiz.subject,
       });
 
       settingsForm.reset({
-        timeLimit: mockQuiz.timeLimit,
-        attemptsAllowed: mockQuiz.attemptsAllowed,
-        shuffleQuestions: mockQuiz.shuffleQuestions,
-        showResults: mockQuiz.showResults,
-        allowReview: mockQuiz.allowReview,
+        timeLimit: loadedQuiz.timeLimit,
+        attemptsAllowed: loadedQuiz.attemptsAllowed,
+        shuffleQuestions: loadedQuiz.shuffleQuestions,
+        showResults: loadedQuiz.showResults,
+        allowReview: loadedQuiz.allowReview,
       });
     } catch (error) {
       console.error('Error loading quiz:', error);
@@ -189,10 +185,32 @@ export default function EditQuizPage() {
 
     setIsSaving(true);
     try {
-      // TODO: Replace with actual API call
-      console.log('Updating basic info:', data);
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+
+      // Update quiz basic info via API
+      const updatePayload = {
+        title: data.title,
+        description: data.description,
+        subject: data.subject,
+        timeLimit: quiz.timeLimit,
+        status: quiz.status,
+        questions: quiz.questions.map(q => ({
+          type: q.type,
+          question: q.question,
+          options: q.options?.filter(opt => opt.trim() !== '') || undefined,
+          correctAnswer: q.correctAnswer,
+          points: q.points
+        }))
+      };
+
+      const response = await apiClient.put(`/quizzes/${quiz.id}`, updatePayload, accessToken);
       
-      await new Promise(resolve => setTimeout(resolve, 500));
+      if (response.errors && response.errors.length > 0) {
+        throw new Error(response.errors[0].message);
+      }
       
       setQuiz(prev => prev ? { ...prev, ...data } : null);
       toast.success('Basic information updated');
@@ -209,10 +227,32 @@ export default function EditQuizPage() {
 
     setIsSaving(true);
     try {
-      // TODO: Replace with actual API call
-      console.log('Updating settings:', data);
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+
+      // Update quiz settings via API
+      const updatePayload = {
+        title: quiz.title,
+        description: quiz.description,
+        subject: quiz.subject,
+        timeLimit: data.timeLimit,
+        status: quiz.status,
+        questions: quiz.questions.map(q => ({
+          type: q.type,
+          question: q.question,
+          options: q.options?.filter(opt => opt.trim() !== '') || undefined,
+          correctAnswer: q.correctAnswer,
+          points: q.points
+        }))
+      };
+
+      const response = await apiClient.put(`/quizzes/${quiz.id}`, updatePayload, accessToken);
       
-      await new Promise(resolve => setTimeout(resolve, 500));
+      if (response.errors && response.errors.length > 0) {
+        throw new Error(response.errors[0].message);
+      }
       
       setQuiz(prev => prev ? { ...prev, ...data } : null);
       toast.success('Settings updated');
@@ -233,23 +273,51 @@ export default function EditQuizPage() {
     };
 
     try {
-      // TODO: Replace with actual API call
-      console.log('Adding/updating question:', newQuestion);
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+
+      // Update questions array
+      let updatedQuestions: Question[];
+      if (editingQuestionId) {
+        updatedQuestions = quiz.questions.map(q => q.id === editingQuestionId ? newQuestion : q);
+      } else {
+        updatedQuestions = [...quiz.questions, newQuestion];
+      }
+
+      // Update quiz with new/modified question via API
+      const updatePayload = {
+        title: quiz.title,
+        description: quiz.description,
+        subject: quiz.subject,
+        timeLimit: quiz.timeLimit,
+        status: quiz.status,
+        questions: updatedQuestions.map(q => ({
+          type: q.type,
+          question: q.question,
+          options: q.options?.filter(opt => opt.trim() !== '') || undefined,
+          correctAnswer: q.correctAnswer,
+          points: q.points
+        }))
+      };
+
+      const response = await apiClient.put(`/quizzes/${quiz.id}`, updatePayload, accessToken);
       
-      await new Promise(resolve => setTimeout(resolve, 500));
+      if (response.errors && response.errors.length > 0) {
+        throw new Error(response.errors[0].message);
+      }
+
+      // Update local state
+      setQuiz(prev => prev ? {
+        ...prev,
+        questions: updatedQuestions,
+      } : null);
 
       if (editingQuestionId) {
-        setQuiz(prev => prev ? {
-          ...prev,
-          questions: prev.questions.map(q => q.id === editingQuestionId ? newQuestion : q),
-        } : null);
         setEditingQuestionId(null);
         toast.success('Question updated');
       } else {
-        setQuiz(prev => prev ? {
-          ...prev,
-          questions: [...prev.questions, newQuestion],
-        } : null);
         toast.success('Question added');
       }
 
@@ -269,14 +337,40 @@ export default function EditQuizPage() {
     if (!quiz) return;
 
     try {
-      // TODO: Replace with actual API call
-      console.log('Deleting question:', questionId);
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+
+      // Remove question from questions array
+      const updatedQuestions = quiz.questions.filter(q => q.id !== questionId);
+
+      // Update quiz with question removed via API
+      const updatePayload = {
+        title: quiz.title,
+        description: quiz.description,
+        subject: quiz.subject,
+        timeLimit: quiz.timeLimit,
+        status: quiz.status,
+        questions: updatedQuestions.map(q => ({
+          type: q.type,
+          question: q.question,
+          options: q.options?.filter(opt => opt.trim() !== '') || undefined,
+          correctAnswer: q.correctAnswer,
+          points: q.points
+        }))
+      };
+
+      const response = await apiClient.put(`/quizzes/${quiz.id}`, updatePayload, accessToken);
       
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
+      if (response.errors && response.errors.length > 0) {
+        throw new Error(response.errors[0].message);
+      }
+
+      // Update local state
       setQuiz(prev => prev ? {
         ...prev,
-        questions: prev.questions.filter(q => q.id !== questionId),
+        questions: updatedQuestions,
       } : null);
       
       toast.success('Question deleted');

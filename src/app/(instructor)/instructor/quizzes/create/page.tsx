@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { InlineLoading } from '@/components/ui/loading-spinner';
 import { toast } from 'sonner';
+import { apiClient } from '@/lib/api';
 import { 
   ChevronLeft,
   ChevronRight,
@@ -206,11 +207,33 @@ export default function CreateQuizPage() {
     setIsSubmitting(true);
 
     try {
-      // TODO: Replace with actual API call
-      console.log('Creating quiz:', quizData);
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('No access token available');
+      }
+
+      // Transform quiz data to match API format
+      const quizPayload = {
+        title: quizData.basicInfo.title,
+        description: quizData.basicInfo.description,
+        subject: quizData.basicInfo.subject,
+        timeLimit: quizData.settings.timeLimit,
+        status: 'draft' as const, // Start as draft, can be published later
+        questions: quizData.questions.map(q => ({
+          type: q.type,
+          question: q.question,
+          options: q.options?.filter(opt => opt.trim() !== '') || undefined,
+          correctAnswer: q.correctAnswer,
+          points: q.points
+        }))
+      };
+
+      // Create quiz via API
+      const response = await apiClient.post('/quizzes', quizPayload, accessToken);
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      if (response.errors && response.errors.length > 0) {
+        throw new Error(response.errors[0].message);
+      }
       
       toast.success('Quiz created successfully!');
       router.push('/instructor/quizzes');
