@@ -37,10 +37,7 @@
 
 ### 4.2 Quiz Taking Experience ✓
 
-### 4.3 Assignment Features
-- [x] Assignment joining via code
-- [x] Assignment attempt interface
-- [ ] Results view
+### 4.3 Assignment Features ✓
 
 ## 📋 **PHASE 5: Advanced Features** (Priority: Medium)
 
