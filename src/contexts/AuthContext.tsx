@@ -81,14 +81,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
-      const accessToken = localStorage.getItem('accessToken');
-      if (accessToken) {
-        // Call logout API to invalidate tokens on server
-        await AuthService.logout(accessToken);
-      }
+      // Call logout service (client-side only for JWT)
+      await AuthService.logout();
     } catch (error) {
       // Log error but don't prevent logout
-      console.warn('Logout API call failed:', error);
+      console.warn('Logout service failed:', error);
     } finally {
       // Always clear local state and storage
       setUser(null);

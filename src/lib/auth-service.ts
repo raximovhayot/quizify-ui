@@ -13,7 +13,7 @@ import {
   RefreshTokenRequest,
   RefreshTokenResponse
 } from '@/types/auth';
-import { ApiResponse, hasApiErrors, extractApiData } from '@/types/api';
+import { ApiResponse, extractApiData } from '@/types/api';
 
 /**
  * Authentication service for handling all auth-related API calls
@@ -25,7 +25,7 @@ export class AuthService {
    */
   static async login(phone: string, password: string): Promise<JWTToken> {
     const request: SignInRequest = { phone, password };
-    const response: ApiResponse<JWTToken> = await apiClient.post('/auth/login', request);
+    const response: ApiResponse<JWTToken> = await apiClient.post('/auth/sign-in', request);
     return extractApiData(response);
   }
 
@@ -78,27 +78,24 @@ export class AuthService {
    */
   static async refreshToken(refreshToken: string): Promise<RefreshTokenResponse> {
     const request: RefreshTokenRequest = { refreshToken };
-    const response: ApiResponse<RefreshTokenResponse> = await apiClient.post('/auth/refresh', request);
+    const response: ApiResponse<RefreshTokenResponse> = await apiClient.post('/auth/refresh-token', request);
     return extractApiData(response);
   }
 
   /**
-   * Logout user (invalidate tokens)
+   * Logout user (client-side only - JWT tokens are stateless)
    */
-  static async logout(accessToken: string): Promise<void> {
-    const response: ApiResponse<void> = await apiClient.post('/auth/logout', {}, accessToken);
-    
-    if (hasApiErrors(response)) {
-      // Log the error but don't throw - logout should always succeed locally
-      console.warn('Logout API call failed:', response.errors);
-    }
+  static async logout(): Promise<void> {
+    // JWT tokens are stateless, so logout is handled entirely on the client side
+    // No backend call needed - tokens will expire naturally
+    return Promise.resolve();
   }
 
   /**
    * Verify current user session
    */
   static async verifyToken(accessToken: string): Promise<User> {
-    const response: ApiResponse<User> = await apiClient.get('/auth/me', accessToken);
+    const response: ApiResponse<User> = await apiClient.get('/account/me', accessToken);
     return extractApiData(response);
   }
 

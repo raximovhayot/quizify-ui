@@ -1,11 +1,14 @@
 import { NextRequest } from 'next/server';
 import { 
   createErrorResponse, 
+  createSuccessResponse,
   withErrorHandling,
   parseRequestBody,
   validateRequiredFields
 } from '@/lib/api-utils';
 import { RefreshTokenRequest } from '@/types/auth';
+
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8080';
 
 /**
  * POST /api/auth/refresh
@@ -18,11 +21,32 @@ export async function POST(request: NextRequest) {
     // Validate required fields
     validateRequiredFields(body, ['refreshToken']);
     
-    // TODO: Implement backend integration for token refresh
-    // This endpoint needs to be connected to a real database and authentication service
-    return createErrorResponse({
-      code: 'NOT_IMPLEMENTED',
-      message: 'Token refresh service not implemented yet. Backend integration required.'
-    }, 501);
+    try {
+      // Forward request to backend
+      const backendResponse = await fetch(`${BACKEND_URL}/auth/refresh-token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+
+      const responseData = await backendResponse.json();
+
+      if (!backendResponse.ok) {
+        return createErrorResponse({
+          code: 'TOKEN_REFRESH_FAILED',
+          message: responseData.message || 'Token refresh failed'
+        }, backendResponse.status);
+      }
+
+      return createSuccessResponse(responseData.data);
+    } catch (error) {
+      console.error('Backend token refresh error:', error);
+      return createErrorResponse({
+        code: 'BACKEND_ERROR',
+        message: 'Unable to connect to authentication service'
+      }, 503);
+    }
   });
 }
