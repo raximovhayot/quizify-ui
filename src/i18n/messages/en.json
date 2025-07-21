@@ -92,6 +92,12 @@
     "accountCreated": "Account created successfully",
     "loginSuccess": "Login successful",
     "logoutSuccess": "Logout successful",
+    "errors": {
+      "accountNotFound": "Account not found. Please check your phone number or sign up.",
+      "accountLocked": "Account is temporarily locked. Please try again later.",
+      "networkError": "Network error. Please check your connection and try again.",
+      "signInFailed": "Sign-in failed. Please try again."
+    },
     "validation": {
       "phoneRequired": "Phone number is required",
       "phoneInvalid": "Please enter a valid Uzbek phone number (e.g., +998901234567)",

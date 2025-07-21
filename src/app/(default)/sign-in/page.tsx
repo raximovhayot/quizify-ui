@@ -26,6 +26,7 @@ import { useAuth } from '@/contexts/AuthContext';
 export default function SignInPage() {
   const { login, isAuthenticated, isLoading: authLoading } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const t = useTranslations();
@@ -60,6 +61,7 @@ export default function SignInPage() {
 
   const onSubmit = async (data: SignInFormData) => {
     setIsSubmitting(true);
+    setAuthError(null); // Clear previous errors
 
     try {
       await login(data.phone, data.password);
@@ -67,22 +69,44 @@ export default function SignInPage() {
       // Get redirect URL from query params or default to home
       const redirectTo = searchParams.get('redirect') || '/';
       
-      toast.success('Successfully signed in!');
+      toast.success(t('auth.loginSuccess'));
       router.push(redirectTo);
     } catch (error: unknown) {
       console.error('Sign-in error:', error);
       
       // Handle different error types
       const errorMessage = error instanceof Error ? error.message : String(error);
-      if (errorMessage.includes('Invalid credentials')) {
-        toast.error('Invalid phone number or password');
-      } else if (errorMessage.includes('Account not found')) {
-        toast.error('Account not found. Please check your phone number or sign up.');
-      } else if (errorMessage.includes('Account locked')) {
-        toast.error('Account is temporarily locked. Please try again later.');
+      let translatedError: string;
+      
+      // Check for specific error patterns
+      if (errorMessage.includes('invalid.credentials') || 
+          errorMessage.includes('Invalid credentials') || 
+          errorMessage.includes('Unauthorized') || 
+          errorMessage.includes('401') ||
+          errorMessage.includes('noto\'g\'ri') || // Uzbek: incorrect
+          errorMessage.includes('неверный') || // Russian: incorrect
+          errorMessage.includes('Foydalanuvchi nomi yoki parol noto\'g\'ri')) { // Uzbek: username or password incorrect
+        translatedError = t('auth.invalidCredentials');
+      } else if (errorMessage.includes('Account not found') || errorMessage.includes('User not found')) {
+        translatedError = t('auth.errors.accountNotFound', { 
+          default: 'Account not found. Please check your phone number or sign up.' 
+        });
+      } else if (errorMessage.includes('Account locked') || errorMessage.includes('locked')) {
+        translatedError = t('auth.errors.accountLocked', { 
+          default: 'Account is temporarily locked. Please try again later.' 
+        });
+      } else if (errorMessage.includes('Network') || errorMessage.includes('NETWORK_ERROR')) {
+        translatedError = t('auth.errors.networkError', { 
+          default: 'Network error. Please check your connection and try again.' 
+        });
       } else {
-        toast.error('Sign-in failed. Please try again.');
+        translatedError = t('auth.errors.signInFailed', { 
+          default: 'Sign-in failed. Please try again.' 
+        });
       }
+      
+      setAuthError(translatedError);
+      toast.error(translatedError);
     } finally {
       setIsSubmitting(false);
     }
@@ -121,6 +145,11 @@ export default function SignInPage() {
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                {authError && (
+                  <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+                    {authError}
+                  </div>
+                )}
                 <FormField
                   control={form.control}
                   name="phone"

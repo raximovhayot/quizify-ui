@@ -92,6 +92,12 @@
     "accountCreated": "Hisob muvaffaqiyatli yaratildi",
     "loginSuccess": "Kirish muvaffaqiyatli",
     "logoutSuccess": "Chiqish muvaffaqiyatli",
+    "errors": {
+      "accountNotFound": "Hisob topilmadi. Telefon raqamingizni tekshiring yoki ro'yxatdan o'ting.",
+      "accountLocked": "Hisob vaqtincha bloklangan. Keyinroq urinib ko'ring.",
+      "networkError": "Tarmoq xatosi. Ulanishni tekshiring va qayta urinib ko'ring.",
+      "signInFailed": "Kirish xatosi. Qayta urinib ko'ring."
+    },
     "validation": {
       "phoneRequired": "Telefon raqami kiritish shart",
       "phoneInvalid": "To'g'ri O'zbek telefon raqamini kiriting (masalan, +998901234567)",
