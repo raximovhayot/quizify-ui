@@ -17,6 +17,7 @@
     "no": "Yo'q",
     "ok": "OK",
     "error": "Xatolik",
+    "unexpectedError": "Kutilmagan xatolik yuz berdi.",
     "success": "Muvaffaqiyatli",
     "warning": "Ogohlantirish",
     "info": "Ma'lumot"

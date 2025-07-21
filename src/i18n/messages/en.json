@@ -17,6 +17,7 @@
     "no": "No",
     "ok": "OK",
     "error": "Error",
+    "unexpectedError": "An unexpected error occurred.",
     "success": "Success",
     "warning": "Warning",
     "info": "Information"
@@ -86,7 +87,34 @@
       "resendIn": "Resend in {seconds}s"
     },
     "forgotPassword": {
-      "link": "Forgot your password?"
+      "link": "Forgot your password?",
+      "title": "Reset Password",
+      "phone": {
+        "title": "Reset Password",
+        "description": "Enter your phone number to receive a verification code"
+      },
+      "verification": {
+        "title": "Verify Code",
+        "description": "Enter the verification code sent to your phone"
+      },
+      "newPassword": {
+        "title": "Set New Password",
+        "description": "Create a new password for your account"
+      },
+      "completed": {
+        "title": "Password Reset Complete",
+        "description": "Your password has been successfully reset"
+      },
+      "sendCode": "Send Verification Code",
+      "sendingCode": "Sending Code...",
+      "verifyCode": "Verify Code",
+      "verifying": "Verifying...",
+      "resetPassword": "Reset Password",
+      "resetting": "Resetting Password...",
+      "success": {
+        "title": "Password Reset Successfully!",
+        "message": "Your password has been reset. You can now sign in with your new password."
+      }
     },
     "invalidCredentials": "Invalid phone number or password",
     "accountCreated": "Account created successfully",
@@ -96,7 +124,19 @@
       "accountNotFound": "Account not found. Please check your phone number or sign up.",
       "accountLocked": "Account is temporarily locked. Please try again later.",
       "networkError": "Network error. Please check your connection and try again.",
-      "signInFailed": "Sign-in failed. Please try again."
+      "signInFailed": "Sign-in failed. Please try again.",
+      "phoneAlreadyExists": "An account with this phone number already exists. Please sign in instead.",
+      "phoneInvalid": "Please enter a valid phone number.",
+      "sendCodeFailed": "Failed to send verification code. Please try again.",
+      "invalidOTP": "Invalid verification code. Please check and try again.",
+      "otpExpired": "Verification code has expired. Please request a new one.",
+      "verificationFailed": "Verification failed. Please try again.",
+      "signUpFailed": "Failed to create account. Please try again.",
+      "passwordWeak": "Password is too weak. Please choose a stronger password.",
+      "rateLimitExceeded": "Too many requests. Please wait before requesting another code.",
+      "resendFailed": "Failed to resend verification code. Please try again.",
+      "resetPasswordFailed": "Failed to reset password. Please try again.",
+      "invalidResetToken": "Invalid or expired reset token. Please start the process again."
     },
     "validation": {
       "phoneRequired": "Phone number is required",

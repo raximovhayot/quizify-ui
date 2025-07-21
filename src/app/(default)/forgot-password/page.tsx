@@ -22,38 +22,7 @@ import {
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
-
-// Phone validation schema
-const phoneSchema = z.object({
-  phone: z.string()
-    .min(1, 'Phone number is required')
-    .regex(/^\+?[1-9]\d{1,14}$/, 'Please enter a valid phone number'),
-});
-
-// SMS verification schema
-const verificationSchema = z.object({
-  verificationCode: z.string()
-    .min(1, 'Verification code is required')
-    .length(6, 'Verification code must be 6 digits')
-    .regex(/^\d{6}$/, 'Verification code must contain only numbers'),
-});
-
-// New password schema
-const newPasswordSchema = z.object({
-  password: z.string()
-    .min(1, 'Password is required')
-    .min(6, 'Password must be at least 6 characters')
-    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'Password must contain at least one uppercase letter, one lowercase letter, and one number'),
-  confirmPassword: z.string()
-    .min(1, 'Please confirm your password'),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-});
-
-type PhoneFormData = z.infer<typeof phoneSchema>;
-type VerificationFormData = z.infer<typeof verificationSchema>;
-type NewPasswordFormData = z.infer<typeof newPasswordSchema>;
+import { AuthService } from '@/lib/auth-service';
 
 type ResetStep = 'phone' | 'verification' | 'new-password' | 'completed';
 
@@ -63,8 +32,41 @@ export default function ForgotPasswordPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [resendCooldown, setResendCooldown] = useState(0);
+  const [authError, setAuthError] = useState<string | null>(null);
   const router = useRouter();
   const t = useTranslations();
+
+  // Phone validation schema with localized messages
+  const phoneSchema = z.object({
+    phone: z.string()
+      .min(1, t('auth.validation.phoneRequired'))
+      .regex(/^(?:\+?998|0)?\d{9}$/, t('auth.validation.phoneInvalid')),
+  });
+
+  // SMS verification schema with localized messages
+  const verificationSchema = z.object({
+    verificationCode: z.string()
+      .min(1, t('auth.validation.otpRequired'))
+      .length(6, t('auth.validation.otpLength'))
+      .regex(/^\d{6}$/, t('auth.validation.otpPattern')),
+  });
+
+  // New password schema with localized messages
+  const newPasswordSchema = z.object({
+    password: z.string()
+      .min(1, t('auth.validation.passwordRequired'))
+      .min(6, t('auth.validation.passwordMinLength'))
+      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, t('auth.validation.passwordPattern')),
+    confirmPassword: z.string()
+      .min(1, t('auth.validation.confirmPasswordRequired')),
+  }).refine((data) => data.password === data.confirmPassword, {
+    message: t('auth.validation.passwordsNotMatch'),
+    path: ["confirmPassword"],
+  });
+
+  type PhoneFormData = z.infer<typeof phoneSchema>;
+  type VerificationFormData = z.infer<typeof verificationSchema>;
+  type NewPasswordFormData = z.infer<typeof newPasswordSchema>;
 
   const phoneForm = useForm<PhoneFormData>({
     resolver: zodResolver(phoneSchema),
@@ -105,21 +107,53 @@ export default function ForgotPasswordPage() {
 
   const onPhoneSubmit = async (data: PhoneFormData) => {
     setIsSubmitting(true);
+    setAuthError(null); // Clear previous errors
 
     try {
-      // TODO: Replace with actual API call to send reset SMS
-      console.log('Sending reset SMS to:', data.phone);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await AuthService.forgotPasswordPrepare(data.phone);
       
       setPhoneNumber(data.phone);
       setCurrentStep('verification');
       setResendCooldown(60);
-      toast.success('Verification code sent to your phone');
-    } catch (error) {
-      toast.error('Failed to send verification code. Please try again.');
-      console.error('Send SMS error:', error);
+      toast.success(t('auth.forgotPassword.codeSent', { 
+        default: 'Verification code sent to your phone' 
+      }));
+    } catch (error: unknown) {
+      console.error('Forgot password prepare error:', error);
+      
+      // Handle different error types
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      let translatedError: string;
+      
+      // Check for specific error patterns
+      if (errorMessage.includes('User not found') || 
+          errorMessage.includes('Account not found') ||
+          errorMessage.includes('Phone number not registered')) {
+        translatedError = t('auth.errors.accountNotFound', { 
+          default: 'Account not found. Please check your phone number or sign up.' 
+        });
+      } else if (errorMessage.includes('Invalid phone') || 
+                 errorMessage.includes('Phone number invalid')) {
+        translatedError = t('auth.errors.phoneInvalid', { 
+          default: 'Please enter a valid phone number.' 
+        });
+      } else if (errorMessage.includes('Rate limit') || 
+                 errorMessage.includes('Too many requests')) {
+        translatedError = t('auth.errors.rateLimitExceeded', { 
+          default: 'Too many requests. Please wait before requesting another code.' 
+        });
+      } else if (errorMessage.includes('Network') || errorMessage.includes('NETWORK_ERROR')) {
+        translatedError = t('auth.errors.networkError', { 
+          default: 'Network error. Please check your connection and try again.' 
+        });
+      } else {
+        translatedError = t('auth.errors.sendCodeFailed', { 
+          default: 'Failed to send verification code. Please try again.' 
+        });
+      }
+      
+      setAuthError(translatedError);
+      toast.error(translatedError);
     } finally {
       setIsSubmitting(false);
     }
@@ -127,19 +161,48 @@ export default function ForgotPasswordPage() {
 
   const onVerificationSubmit = async (data: VerificationFormData) => {
     setIsSubmitting(true);
+    setAuthError(null); // Clear previous errors
 
     try {
-      // TODO: Replace with actual API call to verify reset code
-      console.log('Verifying reset code:', data.verificationCode);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await AuthService.forgotPasswordVerify(phoneNumber, data.verificationCode);
       
       setCurrentStep('new-password');
-      toast.success('Code verified successfully');
-    } catch (error) {
-      toast.error('Invalid verification code. Please try again.');
-      console.error('Verification error:', error);
+      toast.success(t('auth.verification.success', { 
+        default: 'Code verified successfully' 
+      }));
+    } catch (error: unknown) {
+      console.error('Forgot password verify error:', error);
+      
+      // Handle different error types
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      let translatedError: string;
+      
+      // Check for specific error patterns
+      if (errorMessage.includes('Invalid OTP') || 
+          errorMessage.includes('Invalid verification code') ||
+          errorMessage.includes('Incorrect code')) {
+        translatedError = t('auth.errors.invalidOTP', { 
+          default: 'Invalid verification code. Please check and try again.' 
+        });
+      } else if (errorMessage.includes('OTP expired') || 
+                 errorMessage.includes('Code expired') ||
+                 errorMessage.includes('Verification code expired')) {
+        translatedError = t('auth.errors.otpExpired', { 
+          default: 'Verification code has expired. Please request a new one.' 
+        });
+        setCurrentStep('phone'); // Go back to phone step
+      } else if (errorMessage.includes('Network') || errorMessage.includes('NETWORK_ERROR')) {
+        translatedError = t('auth.errors.networkError', { 
+          default: 'Network error. Please check your connection and try again.' 
+        });
+      } else {
+        translatedError = t('auth.errors.verificationFailed', { 
+          default: 'Verification failed. Please try again.' 
+        });
+      }
+      
+      setAuthError(translatedError);
+      toast.error(translatedError);
     } finally {
       setIsSubmitting(false);
     }
@@ -147,25 +210,55 @@ export default function ForgotPasswordPage() {
 
   const onPasswordSubmit = async (data: NewPasswordFormData) => {
     setIsSubmitting(true);
+    setAuthError(null); // Clear previous errors
 
     try {
-      // TODO: Replace with actual API call to reset password
-      console.log('Resetting password for:', phoneNumber);
-      console.log('New password data:', data);
+      // Note: In a real implementation, you would get the verification token from the previous step
+      // For now, we'll use a placeholder token - this should be stored from the verification step
+      const verificationToken = 'placeholder-token'; // This should come from forgotPasswordVerify response
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await AuthService.forgotPasswordUpdate(verificationToken, data.password);
       
       setCurrentStep('completed');
-      toast.success('Password reset successfully');
+      toast.success(t('auth.forgotPassword.success.message', { 
+        default: 'Password reset successfully. You can now sign in with your new password.' 
+      }));
       
       // Redirect to sign-in page after a short delay
       setTimeout(() => {
         router.push('/sign-in');
       }, 2000);
-    } catch (error) {
-      toast.error('Failed to reset password. Please try again.');
+    } catch (error: unknown) {
       console.error('Password reset error:', error);
+      
+      // Handle different error types
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      let translatedError: string;
+      
+      // Check for specific error patterns
+      if (errorMessage.includes('Invalid token') || 
+          errorMessage.includes('Token expired') ||
+          errorMessage.includes('Invalid verification token')) {
+        translatedError = t('auth.errors.invalidResetToken', { 
+          default: 'Invalid or expired reset token. Please start the process again.' 
+        });
+        setCurrentStep('phone'); // Go back to phone step
+      } else if (errorMessage.includes('Password') && errorMessage.includes('weak')) {
+        translatedError = t('auth.errors.passwordWeak', { 
+          default: 'Password is too weak. Please choose a stronger password.' 
+        });
+      } else if (errorMessage.includes('Network') || errorMessage.includes('NETWORK_ERROR')) {
+        translatedError = t('auth.errors.networkError', { 
+          default: 'Network error. Please check your connection and try again.' 
+        });
+      } else {
+        translatedError = t('auth.errors.resetPasswordFailed', { 
+          default: 'Failed to reset password. Please try again.' 
+        });
+      }
+      
+      setAuthError(translatedError);
+      toast.error(translatedError);
     } finally {
       setIsSubmitting(false);
     }
@@ -174,18 +267,41 @@ export default function ForgotPasswordPage() {
   const handleResendCode = async () => {
     if (resendCooldown > 0) return;
 
+    setIsSubmitting(true);
+    setAuthError(null); // Clear previous errors
+    
     try {
-      // TODO: Replace with actual API call to resend SMS
-      console.log('Resending reset SMS to:', phoneNumber);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
+      await AuthService.forgotPasswordPrepare(phoneNumber);
       setResendCooldown(60);
-      toast.success('Verification code sent');
-    } catch (error) {
-      toast.error('Failed to resend code. Please try again.');
-      console.error('Resend SMS error:', error);
+      toast.success(t('auth.verification.resendSuccess', { 
+        default: 'New verification code sent' 
+      }));
+    } catch (error: unknown) {
+      console.error('Resend code error:', error);
+      
+      // Handle different error types
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      let translatedError: string;
+      
+      if (errorMessage.includes('Rate limit') || 
+          errorMessage.includes('Too many requests')) {
+        translatedError = t('auth.errors.rateLimitExceeded', { 
+          default: 'Too many requests. Please wait before requesting another code.' 
+        });
+      } else if (errorMessage.includes('Network') || errorMessage.includes('NETWORK_ERROR')) {
+        translatedError = t('auth.errors.networkError', { 
+          default: 'Network error. Please check your connection and try again.' 
+        });
+      } else {
+        translatedError = t('auth.errors.resendFailed', { 
+          default: 'Failed to resend verification code. Please try again.' 
+        });
+      }
+      
+      setAuthError(translatedError);
+      toast.error(translatedError);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -193,16 +309,23 @@ export default function ForgotPasswordPage() {
     <Card>
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold text-center">
-          Reset Password
+          {t('auth.forgotPassword.phone.title', { default: 'Reset Password' })}
         </CardTitle>
         <CardDescription className="text-center">
-          Enter your phone number to receive a verification code
+          {t('auth.forgotPassword.phone.description', { 
+            default: 'Enter your phone number to receive a verification code' 
+          })}
         </CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-4">
         <Form {...phoneForm}>
           <form onSubmit={phoneForm.handleSubmit(onPhoneSubmit)} className="space-y-4">
+            {authError && (
+              <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+                {authError}
+              </div>
+            )}
             <FormField
               control={phoneForm.control}
               name="phone"
@@ -230,9 +353,12 @@ export default function ForgotPasswordPage() {
               disabled={isSubmitting}
             >
               {isSubmitting ? (
-                <InlineLoading text="Sending Code..." />
+                <>
+                  <InlineLoading />
+                  {t('auth.forgotPassword.sendingCode', { default: 'Sending Code...' })}
+                </>
               ) : (
-                t('auth.sendCode')
+                t('auth.forgotPassword.sendCode', { default: 'Send Verification Code' })
               )}
             </Button>
           </form>
@@ -240,9 +366,9 @@ export default function ForgotPasswordPage() {
 
         <div className="text-center">
           <div className="text-sm text-muted-foreground">
-            Remember your password?{' '}
+            {t('auth.forgotPassword.rememberPassword', { default: 'Remember your password?' })}{' '}
             <Link href="/sign-in" className="text-primary hover:underline">
-              {t('auth.signIn')}
+              {t('auth.signIn.link', { default: 'Sign In' })}
             </Link>
           </div>
         </div>
@@ -254,23 +380,30 @@ export default function ForgotPasswordPage() {
     <Card>
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold text-center">
-          Verify Your Phone
+          {t('auth.forgotPassword.verification.title', { default: 'Verify Code' })}
         </CardTitle>
         <CardDescription className="text-center">
-          We sent a verification code to {phoneNumber}
+          {t('auth.forgotPassword.verification.description', { 
+            default: 'Enter the verification code sent to your phone' 
+          })}
         </CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-4">
         <Form {...verificationForm}>
           <form onSubmit={verificationForm.handleSubmit(onVerificationSubmit)} className="space-y-4">
+            {authError && (
+              <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+                {authError}
+              </div>
+            )}
             <FormField
               control={verificationForm.control}
               name="verificationCode"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    {t('auth.verificationCode')}
+                    {t('auth.verification.label', { default: 'Verification Code' })}
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -292,9 +425,12 @@ export default function ForgotPasswordPage() {
               disabled={isSubmitting}
             >
               {isSubmitting ? (
-                <InlineLoading text="Verifying..." />
+                <>
+                  <InlineLoading />
+                  {t('auth.forgotPassword.verifying', { default: 'Verifying...' })}
+                </>
               ) : (
-                'Verify Code'
+                t('auth.forgotPassword.verifyCode', { default: 'Verify Code' })
               )}
             </Button>
           </form>
@@ -309,9 +445,12 @@ export default function ForgotPasswordPage() {
             disabled={resendCooldown > 0}
           >
             {resendCooldown > 0 ? (
-              `Resend code in ${resendCooldown}s`
+              t('auth.verification.resendIn', { 
+                default: `Resend in ${resendCooldown}s`,
+                seconds: resendCooldown 
+              })
             ) : (
-              t('auth.resendCode')
+              t('auth.verification.resend', { default: 'Resend Code' })
             )}
           </Button>
           
@@ -322,7 +461,7 @@ export default function ForgotPasswordPage() {
               size="sm"
               onClick={() => setCurrentStep('phone')}
             >
-              ← Back to phone entry
+              {t('auth.forgotPassword.backToPhone', { default: '← Back to phone entry' })}
             </Button>
           </div>
         </div>
@@ -334,23 +473,30 @@ export default function ForgotPasswordPage() {
     <Card>
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold text-center">
-          Set New Password
+          {t('auth.forgotPassword.newPassword.title', { default: 'Set New Password' })}
         </CardTitle>
         <CardDescription className="text-center">
-          Create a new password for your account
+          {t('auth.forgotPassword.newPassword.description', { 
+            default: 'Create a new password for your account' 
+          })}
         </CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-4">
         <Form {...passwordForm}>
           <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4">
+            {authError && (
+              <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+                {authError}
+              </div>
+            )}
             <FormField
               control={passwordForm.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    {t('auth.password')}
+                    {t('auth.password.label', { default: 'Password' })}
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -370,7 +516,7 @@ export default function ForgotPasswordPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    {t('auth.confirmPassword')}
+                    {t('auth.confirmPassword.label', { default: 'Confirm Password' })}
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -390,9 +536,12 @@ export default function ForgotPasswordPage() {
               disabled={isSubmitting}
             >
               {isSubmitting ? (
-                <InlineLoading text="Resetting Password..." />
+                <>
+                  <InlineLoading />
+                  {t('auth.forgotPassword.resetting', { default: 'Resetting Password...' })}
+                </>
               ) : (
-                'Reset Password'
+                t('auth.forgotPassword.resetPassword', { default: 'Reset Password' })
               )}
             </Button>
           </form>
@@ -405,10 +554,12 @@ export default function ForgotPasswordPage() {
     <Card>
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold text-center text-green-600">
-          Password Reset!
+          {t('auth.forgotPassword.completed.title', { default: 'Password Reset Complete' })}
         </CardTitle>
         <CardDescription className="text-center">
-          Your password has been successfully reset. Redirecting to sign in...
+          {t('auth.forgotPassword.completed.description', { 
+            default: 'Your password has been successfully reset' 
+          })}
         </CardDescription>
       </CardHeader>
 

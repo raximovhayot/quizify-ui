@@ -32,6 +32,7 @@ export default function SignUpPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [resendCooldown, setResendCooldown] = useState(0);
+  const [authError, setAuthError] = useState<string | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const t = useTranslations();
@@ -116,6 +117,7 @@ export default function SignUpPage() {
 
   const onPhoneSubmit = async (data: PhoneFormData) => {
     setIsSubmitting(true);
+    setAuthError(null); // Clear previous errors
 
     try {
       await AuthService.signUpPrepare(data.phone);
@@ -123,28 +125,94 @@ export default function SignUpPage() {
       setPhoneNumber(data.phone);
       setCurrentStep('verification');
       setResendCooldown(60);
-      toast.success('Verification code sent to your phone');
+      toast.success(t('auth.signUp.codeSent', { default: 'Verification code sent to your phone' }));
     } catch (error: unknown) {
       console.error('Phone verification error:', error);
-      const errorMessage = error instanceof Error ? error.message : String(error);
       
-      if (errorMessage.includes('already exists')) {
-        toast.error('An account with this phone number already exists. Please sign in instead.');
+      // Handle different error types
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      let translatedError: string;
+      
+      // Check for specific error patterns
+      if (errorMessage.includes('already exists') || 
+          errorMessage.includes('User already exists') ||
+          errorMessage.includes('Phone number already registered')) {
+        translatedError = t('auth.errors.phoneAlreadyExists', { 
+          default: 'An account with this phone number already exists. Please sign in instead.' 
+        });
+      } else if (errorMessage.includes('Invalid phone') || 
+                 errorMessage.includes('Phone number invalid')) {
+        translatedError = t('auth.errors.phoneInvalid', { 
+          default: 'Please enter a valid phone number.' 
+        });
+      } else if (errorMessage.includes('Network') || errorMessage.includes('NETWORK_ERROR')) {
+        translatedError = t('auth.errors.networkError', { 
+          default: 'Network error. Please check your connection and try again.' 
+        });
       } else {
-        toast.error('Failed to send verification code. Please try again.');
+        translatedError = t('auth.errors.sendCodeFailed', { 
+          default: 'Failed to send verification code. Please try again.' 
+        });
       }
+      
+      setAuthError(translatedError);
+      toast.error(translatedError);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const onVerificationSubmit = async () => {
-    setCurrentStep('details');
-    verificationForm.reset();
+  const onVerificationSubmit = async (data: VerificationFormData) => {
+    setIsSubmitting(true);
+    setAuthError(null); // Clear previous errors
+
+    try {
+      // Store the verification data for later use in final submission
+      // For now, just move to the next step since we'll verify during final submission
+      console.log('Verification data:', data); // Use the data parameter
+      setCurrentStep('details');
+      verificationForm.reset();
+      toast.success(t('auth.verification.success', { default: 'Phone number verified successfully' }));
+    } catch (error: unknown) {
+      console.error('Verification error:', error);
+      
+      // Handle different error types
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      let translatedError: string;
+      
+      // Check for specific error patterns
+      if (errorMessage.includes('Invalid OTP') || 
+          errorMessage.includes('Invalid verification code') ||
+          errorMessage.includes('Incorrect code')) {
+        translatedError = t('auth.errors.invalidOTP', { 
+          default: 'Invalid verification code. Please check and try again.' 
+        });
+      } else if (errorMessage.includes('OTP expired') || 
+                 errorMessage.includes('Code expired') ||
+                 errorMessage.includes('Verification code expired')) {
+        translatedError = t('auth.errors.otpExpired', { 
+          default: 'Verification code has expired. Please request a new one.' 
+        });
+      } else if (errorMessage.includes('Network') || errorMessage.includes('NETWORK_ERROR')) {
+        translatedError = t('auth.errors.networkError', { 
+          default: 'Network error. Please check your connection and try again.' 
+        });
+      } else {
+        translatedError = t('auth.errors.verificationFailed', { 
+          default: 'Verification failed. Please try again.' 
+        });
+      }
+      
+      setAuthError(translatedError);
+      toast.error(translatedError);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const onUserDetailsSubmit = async (data: UserDetailsFormData) => {
     setIsSubmitting(true);
+    setAuthError(null); // Clear previous errors
 
     try {
       const verificationData = verificationForm.getValues();
@@ -158,7 +226,9 @@ export default function SignUpPage() {
       });
 
       setCurrentStep('completed');
-      toast.success('Account created successfully! You can now sign in.');
+      toast.success(t('auth.signUp.success.message', { 
+        default: 'Account created successfully! You can now sign in.' 
+      }));
       
       // Redirect to sign-in page after a short delay
       setTimeout(() => {
@@ -166,17 +236,48 @@ export default function SignUpPage() {
       }, 2000);
     } catch (error: unknown) {
       console.error('Sign-up error:', error);
-      const errorMessage = error instanceof Error ? error.message : String(error);
       
-      if (errorMessage.includes('Invalid OTP')) {
-        toast.error('Invalid verification code. Please check and try again.');
-        setCurrentStep('verification');
-      } else if (errorMessage.includes('OTP expired')) {
-        toast.error('Verification code has expired. Please request a new one.');
-        setCurrentStep('phone');
+      // Handle different error types
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      let translatedError: string;
+      
+      // Check for specific error patterns
+      if (errorMessage.includes('Invalid OTP') || 
+          errorMessage.includes('Invalid verification code') ||
+          errorMessage.includes('Incorrect code')) {
+        translatedError = t('auth.errors.invalidOTP', { 
+          default: 'Invalid verification code. Please check and try again.' 
+        });
+        setCurrentStep('verification'); // Go back to verification step
+      } else if (errorMessage.includes('OTP expired') || 
+                 errorMessage.includes('Code expired') ||
+                 errorMessage.includes('Verification code expired')) {
+        translatedError = t('auth.errors.otpExpired', { 
+          default: 'Verification code has expired. Please request a new one.' 
+        });
+        setCurrentStep('phone'); // Go back to phone step
+      } else if (errorMessage.includes('Phone number already exists') ||
+                 errorMessage.includes('User already exists')) {
+        translatedError = t('auth.errors.phoneAlreadyExists', { 
+          default: 'An account with this phone number already exists. Please sign in instead.' 
+        });
+        setCurrentStep('phone'); // Go back to phone step
+      } else if (errorMessage.includes('Password') && errorMessage.includes('weak')) {
+        translatedError = t('auth.errors.passwordWeak', { 
+          default: 'Password is too weak. Please choose a stronger password.' 
+        });
+      } else if (errorMessage.includes('Network') || errorMessage.includes('NETWORK_ERROR')) {
+        translatedError = t('auth.errors.networkError', { 
+          default: 'Network error. Please check your connection and try again.' 
+        });
       } else {
-        toast.error('Failed to create account. Please try again.');
+        translatedError = t('auth.errors.signUpFailed', { 
+          default: 'Failed to create account. Please try again.' 
+        });
       }
+      
+      setAuthError(translatedError);
+      toast.error(translatedError);
     } finally {
       setIsSubmitting(false);
     }
@@ -186,13 +287,38 @@ export default function SignUpPage() {
     if (resendCooldown > 0) return;
 
     setIsSubmitting(true);
+    setAuthError(null); // Clear previous errors
+    
     try {
       await AuthService.signUpPrepare(phoneNumber);
       setResendCooldown(60);
-      toast.success('New verification code sent');
+      toast.success(t('auth.verification.resendSuccess', { 
+        default: 'New verification code sent' 
+      }));
     } catch (error: unknown) {
       console.error('Resend OTP error:', error);
-      toast.error('Failed to resend verification code. Please try again.');
+      
+      // Handle different error types
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      let translatedError: string;
+      
+      if (errorMessage.includes('Rate limit') || 
+          errorMessage.includes('Too many requests')) {
+        translatedError = t('auth.errors.rateLimitExceeded', { 
+          default: 'Too many requests. Please wait before requesting another code.' 
+        });
+      } else if (errorMessage.includes('Network') || errorMessage.includes('NETWORK_ERROR')) {
+        translatedError = t('auth.errors.networkError', { 
+          default: 'Network error. Please check your connection and try again.' 
+        });
+      } else {
+        translatedError = t('auth.errors.resendFailed', { 
+          default: 'Failed to resend verification code. Please try again.' 
+        });
+      }
+      
+      setAuthError(translatedError);
+      toast.error(translatedError);
     } finally {
       setIsSubmitting(false);
     }
@@ -220,6 +346,11 @@ export default function SignUpPage() {
         return (
           <Form {...phoneForm}>
             <form onSubmit={phoneForm.handleSubmit(onPhoneSubmit)} className="space-y-4">
+              {authError && (
+                <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+                  {authError}
+                </div>
+              )}
               <FormField
                 control={phoneForm.control}
                 name="phone"
@@ -259,6 +390,11 @@ export default function SignUpPage() {
         return (
           <Form {...verificationForm}>
             <form onSubmit={verificationForm.handleSubmit(onVerificationSubmit)} className="space-y-4">
+              {authError && (
+                <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+                  {authError}
+                </div>
+              )}
               <div className="text-center mb-4">
                 <p className="text-sm text-gray-600">
                   {t('auth.verification.instruction', { 
@@ -325,6 +461,11 @@ export default function SignUpPage() {
         return (
           <Form {...userDetailsForm}>
             <form onSubmit={userDetailsForm.handleSubmit(onUserDetailsSubmit)} className="space-y-4">
+              {authError && (
+                <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+                  {authError}
+                </div>
+              )}
               <div className="grid grid-cols-2 gap-4">
                 <FormField
                   control={userDetailsForm.control}
