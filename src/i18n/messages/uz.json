@@ -27,7 +27,9 @@
       "title": "Kirish",
       "description": "Hisobingizga kirish uchun telefon raqami va parolni kiriting",
       "submit": "Kirish",
-      "submitting": "Kirilmoqda..."
+      "submitting": "Kirilmoqda...",
+      "link": "Kirish",
+      "prompt": "Hisobingiz bormi?"
     },
     "signUp": {
       "title": "Ro'yxatdan o'tish",
@@ -78,17 +80,55 @@
       "label": "Familiya",
       "placeholder": "Ahmedov"
     },
+    "dashboardType": {
+      "label": "Men",
+      "student": "Talaba",
+      "instructor": "O'qituvchi"
+    },
     "verification": {
       "label": "Tasdiqlash kodi",
       "instruction": "Quyidagi raqamga yuborilgan 6 xonali kodni kiriting",
       "verify": "Kodni tasdiqlash",
       "verifying": "Tasdiqlanmoqda...",
       "resend": "Kodni qayta yuborish",
-      "resendIn": "{seconds}s ichida qayta yuborish"
+      "resendIn": "{seconds}s ichida qayta yuborish",
+      "success": "Telefon raqami muvaffaqiyatli tasdiqlandi",
+      "resendSuccess": "Yangi tasdiqlash kodi yuborildi"
     },
     "forgotPassword": {
-      "link": "Parolni unutdingizmi?"
+      "link": "Parolni unutdingizmi?",
+      "title": "Parolni tiklash",
+      "phone": {
+        "title": "Parolni tiklash",
+        "description": "Tasdiqlash kodini olish uchun telefon raqamingizni kiriting"
+      },
+      "verification": {
+        "title": "Kodni tasdiqlang",
+        "description": "Telefoningizga yuborilgan tasdiqlash kodini kiriting"
+      },
+      "newPassword": {
+        "title": "Yangi parol o'rnating",
+        "description": "Hisobingiz uchun yangi parol yarating"
+      },
+      "completed": {
+        "title": "Parol tiklash tugallandi",
+        "description": "Parolingiz muvaffaqiyatli tiklandi"
+      },
+      "sendCode": "Tasdiqlash kodini yuborish",
+      "sendingCode": "Kod yuborilmoqda...",
+      "verifyCode": "Kodni tasdiqlash",
+      "verifying": "Tasdiqlanmoqda...",
+      "resetPassword": "Parolni tiklash",
+      "resetting": "Parol tiklanmoqda...",
+      "success": {
+        "title": "Parol muvaffaqiyatli tiklandi!",
+        "message": "Parolingiz tiklandi. Endi yangi parol bilan kirishingiz mumkin."
+      },
+      "codeSent": "Tasdiqlash kodi telefoningizga yuborildi",
+      "rememberPassword": "Parolni eslaysizmi?",
+      "backToPhone": "← Telefon kiritishga qaytish"
     },
+    "signOut": "Chiqish",
     "invalidCredentials": "Noto'g'ri telefon raqami yoki parol",
     "accountCreated": "Hisob muvaffaqiyatli yaratildi",
     "loginSuccess": "Kirish muvaffaqiyatli",
@@ -97,7 +137,19 @@
       "accountNotFound": "Hisob topilmadi. Telefon raqamingizni tekshiring yoki ro'yxatdan o'ting.",
       "accountLocked": "Hisob vaqtincha bloklangan. Keyinroq urinib ko'ring.",
       "networkError": "Tarmoq xatosi. Ulanishni tekshiring va qayta urinib ko'ring.",
-      "signInFailed": "Kirish xatosi. Qayta urinib ko'ring."
+      "signInFailed": "Kirish xatosi. Qayta urinib ko'ring.",
+      "phoneAlreadyExists": "Bu telefon raqami bilan hisob allaqachon mavjud. Iltimos, tizimga kiring.",
+      "phoneInvalid": "Iltimos, to'g'ri telefon raqamini kiriting.",
+      "sendCodeFailed": "Tasdiqlash kodini yuborib bo'lmadi. Qayta urinib ko'ring.",
+      "invalidOTP": "Noto'g'ri tasdiqlash kodi. Tekshiring va qayta urinib ko'ring.",
+      "otpExpired": "Tasdiqlash kodi muddati tugagan. Iltimos, yangisini so'rang.",
+      "verificationFailed": "Tasdiqlash xatosi. Qayta urinib ko'ring.",
+      "signUpFailed": "Hisob yaratib bo'lmadi. Qayta urinib ko'ring.",
+      "passwordWeak": "Parol juda zaif. Iltimos, kuchliroq parol tanlang.",
+      "rateLimitExceeded": "Juda ko'p so'rovlar. Yangi kod so'rashdan oldin kuting.",
+      "resendFailed": "Tasdiqlash kodini qayta yuborib bo'lmadi. Qayta urinib ko'ring.",
+      "resetPasswordFailed": "Parolni tiklab bo'lmadi. Qayta urinib ko'ring.",
+      "invalidResetToken": "Noto'g'ri yoki muddati tugagan tiklash tokeni. Iltimos, jarayonni qaytadan boshlang."
     },
     "validation": {
       "phoneRequired": "Telefon raqami kiritish shart",
@@ -113,7 +165,8 @@
       "lastNameMinLength": "Familiya kamida 2 ta belgidan iborat bo'lishi kerak",
       "otpRequired": "Tasdiqlash kodi kiritish shart",
       "otpLength": "Tasdiqlash kodi 6 ta raqamdan iborat bo'lishi kerak",
-      "otpPattern": "Tasdiqlash kodi faqat raqamlardan iborat bo'lishi kerak"
+      "otpPattern": "Tasdiqlash kodi faqat raqamlardan iborat bo'lishi kerak",
+      "dashboardTypeRequired": "Iltimos, rolingizni tanlang"
     }
   },
   "navigation": {

@@ -27,7 +27,9 @@
       "title": "Sign In",
       "description": "Enter your phone number and password to access your account",
       "submit": "Sign In",
-      "submitting": "Signing In..."
+      "submitting": "Signing In...",
+      "link": "Sign In",
+      "prompt": "Already have an account?"
     },
     "signUp": {
       "title": "Sign Up",
@@ -78,6 +80,11 @@
       "label": "Last Name",
       "placeholder": "Doe"
     },
+    "dashboardType": {
+      "label": "I am a",
+      "student": "Student",
+      "instructor": "Instructor"
+    },
     "verification": {
       "label": "Verification Code",
       "instruction": "Enter the 6-digit code sent to",
@@ -114,46 +121,16 @@
       "success": {
         "title": "Password Reset Successfully!",
         "message": "Your password has been reset. You can now sign in with your new password."
-      }
+      },
+      "codeSent": "Verification code sent to your phone",
+      "rememberPassword": "Remember your password?",
+      "backToPhone": "← Back to phone entry"
     },
+    "signOut": "Sign Out",
     "invalidCredentials": "Invalid phone number or password",
     "accountCreated": "Account created successfully",
     "loginSuccess": "Login successful",
-    "logoutSuccess": "Logout successful",
-    "errors": {
-      "accountNotFound": "Account not found. Please check your phone number or sign up.",
-      "accountLocked": "Account is temporarily locked. Please try again later.",
-      "networkError": "Network error. Please check your connection and try again.",
-      "signInFailed": "Sign-in failed. Please try again.",
-      "phoneAlreadyExists": "An account with this phone number already exists. Please sign in instead.",
-      "phoneInvalid": "Please enter a valid phone number.",
-      "sendCodeFailed": "Failed to send verification code. Please try again.",
-      "invalidOTP": "Invalid verification code. Please check and try again.",
-      "otpExpired": "Verification code has expired. Please request a new one.",
-      "verificationFailed": "Verification failed. Please try again.",
-      "signUpFailed": "Failed to create account. Please try again.",
-      "passwordWeak": "Password is too weak. Please choose a stronger password.",
-      "rateLimitExceeded": "Too many requests. Please wait before requesting another code.",
-      "resendFailed": "Failed to resend verification code. Please try again.",
-      "resetPasswordFailed": "Failed to reset password. Please try again.",
-      "invalidResetToken": "Invalid or expired reset token. Please start the process again."
-    },
-    "validation": {
-      "phoneRequired": "Phone number is required",
-      "phoneInvalid": "Please enter a valid Uzbek phone number (e.g., +998901234567)",
-      "passwordRequired": "Password is required",
-      "passwordMinLength": "Password must be at least 6 characters",
-      "passwordPattern": "Password must contain at least one uppercase letter, one lowercase letter, and one number",
-      "confirmPasswordRequired": "Please confirm your password",
-      "passwordsNotMatch": "Passwords don't match",
-      "firstNameRequired": "First name is required",
-      "firstNameMinLength": "First name must be at least 2 characters",
-      "lastNameRequired": "Last name is required",
-      "lastNameMinLength": "Last name must be at least 2 characters",
-      "otpRequired": "Verification code is required",
-      "otpLength": "Verification code must be 6 digits",
-      "otpPattern": "Verification code must contain only numbers"
-    }
+    "logoutSuccess": "Logout successful"
   },
   "navigation": {
     "dashboard": "Dashboard",

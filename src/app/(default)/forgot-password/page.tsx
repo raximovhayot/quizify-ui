@@ -23,14 +23,16 @@ import { toast } from 'sonner';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthService } from '@/lib/auth-service';
+import { BackendError } from '@/types/api';
 
 type ResetStep = 'phone' | 'verification' | 'new-password' | 'completed';
 
 export default function ForgotPasswordPage() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const [currentStep, setCurrentStep] = useState<ResetStep>('phone');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [verificationToken, setVerificationToken] = useState<string>('');
   const [resendCooldown, setResendCooldown] = useState(0);
   const [authError, setAuthError] = useState<string | null>(null);
   const router = useRouter();
@@ -92,10 +94,10 @@ export default function ForgotPasswordPage() {
 
   useEffect(() => {
     // If user is already authenticated, redirect them
-    if (isAuthenticated) {
+    if (isAuthenticated && !authLoading) {
       router.push('/');
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, authLoading, router]);
 
   useEffect(() => {
     // Countdown timer for resend button
@@ -119,41 +121,16 @@ export default function ForgotPasswordPage() {
         default: 'Verification code sent to your phone' 
       }));
     } catch (error: unknown) {
-      console.error('Forgot password prepare error:', error);
-      
-      // Handle different error types
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      let translatedError: string;
-      
-      // Check for specific error patterns
-      if (errorMessage.includes('User not found') || 
-          errorMessage.includes('Account not found') ||
-          errorMessage.includes('Phone number not registered')) {
-        translatedError = t('auth.errors.accountNotFound', { 
-          default: 'Account not found. Please check your phone number or sign up.' 
-        });
-      } else if (errorMessage.includes('Invalid phone') || 
-                 errorMessage.includes('Phone number invalid')) {
-        translatedError = t('auth.errors.phoneInvalid', { 
-          default: 'Please enter a valid phone number.' 
-        });
-      } else if (errorMessage.includes('Rate limit') || 
-                 errorMessage.includes('Too many requests')) {
-        translatedError = t('auth.errors.rateLimitExceeded', { 
-          default: 'Too many requests. Please wait before requesting another code.' 
-        });
-      } else if (errorMessage.includes('Network') || errorMessage.includes('NETWORK_ERROR')) {
-        translatedError = t('auth.errors.networkError', { 
-          default: 'Network error. Please check your connection and try again.' 
-        });
+      if (error instanceof BackendError) {
+        const firstError = error.getFirstError();
+        const errorMessage = firstError ? firstError.message : 'An error occurred';
+        setAuthError(errorMessage);
+        toast.error(errorMessage);
       } else {
-        translatedError = t('auth.errors.sendCodeFailed', { 
-          default: 'Failed to send verification code. Please try again.' 
-        });
+        const unexpectedError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
+        setAuthError(unexpectedError);
+        toast.error(unexpectedError);
       }
-      
-      setAuthError(translatedError);
-      toast.error(translatedError);
     } finally {
       setIsSubmitting(false);
     }
@@ -164,45 +141,30 @@ export default function ForgotPasswordPage() {
     setAuthError(null); // Clear previous errors
 
     try {
-      await AuthService.forgotPasswordVerify(phoneNumber, data.verificationCode);
+      const response = await AuthService.forgotPasswordVerify(phoneNumber, data.verificationCode);
       
+      // Store the verification token for the next step
+      setVerificationToken(response.verificationToken);
       setCurrentStep('new-password');
       toast.success(t('auth.verification.success', { 
         default: 'Code verified successfully' 
       }));
     } catch (error: unknown) {
-      console.error('Forgot password verify error:', error);
-      
-      // Handle different error types
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      let translatedError: string;
-      
-      // Check for specific error patterns
-      if (errorMessage.includes('Invalid OTP') || 
-          errorMessage.includes('Invalid verification code') ||
-          errorMessage.includes('Incorrect code')) {
-        translatedError = t('auth.errors.invalidOTP', { 
-          default: 'Invalid verification code. Please check and try again.' 
-        });
-      } else if (errorMessage.includes('OTP expired') || 
-                 errorMessage.includes('Code expired') ||
-                 errorMessage.includes('Verification code expired')) {
-        translatedError = t('auth.errors.otpExpired', { 
-          default: 'Verification code has expired. Please request a new one.' 
-        });
-        setCurrentStep('phone'); // Go back to phone step
-      } else if (errorMessage.includes('Network') || errorMessage.includes('NETWORK_ERROR')) {
-        translatedError = t('auth.errors.networkError', { 
-          default: 'Network error. Please check your connection and try again.' 
-        });
+      if (error instanceof BackendError) {
+        const firstError = error.getFirstError();
+        const errorMessage = firstError ? firstError.message : 'An error occurred';
+        setAuthError(errorMessage);
+        toast.error(errorMessage);
+        
+        // Handle specific error cases
+        if (errorMessage.includes('expired')) {
+          setCurrentStep('phone'); // Go back to phone step if code expired
+        }
       } else {
-        translatedError = t('auth.errors.verificationFailed', { 
-          default: 'Verification failed. Please try again.' 
-        });
+        const unexpectedError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
+        setAuthError(unexpectedError);
+        toast.error(unexpectedError);
       }
-      
-      setAuthError(translatedError);
-      toast.error(translatedError);
     } finally {
       setIsSubmitting(false);
     }
@@ -213,10 +175,6 @@ export default function ForgotPasswordPage() {
     setAuthError(null); // Clear previous errors
 
     try {
-      // Note: In a real implementation, you would get the verification token from the previous step
-      // For now, we'll use a placeholder token - this should be stored from the verification step
-      const verificationToken = 'placeholder-token'; // This should come from forgotPasswordVerify response
-      
       await AuthService.forgotPasswordUpdate(verificationToken, data.password);
       
       setCurrentStep('completed');
@@ -229,36 +187,21 @@ export default function ForgotPasswordPage() {
         router.push('/sign-in');
       }, 2000);
     } catch (error: unknown) {
-      console.error('Password reset error:', error);
-      
-      // Handle different error types
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      let translatedError: string;
-      
-      // Check for specific error patterns
-      if (errorMessage.includes('Invalid token') || 
-          errorMessage.includes('Token expired') ||
-          errorMessage.includes('Invalid verification token')) {
-        translatedError = t('auth.errors.invalidResetToken', { 
-          default: 'Invalid or expired reset token. Please start the process again.' 
-        });
-        setCurrentStep('phone'); // Go back to phone step
-      } else if (errorMessage.includes('Password') && errorMessage.includes('weak')) {
-        translatedError = t('auth.errors.passwordWeak', { 
-          default: 'Password is too weak. Please choose a stronger password.' 
-        });
-      } else if (errorMessage.includes('Network') || errorMessage.includes('NETWORK_ERROR')) {
-        translatedError = t('auth.errors.networkError', { 
-          default: 'Network error. Please check your connection and try again.' 
-        });
+      if (error instanceof BackendError) {
+        const firstError = error.getFirstError();
+        const errorMessage = firstError ? firstError.message : 'An error occurred';
+        setAuthError(errorMessage);
+        toast.error(errorMessage);
+        
+        // Handle specific error cases
+        if (errorMessage.includes('token') && (errorMessage.includes('invalid') || errorMessage.includes('expired'))) {
+          setCurrentStep('phone'); // Go back to phone step if token is invalid/expired
+        }
       } else {
-        translatedError = t('auth.errors.resetPasswordFailed', { 
-          default: 'Failed to reset password. Please try again.' 
-        });
+        const unexpectedError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
+        setAuthError(unexpectedError);
+        toast.error(unexpectedError);
       }
-      
-      setAuthError(translatedError);
-      toast.error(translatedError);
     } finally {
       setIsSubmitting(false);
     }
@@ -277,29 +220,16 @@ export default function ForgotPasswordPage() {
         default: 'New verification code sent' 
       }));
     } catch (error: unknown) {
-      console.error('Resend code error:', error);
-      
-      // Handle different error types
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      let translatedError: string;
-      
-      if (errorMessage.includes('Rate limit') || 
-          errorMessage.includes('Too many requests')) {
-        translatedError = t('auth.errors.rateLimitExceeded', { 
-          default: 'Too many requests. Please wait before requesting another code.' 
-        });
-      } else if (errorMessage.includes('Network') || errorMessage.includes('NETWORK_ERROR')) {
-        translatedError = t('auth.errors.networkError', { 
-          default: 'Network error. Please check your connection and try again.' 
-        });
+      if (error instanceof BackendError) {
+        const firstError = error.getFirstError();
+        const errorMessage = firstError ? firstError.message : 'An error occurred';
+        setAuthError(errorMessage);
+        toast.error(errorMessage);
       } else {
-        translatedError = t('auth.errors.resendFailed', { 
-          default: 'Failed to resend verification code. Please try again.' 
-        });
+        const unexpectedError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
+        setAuthError(unexpectedError);
+        toast.error(unexpectedError);
       }
-      
-      setAuthError(translatedError);
-      toast.error(translatedError);
     } finally {
       setIsSubmitting(false);
     }
@@ -332,7 +262,7 @@ export default function ForgotPasswordPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    {t('auth.phone')}
+                    {t('auth.phone.label')}
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -569,12 +499,30 @@ export default function ForgotPasswordPage() {
     </Card>
   );
 
+  // Show loading state while checking authentication
+  if (authLoading) {
+    return (
+      <AuthLayout>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <InlineLoading/>
+        </div>
+      </AuthLayout>
+    );
+  }
+
+  // Don't render the form if user is already authenticated
+  if (isAuthenticated) {
+    return null;
+  }
+
   return (
-    <AuthLayout title="Quizify">
-      {currentStep === 'phone' && renderPhoneStep()}
-      {currentStep === 'verification' && renderVerificationStep()}
-      {currentStep === 'new-password' && renderNewPasswordStep()}
-      {currentStep === 'completed' && renderCompletedStep()}
+    <AuthLayout>
+      <div className="container mx-auto px-4 py-8 max-w-md">
+        {currentStep === 'phone' && renderPhoneStep()}
+        {currentStep === 'verification' && renderVerificationStep()}
+        {currentStep === 'new-password' && renderNewPasswordStep()}
+        {currentStep === 'completed' && renderCompletedStep()}
+      </div>
     </AuthLayout>
   );
 }

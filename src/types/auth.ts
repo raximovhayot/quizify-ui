@@ -58,16 +58,27 @@ export interface SignUpPrepareRequest {
 }
 
 export interface SignInPrepareResponse {
-  phone: string;
-  otpValidityPeriod: number;
+  phoneNumber: string;
+  waitingTime: number;
 }
 
 export interface SignUpVerifyRequest {
   phone: string;
   otp: string;
+}
+
+// Dashboard type enum to match backend
+export enum DashboardType {
+  INSTRUCTOR = 'INSTRUCTOR',
+  STUDENT = 'STUDENT'
+}
+
+// Account completion request for the final step of sign-up
+export interface AccountCompleteRequest {
   firstName: string;
   lastName: string;
   password: string;
+  dashboardType: DashboardType;
 }
 
 export interface ForgotPasswordPrepareRequest {

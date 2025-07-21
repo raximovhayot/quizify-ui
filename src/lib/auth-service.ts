@@ -6,6 +6,7 @@ import {
   SignUpPrepareRequest,
   SignInPrepareResponse,
   SignUpVerifyRequest,
+  AccountCompleteRequest,
   ForgotPasswordPrepareRequest,
   ForgotPasswordVerifyRequest,
   ForgotPasswordVerifyResponse,
@@ -34,15 +35,23 @@ export class AuthService {
    */
   static async signUpPrepare(phone: string): Promise<SignInPrepareResponse> {
     const request: SignUpPrepareRequest = { phone };
-    const response: ApiResponse<SignInPrepareResponse> = await apiClient.post('/auth/signup/prepare', request);
+    const response: ApiResponse<SignInPrepareResponse> = await apiClient.post('/auth/sign-up/prepare', request);
     return extractApiData(response);
   }
 
   /**
-   * Verify sign-up with OTP and complete registration
+   * Verify sign-up OTP (step 2 of sign-up process)
    */
-  static async signUpVerify(data: SignUpVerifyRequest): Promise<JWTToken> {
-    const response: ApiResponse<JWTToken> = await apiClient.post('/auth/signup/verify', data);
+  static async signUpVerify(data: SignUpVerifyRequest): Promise<void> {
+    const response: ApiResponse<void> = await apiClient.post('/auth/sign-up/verify', data);
+    extractApiData(response);
+  }
+
+  /**
+   * Complete account profile (step 3 of sign-up process)
+   */
+  static async completeAccount(data: AccountCompleteRequest): Promise<User> {
+    const response: ApiResponse<User> = await apiClient.post('/account/complete', data);
     return extractApiData(response);
   }
 

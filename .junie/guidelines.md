@@ -21,6 +21,8 @@
 - Create service layer for working with backend
 - Use access and refresh tokens for authentication
 - Use API Routes for backend communication
+- You can see my backend through backend-filesystem mcp server
+- do not use any mock code
 
 ## Internationalization
 
