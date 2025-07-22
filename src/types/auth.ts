@@ -18,20 +18,17 @@ export interface AccountDTO {
   language: Language;
 }
 
-// Alias for backward compatibility
-export type User = AccountDTO;
-
 // Helper functions for role checking
-export function hasRole(user: User | null, roleName: string): boolean {
+export function hasRole(user: AccountDTO | null, roleName: string): boolean {
   return user?.roles?.some(role => role.name === roleName) ?? false;
 }
 
-export function hasAnyRole(user: User | null, roleNames: string[]): boolean {
+export function hasAnyRole(user: AccountDTO | null, roleNames: string[]): boolean {
   return user?.roles?.some(role => roleNames.includes(role.name)) ?? false;
 }
 
 export interface AuthContextType {
-  user: User | null;
+  user: AccountDTO | null;
   login: (phone: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   hasRole: (roleName: string) => boolean;
@@ -67,6 +64,13 @@ export interface SignUpVerifyRequest {
   otp: string;
 }
 
+// User role enum to match backend
+export enum UserRole {
+  ADMIN = 'ADMIN',
+  INSTRUCTOR = 'INSTRUCTOR',
+  STUDENT = 'STUDENT'
+}
+
 // Dashboard type enum to match backend
 export enum DashboardType {
   INSTRUCTOR = 'INSTRUCTOR',
@@ -91,57 +95,15 @@ export interface ForgotPasswordVerifyRequest {
 }
 
 export interface ForgotPasswordVerifyResponse {
-  verificationToken: string;
+  token: string;
+  validityPeriod: number;
 }
 
 export interface ForgotPasswordUpdateRequest {
-  verificationToken: string;
+  token: string;
   newPassword: string;
 }
 
 export interface RefreshTokenRequest {
   refreshToken: string;
-}
-
-// Legacy types for backward compatibility
-export interface RegisterRequest {
-  phone: string;
-  password: string;
-  firstName: string;
-  lastName?: string;
-}
-
-export interface LoginRequest {
-  phone: string;
-  password: string;
-}
-
-export interface LoginResponse {
-  user: User;
-  accessToken: string;
-  refreshToken: string;
-}
-
-export interface RefreshTokenResponse {
-  accessToken: string;
-  refreshToken: string;
-}
-
-export interface ForgotPasswordRequest {
-  phone: string;
-}
-
-export interface LogoutRequest {
-  accessToken: string;
-}
-
-export interface ResetPasswordRequest {
-  phone: string;
-  code: string;
-  newPassword: string;
-}
-
-export interface ChangePasswordRequest {
-  currentPassword: string;
-  newPassword: string;
 }

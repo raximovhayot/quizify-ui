@@ -1,13 +1,13 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, AuthContextType } from '@/types/auth';
+import { AccountDTO, AuthContextType } from '@/types/auth';
 import { AuthService } from '@/lib/auth-service';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AccountDTO | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -64,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const jwtToken = await AuthService.login(phone, password);
 
       // Extract user data and tokens from response
-      const userData: User = jwtToken.user;
+      const userData: AccountDTO = jwtToken.user;
 
       // Store user data and tokens
       setUser(userData);

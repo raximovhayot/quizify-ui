@@ -1,6 +1,6 @@
 import { apiClient } from './api';
 import { 
-  User, 
+  AccountDTO, 
   JWTToken,
   SignInRequest,
   SignUpPrepareRequest,
@@ -11,8 +11,7 @@ import {
   ForgotPasswordVerifyRequest,
   ForgotPasswordVerifyResponse,
   ForgotPasswordUpdateRequest,
-  RefreshTokenRequest,
-  RefreshTokenResponse
+  RefreshTokenRequest
 } from '@/types/auth';
 import { ApiResponse, extractApiData } from '@/types/api';
 
@@ -50,8 +49,8 @@ export class AuthService {
   /**
    * Complete account profile (step 3 of sign-up process)
    */
-  static async completeAccount(data: AccountCompleteRequest): Promise<User> {
-    const response: ApiResponse<User> = await apiClient.post('/account/complete', data);
+  static async completeAccount(data: AccountCompleteRequest): Promise<AccountDTO> {
+    const response: ApiResponse<AccountDTO> = await apiClient.post('/account/complete', data);
     return extractApiData(response);
   }
 
@@ -76,8 +75,8 @@ export class AuthService {
   /**
    * Update password with verification token
    */
-  static async forgotPasswordUpdate(verificationToken: string, newPassword: string): Promise<void> {
-    const request: ForgotPasswordUpdateRequest = { verificationToken, newPassword };
+  static async forgotPasswordUpdate(token: string, newPassword: string): Promise<void> {
+    const request: ForgotPasswordUpdateRequest = { token, newPassword };
     const response: ApiResponse<void> = await apiClient.post('/auth/forgot-password/update', request);
     extractApiData(response);
   }
@@ -85,9 +84,9 @@ export class AuthService {
   /**
    * Refresh access token using refresh token
    */
-  static async refreshToken(refreshToken: string): Promise<RefreshTokenResponse> {
+  static async refreshToken(refreshToken: string): Promise<JWTToken> {
     const request: RefreshTokenRequest = { refreshToken };
-    const response: ApiResponse<RefreshTokenResponse> = await apiClient.post('/auth/refresh-token', request);
+    const response: ApiResponse<JWTToken> = await apiClient.post('/auth/refresh-token', request);
     return extractApiData(response);
   }
 
@@ -103,42 +102,9 @@ export class AuthService {
   /**
    * Verify current user session
    */
-  static async verifyToken(accessToken: string): Promise<User> {
-    const response: ApiResponse<User> = await apiClient.get('/account/me', accessToken);
+  static async verifyToken(accessToken: string): Promise<AccountDTO> {
+    const response: ApiResponse<AccountDTO> = await apiClient.get('/account/me', accessToken);
     return extractApiData(response);
   }
 
-  // Legacy methods for backward compatibility
-  /**
-   * @deprecated Use signUpPrepare and signUpVerify instead
-   */
-  static async register(userData: {
-    phone: string;
-    password: string;
-    firstName: string;
-    lastName?: string;
-  }): Promise<JWTToken> {
-    const response: ApiResponse<JWTToken> = await apiClient.post('/auth/register', userData);
-    return extractApiData(response);
-  }
-
-  /**
-   * @deprecated Use forgotPasswordPrepare, forgotPasswordVerify, and forgotPasswordUpdate instead
-   */
-  static async requestPasswordReset(phone: string): Promise<void> {
-    const response: ApiResponse<void> = await apiClient.post('/auth/forgot-password', { phone });
-    extractApiData(response);
-  }
-
-  /**
-   * @deprecated Use forgotPasswordPrepare, forgotPasswordVerify, and forgotPasswordUpdate instead
-   */
-  static async resetPassword(phone: string, code: string, newPassword: string): Promise<void> {
-    const response: ApiResponse<void> = await apiClient.post('/auth/reset-password', {
-      phone,
-      code,
-      newPassword
-    });
-    extractApiData(response);
-  }
 }
