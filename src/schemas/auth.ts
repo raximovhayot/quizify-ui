@@ -1,6 +1,5 @@
 import * as z from 'zod';
 import { PHONE_REGEX, PASSWORD_REGEX, PASSWORD_MIN_LENGTH } from '@/constants/validation';
-import { DashboardType } from '@/types/auth';
 
 /**
  * Sign-in form validation schema factory
@@ -39,7 +38,7 @@ export const createSignUpPhoneSchema = (t: (key: string) => string) => {
     return z.object({
         phone: z.string()
             .min(1, t('auth.validation.phoneRequired'))
-            .regex(/^\+998(90|91|93|94|95|97|98|99|77|88|33|55|61|62|65|66|67|69|71|73|74|75|76|78|79)[0-9]{7}$/, t('auth.validation.phoneInvalid')),
+            .regex(PHONE_REGEX, t('auth.validation.phoneInvalid')),
     });
 };
 
@@ -79,48 +78,6 @@ export const verificationFormDefaults: VerificationFormData = {
     otp: '',
 };
 
-/**
- * User details schema factory for sign-up completion
- */
-export const createUserDetailsSchema = (t: (key: string) => string) => {
-    return z.object({
-        firstName: z.string()
-            .min(1, t('auth.validation.firstNameRequired'))
-            .min(2, t('auth.validation.firstNameMinLength')),
-        lastName: z.string()
-            .min(1, t('auth.validation.lastNameRequired'))
-            .min(2, t('auth.validation.lastNameMinLength')),
-        password: z.string()
-            .min(1, t('auth.validation.passwordRequired'))
-            .min(PASSWORD_MIN_LENGTH, t('auth.validation.passwordMinLength'))
-            .regex(PASSWORD_REGEX, t('auth.validation.passwordPattern')),
-        confirmPassword: z.string()
-            .min(1, t('auth.validation.confirmPasswordRequired')),
-        dashboardType: z.nativeEnum(DashboardType, {
-            required_error: t('auth.validation.dashboardTypeRequired', { default: 'Please select your role' }),
-        }),
-    }).refine((data) => data.password === data.confirmPassword, {
-        message: t('auth.validation.passwordsNotMatch'),
-        path: ["confirmPassword"],
-    });
-};
-
-/**
- * User details form data type
- */
-export type UserDetailsFormData = z.infer<ReturnType<typeof createUserDetailsSchema>>;
-
-/**
- * Default values for user details form
- */
-export const userDetailsFormDefaults: UserDetailsFormData = {
-    firstName: '',
-    lastName: '',
-    password: '',
-    confirmPassword: '',
-    dashboardType: DashboardType.STUDENT,
-};
-
 // ============================================================================
 // FORGOT PASSWORD SCHEMAS
 // ============================================================================
@@ -133,7 +90,7 @@ export const createForgotPasswordPhoneSchema = (t: (key: string) => string) => {
     return z.object({
         phone: z.string()
             .min(1, t('auth.validation.phoneRequired'))
-            .regex(/^\+998(90|91|93|94|95|97|98|99|77|88|33|55|61|62|65|66|67|69|71|73|74|75|76|78|79)[0-9]{7}$/, t('auth.validation.phoneInvalid')),
+            .regex(PHONE_REGEX, t('auth.validation.phoneInvalid')),
     });
 };
 
