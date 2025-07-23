@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { InlineLoading } from '@/components/ui/loading-spinner';
+import { PHONE_REGEX, PASSWORD_REGEX, PASSWORD_MIN_LENGTH } from '@/constants/validation';
 import {
   Form,
   FormControl,
@@ -41,7 +42,7 @@ export default function ForgotPasswordPage() {
   const phoneSchema = z.object({
     phone: z.string()
       .min(1, t('auth.validation.phoneRequired'))
-      .regex(/^(?:\+?998|0)?\d{9}$/, t('auth.validation.phoneInvalid')),
+      .regex(PHONE_REGEX, t('auth.validation.phoneInvalid')),
   });
 
   // SMS verification schema with localized messages
@@ -56,8 +57,8 @@ export default function ForgotPasswordPage() {
   const newPasswordSchema = z.object({
     password: z.string()
       .min(1, t('auth.validation.passwordRequired'))
-      .min(6, t('auth.validation.passwordMinLength'))
-      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, t('auth.validation.passwordPattern')),
+      .min(PASSWORD_MIN_LENGTH, t('auth.validation.passwordMinLength'))
+      .regex(PASSWORD_REGEX, t('auth.validation.passwordPattern')),
     confirmPassword: z.string()
       .min(1, t('auth.validation.confirmPasswordRequired')),
   }).refine((data) => data.password === data.confirmPassword, {

@@ -10,6 +10,7 @@ import { AuthLayout } from '@/components/layouts/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { PASSWORD_REGEX, PASSWORD_MIN_LENGTH } from '@/constants/validation';
 import { InlineLoading } from '@/components/ui/loading-spinner';
 import {
   Form,
@@ -64,8 +65,8 @@ export default function SignUpPage() {
       .min(2, t('auth.validation.lastNameMinLength')),
     password: z.string()
       .min(1, t('auth.validation.passwordRequired'))
-      .min(6, t('auth.validation.passwordMinLength'))
-      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/, t('auth.validation.passwordPattern')),
+      .min(PASSWORD_MIN_LENGTH, t('auth.validation.passwordMinLength'))
+      .regex(PASSWORD_REGEX, t('auth.validation.passwordPattern')),
     confirmPassword: z.string()
       .min(1, t('auth.validation.confirmPasswordRequired')),
     dashboardType: z.nativeEnum(DashboardType, {

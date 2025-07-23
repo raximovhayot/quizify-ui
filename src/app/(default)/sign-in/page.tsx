@@ -1,11 +1,6 @@
 'use client';
 
-import {useState, useEffect} from 'react';
-import {useRouter, useSearchParams} from 'next/navigation';
 import {useTranslations} from 'next-intl';
-import {useForm} from 'react-hook-form';
-import {zodResolver} from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import {AuthLayout} from '@/components/layouts/AppLayout';
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
@@ -19,86 +14,12 @@ import {
     FormLabel,
     FormMessage,
 } from '@/components/ui/form';
-import {toast} from 'sonner';
 import Link from 'next/link';
-import {useAuth} from '@/contexts/AuthContext';
-import {BackendError} from '@/types/api';
+import {useSignInForm} from '@/hooks/useSignInForm';
 
 export default function SignInPage() {
-    const {login, isAuthenticated, isLoading: authLoading} = useAuth();
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const router = useRouter();
-    const searchParams = useSearchParams();
     const t = useTranslations();
-
-    // Sign-in validation schema with localized messages
-    const signInSchema = z.object({
-        phone: z.string()
-            .min(1, t('auth.validation.phoneRequired'))
-            .regex(/^(?:\+?998|0)?\d{9}$/, t('auth.validation.phoneInvalid')),
-        password: z.string()
-            .min(1, t('auth.validation.passwordRequired'))
-            .min(6, t('auth.validation.passwordMinLength')),
-    });
-
-    type SignInFormData = z.infer<typeof signInSchema>;
-
-    const form = useForm<SignInFormData>({
-        resolver: zodResolver(signInSchema),
-        defaultValues: {
-            phone: '',
-            password: '',
-        },
-    });
-
-    useEffect(() => {
-        // If user is already authenticated, redirect them
-        if (isAuthenticated && !authLoading) {
-            const redirectTo = searchParams.get('redirect') || '/';
-            router.push(redirectTo);
-        }
-    }, [isAuthenticated, authLoading, router, searchParams]);
-
-    const onSubmit = async (data: SignInFormData) => {
-        setIsSubmitting(true);
-
-        try {
-            await login(data.phone, data.password);
-
-            // Get redirect URL from query params or default to home
-            const redirectTo = searchParams.get('redirect') || '/';
-
-            toast.success(t('auth.loginSuccess'));
-            router.push(redirectTo);
-        } catch (error: unknown) {
-            if (error instanceof BackendError) {
-                const firstError = error.getFirstError();
-                if (firstError) {
-                    toast.error(firstError.message);
-                } else {
-                    // If no specific error message from backend, use generic message
-                    const genericError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
-                    toast.error(genericError);
-                }
-            } else {
-                const unExpectedError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
-                toast.error(unExpectedError);
-            }
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
-    // Show loading state while checking authentication
-    if (authLoading) {
-        return (
-            <AuthLayout>
-                <div className="flex items-center justify-center min-h-[400px]">
-                    <InlineLoading/>
-                </div>
-            </AuthLayout>
-        );
-    }
+    const {form, isSubmitting, isAuthenticated, onSubmit} = useSignInForm();
 
     // Don't render the form if user is already authenticated
     if (isAuthenticated) {
@@ -121,7 +42,7 @@ export default function SignInPage() {
                     </CardHeader>
                     <CardContent>
                         <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                            <form onSubmit={onSubmit} className="space-y-4">
                                 <FormField
                                     control={form.control}
                                     name="phone"
@@ -171,8 +92,9 @@ export default function SignInPage() {
                                 >
                                     {isSubmitting ? (
                                         <>
-                                            <InlineLoading/>
-                                            {t('auth.signIn.submitting', {default: 'Signing In...'})}
+                                            <InlineLoading
+                                                text={t('auth.signIn.submitting', {default: 'Signing In...'})}/>
+
                                         </>
                                     ) : (
                                         t('auth.signIn.submit', {default: 'Sign In'})
