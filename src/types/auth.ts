@@ -31,6 +31,7 @@ export interface AuthContextType {
   user: AccountDTO | null;
   login: (phone: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  setUserFromToken: (jwtToken: JWTToken) => void;
   hasRole: (roleName: string) => boolean;
   hasAnyRole: (roleNames: string[]) => boolean;
   isLoading: boolean;

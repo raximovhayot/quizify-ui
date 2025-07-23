@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { AccountDTO, AuthContextType } from '@/types/auth';
+import {AccountDTO, AuthContextType, JWTToken} from '@/types/auth';
 import { AuthService } from '@/lib/auth-service';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -77,7 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     try {
       // Use AuthService to authenticate user
-      const jwtToken = await AuthService.login(phone, password);
+      const jwtToken = await AuthService.signIn(phone, password);
 
       // Extract user data and tokens from response
       const userData: AccountDTO = jwtToken.user;
@@ -120,6 +120,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const setUserFromToken = (jwtToken: JWTToken) => {
+    // Extract user data from JWT token
+    const userData: AccountDTO = jwtToken.user;
+    
+    // Update context state
+    setUser(userData);
+    
+    // Store tokens and user data (already done in sign-up flow, but ensure consistency)
+    localStorage.setItem('user', JSON.stringify(userData));
+    localStorage.setItem('accessToken', jwtToken.accessToken);
+    localStorage.setItem('refreshToken', jwtToken.refreshToken);
+
+    // Also set cookies for middleware compatibility
+    document.cookie = `user=${JSON.stringify(userData)}; path=/; max-age=${7 * 24 * 60 * 60}`; // 7 days
+    document.cookie = `accessToken=${jwtToken.accessToken}; path=/; max-age=${15 * 60}`; // 15 minutes
+    document.cookie = `refreshToken=${jwtToken.refreshToken}; path=/; max-age=${7 * 24 * 60 * 60}`; // 7 days
+  };
+
   const hasRole = (roleName: string): boolean => {
     return user?.roles?.some(role => role.name === roleName) ?? false;
   };
@@ -132,6 +150,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     user,
     login,
     logout,
+    setUserFromToken,
     hasRole,
     hasAnyRole,
     isLoading,
