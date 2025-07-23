@@ -21,8 +21,30 @@
 - Create service layer for working with backend
 - Use access and refresh tokens for authentication
 - Use API Routes for backend communication
-- You can see my backend through backend-filesystem mcp server
-- do not use any mock code
+- Do not use any mock code
+
+#### MCP Server Integration
+The project is configured with two MCP (Model Context Protocol) servers for enhanced development capabilities:
+
+##### Backend Filesystem Server
+- **Purpose**: Access to backend codebase and business logic
+- **Configuration**: `backend-filesystem` server in `.junie/mcp/mcp.json`
+- **Usage**: Explore backend source code, understand business logic, review implementation details
+- **Benefits**: Direct access to backend files for better understanding of API implementations
+
+##### Swagger API Server  
+- **Purpose**: Access to API documentation and specifications
+- **Configuration**: `swagger` server in `.junie/mcp/mcp.json`
+- **Endpoint**: `https://quizifybackend-b86e8709a4d9.herokuapp.com/swagger-ui/index.html`
+- **Usage**: Review API endpoints, request/response schemas, authentication requirements
+- **Benefits**: Complete API documentation for accurate frontend integration
+
+#### Development Workflow with MCP Servers
+1. **API Integration**: Use swagger MCP server to understand API contracts before implementation
+2. **Business Logic Review**: Use backend-filesystem MCP server to understand backend implementation
+3. **Service Layer Design**: Create frontend services that align with backend architecture
+4. **Type Safety**: Generate TypeScript types based on API specifications from swagger
+5. **Error Handling**: Implement proper error handling based on API response patterns
 
 ## Internationalization
 

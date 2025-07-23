@@ -6,6 +6,13 @@
       "args": [
         "/home/xmpl/Idea/Quizify/quizify-backend"
       ]
+    },
+    {
+      "name": "swagger",
+      "command": "mcp-swagger-server",
+      "args": [
+        "https://quizifybackend-b86e8709a4d9.herokuapp.com/swagger-ui/index.html"
+      ]
     }
   ]
 }
