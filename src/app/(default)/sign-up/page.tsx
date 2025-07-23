@@ -35,7 +35,6 @@ export default function SignUpPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [resendCooldown, setResendCooldown] = useState(0);
-  const [authError, setAuthError] = useState<string | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const t = useTranslations();
@@ -125,24 +124,24 @@ export default function SignUpPage() {
 
   const onPhoneSubmit = async (data: PhoneFormData) => {
     setIsSubmitting(true);
-    setAuthError(null); // Clear previous errors
 
     try {
-      await AuthService.signUpPrepare(data.phone);
-
-      setPhoneNumber(data.phone);
+      const prepareResponse = await AuthService.signUpPrepare(data.phone);
+      setPhoneNumber(prepareResponse.phoneNumber);
       setCurrentStep('verification');
-      setResendCooldown(60);
-      toast.success(t('auth.signUp.codeSent', { default: 'Verification code sent to your phone' }));
+      setResendCooldown(prepareResponse.waitingTime);
     } catch (error: unknown) {
       if (error instanceof BackendError) {
         const firstError = error.getFirstError();
-        const errorMessage = firstError ? firstError.message : 'An error occurred';
-        setAuthError(errorMessage);
-        toast.error(errorMessage);
+        if (firstError) {
+          toast.error(firstError.message);
+        } else {
+          // If no specific error message from backend, use generic message
+          const genericError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
+          toast.error(genericError);
+        }
       } else {
         const unExpectedError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
-        setAuthError(unExpectedError);
         toast.error(unExpectedError);
       }
     } finally {
@@ -152,7 +151,6 @@ export default function SignUpPage() {
 
   const onVerificationSubmit = async (data: VerificationFormData) => {
     setIsSubmitting(true);
-    setAuthError(null); // Clear previous errors
 
     try {
       // Verify OTP with backend (step 2 of sign-up process)
@@ -168,12 +166,15 @@ export default function SignUpPage() {
     } catch (error: unknown) {
       if (error instanceof BackendError) {
         const firstError = error.getFirstError();
-        const errorMessage = firstError ? firstError.message : 'An error occurred';
-        setAuthError(errorMessage);
-        toast.error(errorMessage);
+        if (firstError) {
+          toast.error(firstError.message);
+        } else {
+          // If no specific error message from backend, use generic message
+          const genericError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
+          toast.error(genericError);
+        }
       } else {
         const unExpectedError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
-        setAuthError(unExpectedError);
         toast.error(unExpectedError);
       }
     } finally {
@@ -183,7 +184,6 @@ export default function SignUpPage() {
 
   const onUserDetailsSubmit = async (data: UserDetailsFormData) => {
     setIsSubmitting(true);
-    setAuthError(null); // Clear previous errors
 
     try {
       // Complete account profile (step 3 of sign-up process)
@@ -206,12 +206,15 @@ export default function SignUpPage() {
     } catch (error: unknown) {
       if (error instanceof BackendError) {
         const firstError = error.getFirstError();
-        const errorMessage = firstError ? firstError.message : 'An error occurred';
-        setAuthError(errorMessage);
-        toast.error(errorMessage);
+        if (firstError) {
+          toast.error(firstError.message);
+        } else {
+          // If no specific error message from backend, use generic message
+          const genericError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
+          toast.error(genericError);
+        }
       } else {
         const unExpectedError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
-        setAuthError(unExpectedError);
         toast.error(unExpectedError);
       }
     } finally {
@@ -223,7 +226,6 @@ export default function SignUpPage() {
     if (resendCooldown > 0) return;
 
     setIsSubmitting(true);
-    setAuthError(null); // Clear previous errors
 
     try {
       const response = await AuthService.signUpPrepare(phoneNumber);
@@ -235,12 +237,15 @@ export default function SignUpPage() {
     } catch (error: unknown) {
       if (error instanceof BackendError) {
         const firstError = error.getFirstError();
-        const errorMessage = firstError ? firstError.message : 'An error occurred';
-        setAuthError(errorMessage);
-        toast.error(errorMessage);
+        if (firstError) {
+          toast.error(firstError.message);
+        } else {
+          // If no specific error message from backend, use generic message
+          const genericError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
+          toast.error(genericError);
+        }
       } else {
         const unExpectedError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
-        setAuthError(unExpectedError);
         toast.error(unExpectedError);
       }
     } finally {
@@ -270,11 +275,6 @@ export default function SignUpPage() {
         return (
           <Form {...phoneForm}>
             <form onSubmit={phoneForm.handleSubmit(onPhoneSubmit)} className="space-y-4">
-              {authError && (
-                <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
-                  {authError}
-                </div>
-              )}
               <FormField
                 control={phoneForm.control}
                 name="phone"
@@ -314,11 +314,6 @@ export default function SignUpPage() {
         return (
           <Form {...verificationForm}>
             <form onSubmit={verificationForm.handleSubmit(onVerificationSubmit)} className="space-y-4">
-              {authError && (
-                <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
-                  {authError}
-                </div>
-              )}
               <div className="text-center mb-4">
                 <p className="text-sm text-gray-600">
                   {t('auth.verification.instruction', {
@@ -385,11 +380,6 @@ export default function SignUpPage() {
         return (
           <Form {...userDetailsForm}>
             <form onSubmit={userDetailsForm.handleSubmit(onUserDetailsSubmit)} className="space-y-4">
-              {authError && (
-                <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
-                  {authError}
-                </div>
-              )}
               <div className="grid grid-cols-2 gap-4">
                 <FormField
                   control={userDetailsForm.control}

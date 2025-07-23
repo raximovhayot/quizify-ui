@@ -34,19 +34,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               localStorage.setItem('accessToken', tokens.accessToken);
               localStorage.setItem('refreshToken', tokens.refreshToken);
 
+              // Also update cookies for middleware compatibility
+              document.cookie = `accessToken=${tokens.accessToken}; path=/; max-age=${15 * 60}`; // 15 minutes
+              document.cookie = `refreshToken=${tokens.refreshToken}; path=/; max-age=${7 * 24 * 60 * 60}`; // 7 days
+
               // Verify new token
               const userData = await AuthService.verifyToken(tokens.accessToken);
               setUser(userData);
+              
+              // Update user cookie as well
+              document.cookie = `user=${JSON.stringify(userData)}; path=/; max-age=${7 * 24 * 60 * 60}`; // 7 days
             } catch {
               // Refresh failed, clear stored data
               localStorage.removeItem('user');
               localStorage.removeItem('accessToken');
               localStorage.removeItem('refreshToken');
+              
+              // Also clear cookies
+              document.cookie = 'user=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+              document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+              document.cookie = 'refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
             }
           } else {
             // No refresh token, clear stored data
             localStorage.removeItem('user');
             localStorage.removeItem('accessToken');
+            
+            // Also clear cookies
+            document.cookie = 'user=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+            document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
           }
         }
       }
@@ -66,11 +82,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Extract user data and tokens from response
       const userData: AccountDTO = jwtToken.user;
 
-      // Store user data and tokens
+      // Store user data and tokens in localStorage
       setUser(userData);
       localStorage.setItem('user', JSON.stringify(userData));
       localStorage.setItem('accessToken', jwtToken.accessToken);
       localStorage.setItem('refreshToken', jwtToken.refreshToken);
+
+      // Also set cookies for middleware compatibility
+      document.cookie = `user=${JSON.stringify(userData)}; path=/; max-age=${7 * 24 * 60 * 60}`; // 7 days
+      document.cookie = `accessToken=${jwtToken.accessToken}; path=/; max-age=${15 * 60}`; // 15 minutes
+      document.cookie = `refreshToken=${jwtToken.refreshToken}; path=/; max-age=${7 * 24 * 60 * 60}`; // 7 days
     } catch (error) {
       console.error('Login error:', error);
       throw error;
@@ -92,6 +113,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.removeItem('user');
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
+
+      // Also clear cookies for middleware compatibility
+      document.cookie = 'user=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      document.cookie = 'refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     }
   };
 

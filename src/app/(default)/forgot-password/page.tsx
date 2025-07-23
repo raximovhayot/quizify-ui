@@ -34,7 +34,6 @@ export default function ForgotPasswordPage() {
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [verificationToken, setVerificationToken] = useState<string>('');
   const [resendCooldown, setResendCooldown] = useState(0);
-  const [authError, setAuthError] = useState<string | null>(null);
   const router = useRouter();
   const t = useTranslations();
 
@@ -109,7 +108,6 @@ export default function ForgotPasswordPage() {
 
   const onPhoneSubmit = async (data: PhoneFormData) => {
     setIsSubmitting(true);
-    setAuthError(null); // Clear previous errors
 
     try {
       await AuthService.forgotPasswordPrepare(data.phone);
@@ -123,12 +121,15 @@ export default function ForgotPasswordPage() {
     } catch (error: unknown) {
       if (error instanceof BackendError) {
         const firstError = error.getFirstError();
-        const errorMessage = firstError ? firstError.message : 'An error occurred';
-        setAuthError(errorMessage);
-        toast.error(errorMessage);
+        if (firstError) {
+          toast.error(firstError.message);
+        } else {
+          // If no specific error message from backend, use generic message
+          const genericError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
+          toast.error(genericError);
+        }
       } else {
         const unexpectedError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
-        setAuthError(unexpectedError);
         toast.error(unexpectedError);
       }
     } finally {
@@ -138,7 +139,6 @@ export default function ForgotPasswordPage() {
 
   const onVerificationSubmit = async (data: VerificationFormData) => {
     setIsSubmitting(true);
-    setAuthError(null); // Clear previous errors
 
     try {
       const response = await AuthService.forgotPasswordVerify(phoneNumber, data.verificationCode);
@@ -152,17 +152,20 @@ export default function ForgotPasswordPage() {
     } catch (error: unknown) {
       if (error instanceof BackendError) {
         const firstError = error.getFirstError();
-        const errorMessage = firstError ? firstError.message : 'An error occurred';
-        setAuthError(errorMessage);
-        toast.error(errorMessage);
-        
-        // Handle specific error cases
-        if (errorMessage.includes('expired')) {
-          setCurrentStep('phone'); // Go back to phone step if code expired
+        if (firstError) {
+          toast.error(firstError.message);
+          
+          // Handle specific error cases
+          if (firstError.message.includes('expired')) {
+            setCurrentStep('phone'); // Go back to phone step if code expired
+          }
+        } else {
+          // If no specific error message from backend, use generic message
+          const genericError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
+          toast.error(genericError);
         }
       } else {
         const unexpectedError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
-        setAuthError(unexpectedError);
         toast.error(unexpectedError);
       }
     } finally {
@@ -172,7 +175,6 @@ export default function ForgotPasswordPage() {
 
   const onPasswordSubmit = async (data: NewPasswordFormData) => {
     setIsSubmitting(true);
-    setAuthError(null); // Clear previous errors
 
     try {
       await AuthService.forgotPasswordUpdate(verificationToken, data.password);
@@ -189,17 +191,20 @@ export default function ForgotPasswordPage() {
     } catch (error: unknown) {
       if (error instanceof BackendError) {
         const firstError = error.getFirstError();
-        const errorMessage = firstError ? firstError.message : 'An error occurred';
-        setAuthError(errorMessage);
-        toast.error(errorMessage);
-        
-        // Handle specific error cases
-        if (errorMessage.includes('token') && (errorMessage.includes('invalid') || errorMessage.includes('expired'))) {
-          setCurrentStep('phone'); // Go back to phone step if token is invalid/expired
+        if (firstError) {
+          toast.error(firstError.message);
+          
+          // Handle specific error cases
+          if (firstError.message.includes('token') && (firstError.message.includes('invalid') || firstError.message.includes('expired'))) {
+            setCurrentStep('phone'); // Go back to phone step if token is invalid/expired
+          }
+        } else {
+          // If no specific error message from backend, use generic message
+          const genericError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
+          toast.error(genericError);
         }
       } else {
         const unexpectedError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
-        setAuthError(unexpectedError);
         toast.error(unexpectedError);
       }
     } finally {
@@ -211,7 +216,6 @@ export default function ForgotPasswordPage() {
     if (resendCooldown > 0) return;
 
     setIsSubmitting(true);
-    setAuthError(null); // Clear previous errors
     
     try {
       await AuthService.forgotPasswordPrepare(phoneNumber);
@@ -222,12 +226,15 @@ export default function ForgotPasswordPage() {
     } catch (error: unknown) {
       if (error instanceof BackendError) {
         const firstError = error.getFirstError();
-        const errorMessage = firstError ? firstError.message : 'An error occurred';
-        setAuthError(errorMessage);
-        toast.error(errorMessage);
+        if (firstError) {
+          toast.error(firstError.message);
+        } else {
+          // If no specific error message from backend, use generic message
+          const genericError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
+          toast.error(genericError);
+        }
       } else {
         const unexpectedError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
-        setAuthError(unexpectedError);
         toast.error(unexpectedError);
       }
     } finally {
@@ -251,11 +258,6 @@ export default function ForgotPasswordPage() {
       <CardContent className="space-y-4">
         <Form {...phoneForm}>
           <form onSubmit={phoneForm.handleSubmit(onPhoneSubmit)} className="space-y-4">
-            {authError && (
-              <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
-                {authError}
-              </div>
-            )}
             <FormField
               control={phoneForm.control}
               name="phone"
@@ -322,11 +324,6 @@ export default function ForgotPasswordPage() {
       <CardContent className="space-y-4">
         <Form {...verificationForm}>
           <form onSubmit={verificationForm.handleSubmit(onVerificationSubmit)} className="space-y-4">
-            {authError && (
-              <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
-                {authError}
-              </div>
-            )}
             <FormField
               control={verificationForm.control}
               name="verificationCode"
@@ -415,11 +412,6 @@ export default function ForgotPasswordPage() {
       <CardContent className="space-y-4">
         <Form {...passwordForm}>
           <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4">
-            {authError && (
-              <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
-                {authError}
-              </div>
-            )}
             <FormField
               control={passwordForm.control}
               name="password"

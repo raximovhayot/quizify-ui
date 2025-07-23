@@ -27,7 +27,6 @@ import {BackendError} from '@/types/api';
 export default function SignInPage() {
     const {login, isAuthenticated, isLoading: authLoading} = useAuth();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [authError, setAuthError] = useState<string | null>(null);
     const router = useRouter();
     const searchParams = useSearchParams();
     const t = useTranslations();
@@ -62,7 +61,6 @@ export default function SignInPage() {
 
     const onSubmit = async (data: SignInFormData) => {
         setIsSubmitting(true);
-        setAuthError(null); // Clear previous errors
 
         try {
             await login(data.phone, data.password);
@@ -75,12 +73,15 @@ export default function SignInPage() {
         } catch (error: unknown) {
             if (error instanceof BackendError) {
                 const firstError = error.getFirstError();
-                const errorMessage = firstError ? firstError.message : 'An error occurred';
-                setAuthError(errorMessage);
-                toast.error(errorMessage);
+                if (firstError) {
+                    toast.error(firstError.message);
+                } else {
+                    // If no specific error message from backend, use generic message
+                    const genericError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
+                    toast.error(genericError);
+                }
             } else {
                 const unExpectedError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
-                setAuthError(unExpectedError);
                 toast.error(unExpectedError);
             }
         } finally {
@@ -121,12 +122,6 @@ export default function SignInPage() {
                     <CardContent>
                         <Form {...form}>
                             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                                {authError && (
-                                    <div
-                                        className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
-                                        {authError}
-                                    </div>
-                                )}
                                 <FormField
                                     control={form.control}
                                     name="phone"
