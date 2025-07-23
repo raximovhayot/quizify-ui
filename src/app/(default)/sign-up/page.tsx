@@ -8,8 +8,6 @@ import { useSignUpForms } from '@/hooks/useSignUpForms';
 import {
   PhoneStep,
   VerificationStep,
-  UserDetailsStep,
-  CompletedStep,
 } from '@/components/auth/SignUpSteps';
 
 export default function SignUpPage() {
@@ -22,10 +20,8 @@ export default function SignUpPage() {
     isAuthenticated,
     phoneForm,
     verificationForm,
-    userDetailsForm,
     onPhoneSubmit,
     onVerificationSubmit,
-    onUserDetailsSubmit,
     handleResendOTP,
   } = useSignUpForms();
 
@@ -57,18 +53,6 @@ export default function SignUpPage() {
           />
         );
 
-      case 'details':
-        return (
-          <UserDetailsStep
-            form={userDetailsForm}
-            onSubmit={onUserDetailsSubmit}
-            isSubmitting={isSubmitting}
-          />
-        );
-
-      case 'completed':
-        return <CompletedStep />;
-
       default:
         return null;
     }
@@ -80,10 +64,6 @@ export default function SignUpPage() {
         return t('auth.signUp.phone.title', { default: 'Sign Up' });
       case 'verification':
         return t('auth.signUp.verification.title', { default: 'Verify Phone Number' });
-      case 'details':
-        return t('auth.signUp.details.title', { default: 'Complete Your Profile' });
-      case 'completed':
-        return t('auth.signUp.completed.title', { default: 'Welcome!' });
       default:
         return 'Sign Up';
     }
@@ -98,14 +78,6 @@ export default function SignUpPage() {
       case 'verification':
         return t('auth.signUp.verification.description', {
           default: 'We sent a verification code to your phone'
-        });
-      case 'details':
-        return t('auth.signUp.details.description', {
-          default: 'Tell us a bit about yourself'
-        });
-      case 'completed':
-        return t('auth.signUp.completed.description', {
-          default: 'Your account is ready to use'
         });
       default:
         return '';
