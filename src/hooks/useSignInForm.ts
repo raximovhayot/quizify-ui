@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
+import { UserState } from '@/types/common';
 import { createSignInSchema, SignInFormData, signInFormDefaults } from '@/schemas/auth';
 import { handleAuthError, clearFormErrors } from '@/utils/auth-errors';
 
@@ -13,7 +14,7 @@ import { handleAuthError, clearFormErrors } from '@/utils/auth-errors';
  * Handles form state, validation, submission, and error handling
  */
 export function useSignInForm() {
-    const { login, isAuthenticated } = useAuth();
+    const { login, isAuthenticated, user } = useAuth();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -28,13 +29,14 @@ export function useSignInForm() {
         defaultValues: signInFormDefaults,
     });
 
-    // Handle authentication redirect
+    // Handle authentication redirect for completed users only
+    // NEW users will be redirected by middleware to /sign-up
     useEffect(() => {
-        if (isAuthenticated) {
+        if (isAuthenticated && user && user.state !== UserState.NEW) {
             const redirectTo = searchParams.get('redirect') || '/';
             router.push(redirectTo);
         }
-    }, [isAuthenticated, router, searchParams]);
+    }, [isAuthenticated, user, router, searchParams]);
 
     // Form submission handler
     const onSubmit = async (data: SignInFormData) => {
@@ -46,11 +48,10 @@ export function useSignInForm() {
         try {
             await login(data.phone, data.password);
 
-            // Get redirect URL from query params or default to home
-            const redirectTo = searchParams.get('redirect') || '/';
-
             toast.success(t('auth.loginSuccess'));
-            router.push(redirectTo);
+            
+            // Don't redirect here - let the useEffect handle it based on user state
+            // This ensures NEW users are handled by middleware redirect to /sign-up
         } catch (error: unknown) {
             handleAuthError(error, form, t);
         } finally {

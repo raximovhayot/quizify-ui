@@ -19,7 +19,6 @@ import {
   RotateCcw
 } from 'lucide-react';
 import Link from 'next/link';
-import { apiClient } from '@/lib/api';
 
 interface QuizResult {
   id: string;

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Link from "next/link";
 import { AuthProvider } from "@/contexts/AuthContext";
 import InstructorProtectedRoute from "@/components/InstructorProtectedRoute";
 import "../globals.css";
@@ -36,9 +37,9 @@ export default function InstructorLayout({
                 <div className="max-w-7xl mx-auto flex justify-between items-center">
                   <h1 className="text-xl font-semibold">Instructor Dashboard</h1>
                   <nav className="flex space-x-4">
-                    <a href="/instructor" className="hover:text-green-200">Dashboard</a>
-                    <a href="/join" className="hover:text-green-200">Join Assignment</a>
-                    <a href="/" className="hover:text-green-200">Home</a>
+                    <Link href="/instructor" className="hover:text-green-200">Dashboard</Link>
+                    <Link href="/join" className="hover:text-green-200">Join Assignment</Link>
+                    <Link href="/" className="hover:text-green-200">Home</Link>
                   </nav>
                 </div>
               </header>

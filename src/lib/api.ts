@@ -16,7 +16,7 @@ type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 interface ApiRequestOptions {
   method?: HttpMethod;
   headers?: Record<string, string>;
-  body?: any;
+  body?: unknown;
   token?: string;
 }
 
@@ -95,14 +95,14 @@ class ApiClient {
   /**
    * POST request
    */
-  async post<T>(endpoint: string, body?: any, token?: string): Promise<ApiResponse<T>> {
+  async post<T>(endpoint: string, body?: unknown, token?: string): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, { method: 'POST', body, token });
   }
 
   /**
    * PUT request
    */
-  async put<T>(endpoint: string, body?: any, token?: string): Promise<ApiResponse<T>> {
+  async put<T>(endpoint: string, body?: unknown, token?: string): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, { method: 'PUT', body, token });
   }
 
@@ -116,7 +116,7 @@ class ApiClient {
   /**
    * PATCH request
    */
-  async patch<T>(endpoint: string, body?: any, token?: string): Promise<ApiResponse<T>> {
+  async patch<T>(endpoint: string, body?: unknown, token?: string): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, { method: 'PATCH', body, token });
   }
 }

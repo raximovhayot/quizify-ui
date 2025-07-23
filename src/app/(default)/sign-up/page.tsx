@@ -2,21 +2,8 @@
 
 import { useTranslations } from 'next-intl';
 import { AuthLayout } from '@/components/layouts/AppLayout';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { InlineLoading } from '@/components/ui/loading-spinner';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import Link from 'next/link';
-import { DashboardType } from '@/types/auth';
 import { useSignUpForms } from '@/hooks/useSignUpForms';
 import {
   PhoneStep,

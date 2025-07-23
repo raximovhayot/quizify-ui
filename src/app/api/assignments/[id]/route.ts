@@ -14,13 +14,13 @@ import { UpdateAssignmentRequest } from '@/types/assignments';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   return withErrorHandling(async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return withRole(UserRole.INSTRUCTOR, async (_request: NextRequest, _user: User) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { id } = params;
+      const { id } = await params;
       
       // TODO: Implement backend integration for assignment retrieval by ID
       // This endpoint needs to be connected to a real database
@@ -38,13 +38,13 @@ export async function GET(
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   return withErrorHandling(async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return withRole(UserRole.INSTRUCTOR, async (request: NextRequest, _user: User) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { id } = params;
+      const { id } = await params;
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const body = await parseRequestBody<UpdateAssignmentRequest>(request);
       

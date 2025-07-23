@@ -3,8 +3,6 @@
 import React from 'react';
 import { LoadingSpinner, InlineLoading } from '@/components/ui/loading-spinner';
 import { 
-  Skeleton, 
-  CardSkeleton, 
   TableSkeleton, 
   ListSkeleton, 
   FormSkeleton, 
@@ -18,7 +16,7 @@ import {
   NetworkErrorFallback 
 } from '@/components/ui/error-boundary';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, RefreshCw, Wifi, WifiOff } from 'lucide-react';
+import { AlertTriangle, RefreshCw, WifiOff } from 'lucide-react';
 
 /**
  * Types for async state management

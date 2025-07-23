@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { UserState } from '@/types/common';
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -51,6 +52,12 @@ export function middleware(request: NextRequest) {
     const signInUrl = new URL('/sign-in', request.url);
     signInUrl.searchParams.set('redirect', pathname);
     return NextResponse.redirect(signInUrl);
+  }
+
+  // If user is authenticated but has NEW state, redirect to complete profile
+  // Exclude sign-up page itself to avoid infinite redirect loop
+  if (user && user.state === UserState.NEW && !actualPathname.startsWith('/sign-up')) {
+    return NextResponse.redirect(new URL('/sign-up', request.url));
   }
 
   // Check if user has required roles
