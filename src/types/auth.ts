@@ -108,3 +108,5 @@ export interface ForgotPasswordUpdateRequest {
 export interface RefreshTokenRequest {
   refreshToken: string;
 }
+
+export { UserState };

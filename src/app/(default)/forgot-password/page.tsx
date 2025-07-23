@@ -22,7 +22,6 @@ export default function ForgotPasswordPage() {
   const {
     currentStep,
     isSubmitting,
-    phoneNumber,
     resendCooldown,
     phoneForm,
     verificationForm,
@@ -88,8 +87,7 @@ export default function ForgotPasswordPage() {
         <CardTitle>{t('auth.verification.title', { default: 'Verify Your Phone' })}</CardTitle>
         <CardDescription>
           {t('auth.verification.description', { 
-            default: 'Enter the 6-digit code sent to your phone',
-            values: { phone: phoneNumber }
+            default: 'Enter the 6-digit code sent to your phone'
           })}
         </CardDescription>
       </CardHeader>
@@ -134,8 +132,7 @@ export default function ForgotPasswordPage() {
           >
             {resendCooldown > 0 
               ? t('auth.verification.resendIn', { 
-                  default: 'Resend in {seconds}s',
-                  values: { seconds: resendCooldown }
+                  default: `Resend in ${resendCooldown}s`
                 })
               : t('auth.verification.resend', { default: 'Resend Code' })
             }

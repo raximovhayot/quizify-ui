@@ -145,14 +145,14 @@ export function useSignUpForms(): UseSignUpFormsReturn {
       // Update AuthContext state and store tokens/user data
       setUserFromToken(jwtToken);
 
-      // OTP verified successfully, sign-up is complete - redirect immediately
+      // OTP verified successfully, now user needs to complete profile
       verificationForm.reset();
       toast.success(t('auth.signUp.success.message', {
-        default: 'Account created successfully! Welcome to Quizify!'
+        default: 'Phone verified successfully! Please complete your profile.'
       }));
 
-      // Redirect to dashboard immediately
-      router.push('/dashboard');
+
+      router.push('/profile/complete');
     } catch (error: unknown) {
       handleAuthError(error, verificationForm, t);
     } finally {

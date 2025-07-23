@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -47,10 +46,9 @@ type ProfileUpdateFormData = z.infer<typeof profileUpdateSchema>;
 type PasswordChangeFormData = z.infer<typeof passwordChangeSchema>;
 
 export default function ProfilePage() {
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { user } = useAuth();
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
-  const router = useRouter();
   const t = useTranslations();
 
   const profileForm = useForm<ProfileUpdateFormData>({
@@ -72,12 +70,6 @@ export default function ProfilePage() {
   });
 
   useEffect(() => {
-    // If user is not authenticated, redirect to sign-in
-    if (!isLoading && !isAuthenticated) {
-      router.push('/sign-in');
-      return;
-    }
-
     // Populate form with user data when available
     if (user) {
       profileForm.reset({
@@ -86,7 +78,7 @@ export default function ProfilePage() {
         phone: user.phone || '',
       });
     }
-  }, [user, isAuthenticated, isLoading, router, profileForm]);
+  }, [user, profileForm]);
 
   const onProfileUpdate = async (data: ProfileUpdateFormData) => {
     setIsUpdatingProfile(true);
@@ -128,264 +120,250 @@ export default function ProfilePage() {
     }
   };
 
-  if (isLoading) {
-    return (
+  return (
       <DashboardLayout title="Profile">
-        <div className="flex items-center justify-center py-12">
-          <InlineLoading text={t('common.loading')} />
+        <div className="max-w-4xl mx-auto space-y-6">
+          {/* Profile Header */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center space-x-4">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+                  <User className="w-8 h-8 text-primary" />
+                </div>
+                <div>
+                  <CardTitle className="text-2xl">
+                    {user?.firstName} {user?.lastName}
+                  </CardTitle>
+                  <CardDescription className="flex items-center space-x-4 mt-1">
+                    <span className="flex items-center space-x-1">
+                      <Phone className="w-4 h-4" />
+                      <span>{user?.phone}</span>
+                    </span>
+                    <span className="flex items-center space-x-1">
+                      <Shield className="w-4 h-4" />
+                      <span>{user?.roles?.join(', ') || 'No roles'}</span>
+                    </span>
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+          </Card>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            {/* Profile Information */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <User className="w-5 h-5" />
+                  <span>Profile Information</span>
+                </CardTitle>
+                <CardDescription>
+                  Update your personal information and contact details
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={profileForm.handleSubmit(onProfileUpdate)} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label htmlFor="firstName" className="text-sm font-medium">
+                        First Name
+                      </label>
+                      <Input
+                        id="firstName"
+                        type="text"
+                        {...profileForm.register('firstName')}
+                        className={profileForm.formState.errors.firstName ? 'border-red-500' : ''}
+                      />
+                      {profileForm.formState.errors.firstName && (
+                        <p className="text-sm text-red-500">
+                          {profileForm.formState.errors.firstName.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <label htmlFor="lastName" className="text-sm font-medium">
+                        Last Name
+                      </label>
+                      <Input
+                        id="lastName"
+                        type="text"
+                        {...profileForm.register('lastName')}
+                        className={profileForm.formState.errors.lastName ? 'border-red-500' : ''}
+                      />
+                      {profileForm.formState.errors.lastName && (
+                        <p className="text-sm text-red-500">
+                          {profileForm.formState.errors.lastName.message}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label htmlFor="phone" className="text-sm font-medium">
+                      {t('auth.phone')}
+                    </label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      {...profileForm.register('phone')}
+                      className={profileForm.formState.errors.phone ? 'border-red-500' : ''}
+                    />
+                    {profileForm.formState.errors.phone && (
+                      <p className="text-sm text-red-500">
+                        {profileForm.formState.errors.phone.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <Button
+                    type="submit"
+                    disabled={isUpdatingProfile}
+                    className="w-full"
+                  >
+                    {isUpdatingProfile ? (
+                      <InlineLoading text="Updating..." />
+                    ) : (
+                      'Update Profile'
+                    )}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+
+            {/* Password Change */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Lock className="w-5 h-5" />
+                  <span>Change Password</span>
+                </CardTitle>
+                <CardDescription>
+                  Update your password to keep your account secure
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={passwordForm.handleSubmit(onPasswordChange)} className="space-y-4">
+                  <div className="space-y-2">
+                    <label htmlFor="currentPassword" className="text-sm font-medium">
+                      Current Password
+                    </label>
+                    <Input
+                      id="currentPassword"
+                      type="password"
+                      {...passwordForm.register('currentPassword')}
+                      className={passwordForm.formState.errors.currentPassword ? 'border-red-500' : ''}
+                    />
+                    {passwordForm.formState.errors.currentPassword && (
+                      <p className="text-sm text-red-500">
+                        {passwordForm.formState.errors.currentPassword.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <label htmlFor="newPassword" className="text-sm font-medium">
+                      New Password
+                    </label>
+                    <Input
+                      id="newPassword"
+                      type="password"
+                      {...passwordForm.register('newPassword')}
+                      className={passwordForm.formState.errors.newPassword ? 'border-red-500' : ''}
+                    />
+                    {passwordForm.formState.errors.newPassword && (
+                      <p className="text-sm text-red-500">
+                        {passwordForm.formState.errors.newPassword.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <label htmlFor="confirmPassword" className="text-sm font-medium">
+                      Confirm New Password
+                    </label>
+                    <Input
+                      id="confirmPassword"
+                      type="password"
+                      {...passwordForm.register('confirmPassword')}
+                      className={passwordForm.formState.errors.confirmPassword ? 'border-red-500' : ''}
+                    />
+                    {passwordForm.formState.errors.confirmPassword && (
+                      <p className="text-sm text-red-500">
+                        {passwordForm.formState.errors.confirmPassword.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <Button
+                    type="submit"
+                    disabled={isChangingPassword}
+                    className="w-full"
+                  >
+                    {isChangingPassword ? (
+                      <InlineLoading text="Changing Password..." />
+                    ) : (
+                      'Change Password'
+                    )}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Account Settings */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Globe className="w-5 h-5" />
+                <span>Account Settings</span>
+              </CardTitle>
+              <CardDescription>
+                Manage your account preferences and settings
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div>
+                    <h4 className="font-medium">Language Preference</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Choose your preferred language for the interface
+                    </p>
+                  </div>
+                  <Button variant="outline" size="sm">
+                    English
+                  </Button>
+                </div>
+
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div>
+                    <h4 className="font-medium">Account Status</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Your account is active and verified
+                    </p>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-sm text-green-600 font-medium">Active</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div>
+                    <h4 className="font-medium">Two-Factor Authentication</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Add an extra layer of security to your account
+                    </p>
+                  </div>
+                  <Button variant="outline" size="sm">
+                    Enable
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </DashboardLayout>
-    );
-  }
-
-  if (!user) {
-    return null; // Will redirect via useEffect
-  }
-
-  return (
-    <DashboardLayout title="Profile">
-      <div className="max-w-4xl mx-auto space-y-6">
-        {/* Profile Header */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center space-x-4">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-                <User className="w-8 h-8 text-primary" />
-              </div>
-              <div>
-                <CardTitle className="text-2xl">
-                  {user.firstName} {user.lastName}
-                </CardTitle>
-                <CardDescription className="flex items-center space-x-4 mt-1">
-                  <span className="flex items-center space-x-1">
-                    <Phone className="w-4 h-4" />
-                    <span>{user.phone}</span>
-                  </span>
-                  <span className="flex items-center space-x-1">
-                    <Shield className="w-4 h-4" />
-                    <span>{user.roles?.join(', ') || 'No roles'}</span>
-                  </span>
-                </CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-        </Card>
-
-        <div className="grid gap-6 md:grid-cols-2">
-          {/* Profile Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <User className="w-5 h-5" />
-                <span>Profile Information</span>
-              </CardTitle>
-              <CardDescription>
-                Update your personal information and contact details
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={profileForm.handleSubmit(onProfileUpdate)} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label htmlFor="firstName" className="text-sm font-medium">
-                      First Name
-                    </label>
-                    <Input
-                      id="firstName"
-                      type="text"
-                      {...profileForm.register('firstName')}
-                      className={profileForm.formState.errors.firstName ? 'border-red-500' : ''}
-                    />
-                    {profileForm.formState.errors.firstName && (
-                      <p className="text-sm text-red-500">
-                        {profileForm.formState.errors.firstName.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <label htmlFor="lastName" className="text-sm font-medium">
-                      Last Name
-                    </label>
-                    <Input
-                      id="lastName"
-                      type="text"
-                      {...profileForm.register('lastName')}
-                      className={profileForm.formState.errors.lastName ? 'border-red-500' : ''}
-                    />
-                    {profileForm.formState.errors.lastName && (
-                      <p className="text-sm text-red-500">
-                        {profileForm.formState.errors.lastName.message}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="phone" className="text-sm font-medium">
-                    {t('auth.phone')}
-                  </label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    {...profileForm.register('phone')}
-                    className={profileForm.formState.errors.phone ? 'border-red-500' : ''}
-                  />
-                  {profileForm.formState.errors.phone && (
-                    <p className="text-sm text-red-500">
-                      {profileForm.formState.errors.phone.message}
-                    </p>
-                  )}
-                </div>
-
-                <Button
-                  type="submit"
-                  disabled={isUpdatingProfile}
-                  className="w-full"
-                >
-                  {isUpdatingProfile ? (
-                    <InlineLoading text="Updating..." />
-                  ) : (
-                    'Update Profile'
-                  )}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-
-          {/* Password Change */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Lock className="w-5 h-5" />
-                <span>Change Password</span>
-              </CardTitle>
-              <CardDescription>
-                Update your password to keep your account secure
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={passwordForm.handleSubmit(onPasswordChange)} className="space-y-4">
-                <div className="space-y-2">
-                  <label htmlFor="currentPassword" className="text-sm font-medium">
-                    Current Password
-                  </label>
-                  <Input
-                    id="currentPassword"
-                    type="password"
-                    {...passwordForm.register('currentPassword')}
-                    className={passwordForm.formState.errors.currentPassword ? 'border-red-500' : ''}
-                  />
-                  {passwordForm.formState.errors.currentPassword && (
-                    <p className="text-sm text-red-500">
-                      {passwordForm.formState.errors.currentPassword.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="newPassword" className="text-sm font-medium">
-                    New Password
-                  </label>
-                  <Input
-                    id="newPassword"
-                    type="password"
-                    {...passwordForm.register('newPassword')}
-                    className={passwordForm.formState.errors.newPassword ? 'border-red-500' : ''}
-                  />
-                  {passwordForm.formState.errors.newPassword && (
-                    <p className="text-sm text-red-500">
-                      {passwordForm.formState.errors.newPassword.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="confirmPassword" className="text-sm font-medium">
-                    Confirm New Password
-                  </label>
-                  <Input
-                    id="confirmPassword"
-                    type="password"
-                    {...passwordForm.register('confirmPassword')}
-                    className={passwordForm.formState.errors.confirmPassword ? 'border-red-500' : ''}
-                  />
-                  {passwordForm.formState.errors.confirmPassword && (
-                    <p className="text-sm text-red-500">
-                      {passwordForm.formState.errors.confirmPassword.message}
-                    </p>
-                  )}
-                </div>
-
-                <Button
-                  type="submit"
-                  disabled={isChangingPassword}
-                  className="w-full"
-                >
-                  {isChangingPassword ? (
-                    <InlineLoading text="Changing Password..." />
-                  ) : (
-                    'Change Password'
-                  )}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Account Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Globe className="w-5 h-5" />
-              <span>Account Settings</span>
-            </CardTitle>
-            <CardDescription>
-              Manage your account preferences and settings
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div>
-                  <h4 className="font-medium">Language Preference</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Choose your preferred language for the interface
-                  </p>
-                </div>
-                <Button variant="outline" size="sm">
-                  English
-                </Button>
-              </div>
-
-              <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div>
-                  <h4 className="font-medium">Account Status</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Your account is active and verified
-                  </p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-sm text-green-600 font-medium">Active</span>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div>
-                  <h4 className="font-medium">Two-Factor Authentication</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Add an extra layer of security to your account
-                  </p>
-                </div>
-                <Button variant="outline" size="sm">
-                  Enable
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </DashboardLayout>
   );
 }
