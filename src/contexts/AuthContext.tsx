@@ -93,7 +93,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       document.cookie = `accessToken=${jwtToken.accessToken}; path=/; max-age=${15 * 60}`; // 15 minutes
       document.cookie = `refreshToken=${jwtToken.refreshToken}; path=/; max-age=${7 * 24 * 60 * 60}`; // 7 days
     } catch (error) {
-      console.error('Login error:', error);
       throw error;
     } finally {
       setIsLoading(false);
