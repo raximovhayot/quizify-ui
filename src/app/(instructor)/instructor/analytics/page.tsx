@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/contexts/AuthContext';
@@ -77,9 +77,9 @@ export default function AnalyticsPage() {
     if (isAuthenticated && hasRole('INSTRUCTOR')) {
       loadAnalyticsData();
     }
-  }, [isAuthenticated, hasRole, isLoading, router, selectedPeriod]);
+  }, [isAuthenticated, hasRole, isLoading, router, selectedPeriod, loadAnalyticsData]);
 
-  const loadAnalyticsData = async (forceRefresh: boolean = false) => {
+  const loadAnalyticsData = useCallback(async (forceRefresh: boolean = false) => {
     setIsLoadingData(true);
 
     try {
@@ -138,7 +138,7 @@ export default function AnalyticsPage() {
     } finally {
       setIsLoadingData(false);
     }
-  };
+  }, [selectedPeriod, user?.id]);
 
   const handleExportData = (format: 'pdf' | 'csv') => {
     // TODO: Implement actual export functionality

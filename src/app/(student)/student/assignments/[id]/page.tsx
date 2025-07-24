@@ -66,7 +66,7 @@ export default function AssignmentAttemptPage() {
       // Auto-submit when time runs out
       handleSubmitAssignment();
     }
-  }, [timeRemaining, assignment]);
+  }, [timeRemaining, assignment, handleSubmitAssignment]);
 
   // Auto-save effect
   useEffect(() => {
@@ -76,7 +76,7 @@ export default function AssignmentAttemptPage() {
       }, 2000); // Auto-save after 2 seconds of inactivity
       return () => clearTimeout(autoSaveTimer);
     }
-  }, [answers, assignment]);
+  }, [answers, assignment, saveProgress]);
 
   useEffect(() => {
     if (!isLoading && (!isAuthenticated || !hasRole('STUDENT'))) {
@@ -87,9 +87,9 @@ export default function AssignmentAttemptPage() {
     if (isAuthenticated && hasRole('STUDENT') && assignmentId) {
       loadAssignment();
     }
-  }, [isAuthenticated, hasRole, isLoading, router, assignmentId]);
+  }, [isAuthenticated, hasRole, isLoading, router, assignmentId, loadAssignment]);
 
-  const loadAssignment = async () => {
+  const loadAssignment = useCallback(async () => {
     try {
       // TODO: Replace with actual API call
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -134,7 +134,7 @@ export default function AssignmentAttemptPage() {
       console.error('Error loading assignment:', error);
       router.push('/student');
     }
-  };
+  }, [assignmentId, router]);
 
   const saveProgress = useCallback(async () => {
     try {
@@ -154,7 +154,7 @@ export default function AssignmentAttemptPage() {
       // Show confirmation dialog
       setShowSubmitConfirmation(true);
     }
-  }, [timeRemaining]);
+  }, [timeRemaining, submitAssignment]);
 
   const submitAssignment = async () => {
     setIsSubmitting(true);

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/contexts/AuthContext';
@@ -71,9 +71,9 @@ export default function QuizPreviewPage() {
     if (isAuthenticated && hasRole('INSTRUCTOR') && quizId) {
       loadQuiz();
     }
-  }, [isAuthenticated, hasRole, isLoading, router, quizId]);
+  }, [isAuthenticated, hasRole, isLoading, router, quizId, loadQuiz]);
 
-  const loadQuiz = async () => {
+  const loadQuiz = useCallback(async () => {
     setIsLoadingQuiz(true);
 
     try {
@@ -130,7 +130,7 @@ export default function QuizPreviewPage() {
     } finally {
       setIsLoadingQuiz(false);
     }
-  };
+  }, [quizId, router]);
 
   const handlePublishQuiz = async () => {
     if (!quiz) return;

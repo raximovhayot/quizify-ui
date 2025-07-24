@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/contexts/AuthContext';
@@ -70,9 +70,9 @@ export default function AssignmentResultsPage() {
     if (isAuthenticated && hasRole('STUDENT') && assignmentId) {
       loadResult();
     }
-  }, [isAuthenticated, hasRole, isLoading, router, assignmentId]);
+  }, [isAuthenticated, hasRole, isLoading, router, assignmentId, loadResult]);
 
-  const loadResult = async () => {
+  const loadResult = useCallback(async () => {
     setIsLoadingResult(true);
 
     try {
@@ -137,7 +137,7 @@ export default function AssignmentResultsPage() {
     } finally {
       setIsLoadingResult(false);
     }
-  };
+  }, [assignmentId, router]);
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);

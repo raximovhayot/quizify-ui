@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
@@ -120,9 +120,9 @@ export default function EditQuizPage() {
     if (isAuthenticated && hasRole('INSTRUCTOR') && quizId) {
       loadQuiz();
     }
-  }, [isAuthenticated, hasRole, isLoading, router, quizId]);
+  }, [isAuthenticated, hasRole, isLoading, router, quizId, loadQuiz]);
 
-  const loadQuiz = async () => {
+  const loadQuiz = useCallback(async () => {
     setIsLoadingQuiz(true);
 
     try {
@@ -178,7 +178,7 @@ export default function EditQuizPage() {
     } finally {
       setIsLoadingQuiz(false);
     }
-  };
+  }, [quizId, basicInfoForm, settingsForm, router]);
 
   const handleSaveBasicInfo = async (data: BasicInfoFormData) => {
     if (!quiz) return;

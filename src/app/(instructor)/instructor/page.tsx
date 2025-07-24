@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/contexts/AuthContext';
@@ -80,9 +80,9 @@ export default function InstructorDashboard() {
     if (isAuthenticated && hasRole('INSTRUCTOR')) {
       loadDashboardData();
     }
-  }, [isAuthenticated, hasRole, isLoading, router]);
+  }, [isAuthenticated, hasRole, isLoading, router, loadDashboardData]);
 
-  const loadDashboardData = async (forceRefresh: boolean = false) => {
+  const loadDashboardData = useCallback(async (forceRefresh: boolean = false) => {
     setIsLoadingData(true);
 
     try {
@@ -201,7 +201,7 @@ export default function InstructorDashboard() {
     } finally {
       setIsLoadingData(false);
     }
-  };
+  }, [user?.id]);
 
   if (isLoading || !user) {
     return (
