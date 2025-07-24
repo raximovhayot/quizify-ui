@@ -5,14 +5,9 @@ import { useNextAuth } from '@/hooks/useNextAuth';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { 
-  Home, 
-  BookOpen, 
-  ClipboardList, 
   BarChart3, 
   Settings,
-  PlusCircle,
-  Users,
-  Calendar
+  FileText
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -36,27 +31,9 @@ export function Sidebar({ className }: SidebarProps) {
   // Navigation items based on user roles
   const navItems: NavItem[] = [
     {
-      title: t('navigation.dashboard'),
-      href: hasRole('INSTRUCTOR') ? '/instructor' : '/student',
-      icon: Home,
-    },
-    // Instructor-specific items
-    {
       title: t('navigation.quizzes'),
       href: '/instructor/quizzes',
-      icon: BookOpen,
-      roles: ['INSTRUCTOR'],
-    },
-    {
-      title: t('quiz.createQuiz'),
-      href: '/instructor/quizzes/create',
-      icon: PlusCircle,
-      roles: ['INSTRUCTOR'],
-    },
-    {
-      title: t('navigation.assignments'),
-      href: '/instructor/assignments',
-      icon: ClipboardList,
+      icon: FileText,
       roles: ['INSTRUCTOR'],
     },
     {
@@ -64,31 +41,6 @@ export function Sidebar({ className }: SidebarProps) {
       href: '/instructor/analytics',
       icon: BarChart3,
       roles: ['INSTRUCTOR'],
-    },
-    {
-      title: 'Students',
-      href: '/instructor/students',
-      icon: Users,
-      roles: ['INSTRUCTOR'],
-    },
-    // Student-specific items
-    {
-      title: t('navigation.assignments'),
-      href: '/student/assignments',
-      icon: ClipboardList,
-      roles: ['STUDENT'],
-    },
-    {
-      title: 'My Quizzes',
-      href: '/student/quizzes',
-      icon: BookOpen,
-      roles: ['STUDENT'],
-    },
-    {
-      title: 'Schedule',
-      href: '/student/schedule',
-      icon: Calendar,
-      roles: ['STUDENT'],
     },
     // Common items
     {
@@ -114,7 +66,7 @@ export function Sidebar({ className }: SidebarProps) {
   if (!user) return null;
 
   return (
-    <div className={cn("flex h-full w-64 flex-col border-r bg-background", className)}>
+    <div className={cn("fixed left-0 top-16 z-40 flex h-[calc(100vh-4rem)] w-64 flex-col border-r bg-background", className)}>
       {/* Sidebar Header */}
       <div className="flex h-16 items-center border-b px-6">
         <h2 className="text-lg font-semibold tracking-tight">

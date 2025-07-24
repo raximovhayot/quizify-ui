@@ -52,9 +52,6 @@ export function AppBreadcrumb({ items, className }: AppBreadcrumbProps) {
       const segmentLabels: Record<string, string> = {
         'instructor': 'Instructor',
         'student': 'Student',
-        'dashboard': t('navigation.dashboard'),
-        'quizzes': t('navigation.quizzes'),
-        'assignments': t('navigation.assignments'),
         'analytics': t('navigation.analytics'),
         'settings': t('navigation.settings'),
         'profile': t('navigation.profile'),
@@ -117,22 +114,6 @@ export function DashboardBreadcrumb({ title }: { title?: string }) {
 
   if (title) {
     items.push({ label: title });
-  }
-
-  return <AppBreadcrumb items={items} />;
-}
-
-export function QuizBreadcrumb({ quizTitle }: { quizTitle?: string }) {
-  const t = useTranslations();
-  
-  const items: BreadcrumbItem[] = [
-    { label: t('navigation.home'), href: '/' },
-    { label: t('navigation.dashboard'), href: '/instructor' },
-    { label: t('navigation.quizzes'), href: '/instructor/quizzes' },
-  ];
-
-  if (quizTitle) {
-    items.push({ label: quizTitle });
   }
 
   return <AppBreadcrumb items={items} />;
