@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { AuthProvider } from "@/contexts/AuthContext";
 
 export const metadata: Metadata = {
   title: "Quizify - Default",
@@ -12,10 +11,8 @@ export default function DefaultLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <AuthProvider>
-      <div className="default-layout">
-        {children}
-      </div>
-    </AuthProvider>
+    <div className="default-layout">
+      {children}
+    </div>
   );
 }

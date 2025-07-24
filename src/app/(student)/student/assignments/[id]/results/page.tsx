@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { useAuth } from '@/contexts/AuthContext';
+import { useNextAuth } from '@/hooks/useNextAuth';
 import { DashboardLayout } from '@/components/layouts/AppLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -53,7 +53,7 @@ interface AssignmentResult {
 }
 
 export default function AssignmentResultsPage() {
-  const { hasRole, isAuthenticated, isLoading } = useAuth();
+  const { hasRole, isAuthenticated, isLoading } = useNextAuth();
   const [result, setResult] = useState<AssignmentResult | null>(null);
   const [isLoadingResult, setIsLoadingResult] = useState(true);
   const router = useRouter();

@@ -13,23 +13,20 @@ import {DashboardType} from "@/types/auth";
 export const createProfileCompleteSchema = (t: (key: string) => string) => {
     return z.object({
         firstName: z.string()
-            .min(1, t('auth.validation.firstNameRequired'))
-            .min(2, t('auth.validation.firstNameMinLength'))
-            .max(50, t('auth.validation.firstNameMaxLength')),
+            .min(1, t('auth.validation.firstNameRequired', { default: 'First name is required' }))
+            .min(2, t('auth.validation.firstNameMinLength', { default: 'First name must be at least 2 characters' }))
+            .max(50, t('auth.validation.firstNameMaxLength', { default: 'First name must be less than 50 characters' })),
         lastName: z.string()
-            .min(1, t('auth.validation.lastNameRequired'))
-            .min(2, t('auth.validation.lastNameMinLength'))
-            .max(50, t('auth.validation.lastNameMaxLength')),
+            .min(1, t('auth.validation.lastNameRequired', { default: 'Last name is required' }))
+            .min(2, t('auth.validation.lastNameMinLength', { default: 'Last name must be at least 2 characters' }))
+            .max(50, t('auth.validation.lastNameMaxLength', { default: 'Last name must be less than 50 characters' })),
         password: z.string()
-            .min(1, t('auth.validation.passwordRequired'))
-            .min(PASSWORD_MIN_LENGTH, t('auth.validation.passwordMinLength'))
-            .regex(PASSWORD_REGEX, t('auth.validation.passwordPattern')),
-        confirmPassword: z.string()
-            .min(1, t('auth.validation.confirmPasswordRequired')),
-        dashboardType: z.enum(DashboardType, t('auth.validation.dashboardTypeRequired'))
-    }).refine((data) => data.password === data.confirmPassword, {
-        message: t('auth.validation.passwordsNotMatch'),
-        path: ['confirmPassword']
+            .min(1, t('auth.validation.passwordRequired', { default: 'Password is required' }))
+            .min(PASSWORD_MIN_LENGTH, t('auth.validation.passwordMinLength', { default: 'Password must be at least 8 characters' }))
+            .regex(PASSWORD_REGEX, t('auth.validation.passwordPattern', { default: 'Password must contain at least one uppercase letter, one lowercase letter, and one number' })),
+        dashboardType: z.nativeEnum(DashboardType, {
+            errorMap: () => ({ message: t('auth.validation.dashboardTypeRequired', { default: 'Please select your role' }) })
+        })
     });
 };
 
@@ -45,6 +42,5 @@ export const profileCompleteFormDefaults: Partial<ProfileCompleteFormData> = {
     firstName: '',
     lastName: '',
     password: '',
-    confirmPassword: '',
-    dashboardType: undefined, // Will be set by user selection
+    dashboardType: DashboardType.STUDENT, // Default to student
 };

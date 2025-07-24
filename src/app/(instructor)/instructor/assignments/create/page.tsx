@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useAuth } from '@/contexts/AuthContext';
+import { useNextAuth } from '@/hooks/useNextAuth';
 import { DashboardLayout } from '@/components/layouts/AppLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -53,7 +53,7 @@ interface AssignmentData {
 }
 
 export default function CreateAssignmentPage() {
-  const { user, hasRole, isAuthenticated, isLoading } = useAuth();
+  const { user, hasRole, isAuthenticated, isLoading } = useNextAuth();
   const [currentStep, setCurrentStep] = useState<AssignmentStep>('basic-info');
   const [assignmentData, setAssignmentData] = useState<AssignmentData>({
     basicInfo: null,

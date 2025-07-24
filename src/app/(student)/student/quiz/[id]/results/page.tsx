@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { useAuth } from '@/contexts/AuthContext';
+import { useNextAuth } from '@/hooks/useNextAuth';
 import { FullPageLayout } from '@/components/layouts/AppLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -40,7 +40,7 @@ interface QuizResult {
 }
 
 export default function QuizResultsPage() {
-  const { hasRole, isAuthenticated, isLoading } = useAuth();
+  const { hasRole, isAuthenticated, isLoading } = useNextAuth();
   const [result, setResult] = useState<QuizResult | null>(null);
   const [isLoadingResult, setIsLoadingResult] = useState(true);
   const router = useRouter();

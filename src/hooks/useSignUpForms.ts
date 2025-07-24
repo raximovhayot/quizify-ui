@@ -149,9 +149,6 @@ export function useSignUpForms(): UseSignUpFormsReturn {
 
       // OTP verified successfully, now user needs to complete profile
       verificationForm.reset();
-      toast.success(t('auth.signUp.success.message', {
-        default: 'Phone verified successfully! Please complete your profile.'
-      }));
 
       // NextAuth middleware will handle redirect to /profile/complete for NEW users
       router.push('/profile/complete');

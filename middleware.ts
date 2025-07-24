@@ -29,7 +29,7 @@ export async function middleware(request: NextRequest) {
     return routeConfig['/'] || [];
   };
 
-  const requiredRoles = getRequiredRoles(actualPathname);
+  const requiredRoles = getRequiredRoles(pathname);
 
   // If no roles required, allow access
   if (requiredRoles.length === 0) {

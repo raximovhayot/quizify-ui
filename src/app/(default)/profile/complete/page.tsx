@@ -17,7 +17,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useProfileComplete } from '@/hooks/useProfileComplete';
-import { DashboardType } from '@/types/common';
+import { DashboardType } from '@/types/auth';
+import { UserState } from '@/types/common';
 
 export default function ProfileCompletePage() {
   const t = useTranslations();
@@ -43,7 +44,7 @@ export default function ProfileCompletePage() {
   }
 
   // If user is not NEW, redirect will be handled by middleware
-  if (!user || user.state !== 'NEW') {
+  if (!user || user.state !== UserState.NEW) {
     return null;
   }
 

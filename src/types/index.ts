@@ -30,13 +30,11 @@ export * from './student';
 // Re-export commonly used types for convenience
 export type {
   // Authentication
-  User,
   UserRole,
   UserState,
-  LoginRequest,
-  LoginResponse,
-  RegisterRequest,
-  AuthContextType,
+  AccountDTO,
+  JWTToken,
+  DashboardType,
 } from './auth';
 
 export type {

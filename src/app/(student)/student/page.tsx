@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { useAuth } from '@/contexts/AuthContext';
+import { useNextAuth } from '@/hooks/useNextAuth';
 import { DashboardLayout } from '@/components/layouts/AppLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -68,7 +68,7 @@ interface RecentResult {
 }
 
 export default function StudentDashboard() {
-  const { user, hasRole, isAuthenticated, isLoading } = useAuth();
+  const { user, hasRole, isAuthenticated, isLoading } = useNextAuth();
   const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
   const [upcomingItems, setUpcomingItems] = useState<UpcomingItem[]>([]);
   const [recentResults, setRecentResults] = useState<RecentResult[]>([]);

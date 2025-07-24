@@ -27,16 +27,6 @@ export function hasAnyRole(user: AccountDTO | null, roleNames: string[]): boolea
   return user?.roles?.some(role => roleNames.includes(role.name)) ?? false;
 }
 
-export interface AuthContextType {
-  user: AccountDTO | null;
-  login: (phone: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-  setUserFromToken: (jwtToken: JWTToken) => void;
-  hasRole: (roleName: string) => boolean;
-  hasAnyRole: (roleNames: string[]) => boolean;
-  isLoading: boolean;
-  isAuthenticated: boolean;
-}
 
 // Authentication request/response types based on backend-filesystem MCP server
 

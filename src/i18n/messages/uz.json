@@ -128,6 +128,18 @@
       "rememberPassword": "Parolni eslaysizmi?",
       "backToPhone": "← Telefon kiritishga qaytish"
     },
+    "profileComplete": {
+      "title": "Profilingizni to'ldiring",
+      "description": "Hisob sozlamalarini yakunlash uchun ma'lumotlaringizni kiriting",
+      "submit": "Profilni yakunlash",
+      "submitting": "Profil yakunlanmoqda...",
+      "success": "Profil muvaffaqiyatli yakunlandi!"
+    },
+    "error": {
+      "noSignupToken": "Ro'yxatdan o'tish sessiyasi topilmadi. Iltimos, ro'yxatdan o'tish jarayonini qaytadan boshlang.",
+      "sessionCreation": "Profil yakunlandi, lekin sessiya yaratib bo'lmadi. Iltimos, qo'lda kiring.",
+      "noToken": "Autentifikatsiya tokeni topilmadi. Iltimos, qaytadan kiring."
+    },
     "signOut": "Chiqish",
     "invalidCredentials": "Noto'g'ri telefon raqami yoki parol",
     "accountCreated": "Hisob muvaffaqiyatli yaratildi",
@@ -155,14 +167,16 @@
       "phoneRequired": "Telefon raqami kiritish shart",
       "phoneInvalid": "To'g'ri O'zbek telefon raqamini kiriting (masalan, +998901234567)",
       "passwordRequired": "Parol kiritish shart",
-      "passwordMinLength": "Parol kamida 6 ta belgidan iborat bo'lishi kerak",
+      "passwordMinLength": "Parol kamida 8 ta belgidan iborat bo'lishi kerak",
       "passwordPattern": "Parol kamida bitta katta harf, bitta kichik harf va bitta raqamdan iborat bo'lishi kerak",
       "confirmPasswordRequired": "Parolni tasdiqlang",
       "passwordsNotMatch": "Parollar mos kelmaydi",
       "firstNameRequired": "Ism kiritish shart",
       "firstNameMinLength": "Ism kamida 2 ta belgidan iborat bo'lishi kerak",
+      "firstNameMaxLength": "Ism 50 ta belgidan kam bo'lishi kerak",
       "lastNameRequired": "Familiya kiritish shart",
       "lastNameMinLength": "Familiya kamida 2 ta belgidan iborat bo'lishi kerak",
+      "lastNameMaxLength": "Familiya 50 ta belgidan kam bo'lishi kerak",
       "otpRequired": "Tasdiqlash kodi kiritish shart",
       "otpLength": "Tasdiqlash kodi 6 ta raqamdan iborat bo'lishi kerak",
       "otpPattern": "Tasdiqlash kodi faqat raqamlardan iborat bo'lishi kerak",

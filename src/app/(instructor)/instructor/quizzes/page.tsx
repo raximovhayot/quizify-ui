@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { useAuth } from '@/contexts/AuthContext';
+import { useNextAuth } from '@/hooks/useNextAuth';
 import { DashboardLayout } from '@/components/layouts/AppLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -52,7 +52,7 @@ type SortBy = 'title' | 'created' | 'updated' | 'students' | 'attempts';
 type FilterStatus = 'all' | 'draft' | 'published' | 'archived';
 
 export default function QuizzesPage() {
-  const { user, hasRole, isAuthenticated, isLoading } = useAuth();
+  const { user, hasRole, isAuthenticated, isLoading } = useNextAuth();
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [filteredQuizzes, setFilteredQuizzes] = useState<Quiz[]>([]);
   const [isLoadingQuizzes, setIsLoadingQuizzes] = useState(true);

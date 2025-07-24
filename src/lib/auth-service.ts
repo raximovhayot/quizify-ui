@@ -242,7 +242,7 @@ export class AuthService {
    * 
    * This method doesn't make any backend calls since JWT tokens are stateless.
    * The actual logout logic (clearing tokens, redirecting) should be handled
-   * by the AuthContext or calling component.
+   * by NextAuth or the calling component.
    * 
    * @returns Promise resolving immediately
    * 

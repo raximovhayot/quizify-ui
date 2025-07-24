@@ -126,6 +126,30 @@
       "rememberPassword": "Remember your password?",
       "backToPhone": "← Back to phone entry"
     },
+    "profileComplete": {
+      "title": "Complete Your Profile",
+      "description": "Please provide your details to complete your account setup",
+      "submit": "Complete Profile",
+      "submitting": "Completing Profile...",
+      "success": "Profile completed successfully!"
+    },
+    "error": {
+      "noSignupToken": "No signup session found. Please start the signup process again.",
+      "sessionCreation": "Profile completed but failed to create session. Please sign in manually.",
+      "noToken": "Authentication token not found. Please sign in again."
+    },
+    "validation": {
+      "firstNameRequired": "First name is required",
+      "firstNameMinLength": "First name must be at least 2 characters",
+      "firstNameMaxLength": "First name must be less than 50 characters",
+      "lastNameRequired": "Last name is required",
+      "lastNameMinLength": "Last name must be at least 2 characters",
+      "lastNameMaxLength": "Last name must be less than 50 characters",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 8 characters",
+      "passwordPattern": "Password must contain at least one uppercase letter, one lowercase letter, and one number",
+      "dashboardTypeRequired": "Please select your role"
+    },
     "signOut": "Sign Out",
     "invalidCredentials": "Invalid phone number or password",
     "accountCreated": "Account created successfully",
