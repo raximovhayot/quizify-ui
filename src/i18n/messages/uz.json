@@ -156,7 +156,8 @@
       "passwordLowercase": "Bitta kichik harf",
       "passwordNumber": "Bitta raqam",
       "studentDescription": "Testlarni yechib, o'z rivojlanishingizni kuzating",
-      "instructorDescription": "Testlar yarating va topshiriqlarni boshqaring"
+      "instructorDescription": "Testlar yarating va topshiriqlarni boshqaring",
+      "alreadyCompleted": "Profilingiz allaqachon yakunlangan. Boshqaruv paneliga yo'naltirilmoqda..."
     },
     "error": {
       "noSignupToken": "Ro'yxatdan o'tish sessiyasi topilmadi. Iltimos, ro'yxatdan o'tish jarayonini qaytadan boshlang.",

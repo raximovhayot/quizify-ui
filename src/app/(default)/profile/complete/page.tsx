@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { AuthLayout } from '@/components/layouts/AppLayout';
 import { InlineLoading } from '@/components/ui/loading-spinner';
@@ -7,14 +9,39 @@ import { Form } from '@/components/ui/form';
 import { useProfileComplete } from '@/hooks/useProfileComplete';
 import { UserState } from '@/types/common';
 import { ProfileCompleteSteps } from '@/components/profile/ProfileCompleteSteps';
+import { hasRole } from '@/types/auth';
 
 export default function ProfileCompletePage() {
   const t = useTranslations();
+  const router = useRouter();
   const {
     form,
     user,
     isLoading
   } = useProfileComplete();
+
+  // Handle immediate redirection for users who shouldn't be on this page
+  useEffect(() => {
+    if (!isLoading) {
+      if (user && user.state !== UserState.NEW) {
+        // User profile is already completed, redirect to appropriate dashboard immediately
+        if (hasRole(user, 'STUDENT')) {
+          router.replace('/student');
+        } else if (hasRole(user, 'INSTRUCTOR')) {
+          router.replace('/instructor');
+        } else {
+          router.replace('/');
+        }
+      } else if (!user) {
+        // No user session, check for signup token
+        const signupToken = sessionStorage.getItem('signupToken');
+        if (!signupToken) {
+          // No signup token either, redirect to signup immediately
+          router.replace('/sign-up');
+        }
+      }
+    }
+  }, [isLoading, user, router]);
 
   // Show loading while checking authentication status
   if (isLoading) {
@@ -29,8 +56,15 @@ export default function ProfileCompletePage() {
     );
   }
 
-  // If user is not NEW, redirect will be handled by middleware
-  if (!user || user.state !== UserState.NEW) {
+  // Only render the profile completion form for authenticated users with NEW state
+  // or users with valid signup tokens
+  if (!user && !sessionStorage.getItem('signupToken')) {
+    // Redirect is happening in useEffect, show nothing
+    return null;
+  }
+
+  if (user && user.state !== UserState.NEW) {
+    // Redirect is happening in useEffect, show nothing
     return null;
   }
 

@@ -154,7 +154,8 @@
       "passwordLowercase": "One lowercase letter",
       "passwordNumber": "One number",
       "studentDescription": "Take quizzes and track your progress",
-      "instructorDescription": "Create quizzes and manage assignments"
+      "instructorDescription": "Create quizzes and manage assignments",
+      "alreadyCompleted": "Your profile is already completed. Redirecting to dashboard..."
     },
     "error": {
       "noSignupToken": "No signup session found. Please start the signup process again.",
