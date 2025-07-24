@@ -90,6 +90,8 @@
       "instructor": "O'qituvchi"
     },
     "verification": {
+      "title": "Telefoningizni tasdiqlang",
+      "description": "Telefoningizga yuborilgan 6 xonali kodni kiriting",
       "label": "Tasdiqlash kodi",
       "instruction": "Quyidagi raqamga yuborilgan 6 xonali kodni kiriting",
       "verify": "Kodni tasdiqlash",
@@ -113,7 +115,7 @@
       },
       "newPassword": {
         "title": "Yangi parol o'rnating",
-        "description": "Hisobingiz uchun yangi parol yarating"
+        "description": "Yangi parolni kiriting"
       },
       "completed": {
         "title": "Parol tiklash tugallandi",
@@ -123,11 +125,13 @@
       "sendingCode": "Kod yuborilmoqda...",
       "verifyCode": "Kodni tasdiqlash",
       "verifying": "Tasdiqlanmoqda...",
+      "updatePassword": "Parolni yangilash",
       "resetPassword": "Parolni tiklash",
       "resetting": "Parol tiklanmoqda...",
       "success": {
-        "title": "Parol muvaffaqiyatli tiklandi!",
-        "message": "Parolingiz tiklandi. Endi yangi parol bilan kirishingiz mumkin."
+        "title": "Parol tiklash tugallandi",
+        "description": "Parolingiz muvaffaqiyatli tiklandi. Tez orada kirish sahifasiga yo'naltirilasiz.",
+        "message": "Parol muvaffaqiyatli tiklandi. Endi yangi parol bilan kirishingiz mumkin."
       },
       "codeSent": "Tasdiqlash kodi telefoningizga yuborildi",
       "rememberPassword": "Parolni eslaysizmi?",

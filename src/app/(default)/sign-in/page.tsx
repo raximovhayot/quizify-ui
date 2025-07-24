@@ -28,108 +28,106 @@ export default function SignInPage() {
 
     return (
         <AuthLayout>
-            <div className="container mx-auto px-4 py-8 max-w-md">
-                <Card>
-                    <CardHeader className="text-center">
-                        <CardTitle className="text-2xl font-bold">
-                            {t('auth.signIn.title', {default: 'Sign In'})}
-                        </CardTitle>
-                        <CardDescription>
-                            {t('auth.signIn.description', {
-                                default: 'Enter your phone number and password to access your account'
-                            })}
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <Form {...form}>
-                            <form onSubmit={onSubmit} className="space-y-4">
-                                <FormField
-                                    control={form.control}
-                                    name="phone"
-                                    render={({field}) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                {t('auth.phone.label', {default: 'Phone Number'})}
-                                            </FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="tel"
-                                                    placeholder={t('auth.phone.placeholder', {default: '+1234567890'})}
-                                                    disabled={isSubmitting}
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage/>
-                                        </FormItem>
-                                    )}
-                                />
+            <Card>
+                <CardHeader className="text-center">
+                    <CardTitle className="text-2xl font-bold">
+                        {t('auth.signIn.title', {default: 'Sign In'})}
+                    </CardTitle>
+                    <CardDescription>
+                        {t('auth.signIn.description', {
+                            default: 'Enter your phone number and password to access your account'
+                        })}
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Form {...form}>
+                        <form onSubmit={onSubmit} className="space-y-4">
+                            <FormField
+                                control={form.control}
+                                name="phone"
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            {t('auth.phone.label', {default: 'Phone Number'})}
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="tel"
+                                                placeholder={t('auth.phone.placeholder', {default: '+1234567890'})}
+                                                disabled={isSubmitting}
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage/>
+                                    </FormItem>
+                                )}
+                            />
 
-                                <FormField
-                                    control={form.control}
-                                    name="password"
-                                    render={({field}) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                {t('auth.password.label', {default: 'Password'})}
-                                            </FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="password"
-                                                    placeholder={t('auth.password.placeholder', {default: 'Enter your password'})}
-                                                    disabled={isSubmitting}
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage/>
-                                        </FormItem>
-                                    )}
-                                />
+                            <FormField
+                                control={form.control}
+                                name="password"
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            {t('auth.password.label', {default: 'Password'})}
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="password"
+                                                placeholder={t('auth.password.placeholder', {default: 'Enter your password'})}
+                                                disabled={isSubmitting}
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage/>
+                                    </FormItem>
+                                )}
+                            />
 
-                                <Button
-                                    type="submit"
-                                    className="w-full"
-                                    disabled={isSubmitting}
+                            <Button
+                                type="submit"
+                                className="w-full"
+                                disabled={isSubmitting}
+                            >
+                                {isSubmitting ? (
+                                    <>
+                                        <InlineLoading
+                                            text={t('auth.signIn.submitting', {default: 'Signing In...'})}/>
+
+                                    </>
+                                ) : (
+                                    t('auth.signIn.submit', {default: 'Sign In'})
+                                )}
+                            </Button>
+                        </form>
+                    </Form>
+
+                    <div className="mt-6 space-y-4">
+                        <div className="text-center">
+                            <div className="text-sm text-muted-foreground">
+                                <Link
+                                    href="/forgot-password"
+                                    className="text-primary hover:underline"
                                 >
-                                    {isSubmitting ? (
-                                        <>
-                                            <InlineLoading
-                                                text={t('auth.signIn.submitting', {default: 'Signing In...'})}/>
-
-                                        </>
-                                    ) : (
-                                        t('auth.signIn.submit', {default: 'Sign In'})
-                                    )}
-                                </Button>
-                            </form>
-                        </Form>
-
-                        <div className="mt-6 space-y-4">
-                            <div className="text-center">
-                                <div className="text-sm text-muted-foreground">
-                                    <Link
-                                        href="/forgot-password"
-                                        className="text-primary hover:underline"
-                                    >
-                                        {t('auth.forgotPassword.link', {default: 'Forgot your password?'})}
-                                    </Link>
-                                </div>
-                            </div>
-
-                            <div className="text-center">
-                                <div className="text-sm text-muted-foreground">
-                                    {t('auth.signUp.prompt', {default: "Don't have an account?"})}{' '}
-                                    <Link
-                                        href="/sign-up"
-                                        className="text-primary hover:underline"
-                                    >
-                                        {t('auth.signUp.link', {default: 'Sign up'})}
-                                    </Link>
-                                </div>
+                                    {t('auth.forgotPassword.link', {default: 'Forgot your password?'})}
+                                </Link>
                             </div>
                         </div>
-                    </CardContent>
-                </Card>
-            </div>
+
+                        <div className="text-center">
+                            <div className="text-sm text-muted-foreground">
+                                {t('auth.signUp.prompt', {default: "Don't have an account?"})}{' '}
+                                <Link
+                                    href="/sign-up"
+                                    className="text-primary hover:underline"
+                                >
+                                    {t('auth.signUp.link', {default: 'Sign up'})}
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
         </AuthLayout>
     );
 }

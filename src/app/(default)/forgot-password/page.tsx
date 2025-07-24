@@ -241,9 +241,7 @@ export default function ForgotPasswordPage() {
 
   return (
     <AuthLayout>
-      <div className="min-h-screen flex items-center justify-center p-4">
-        {renderCurrentStep()}
-      </div>
+      {renderCurrentStep()}
     </AuthLayout>
   );
 }

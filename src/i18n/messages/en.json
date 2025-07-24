@@ -90,16 +90,21 @@
       "instructor": "Instructor"
     },
     "verification": {
+      "title": "Verify Your Phone",
+      "description": "Enter the 6-digit code sent to your phone",
       "label": "Verification Code",
       "instruction": "Enter the 6-digit code sent to",
       "verify": "Verify Code",
       "verifying": "Verifying...",
       "resend": "Resend Code",
-      "resendIn": "Resend in {seconds}s"
+      "resendIn": "Resend in {seconds}s",
+      "success": "Phone number verified successfully",
+      "resendSuccess": "New verification code sent"
     },
     "forgotPassword": {
       "link": "Forgot your password?",
       "title": "Reset Password",
+      "description": "Enter your phone number to receive a verification code",
       "phone": {
         "title": "Reset Password",
         "description": "Enter your phone number to receive a verification code"
@@ -110,7 +115,7 @@
       },
       "newPassword": {
         "title": "Set New Password",
-        "description": "Create a new password for your account"
+        "description": "Enter your new password"
       },
       "completed": {
         "title": "Password Reset Complete",
@@ -120,11 +125,13 @@
       "sendingCode": "Sending Code...",
       "verifyCode": "Verify Code",
       "verifying": "Verifying...",
+      "updatePassword": "Update Password",
       "resetPassword": "Reset Password",
       "resetting": "Resetting Password...",
       "success": {
-        "title": "Password Reset Successfully!",
-        "message": "Your password has been reset. You can now sign in with your new password."
+        "title": "Password Reset Complete",
+        "description": "Your password has been successfully reset. You will be redirected to the sign-in page shortly.",
+        "message": "Password reset successfully. You can now sign in with your new password."
       },
       "codeSent": "Verification code sent to your phone",
       "rememberPassword": "Remember your password?",
@@ -187,6 +194,7 @@
     "verificationCode": "Verification Code",
     "newPassword": "New Password",
     "confirmPassword": "Confirm Password",
+    "backToSignIn": "Back to Sign In",
     "goToSignIn": "Go to Sign In",
     "signOut": "Sign Out",
     "invalidCredentials": "Invalid phone number or password",

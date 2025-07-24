@@ -86,35 +86,33 @@ export default function SignUpPage() {
 
   return (
     <AuthLayout>
-      <div className="container mx-auto px-4 py-8 max-w-md">
-        <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold">
-              {getStepTitle()}
-            </CardTitle>
-            <CardDescription>
-              {getStepDescription()}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {renderStepContent()}
+      <Card>
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl font-bold">
+            {getStepTitle()}
+          </CardTitle>
+          <CardDescription>
+            {getStepDescription()}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {renderStepContent()}
 
-            {currentStep === 'phone' && (
-              <div className="mt-6 text-center">
-                <div className="text-sm text-muted-foreground">
-                  {t('auth.signIn.prompt', { default: 'Already have an account?' })}{' '}
-                  <Link
-                    href="/sign-in"
-                    className="text-primary hover:underline"
-                  >
-                    {t('auth.signIn.link', { default: 'Sign in' })}
-                  </Link>
-                </div>
+          {currentStep === 'phone' && (
+            <div className="mt-6 text-center">
+              <div className="text-sm text-muted-foreground">
+                {t('auth.signIn.prompt', { default: 'Already have an account?' })}{' '}
+                <Link
+                  href="/sign-in"
+                  className="text-primary hover:underline"
+                >
+                  {t('auth.signIn.link', { default: 'Sign in' })}
+                </Link>
               </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </AuthLayout>
   );
 }
