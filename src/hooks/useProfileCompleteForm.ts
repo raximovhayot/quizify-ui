@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { useAuth } from '@/contexts/AuthContext';
+import { useNextAuth } from '@/hooks/useNextAuth';
 import { AuthService } from '@/lib/auth-service';
 import { AccountCompleteRequest, DashboardType } from '@/types/auth';
 import { handleAuthError, clearFormErrors } from '@/utils/auth-errors';
@@ -19,7 +19,7 @@ import {
  * Handles form state, validation, submission, and error handling
  */
 export function useProfileCompleteForm() {
-  const { user, setUserFromToken } = useAuth();
+  const { user } = useNextAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const t = useTranslations();

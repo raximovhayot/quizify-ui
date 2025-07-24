@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useAuth } from '@/contexts/AuthContext';
+import { useNextAuth } from '@/hooks/useNextAuth';
 import { DashboardLayout } from '@/components/layouts/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -46,7 +46,7 @@ type ProfileUpdateFormData = z.infer<typeof profileUpdateSchema>;
 type PasswordChangeFormData = z.infer<typeof passwordChangeSchema>;
 
 export default function ProfilePage() {
-  const { user } = useAuth();
+  const { user } = useNextAuth();
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const t = useTranslations();

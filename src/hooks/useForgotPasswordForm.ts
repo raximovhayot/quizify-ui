@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { useAuth } from '@/contexts/AuthContext';
+import { useNextAuth } from '@/hooks/useNextAuth';
 import { AuthService } from '@/lib/auth-service';
 import { BackendError } from '@/types/api';
 import { handleAuthError, clearFormErrors } from '@/utils/auth-errors';
@@ -27,7 +27,7 @@ export type ForgotPasswordStep = 'phone' | 'verification' | 'new-password' | 'co
  * Handles all steps of the forgot password process: phone, verification, and new password
  */
 export function useForgotPasswordForm() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useNextAuth();
   const [currentStep, setCurrentStep] = useState<ForgotPasswordStep>('phone');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState<string>('');

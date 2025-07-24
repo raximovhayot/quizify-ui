@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useAuth } from '@/contexts/AuthContext';
+import { useNextAuth } from '@/hooks/useNextAuth';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { 
@@ -30,7 +30,7 @@ interface NavItem {
 
 export function Sidebar({ className }: SidebarProps) {
   const t = useTranslations();
-  const { user, hasRole } = useAuth();
+  const { user, hasRole } = useNextAuth();
   const pathname = usePathname();
 
   // Navigation items based on user roles

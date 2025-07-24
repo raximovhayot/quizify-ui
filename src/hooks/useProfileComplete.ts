@@ -1,0 +1,146 @@
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
+import { useNextAuth } from '@/hooks/useNextAuth';
+import { signIn } from 'next-auth/react';
+import { AuthService } from '@/lib/auth-service';
+import { DashboardType } from '@/types/common';
+import { AccountCompleteRequest } from '@/types/auth';
+import { handleAuthError, clearFormErrors } from '@/utils/auth-errors';
+import { z } from 'zod';
+
+// Profile completion form schema
+const createProfileCompleteSchema = (t: (key: string, options?: Record<string, unknown>) => string) => z.object({
+  firstName: z.string().min(1, t('validation.firstName.required', { default: 'First name is required' })),
+  lastName: z.string().min(1, t('validation.lastName.required', { default: 'Last name is required' })),
+  password: z.string()
+    .min(8, t('validation.password.minLength', { default: 'Password must be at least 8 characters' }))
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 
+      t('validation.password.complexity', { 
+        default: 'Password must contain at least one uppercase letter, one lowercase letter, and one number' 
+      })),
+  dashboardType: z.nativeEnum(DashboardType, {
+    errorMap: () => ({ message: t('validation.dashboardType.required', { default: 'Please select your role' }) })
+  }),
+});
+
+type ProfileCompleteFormData = z.infer<ReturnType<typeof createProfileCompleteSchema>>;
+
+const profileCompleteDefaults: ProfileCompleteFormData = {
+  firstName: '',
+  lastName: '',
+  password: '',
+  dashboardType: DashboardType.STUDENT,
+};
+
+/**
+ * Custom hook for profile completion form logic
+ * Handles form state, validation, submission, and error handling
+ */
+export function useProfileComplete() {
+  const { user, session, isLoading } = useNextAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
+  const t = useTranslations();
+
+  // Create validation schema with localized messages
+  const profileCompleteSchema = createProfileCompleteSchema(t);
+
+  // Initialize form with validation schema
+  const form = useForm<ProfileCompleteFormData>({
+    resolver: zodResolver(profileCompleteSchema),
+    defaultValues: profileCompleteDefaults,
+  });
+
+  // Form submission handler
+  const onSubmit = async (data: ProfileCompleteFormData) => {
+    setIsSubmitting(true);
+    
+    // Clear any previous errors
+    clearFormErrors(form);
+
+    try {
+      let accessToken: string;
+      let userPhone: string;
+
+      // Check if we have a NextAuth session (existing user) or signup token (new user)
+      if (session?.accessToken) {
+        // Existing user with NextAuth session
+        accessToken = session.accessToken;
+        userPhone = session.user.phone;
+      } else {
+        // New user from signup flow - get token from sessionStorage
+        const signupTokenData = sessionStorage.getItem('signupToken');
+        if (!signupTokenData) {
+          toast.error(t('auth.error.noSignupToken', { 
+            default: 'No signup session found. Please start the signup process again.' 
+          }));
+          router.push('/sign-up');
+          return;
+        }
+
+        const signupToken = JSON.parse(signupTokenData);
+        accessToken = signupToken.accessToken;
+        userPhone = signupToken.user.phone;
+      }
+
+      // Prepare account completion request
+      const accountCompleteRequest: AccountCompleteRequest = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        password: data.password,
+        dashboardType: data.dashboardType,
+      };
+
+      // Complete account using AuthService
+      await AuthService.completeAccount(accountCompleteRequest, accessToken);
+
+      // Clear the signup token from sessionStorage
+      sessionStorage.removeItem('signupToken');
+
+      // Create NextAuth session with the new credentials
+      const signInResult = await signIn('credentials', {
+        phone: userPhone,
+        password: data.password,
+        redirect: false,
+      });
+
+      if (signInResult?.error) {
+        toast.error(t('auth.error.sessionCreation', { 
+          default: 'Profile completed but failed to create session. Please sign in manually.' 
+        }));
+        router.push('/sign-in');
+        return;
+      }
+
+      toast.success(t('auth.profileComplete.success', { 
+        default: 'Profile completed successfully!' 
+      }));
+
+      // Redirect based on dashboard type
+      if (data.dashboardType === DashboardType.STUDENT) {
+        router.push('/student');
+      } else if (data.dashboardType === DashboardType.INSTRUCTOR) {
+        router.push('/instructor');
+      } else {
+        router.push('/');
+      }
+
+    } catch (error: unknown) {
+      handleAuthError(error, form, t);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return {
+    form,
+    isSubmitting,
+    isLoading,
+    user,
+    onSubmit: form.handleSubmit(onSubmit),
+  };
+}

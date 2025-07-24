@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 import { Header } from '@/components/navigation/Header';
 import { Sidebar } from '@/components/navigation/Sidebar';
 import { AppBreadcrumb } from '@/components/navigation/AppBreadcrumb';
-import { useAuth } from '@/contexts/AuthContext';
+import { useNextAuth } from '@/hooks/useNextAuth';
 import { cn } from '@/lib/utils';
 
 interface AppLayoutProps {
@@ -24,7 +24,7 @@ export function AppLayout({
   breadcrumbItems,
   className
 }: AppLayoutProps) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useNextAuth();
 
   return (
     <div className="min-h-screen bg-background">

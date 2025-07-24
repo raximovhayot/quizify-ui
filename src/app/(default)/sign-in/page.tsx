@@ -15,11 +15,11 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import Link from 'next/link';
-import {useSignInForm} from '@/hooks/useSignInForm';
+import {useNextAuthSignIn} from '@/hooks/useNextAuthSignIn';
 
 export default function SignInPage() {
     const t = useTranslations();
-    const {form, isSubmitting, isAuthenticated, onSubmit} = useSignInForm();
+    const {form, isSubmitting, isAuthenticated, onSubmit} = useNextAuthSignIn();
 
     // Don't render the form if user is already authenticated
     if (isAuthenticated) {

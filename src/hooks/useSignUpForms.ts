@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { useAuth } from '@/contexts/AuthContext';
+import { useNextAuth } from '@/hooks/useNextAuth';
 import { AuthService } from '@/lib/auth-service';
 import { BackendError } from '@/types/api';
 import { handleAuthError, clearFormErrors } from '@/utils/auth-errors';
@@ -65,7 +65,7 @@ const handleGenericError = (error: unknown, t: TranslationFunction): void => {
  * Handles all three steps of the sign-up process: phone, verification, and user details
  */
 export function useSignUpForms(): UseSignUpFormsReturn {
-  const { isAuthenticated, setUserFromToken, user } = useAuth();
+  const { isAuthenticated, user } = useNextAuth();
   const [currentStep, setCurrentStep] = useState<SignUpStep>('phone');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
@@ -142,8 +142,10 @@ export function useSignUpForms(): UseSignUpFormsReturn {
         otp: data.otp,
       });
 
-      // Update AuthContext state and store tokens/user data
-      setUserFromToken(jwtToken);
+      // Store the JWT token temporarily for profile completion
+      // We can't create a NextAuth session yet because the user hasn't set a password
+      // The profile completion page will handle creating the session after completion
+      sessionStorage.setItem('signupToken', JSON.stringify(jwtToken));
 
       // OTP verified successfully, now user needs to complete profile
       verificationForm.reset();
@@ -151,14 +153,14 @@ export function useSignUpForms(): UseSignUpFormsReturn {
         default: 'Phone verified successfully! Please complete your profile.'
       }));
 
-
+      // NextAuth middleware will handle redirect to /profile/complete for NEW users
       router.push('/profile/complete');
     } catch (error: unknown) {
       handleAuthError(error, verificationForm, t);
     } finally {
       setIsSubmitting(false);
     }
-  }, [phoneNumber, verificationForm, setUserFromToken, router, t]);
+  }, [phoneNumber, verificationForm, router, t]);
 
   // Resend OTP handler
   const handleResendOTP = useCallback(async () => {

@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
-import { useAuth } from '@/contexts/AuthContext';
+import { useNextAuth } from '@/hooks/useNextAuth';
 import { User, LogOut, Settings } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -21,7 +21,7 @@ interface HeaderProps {
 
 export function Header({ title, showUserMenu = true }: HeaderProps) {
   const t = useTranslations();
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user, logout, isAuthenticated } = useNextAuth();
   const router = useRouter();
 
   const handleLogout = async () => {

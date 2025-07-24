@@ -1,25 +1,14 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { auth } from '@/auth';
 import { UserState } from '@/types/common';
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Since we don't use locale-based routing anymore, use pathname directly
-  const actualPathname = pathname;
-
-  // Get user data and access token from cookies (in a real app, you'd validate JWT tokens)
-  const userCookie = request.cookies.get('user');
-  const accessTokenCookie = request.cookies.get('accessToken');
-  let user = null;
-
-  if (userCookie) {
-    try {
-      user = JSON.parse(userCookie.value);
-    } catch (error) {
-      console.error('Error parsing user cookie:', error);
-    }
-  }
+  // Get session from NextAuth
+  const session = await auth();
+  const user = session?.user || null;
 
   // Define route patterns and their required roles
   const routeConfig = {
@@ -48,30 +37,35 @@ export function middleware(request: NextRequest) {
   }
 
   // If roles required but user not authenticated, redirect to sign-in
-  if (!user || !accessTokenCookie) {
+  if (!user || !session) {
     const signInUrl = new URL('/sign-in', request.url);
     signInUrl.searchParams.set('redirect', pathname);
     return NextResponse.redirect(signInUrl);
   }
 
-  // If user is authenticated but has NEW state, redirect to complete profile
-  // Exclude sign-up page itself to avoid infinite redirect loop
-  if (user && user.state === UserState.NEW && !actualPathname.startsWith('/sign-up')) {
-    return NextResponse.redirect(new URL('/sign-up', request.url));
+  // If user is authenticated but has NEW state, redirect to profile completion
+  // Exclude profile completion page itself to avoid infinite redirect loop
+  if (user && user.state === UserState.NEW && !pathname.startsWith('/profile/complete')) {
+    return NextResponse.redirect(new URL('/profile/complete', request.url));
   }
 
   // Check if user has required roles
   const userRoles = user.roles || [];
-  const hasRequiredRole = requiredRoles.some((role: string) => userRoles.includes(role));
+  const hasRequiredRole = requiredRoles.some((role: string) => 
+    userRoles.some(userRole => userRole.name === role)
+  );
 
   if (!hasRequiredRole) {
-    // Redirect based on user's roles without locale prefix
-    if (userRoles.includes('STUDENT') && userRoles.includes('INSTRUCTOR')) {
+    // Redirect based on user's roles
+    const hasStudentRole = userRoles.some(role => role.name === 'STUDENT');
+    const hasInstructorRole = userRoles.some(role => role.name === 'INSTRUCTOR');
+    
+    if (hasStudentRole && hasInstructorRole) {
       // User has both roles, redirect to a role selection page or default
       return NextResponse.redirect(new URL('/', request.url));
-    } else if (userRoles.includes('STUDENT')) {
+    } else if (hasStudentRole) {
       return NextResponse.redirect(new URL('/student', request.url));
-    } else if (userRoles.includes('INSTRUCTOR')) {
+    } else if (hasInstructorRole) {
       return NextResponse.redirect(new URL('/instructor', request.url));
     } else {
       // No valid roles, redirect to sign-in

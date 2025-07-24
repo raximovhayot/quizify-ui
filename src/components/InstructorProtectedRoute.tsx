@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '@/contexts/AuthContext';
+import { useNextAuth } from '@/hooks/useNextAuth';
 import { UserRole } from '@/types/auth';
 import { useRouter } from 'next/navigation';
 import { useEffect, ReactNode } from 'react';
@@ -10,7 +10,7 @@ interface InstructorProtectedRouteProps {
 }
 
 export default function InstructorProtectedRoute({ children }: InstructorProtectedRouteProps) {
-  const { user, hasRole, isLoading, logout, isAuthenticated } = useAuth();
+  const { user, hasRole, isLoading, logout, isAuthenticated } = useNextAuth();
   const router = useRouter();
 
   useEffect(() => {

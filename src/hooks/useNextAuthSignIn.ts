@@ -4,17 +4,17 @@ import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { useAuth } from '@/contexts/AuthContext';
+import { useNextAuth } from '@/hooks/useNextAuth';
 import { UserState } from '@/types/common';
 import { createSignInSchema, SignInFormData, signInFormDefaults } from '@/schemas/auth';
 import { handleAuthError, clearFormErrors } from '@/utils/auth-errors';
 
 /**
- * Custom hook for sign-in form logic
+ * Custom hook for NextAuth sign-in form logic
  * Handles form state, validation, submission, and error handling
  */
-export function useSignInForm() {
-    const { login, isAuthenticated, user } = useAuth();
+export function useNextAuthSignIn() {
+    const { login, isAuthenticated, user, isLoading } = useNextAuth();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -30,7 +30,7 @@ export function useSignInForm() {
     });
 
     // Handle authentication redirect for completed users only
-    // NEW users will be redirected by middleware to /sign-up
+    // NEW users will be redirected by middleware to profile completion
     useEffect(() => {
         if (isAuthenticated && user && user.state !== UserState.NEW) {
             const redirectTo = searchParams.get('redirect') || '/';
@@ -51,7 +51,7 @@ export function useSignInForm() {
             toast.success(t('auth.loginSuccess'));
             
             // Don't redirect here - let the useEffect handle it based on user state
-            // This ensures NEW users are handled by middleware redirect to /sign-up
+            // This ensures NEW users are handled by middleware redirect
         } catch (error: unknown) {
             handleAuthError(error, form, t);
         } finally {
@@ -63,6 +63,7 @@ export function useSignInForm() {
         form,
         isSubmitting,
         isAuthenticated,
+        isLoading,
         onSubmit: form.handleSubmit(onSubmit),
     };
 }
