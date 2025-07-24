@@ -16,6 +16,7 @@
     "yes": "Ha",
     "no": "Yo'q",
     "ok": "OK",
+    "of": "dan",
     "error": "Xatolik",
     "unexpectedError": "Kutilmagan xatolik yuz berdi.",
     "success": "Muvaffaqiyatli",
@@ -133,7 +134,29 @@
       "description": "Hisob sozlamalarini yakunlash uchun ma'lumotlaringizni kiriting",
       "submit": "Profilni yakunlash",
       "submitting": "Profil yakunlanmoqda...",
-      "success": "Profil muvaffaqiyatli yakunlandi!"
+      "success": "Profil muvaffaqiyatli yakunlandi!",
+      "step": "Qadam",
+      "steps": {
+        "personalInfo": {
+          "title": "Shaxsiy ma'lumotlar",
+          "description": "O'zingiz haqingizda ma'lumot bering"
+        },
+        "password": {
+          "title": "Parol yaratish",
+          "description": "Hisobingizni himoyalang"
+        },
+        "role": {
+          "title": "Rolingizni tanlang",
+          "description": "Quizify'dan qanday foydalanasiz?"
+        }
+      },
+      "passwordRequirements": "Parol kamida quyidagilarni o'z ichiga olishi kerak:",
+      "passwordLength": "8 ta belgi minimum",
+      "passwordUppercase": "Bitta katta harf",
+      "passwordLowercase": "Bitta kichik harf",
+      "passwordNumber": "Bitta raqam",
+      "studentDescription": "Testlarni yechib, o'z rivojlanishingizni kuzating",
+      "instructorDescription": "Testlar yarating va topshiriqlarni boshqaring"
     },
     "error": {
       "noSignupToken": "Ro'yxatdan o'tish sessiyasi topilmadi. Iltimos, ro'yxatdan o'tish jarayonini qaytadan boshlang.",

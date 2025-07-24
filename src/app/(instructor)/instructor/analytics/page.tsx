@@ -66,19 +66,6 @@ export default function AnalyticsPage() {
   const router = useRouter();
   const t = useTranslations();
 
-  useEffect(() => {
-    // Check if user is authenticated and has instructor role
-    if (!isLoading && (!isAuthenticated || !hasRole('INSTRUCTOR'))) {
-      router.push('/sign-in');
-      return;
-    }
-
-    // Load analytics data
-    if (isAuthenticated && hasRole('INSTRUCTOR')) {
-      loadAnalyticsData();
-    }
-  }, [isAuthenticated, hasRole, isLoading, router, selectedPeriod, loadAnalyticsData]);
-
   const loadAnalyticsData = useCallback(async (forceRefresh: boolean = false) => {
     setIsLoadingData(true);
 
@@ -110,7 +97,7 @@ export default function AnalyticsPage() {
           throw new Error(analyticsResponse.errors[0].message);
         }
 
-        data = analyticsResponse.data;
+        data = analyticsResponse.data as AnalyticsData;
         
         // Cache the data for 3 minutes (shorter than dashboard since it's more detailed)
         CacheManager.set(cacheKey, data, 3 * 60 * 1000);
@@ -139,6 +126,19 @@ export default function AnalyticsPage() {
       setIsLoadingData(false);
     }
   }, [selectedPeriod, user?.id]);
+
+  useEffect(() => {
+    // Check if user is authenticated and has instructor role
+    if (!isLoading && (!isAuthenticated || !hasRole('INSTRUCTOR'))) {
+      router.push('/sign-in');
+      return;
+    }
+
+    // Load analytics data
+    if (isAuthenticated && hasRole('INSTRUCTOR')) {
+      loadAnalyticsData();
+    }
+  }, [isAuthenticated, hasRole, isLoading, router, selectedPeriod, loadAnalyticsData]);
 
   const handleExportData = (format: 'pdf' | 'csv') => {
     // TODO: Implement actual export functionality

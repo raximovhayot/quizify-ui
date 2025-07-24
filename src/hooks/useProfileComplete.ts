@@ -25,7 +25,7 @@ const createProfileCompleteSchema = (t: (key: string, options?: Record<string, u
     dashboardType: z.enum(DashboardType, {message: t('auth.validation.dashboardTypeRequired', {default: 'Please select your role'})}),
 });
 
-type ProfileCompleteFormData = z.infer<ReturnType<typeof createProfileCompleteSchema>>;
+export type ProfileCompleteFormData = z.infer<ReturnType<typeof createProfileCompleteSchema>>;
 
 const profileCompleteDefaults: ProfileCompleteFormData = {
     firstName: '',

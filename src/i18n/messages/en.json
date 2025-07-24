@@ -16,6 +16,7 @@
     "yes": "Yes",
     "no": "No",
     "ok": "OK",
+    "of": "of",
     "error": "Error",
     "unexpectedError": "An unexpected error occurred.",
     "success": "Success",
@@ -131,7 +132,29 @@
       "description": "Please provide your details to complete your account setup",
       "submit": "Complete Profile",
       "submitting": "Completing Profile...",
-      "success": "Profile completed successfully!"
+      "success": "Profile completed successfully!",
+      "step": "Step",
+      "steps": {
+        "personalInfo": {
+          "title": "Personal Information",
+          "description": "Tell us about yourself"
+        },
+        "password": {
+          "title": "Create Password",
+          "description": "Secure your account"
+        },
+        "role": {
+          "title": "Choose Your Role",
+          "description": "How will you use Quizify?"
+        }
+      },
+      "passwordRequirements": "Password must contain at least:",
+      "passwordLength": "8 characters minimum",
+      "passwordUppercase": "One uppercase letter",
+      "passwordLowercase": "One lowercase letter",
+      "passwordNumber": "One number",
+      "studentDescription": "Take quizzes and track your progress",
+      "instructorDescription": "Create quizzes and manage assignments"
     },
     "error": {
       "noSignupToken": "No signup session found. Please start the signup process again.",
