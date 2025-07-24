@@ -9,7 +9,7 @@ import { Form } from '@/components/ui/form';
 import { useProfileComplete } from '@/hooks/useProfileComplete';
 import { UserState } from '@/types/common';
 import { ProfileCompleteSteps } from '@/components/profile/ProfileCompleteSteps';
-import { hasRole } from '@/types/auth';
+import { hasRole, AccountDTO } from '@/types/auth';
 
 export default function ProfileCompletePage() {
   const t = useTranslations();
@@ -24,10 +24,10 @@ export default function ProfileCompletePage() {
   useEffect(() => {
     if (!isLoading) {
       if (user && user.state !== UserState.NEW) {
-        // User profile is already completed, redirect to appropriate dashboard immediately
-        if (hasRole(user, 'STUDENT')) {
+        const userWithLanguage = {...user, language: 'en' as const} as unknown as AccountDTO;
+        if (hasRole(userWithLanguage, 'STUDENT')) {
           router.replace('/student');
-        } else if (hasRole(user, 'INSTRUCTOR')) {
+        } else if (hasRole(userWithLanguage, 'INSTRUCTOR')) {
           router.replace('/instructor');
         } else {
           router.replace('/');

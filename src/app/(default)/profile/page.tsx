@@ -201,7 +201,7 @@ export default function ProfilePage() {
 
                   <div className="space-y-2">
                     <label htmlFor="phone" className="text-sm font-medium">
-                      {t('auth.phone')}
+                      {t('auth.phone.label')}
                     </label>
                     <Input
                       id="phone"

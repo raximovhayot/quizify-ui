@@ -10,23 +10,47 @@ export async function middleware(request: NextRequest) {
   const session = await auth();
   const user = session?.user || null;
 
+  // Handle root path redirection
+  if (pathname === '/') {
+    if (!user || !session) {
+      // Not authenticated, redirect to sign-in
+      return NextResponse.redirect(new URL('/sign-in', request.url));
+    }
+
+    // User is authenticated, redirect based on roles
+    const userRoles = user.roles || [];
+    const hasStudentRole = userRoles.some(role => role.name === 'STUDENT');
+    const hasInstructorRole = userRoles.some(role => role.name === 'INSTRUCTOR');
+    
+    if (hasStudentRole && hasInstructorRole) {
+      // User has both roles, redirect to student dashboard as default
+      return NextResponse.redirect(new URL('/student', request.url));
+    } else if (hasStudentRole) {
+      return NextResponse.redirect(new URL('/student', request.url));
+    } else if (hasInstructorRole) {
+      return NextResponse.redirect(new URL('/instructor', request.url));
+    } else {
+      // No valid roles, redirect to sign-in
+      return NextResponse.redirect(new URL('/sign-in', request.url));
+    }
+  }
+
   // Define route patterns and their required roles
   const routeConfig = {
     '/student': ['STUDENT'],
     '/instructor': ['INSTRUCTOR'],
     '/join': [], // Join page accessible to all
     '/sign-in': [], // Sign-in page accessible to all
-    '/': [] // Default page accessible to all
   };
 
   // Check if the current path requires authentication
   const getRequiredRoles = (path: string): string[] => {
     for (const [route, roles] of Object.entries(routeConfig)) {
-      if (path.startsWith(route) && route !== '/') {
+      if (path.startsWith(route)) {
         return roles;
       }
     }
-    return routeConfig['/'] || [];
+    return [];
   };
 
   const requiredRoles = getRequiredRoles(pathname);

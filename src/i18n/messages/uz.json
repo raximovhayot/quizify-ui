@@ -21,7 +21,10 @@
     "unexpectedError": "Kutilmagan xatolik yuz berdi.",
     "success": "Muvaffaqiyatli",
     "warning": "Ogohlantirish",
-    "info": "Ma'lumot"
+    "info": "Ma'lumot",
+    "sending": "Yuborilmoqda...",
+    "verifying": "Tekshirilmoqda...",
+    "updating": "Yangilanmoqda..."
   },
   "auth": {
     "signIn": {
@@ -99,6 +102,7 @@
     "forgotPassword": {
       "link": "Parolni unutdingizmi?",
       "title": "Parolni tiklash",
+      "description": "Tasdiqlash kodini olish uchun telefon raqamingizni kiriting",
       "phone": {
         "title": "Parolni tiklash",
         "description": "Tasdiqlash kodini olish uchun telefon raqamingizni kiriting"
@@ -164,7 +168,12 @@
       "sessionCreation": "Profil yakunlandi, lekin sessiya yaratib bo'lmadi. Iltimos, qo'lda kiring.",
       "noToken": "Autentifikatsiya tokeni topilmadi. Iltimos, qaytadan kiring."
     },
+    "verificationCode": "Tasdiqlash kodi",
+    "newPassword": "Yangi parol",
+    "confirmPassword": "Parolni tasdiqlang",
+    "goToSignIn": "Kirishga o'tish",
     "signOut": "Chiqish",
+    "backToSignIn": "Kirishga qaytish",
     "invalidCredentials": "Noto'g'ri telefon raqami yoki parol",
     "accountCreated": "Hisob muvaffaqiyatli yaratildi",
     "loginSuccess": "Kirish muvaffaqiyatli",

@@ -21,7 +21,10 @@
     "unexpectedError": "An unexpected error occurred.",
     "success": "Success",
     "warning": "Warning",
-    "info": "Information"
+    "info": "Information",
+    "sending": "Sending...",
+    "verifying": "Verifying...",
+    "updating": "Updating..."
   },
   "auth": {
     "signIn": {
@@ -163,17 +166,28 @@
       "noToken": "Authentication token not found. Please sign in again."
     },
     "validation": {
+      "phoneRequired": "Phone number is required",
+      "phoneInvalid": "Please enter a valid Uzbek phone number (e.g., +998901234567)",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 8 characters",
+      "passwordPattern": "Password must contain at least one uppercase letter, one lowercase letter, and one number",
+      "confirmPasswordRequired": "Please confirm your password",
+      "passwordsNotMatch": "Passwords do not match",
       "firstNameRequired": "First name is required",
       "firstNameMinLength": "First name must be at least 2 characters",
       "firstNameMaxLength": "First name must be less than 50 characters",
       "lastNameRequired": "Last name is required",
       "lastNameMinLength": "Last name must be at least 2 characters",
       "lastNameMaxLength": "Last name must be less than 50 characters",
-      "passwordRequired": "Password is required",
-      "passwordMinLength": "Password must be at least 8 characters",
-      "passwordPattern": "Password must contain at least one uppercase letter, one lowercase letter, and one number",
+      "otpRequired": "Verification code is required",
+      "otpLength": "Verification code must be 6 digits",
+      "otpPattern": "Verification code must contain only digits",
       "dashboardTypeRequired": "Please select your role"
     },
+    "verificationCode": "Verification Code",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "goToSignIn": "Go to Sign In",
     "signOut": "Sign Out",
     "invalidCredentials": "Invalid phone number or password",
     "accountCreated": "Account created successfully",

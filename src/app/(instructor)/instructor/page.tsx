@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useNextAuth } from '@/hooks/useNextAuth';
 import { DashboardLayout } from '@/components/layouts/AppLayout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { InlineLoading } from '@/components/ui/loading-spinner';
 import { apiClient } from '@/lib/api';
@@ -15,11 +15,7 @@ import {
   Users, 
   ClipboardList, 
   TrendingUp, 
-  Plus,
-  Eye,
-  Calendar,
-  Award,
-  Activity
+  Plus
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -32,14 +28,6 @@ interface DashboardStats {
   activeAssignments: number;
 }
 
-interface RecentActivity {
-  id: string;
-  type: 'quiz_created' | 'assignment_created' | 'student_joined' | 'quiz_completed';
-  title: string;
-  description: string;
-  timestamp: string;
-  icon: React.ComponentType<{ className?: string }>;
-}
 
 interface AnalyticsData {
   summary?: {
@@ -64,7 +52,6 @@ interface AnalyticsData {
 export default function InstructorDashboard() {
   const { user, hasRole, isAuthenticated, isLoading } = useNextAuth();
   const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
-  const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
   const [isLoadingData, setIsLoadingData] = useState(true);
   const router = useRouter();
   const t = useTranslations();
@@ -129,52 +116,6 @@ export default function InstructorDashboard() {
         activeAssignments: Math.floor((analyticsData.summary?.totalQuizzes || 0) * 0.6), // Estimate active assignments
       });
 
-      // Generate recent activity from analytics data
-      const recentActivity: RecentActivity[] = [];
-      
-      // Add quiz performance activities
-      if (analyticsData.quizPerformance && analyticsData.quizPerformance.length > 0) {
-        analyticsData.quizPerformance.slice(0, 2).forEach((quiz, index: number) => {
-          recentActivity.push({
-            id: `quiz-${index}`,
-            type: 'quiz_completed' as const,
-            title: `${quiz.name} Results`,
-            description: `${quiz.attempts} attempts with ${quiz.averageScore}% average score`,
-            timestamp: index === 0 ? '2 hours ago' : '4 hours ago',
-            icon: Award,
-          });
-        });
-      }
-
-      // Add top performer activities
-      if (analyticsData.topPerformers && analyticsData.topPerformers.length > 0) {
-        analyticsData.topPerformers.slice(0, 2).forEach((performer, index: number) => {
-          recentActivity.push({
-            id: `performer-${index}`,
-            type: 'student_joined' as const,
-            title: 'Top Performance',
-            description: `${performer.name} achieved ${performer.averageScore}% average`,
-            timestamp: index === 0 ? '6 hours ago' : '1 day ago',
-            icon: Users,
-          });
-        });
-      }
-
-      // If no real activity data, add some default activities
-      if (recentActivity.length === 0) {
-        recentActivity.push(
-          {
-            id: '1',
-            type: 'quiz_created' as const,
-            title: 'Dashboard Updated',
-            description: 'Analytics data refreshed successfully',
-            timestamp: 'Just now',
-            icon: Activity,
-          }
-        );
-      }
-
-      setRecentActivity(recentActivity);
     } catch (error) {
       console.error('Error loading dashboard data:', error);
       
@@ -187,17 +128,6 @@ export default function InstructorDashboard() {
         averageScore: 0,
         activeAssignments: 0,
       });
-      
-      setRecentActivity([
-        {
-          id: 'error',
-          type: 'quiz_created' as const,
-          title: 'Data Loading Error',
-          description: 'Unable to load dashboard data. Please try again.',
-          timestamp: 'Just now',
-          icon: Activity,
-        },
-      ]);
     } finally {
       setIsLoadingData(false);
     }
@@ -218,22 +148,15 @@ export default function InstructorDashboard() {
       <div className="space-y-6">
         {/* Welcome Header */}
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">
-              Welcome back, {user.firstName}!
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              Here&apos;s what&apos;s happening with your courses today.
-            </p>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Button asChild>
-              <Link href="/instructor/quizzes/create">
-                <Plus className="w-4 h-4 mr-2" />
-                Create Quiz
-              </Link>
-            </Button>
-          </div>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Welcome back, {user.firstName}!
+          </h1>
+          <Button asChild>
+            <Link href="/instructor/quizzes/create">
+              <Plus className="w-4 h-4 mr-2" />
+              Create Quiz
+            </Link>
+          </Button>
         </div>
 
         {/* Quick Stats Cards */}
@@ -262,9 +185,6 @@ export default function InstructorDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{dashboardStats.totalQuizzes}</div>
-                <p className="text-xs text-muted-foreground">
-                  +2 from last month
-                </p>
               </CardContent>
             </Card>
 
@@ -275,9 +195,6 @@ export default function InstructorDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{dashboardStats.activeAssignments}</div>
-                <p className="text-xs text-muted-foreground">
-                  {dashboardStats.totalAssignments} total assignments
-                </p>
               </CardContent>
             </Card>
 
@@ -288,9 +205,6 @@ export default function InstructorDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{dashboardStats.totalStudents}</div>
-                <p className="text-xs text-muted-foreground">
-                  Across all assignments
-                </p>
               </CardContent>
             </Card>
 
@@ -301,106 +215,11 @@ export default function InstructorDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{dashboardStats.averageScore}%</div>
-                <p className="text-xs text-muted-foreground">
-                  +2.5% from last week
-                </p>
               </CardContent>
             </Card>
           </div>
         ) : null}
 
-        <div className="grid gap-6 md:grid-cols-2">
-          {/* Recent Activity */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Activity className="w-5 h-5" />
-                <span>Recent Activity</span>
-              </CardTitle>
-              <CardDescription>
-                Your latest actions and updates
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {isLoadingData ? (
-                <div className="space-y-4">
-                  {[...Array(4)].map((_, i) => (
-                    <div key={i} className="flex items-center space-x-3">
-                      <div className="w-8 h-8 bg-muted rounded-full animate-pulse" />
-                      <div className="flex-1 space-y-2">
-                        <div className="h-4 bg-muted rounded animate-pulse" />
-                        <div className="h-3 bg-muted rounded animate-pulse w-2/3" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {recentActivity.map((activity) => {
-                    const Icon = activity.icon;
-                    return (
-                      <div key={activity.id} className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                          <Icon className="w-4 h-4 text-primary" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate">
-                            {activity.title}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {activity.description} • {activity.timestamp}
-                          </p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Quick Actions */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Calendar className="w-5 h-5" />
-                <span>Quick Actions</span>
-              </CardTitle>
-              <CardDescription>
-                Common tasks and shortcuts
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <Button asChild variant="outline" className="w-full justify-start">
-                <Link href="/instructor/quizzes/create">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Create New Quiz
-                </Link>
-              </Button>
-              
-              <Button asChild variant="outline" className="w-full justify-start">
-                <Link href="/instructor/assignments/create">
-                  <ClipboardList className="w-4 h-4 mr-2" />
-                  Create Assignment
-                </Link>
-              </Button>
-              
-              <Button asChild variant="outline" className="w-full justify-start">
-                <Link href="/instructor/quizzes">
-                  <Eye className="w-4 h-4 mr-2" />
-                  View All Quizzes
-                </Link>
-              </Button>
-              
-              <Button asChild variant="outline" className="w-full justify-start">
-                <Link href="/instructor/analytics">
-                  <TrendingUp className="w-4 h-4 mr-2" />
-                  View Analytics
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
       </div>
     </DashboardLayout>
   );

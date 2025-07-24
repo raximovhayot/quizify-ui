@@ -50,7 +50,7 @@ export default function ForgotPasswordPage() {
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('auth.phone', { default: 'Phone Number' })}</FormLabel>
+                  <FormLabel>{t('auth.phone.label', { default: 'Phone Number' })}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}

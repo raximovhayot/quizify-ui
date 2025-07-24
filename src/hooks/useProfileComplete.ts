@@ -12,8 +12,13 @@ import {AccountCompleteRequest} from '@/types/auth';
 import {handleAuthError, clearFormErrors} from '@/utils/auth-errors';
 import {z} from 'zod';
 
+// Types for helper functions
+interface TranslationFunction {
+    (key: string, options?: { default?: string }): string;
+}
+
 // Profile completion form schema
-const createProfileCompleteSchema = (t: (key: string, options?: Record<string, unknown>) => string) => z.object({
+const createProfileCompleteSchema = (t: TranslationFunction) => z.object({
     firstName: z.string().min(1, t('auth.validation.firstNameRequired', {default: 'First name is required'})),
     lastName: z.string().min(1, t('auth.validation.lastNameRequired', {default: 'Last name is required'})),
     password: z.string()

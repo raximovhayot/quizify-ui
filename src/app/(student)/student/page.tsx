@@ -238,22 +238,15 @@ export default function StudentDashboard() {
       <div className="space-y-6">
         {/* Welcome Header */}
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">
-              Welcome back, {user.firstName}!
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              Here&apos;s your learning progress and upcoming tasks.
-            </p>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Button asChild>
-              <Link href="/join">
-                <Play className="w-4 h-4 mr-2" />
-                Join Assignment
-              </Link>
-            </Button>
-          </div>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Welcome back, {user.firstName}!
+          </h1>
+          <Button asChild>
+            <Link href="/join">
+              <Play className="w-4 h-4 mr-2" />
+              Join Assignment
+            </Link>
+          </Button>
         </div>
 
         {/* Quick Stats Cards */}
@@ -308,9 +301,6 @@ export default function StudentDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{dashboardStats.totalQuizzesTaken}</div>
-                <p className="text-xs text-muted-foreground">
-                  This semester
-                </p>
               </CardContent>
             </Card>
 
@@ -321,9 +311,6 @@ export default function StudentDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{dashboardStats.averageScore}%</div>
-                <p className="text-xs text-muted-foreground">
-                  +5.2% from last month
-                </p>
               </CardContent>
             </Card>
           </div>
