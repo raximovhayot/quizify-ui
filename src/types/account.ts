@@ -26,7 +26,6 @@ export enum DashboardType {
   STUDENT = 'student'
 }
 
-
 // Role DTO based on backend-filesystem MCP server
 export interface RoleDTO {
   id: number;

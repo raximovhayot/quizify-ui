@@ -1,8 +1,8 @@
 'use client';
 
 import { ReactNode } from 'react';
-import { Sidebar } from '@/components/navigation/Sidebar';
-import InstructorProtectedRoute from '@/components/InstructorProtectedRoute';
+import { Sidebar } from '@/components/shared/navigation/Sidebar';
+import InstructorProtectedRoute from '@/components/shared/InstructorProtectedRoute';
 
 interface InstructorLayoutProps {
   children: ReactNode;

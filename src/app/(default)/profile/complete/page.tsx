@@ -3,11 +3,11 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { AuthLayout } from '@/components/layouts/AppLayout';
+import { AuthLayout } from '@/components/shared/layouts/AppLayout';
 import { InlineLoading } from '@/components/ui/loading-spinner';
 import { Form } from '@/components/ui/form';
 import { useProfileComplete } from '@/hooks/useProfileComplete';
-import { ProfileCompleteSteps } from '@/components/profile/ProfileCompleteSteps';
+import { ProfileCompleteSteps } from '@/components/features/profile/ProfileCompleteSteps';
 import { hasRole, AccountDTO, UserState } from '@/types/account';
 
 export default function ProfileCompletePage() {

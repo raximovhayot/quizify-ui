@@ -1,9 +1,9 @@
 'use client';
 
 import { ReactNode } from 'react';
-import { Header } from '@/components/navigation/Header';
-import { Sidebar } from '@/components/navigation/Sidebar';
-import { AppBreadcrumb } from '@/components/navigation/AppBreadcrumb';
+import { Header } from '@/components/shared/navigation/Header';
+import { Sidebar } from '@/components/shared/navigation/Sidebar';
+import { AppBreadcrumb } from '@/components/shared/navigation/AppBreadcrumb';
 import { useNextAuth } from '@/hooks/useNextAuth';
 import { cn } from '@/lib/utils';
 

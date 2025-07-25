@@ -1,14 +1,14 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { AuthLayout } from '@/components/layouts/AppLayout';
+import { AuthLayout } from '@/components/shared/layouts/AppLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import { useSignUpForms } from '@/hooks/useSignUpForms';
 import {
   PhoneStep,
   VerificationStep,
-} from '@/components/auth/SignUpSteps';
+} from '@/components/features/auth/SignUpSteps';
 
 export default function SignUpPage() {
   const t = useTranslations();
