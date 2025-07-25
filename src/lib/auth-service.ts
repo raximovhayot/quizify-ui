@@ -1,18 +1,17 @@
 import { apiClient } from './api';
 import { 
-  AccountDTO, 
   JWTToken,
   SignInRequest,
   SignUpPrepareRequest,
   SignInPrepareResponse,
   SignUpVerifyRequest,
-  AccountCompleteRequest,
   ForgotPasswordPrepareRequest,
   ForgotPasswordVerifyRequest,
   ForgotPasswordVerifyResponse,
   ForgotPasswordUpdateRequest,
   RefreshTokenRequest
 } from '@/types/auth';
+import { AccountDTO, AccountCompleteRequest } from '@/types/account';
 import { ApiResponse, extractApiData } from '@/types/api';
 
 /**

@@ -12,26 +12,30 @@ export * from './api';
 // Authentication types
 export * from './auth';
 
-// Profile types
-export * from './profile';
+// Account types
+export * from './account';
 
 // Re-export commonly used types for convenience
 export type {
-  // Authentication
-  UserRole,
-  UserState,
-  AccountDTO,
-  JWTToken,
-  DashboardType,
+    // Authentication
+    JWTToken,
 } from './auth';
 
 export type {
-  // API responses
-  ApiResponse,
-  ApiError,
+    // Account
+    UserRole,
+    UserState,
+    AccountDTO,
+    DashboardType,
+} from './account';
+
+export type {
+    // API responses
+    ApiResponse,
+    ApiError,
 } from './api';
 
 export type {
-  // Common
-  Language,
+    // Common
+    Language,
 } from './common';

@@ -7,8 +7,7 @@ import {toast} from 'sonner';
 import {useNextAuth} from '@/hooks/useNextAuth';
 import {signIn} from 'next-auth/react';
 import {AuthService} from '@/lib/auth-service';
-import {DashboardType} from '@/types/auth';
-import {AccountCompleteRequest} from '@/types/auth';
+import {DashboardType, AccountCompleteRequest} from '@/types/account';
 import {handleAuthError, clearFormErrors} from '@/utils/auth-errors';
 import {z} from 'zod';
 

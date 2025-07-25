@@ -7,9 +7,8 @@ import { AuthLayout } from '@/components/layouts/AppLayout';
 import { InlineLoading } from '@/components/ui/loading-spinner';
 import { Form } from '@/components/ui/form';
 import { useProfileComplete } from '@/hooks/useProfileComplete';
-import { UserState } from '@/types/common';
 import { ProfileCompleteSteps } from '@/components/profile/ProfileCompleteSteps';
-import { hasRole, AccountDTO } from '@/types/auth';
+import { hasRole, AccountDTO, UserState } from '@/types/account';
 
 export default function ProfileCompletePage() {
   const t = useTranslations();

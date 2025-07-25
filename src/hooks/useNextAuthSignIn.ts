@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { useNextAuth } from '@/hooks/useNextAuth';
-import { UserState } from '@/types/common';
+import { UserState } from '@/types/account';
 import { createSignInSchema, SignInFormData, signInFormDefaults } from '@/schemas/auth';
 import { handleAuthError, clearFormErrors } from '@/utils/auth-errors';
 

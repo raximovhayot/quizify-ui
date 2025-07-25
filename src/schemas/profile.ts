@@ -1,6 +1,6 @@
 import * as z from 'zod';
 import {PASSWORD_MIN_LENGTH, PASSWORD_REGEX} from "@/constants/validation";
-import {DashboardType} from "@/types/auth";
+import {DashboardType} from "@/types/account";
 
 // ============================================================================
 // PROFILE COMPLETE SCHEMAS
@@ -24,7 +24,7 @@ export const createProfileCompleteSchema = (t: (key: string, p: { default: strin
             .min(1, t('auth.validation.passwordRequired', {default: 'Password is required'}))
             .min(PASSWORD_MIN_LENGTH, t('auth.validation.passwordMinLength', {default: 'Password must be at least 8 characters'}))
             .regex(PASSWORD_REGEX, t('auth.validation.passwordPattern', {default: 'Password must contain at least one uppercase letter, one lowercase letter, and one number'})),
-        dashboardType: z.enum(DashboardType, {message: t('auth.validation.dashboardTypeRequired', {default: 'Please select your role'})})
+        dashboardType: z.nativeEnum(DashboardType, {message: t('auth.validation.dashboardTypeRequired', {default: 'Please select your role'})})
     });
 };
 

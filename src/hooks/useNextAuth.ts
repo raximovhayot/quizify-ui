@@ -1,6 +1,6 @@
 import { useSession, signIn, signOut } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { UserState } from "@/types/common"
+import { UserState } from "@/types/account"
 
 /**
  * Custom hook that wraps NextAuth session management

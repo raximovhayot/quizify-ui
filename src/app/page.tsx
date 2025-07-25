@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useNextAuth } from '@/hooks/useNextAuth';
-import { UserRole, UserState } from '@/types/auth';
+import { UserRole, UserState } from '@/types/account';
 
 export default function RootPage() {
   const { user, isAuthenticated, isLoading, hasRole, isNewUser } = useNextAuth();

@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/form';
 import { UseFormReturn } from 'react-hook-form';
 import { ProfileCompleteFormData } from '@/hooks/useProfileComplete';
-import { DashboardType } from '@/types/auth';
+import { DashboardType } from '@/types/account';
 import { GraduationCap, Users } from 'lucide-react';
 
 interface RoleSelectionStepProps {

@@ -1,35 +1,4 @@
-import { Language, UserState } from "@/types/common";
-
-// Role DTO based on backend-filesystem MCP server
-export interface RoleDTO {
-  id: number;
-  name: string;
-  description: string;
-}
-
-// Account DTO based on backend-filesystem MCP server (matches backend AccountDTO)
-export interface AccountDTO {
-  id: number;
-  firstName: string;
-  lastName: string;
-  roles: RoleDTO[];
-  phone: string;
-  state: UserState;
-  language: Language;
-  dashboardType?: DashboardType;
-}
-
-// Helper functions for role checking
-export function hasRole(user: AccountDTO | null, roleName: string): boolean {
-  return user?.roles?.some(role => role.name === roleName) ?? false;
-}
-
-export function hasAnyRole(user: AccountDTO | null, roleNames: string[]): boolean {
-  return user?.roles?.some(role => roleNames.includes(role.name)) ?? false;
-}
-
-
-// Authentication request/response types based on backend-filesystem MCP server
+import { AccountDTO } from "./account";
 
 export interface SignInRequest {
   phone: string;
@@ -56,27 +25,6 @@ export interface SignUpVerifyRequest {
   otp: string;
 }
 
-// User role enum to match backend
-export enum UserRole {
-  ADMIN = 'ADMIN',
-  INSTRUCTOR = 'INSTRUCTOR',
-  STUDENT = 'STUDENT'
-}
-
-// Dashboard type enum to match backend
-export enum DashboardType {
-  INSTRUCTOR = 'instructor',
-  STUDENT = 'student'
-}
-
-// Account completion request for the final step of sign-up
-export interface AccountCompleteRequest {
-  firstName: string;
-  lastName: string;
-  password: string;
-  dashboardType: DashboardType;
-}
-
 export interface ForgotPasswordPrepareRequest {
   phone: string;
 }
@@ -99,5 +47,3 @@ export interface ForgotPasswordUpdateRequest {
 export interface RefreshTokenRequest {
   refreshToken: string;
 }
-
-export { UserState };

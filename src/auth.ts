@@ -2,8 +2,8 @@ import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { JWT } from "next-auth/jwt"
 import { AuthService } from "@/lib/auth-service"
-import { UserState } from "@/types/common"
-import { AccountDTO, JWTToken } from "@/types/auth"
+import { JWTToken } from "@/types/auth"
+import { AccountDTO, UserState } from "@/types/account"
 
 // Override NextAuth types to completely replace AdapterUser requirements
 declare module "next-auth" {
