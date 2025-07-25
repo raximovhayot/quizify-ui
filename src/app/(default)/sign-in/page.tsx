@@ -1,5 +1,6 @@
 'use client';
 
+import {Suspense} from 'react';
 import {useTranslations} from 'next-intl';
 import {AuthLayout} from '@/components/shared/layouts/AppLayout';
 import {Button} from '@/components/ui/button';
@@ -17,7 +18,7 @@ import {
 import Link from 'next/link';
 import {useNextAuthSignIn} from '@/hooks/useNextAuthSignIn';
 
-export default function SignInPage() {
+function SignInForm() {
     const t = useTranslations();
     const {form, isSubmitting, isAuthenticated, onSubmit} = useNextAuthSignIn();
 
@@ -129,5 +130,13 @@ export default function SignInPage() {
                 </CardContent>
             </Card>
         </AuthLayout>
+    );
+}
+
+export default function SignInPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <SignInForm />
+        </Suspense>
     );
 }
