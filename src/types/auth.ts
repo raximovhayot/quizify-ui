@@ -65,8 +65,8 @@ export enum UserRole {
 
 // Dashboard type enum to match backend
 export enum DashboardType {
-  INSTRUCTOR = 'INSTRUCTOR',
-  STUDENT = 'STUDENT'
+  INSTRUCTOR = 'instructor',
+  STUDENT = 'student'
 }
 
 // Account completion request for the final step of sign-up
