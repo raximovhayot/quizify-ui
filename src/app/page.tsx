@@ -2,12 +2,15 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useNextAuth } from '@/hooks/useNextAuth';
 import { UserRole, UserState } from '@/types/account';
+import { PageLoading } from '@/components/ui/loading-spinner';
 
 export default function RootPage() {
   const { user, isAuthenticated, isLoading, hasRole, isNewUser } = useNextAuth();
   const router = useRouter();
+  const t = useTranslations('common');
 
   useEffect(() => {
     if (!isLoading) {
@@ -42,23 +45,9 @@ export default function RootPage() {
 
   // Show loading state while checking authentication
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
+    return <PageLoading text={t('authenticating')} />;
   }
 
   // Show redirecting state (this should be brief as useEffect will handle the redirect)
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-        <p className="text-gray-600">Redirecting...</p>
-      </div>
-    </div>
-  );
+  return <PageLoading text={t('redirecting')} />;
 }

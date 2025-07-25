@@ -1,6 +1,8 @@
 {
   "common": {
     "loading": "Загрузка...",
+    "authenticating": "Аутентификация...",
+    "redirecting": "Перенаправление...",
     "save": "Сохранить",
     "cancel": "Отмена",
     "delete": "Удалить",

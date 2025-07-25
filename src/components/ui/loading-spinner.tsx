@@ -28,12 +28,16 @@ export function LoadingSpinner({ size = "md", className }: LoadingSpinnerProps) 
 }
 
 // Full page loading component
-export function PageLoading() {
+export function PageLoading({ 
+  text = "Loading..." 
+}: { 
+  text?: string 
+}) {
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="flex flex-col items-center space-y-4">
-        <LoadingSpinner size="lg" />
-        <p className="text-sm text-muted-foreground">Loading...</p>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="text-center">
+        <LoadingSpinner size="lg" className="mx-auto mb-4" />
+        <p className="text-gray-600">{text}</p>
       </div>
     </div>
   )

@@ -1,6 +1,8 @@
 {
   "common": {
     "loading": "Yuklanmoqda...",
+    "authenticating": "Autentifikatsiya qilinmoqda...",
+    "redirecting": "Yo'naltirilmoqda...",
     "save": "Saqlash",
     "cancel": "Bekor qilish",
     "delete": "O'chirish",
