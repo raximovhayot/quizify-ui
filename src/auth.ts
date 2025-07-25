@@ -5,7 +5,7 @@ import { AuthService } from "@/lib/auth-service"
 import { UserState } from "@/types/common"
 import { AccountDTO, JWTToken } from "@/types/auth"
 
-// Extend NextAuth types to include our custom fields
+// Override NextAuth types to completely replace AdapterUser requirements
 declare module "next-auth" {
   interface Session {
     user: {
@@ -31,6 +31,19 @@ declare module "next-auth" {
     dashboardType?: string
     accessToken: string
     refreshToken: string
+  }
+}
+
+// Override AdapterUser to remove email requirements
+declare module "@auth/core/adapters" {
+  interface AdapterUser {
+    id: string
+    phone: string
+    firstName?: string
+    lastName?: string
+    state: UserState
+    roles: Array<{ id: number; name: string }>
+    dashboardType?: string
   }
 }
 
@@ -136,7 +149,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           state: token.user.state,
           roles: token.user.roles,
           dashboardType: token.user.dashboardType,
-        }
+        } as unknown as typeof session.user
         session.accessToken = token.accessToken
         session.refreshToken = token.refreshToken
       }
