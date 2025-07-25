@@ -207,10 +207,47 @@
     "quizzes": "Quizzes",
     "assignments": "Assignments",
     "analytics": "Analytics",
+    "results": "Results",
     "profile": "Profile",
     "settings": "Settings",
     "help": "Help",
     "home": "Home"
+  },
+  "profile": {
+    "settings": {
+      "title": "Profile Settings",
+      "description": "Manage your account settings and preferences",
+      "personalInfo": "Personal Information",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "language": "Language",
+      "dashboardType": "Dashboard Type",
+      "updateProfile": "Update Profile",
+      "updating": "Updating...",
+      "profileUpdated": "Profile updated successfully",
+      "profileUpdateFailed": "Failed to update profile. Please try again.",
+      "passwordSection": "Change Password",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmNewPassword": "Confirm New Password",
+      "changePassword": "Change Password",
+      "changing": "Changing...",
+      "passwordChanged": "Password changed successfully",
+      "passwordChangeFailed": "Failed to change password. Please try again.",
+      "phoneNotice": {
+        "title": "Phone Number Updates",
+        "message": "Phone number updates are currently not supported through this interface. Please contact support if you need to change your phone number."
+      },
+      "languages": {
+        "en": "English",
+        "uz": "O'zbek",
+        "ru": "Русский"
+      },
+      "dashboardTypes": {
+        "instructor": "Instructor",
+        "student": "Student"
+      }
+    }
   },
   "dashboard": {
     "welcome": "Welcome",

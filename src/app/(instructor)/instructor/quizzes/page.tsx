@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
+import { useInstructorQuizzes } from '@/hooks/useInstructorQuizzes';
+import { QuizStatus } from '@/types/quiz';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
@@ -20,7 +22,6 @@ import {
   Trash2,
   Copy,
   Eye,
-  Users,
   Clock,
   CheckCircle,
   AlertCircle
@@ -28,78 +29,52 @@ import {
 
 export default function QuizzesPage() {
   const t = useTranslations();
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | QuizStatus>('all');
   const [sortBy, setSortBy] = useState('created');
+  const [searchTerm, setSearchTerm] = useState('');
 
-  // Mock data - in real implementation, this would come from API calls
-  const quizzes = [
-    {
-      id: 1,
-      title: 'JavaScript Fundamentals',
-      description: 'Basic concepts of JavaScript programming',
-      questions: 15,
-      duration: 30,
-      attempts: 45,
-      status: 'published',
-      createdAt: '2024-07-20',
-      lastModified: '2024-07-22'
-    },
-    {
-      id: 2,
-      title: 'React Components',
-      description: 'Understanding React component lifecycle and props',
-      questions: 20,
-      duration: 45,
-      attempts: 38,
-      status: 'published',
-      createdAt: '2024-07-18',
-      lastModified: '2024-07-21'
-    },
-    {
-      id: 3,
-      title: 'TypeScript Basics',
-      description: 'Introduction to TypeScript type system',
-      questions: 12,
-      duration: 25,
-      attempts: 42,
-      status: 'draft',
-      createdAt: '2024-07-15',
-      lastModified: '2024-07-23'
-    },
-    {
-      id: 4,
-      title: 'Node.js Backend',
-      description: 'Server-side development with Node.js',
-      questions: 18,
-      duration: 40,
-      attempts: 35,
-      status: 'published',
-      createdAt: '2024-07-10',
-      lastModified: '2024-07-20'
-    },
-    {
-      id: 5,
-      title: 'Database Design',
-      description: 'Relational database concepts and SQL',
-      questions: 25,
-      duration: 60,
-      attempts: 0,
-      status: 'draft',
-      createdAt: '2024-07-24',
-      lastModified: '2024-07-24'
-    }
-  ];
+  const {
+    quizzes,
+    isLoading,
+    error,
+    fetchQuizzes,
+    updateQuizStatus,
+    deleteQuiz,
+    duplicateQuiz,
+    searchQuizzes
+  } = useInstructorQuizzes();
 
-  const getStatusBadge = (status: string) => {
+  // Handle search with debouncing
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (searchTerm.trim()) {
+        const status = statusFilter === 'all' ? undefined : statusFilter;
+        searchQuizzes(searchTerm, status);
+      } else {
+        const params = statusFilter === 'all' ? {} : { status: statusFilter };
+        fetchQuizzes(params);
+      }
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm, statusFilter, fetchQuizzes, searchQuizzes]);
+
+  // Handle status filter changes
+  const handleStatusFilterChange = (value: string) => {
+    const newStatus = value as 'all' | QuizStatus;
+    setStatusFilter(newStatus);
+  };
+
+  const getStatusBadge = (status: QuizStatus) => {
     switch (status) {
-      case 'published':
+      case QuizStatus.PUBLISHED:
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
             <CheckCircle className="h-3 w-3" />
             Published
           </span>
         );
-      case 'draft':
+      case QuizStatus.DRAFT:
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
             <AlertCircle className="h-3 w-3" />
@@ -111,10 +86,20 @@ export default function QuizzesPage() {
     }
   };
 
-  const filteredQuizzes = quizzes.filter(quiz => {
-    if (statusFilter === 'all') return true;
-    return quiz.status === statusFilter;
-  });
+  // Handle quiz actions
+  const handleUpdateStatus = async (quizId: number, newStatus: QuizStatus) => {
+    await updateQuizStatus(quizId, newStatus);
+  };
+
+  const handleDeleteQuiz = async (quizId: number) => {
+    if (window.confirm('Are you sure you want to delete this quiz?')) {
+      await deleteQuiz(quizId);
+    }
+  };
+
+  const handleDuplicateQuiz = async (quizId: number) => {
+    await duplicateQuiz(quizId);
+  };
 
   return (
     <div className="space-y-6">
@@ -141,18 +126,20 @@ export default function QuizzesPage() {
           <input
             type="text"
             placeholder="Search quizzes..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-input rounded-md bg-background"
           />
         </div>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
+        <Select value={statusFilter} onValueChange={handleStatusFilterChange}>
           <SelectTrigger className="w-32">
             <Filter className="h-4 w-4 mr-2" />
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="published">Published</SelectItem>
-            <SelectItem value="draft">Draft</SelectItem>
+            <SelectItem value={QuizStatus.PUBLISHED}>Published</SelectItem>
+            <SelectItem value={QuizStatus.DRAFT}>Draft</SelectItem>
           </SelectContent>
         </Select>
         <Select value={sortBy} onValueChange={setSortBy}>
@@ -163,131 +150,121 @@ export default function QuizzesPage() {
             <SelectItem value="created">Created Date</SelectItem>
             <SelectItem value="modified">Last Modified</SelectItem>
             <SelectItem value="title">Title</SelectItem>
-            <SelectItem value="attempts">Attempts</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
-      {/* Quiz Stats */}
-      <div className="grid gap-4 md:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Quizzes</CardTitle>
-            <CheckCircle className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{quizzes.length}</div>
-            <p className="text-xs text-muted-foreground">
-              {quizzes.filter(q => q.status === 'published').length} published
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Attempts</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {quizzes.reduce((sum, quiz) => sum + quiz.attempts, 0)}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Across all quizzes
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Questions</CardTitle>
-            <Eye className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {Math.round(quizzes.reduce((sum, quiz) => sum + quiz.questions, 0) / quizzes.length)}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Per quiz
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Duration</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {Math.round(quizzes.reduce((sum, quiz) => sum + quiz.duration, 0) / quizzes.length)}m
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Minutes
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+
+      {/* Loading State */}
+      {isLoading && (
+        <div className="flex justify-center py-8">
+          <div className="text-muted-foreground">Loading quizzes...</div>
+        </div>
+      )}
+
+      {/* Error State */}
+      {error && (
+        <div className="text-center py-8">
+          <p className="text-red-600 mb-4">{error}</p>
+          <Button onClick={() => fetchQuizzes()}>Try Again</Button>
+        </div>
+      )}
 
       {/* Quizzes List */}
-      <div className="space-y-4">
-        {filteredQuizzes.map((quiz) => (
-          <Card key={quiz.id}>
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="space-y-1">
+      {!isLoading && !error && (
+        <div className="space-y-4">
+          {quizzes.map((quiz) => (
+            <Card key={quiz.id}>
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <CardTitle className="text-lg">{quiz.title}</CardTitle>
+                      {getStatusBadge(quiz.status)}
+                    </div>
+                    <CardDescription>{quiz.description}</CardDescription>
+                  </div>
+                  <Button variant="ghost" size="sm">
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-6 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-1">
+                      <Eye className="h-4 w-4" />
+                      {quiz.numberOfQuestions} questions
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Clock className="h-4 w-4" />
+                      {quiz.time} min
+                    </div>
+                    <div>
+                      Created: {new Date(quiz.createdDate).toLocaleDateString()}
+                    </div>
+                  </div>
                   <div className="flex items-center gap-2">
-                    <CardTitle className="text-lg">{quiz.title}</CardTitle>
-                    {getStatusBadge(quiz.status)}
+                    <Button variant="outline" size="sm">
+                      <Eye className="h-4 w-4 mr-1" />
+                      Preview
+                    </Button>
+                    <Button variant="outline" size="sm">
+                      <Edit className="h-4 w-4 mr-1" />
+                      Edit
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        const newStatus = quiz.status === QuizStatus.PUBLISHED 
+                          ? QuizStatus.DRAFT 
+                          : QuizStatus.PUBLISHED;
+                        handleUpdateStatus(quiz.id, newStatus);
+                      }}
+                      className={quiz.status === QuizStatus.PUBLISHED 
+                        ? "text-yellow-600 hover:text-yellow-700" 
+                        : "text-green-600 hover:text-green-700"
+                      }
+                    >
+                      {quiz.status === QuizStatus.PUBLISHED ? (
+                        <>
+                          <AlertCircle className="h-4 w-4 mr-1" />
+                          Unpublish
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle className="h-4 w-4 mr-1" />
+                          Publish
+                        </>
+                      )}
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleDuplicateQuiz(quiz.id)}
+                    >
+                      <Copy className="h-4 w-4 mr-1" />
+                      Duplicate
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-red-600 hover:text-red-700"
+                      onClick={() => handleDeleteQuiz(quiz.id)}
+                    >
+                      <Trash2 className="h-4 w-4 mr-1" />
+                      Delete
+                    </Button>
                   </div>
-                  <CardDescription>{quiz.description}</CardDescription>
                 </div>
-                <Button variant="ghost" size="sm">
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-6 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <Eye className="h-4 w-4" />
-                    {quiz.questions} questions
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Clock className="h-4 w-4" />
-                    {quiz.duration} min
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Users className="h-4 w-4" />
-                    {quiz.attempts} attempts
-                  </div>
-                  <div>
-                    Modified: {quiz.lastModified}
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm">
-                    <Eye className="h-4 w-4 mr-1" />
-                    Preview
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    <Edit className="h-4 w-4 mr-1" />
-                    Edit
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    <Copy className="h-4 w-4 mr-1" />
-                    Duplicate
-                  </Button>
-                  <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
-                    <Trash2 className="h-4 w-4 mr-1" />
-                    Delete
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
 
-      {filteredQuizzes.length === 0 && (
+      {!isLoading && !error && quizzes.length === 0 && (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <CheckCircle className="h-12 w-12 text-muted-foreground mb-4" />

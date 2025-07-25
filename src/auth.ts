@@ -97,24 +97,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
 
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account }): Promise<JWT> {
       // Initial sign in
       if (account && user) {
         return {
-          ...token,
           accessToken: user.accessToken,
           refreshToken: user.refreshToken,
           user: {
-            id: user.id,
-            phone: user.phone,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            state: user.state,
+            id: parseInt(user.id),
+            firstName: user.firstName || '',
+            lastName: user.lastName || '',
             roles: user.roles,
+            phone: user.phone,
+            state: user.state,
+            language: 'en' as const,
             dashboardType: user.dashboardType,
           },
           accessTokenExpires: Date.now() + 15 * 60 * 1000, // 15 minutes
-        }
+        } as JWT
       }
 
       // Return previous token if the access token has not expired yet
@@ -129,7 +129,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, token }) {
       if (token) {
         session.user = {
-          id: token.user.id,
+          id: token.user.id.toString(),
           phone: token.user.phone,
           firstName: token.user.firstName,
           lastName: token.user.lastName,

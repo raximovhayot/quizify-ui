@@ -225,10 +225,47 @@
     "quizzes": "Testlar",
     "assignments": "Topshiriqlar",
     "analytics": "Analitika",
+    "results": "Natijalar",
     "profile": "Profil",
     "settings": "Sozlamalar",
     "help": "Yordam",
     "home": "Bosh sahifa"
+  },
+  "profile": {
+    "settings": {
+      "title": "Profil sozlamalari",
+      "description": "Hisob sozlamalaringiz va afzalliklaringizni boshqaring",
+      "personalInfo": "Shaxsiy ma'lumotlar",
+      "firstName": "Ism",
+      "lastName": "Familiya",
+      "language": "Til",
+      "dashboardType": "Boshqaruv paneli turi",
+      "updateProfile": "Profilni yangilash",
+      "updating": "Yangilanmoqda...",
+      "profileUpdated": "Profil muvaffaqiyatli yangilandi",
+      "profileUpdateFailed": "Profilni yangilab bo'lmadi. Qayta urinib ko'ring.",
+      "passwordSection": "Parolni o'zgartirish",
+      "currentPassword": "Joriy parol",
+      "newPassword": "Yangi parol",
+      "confirmNewPassword": "Yangi parolni tasdiqlang",
+      "changePassword": "Parolni o'zgartirish",
+      "changing": "O'zgartirilmoqda...",
+      "passwordChanged": "Parol muvaffaqiyatli o'zgartirildi",
+      "passwordChangeFailed": "Parolni o'zgartirib bo'lmadi. Qayta urinib ko'ring.",
+      "phoneNotice": {
+        "title": "Telefon raqamini yangilash",
+        "message": "Telefon raqamini yangilash hozircha ushbu interfeys orqali qo'llab-quvvatlanmaydi. Telefon raqamingizni o'zgartirish kerak bo'lsa, qo'llab-quvvatlash xizmatiga murojaat qiling."
+      },
+      "languages": {
+        "en": "English",
+        "uz": "O'zbek",
+        "ru": "Русский"
+      },
+      "dashboardTypes": {
+        "instructor": "O'qituvchi",
+        "student": "Talaba"
+      }
+    }
   },
   "dashboard": {
     "welcome": "Xush kelibsiz",

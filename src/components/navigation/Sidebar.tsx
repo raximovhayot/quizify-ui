@@ -7,13 +7,16 @@ import { cn } from '@/lib/utils';
 import { 
   BarChart3, 
   Settings,
-  FileText
+  FileText,
+  Trophy,
+  Home
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 interface SidebarProps {
   className?: string;
+  noHeader?: boolean;
 }
 
 interface NavItem {
@@ -23,7 +26,7 @@ interface NavItem {
   roles?: string[];
 }
 
-export function Sidebar({ className }: SidebarProps) {
+export function Sidebar({ className, noHeader = false }: SidebarProps) {
   const t = useTranslations();
   const { user, hasRole } = useNextAuth();
   const pathname = usePathname();
@@ -31,21 +34,33 @@ export function Sidebar({ className }: SidebarProps) {
   // Navigation items based on user roles
   const navItems: NavItem[] = [
     {
-      title: t('navigation.quizzes'),
+      title: t('navigation.dashboard') || 'Dashboard',
+      href: '/instructor',
+      icon: Home,
+      roles: ['INSTRUCTOR'],
+    },
+    {
+      title: t('navigation.quizzes') || 'My Quizzes',
       href: '/instructor/quizzes',
       icon: FileText,
       roles: ['INSTRUCTOR'],
     },
     {
-      title: t('navigation.analytics'),
+      title: t('navigation.analytics') || 'Analytics',
       href: '/instructor/analytics',
       icon: BarChart3,
       roles: ['INSTRUCTOR'],
     },
+    {
+      title: t('navigation.results') || 'Results',
+      href: '/instructor/results',
+      icon: Trophy,
+      roles: ['INSTRUCTOR'],
+    },
     // Common items
     {
-      title: t('navigation.settings'),
-      href: '/settings',
+      title: t('navigation.profile') || 'Settings',
+      href: hasRole('INSTRUCTOR') ? '/instructor/profile' : '/profile',
       icon: Settings,
     },
   ];
@@ -66,11 +81,15 @@ export function Sidebar({ className }: SidebarProps) {
   if (!user) return null;
 
   return (
-    <div className={cn("fixed left-0 top-16 z-40 flex h-[calc(100vh-4rem)] w-64 flex-col border-r bg-background", className)}>
+    <div className={cn(
+      "fixed left-0 z-40 flex w-64 flex-col border-r bg-background",
+      noHeader ? "top-0 h-screen" : "top-16 h-[calc(100vh-4rem)]",
+      className
+    )}>
       {/* Sidebar Header */}
       <div className="flex h-16 items-center border-b px-6">
         <h2 className="text-lg font-semibold tracking-tight">
-          {hasRole('INSTRUCTOR') ? 'Instructor' : 'Student'}
+          {hasRole('INSTRUCTOR') ? 'Instructor Dashboard' : 'Student'}
         </h2>
       </div>
 

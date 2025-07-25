@@ -225,10 +225,47 @@
     "quizzes": "Тесты",
     "assignments": "Задания",
     "analytics": "Аналитика",
+    "results": "Результаты",
     "profile": "Профиль",
     "settings": "Настройки",
     "help": "Помощь",
     "home": "Главная"
+  },
+  "profile": {
+    "settings": {
+      "title": "Настройки профиля",
+      "description": "Управляйте настройками аккаунта и предпочтениями",
+      "personalInfo": "Личная информация",
+      "firstName": "Имя",
+      "lastName": "Фамилия",
+      "language": "Язык",
+      "dashboardType": "Тип панели управления",
+      "updateProfile": "Обновить профиль",
+      "updating": "Обновление...",
+      "profileUpdated": "Профиль успешно обновлен",
+      "profileUpdateFailed": "Не удалось обновить профиль. Попробуйте снова.",
+      "passwordSection": "Изменить пароль",
+      "currentPassword": "Текущий пароль",
+      "newPassword": "Новый пароль",
+      "confirmNewPassword": "Подтвердите новый пароль",
+      "changePassword": "Изменить пароль",
+      "changing": "Изменение...",
+      "passwordChanged": "Пароль успешно изменен",
+      "passwordChangeFailed": "Не удалось изменить пароль. Попробуйте снова.",
+      "phoneNotice": {
+        "title": "Обновление номера телефона",
+        "message": "Обновление номера телефона в настоящее время не поддерживается через этот интерфейс. Пожалуйста, обратитесь в службу поддержки, если вам нужно изменить номер телефона."
+      },
+      "languages": {
+        "en": "English",
+        "uz": "O'zbek",
+        "ru": "Русский"
+      },
+      "dashboardTypes": {
+        "instructor": "Преподаватель",
+        "student": "Студент"
+      }
+    }
   },
   "dashboard": {
     "welcome": "Добро пожаловать",

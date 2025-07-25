@@ -16,6 +16,7 @@ export interface AccountDTO {
   phone: string;
   state: UserState;
   language: Language;
+  dashboardType?: DashboardType;
 }
 
 // Helper functions for role checking
