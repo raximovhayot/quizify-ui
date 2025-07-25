@@ -10,7 +10,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { PersonalInfoStep } from './steps/PersonalInfoStep';
 import { PasswordStep } from './steps/PasswordStep';
 import { RoleSelectionStep } from './steps/RoleSelectionStep';
-import { useProfileComplete } from '@/hooks/useProfileComplete';
+import { useProfileComplete, ProfileCompleteFormData } from '@/hooks/useProfileComplete';
 
 export function ProfileCompleteSteps() {
   const t = useTranslations();
@@ -53,7 +53,7 @@ export function ProfileCompleteSteps() {
     return isValid;
   };
 
-  const getFieldsForStep = (step: number): (keyof typeof form.getValues)[] => {
+  const getFieldsForStep = (step: number): (keyof ProfileCompleteFormData)[] => {
     switch (step) {
       case 1:
         return ['firstName', 'lastName'];
@@ -82,7 +82,7 @@ export function ProfileCompleteSteps() {
   const handleSubmit = async () => {
     const isValid = await validateCurrentStep();
     if (isValid) {
-      await onSubmit();
+      onSubmit();
     }
   };
 
