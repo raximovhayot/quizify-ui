@@ -5,7 +5,7 @@ import { useForm, UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { useNextAuth } from '@/hooks/useNextAuth';
-import { AuthService } from '@/lib/auth-service';
+import { AuthService } from '@/lib/services/auth-service';
 import { BackendError } from '@/types/api';
 import { handleAuthError, clearFormErrors } from '@/utils/auth-errors';
 import {

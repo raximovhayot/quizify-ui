@@ -1,4 +1,4 @@
-import { apiClient } from './api';
+import { apiClient } from '../api';
 import { 
   JWTToken,
   SignInRequest,
@@ -215,24 +215,6 @@ export class AuthService {
   static async refreshToken(refreshToken: string): Promise<JWTToken> {
     const request: RefreshTokenRequest = { refreshToken };
     const response: ApiResponse<JWTToken> = await apiClient.post('/auth/refresh-token', request);
-    return extractApiData(response);
-  }
-
-  /**
-   * Verify current user session and get user data
-   * 
-   * @param accessToken - JWT access token to verify
-   * @returns Promise resolving to current user account data
-   * @throws BackendError if token is invalid or expired
-   * 
-   * @example
-   * ```typescript
-   * const userData = await AuthService.verifyToken(accessToken);
-   * console.log(`Welcome back, ${userData.firstName}!`);
-   * ```
-   */
-  static async verifyToken(accessToken: string): Promise<AccountDTO> {
-    const response: ApiResponse<AccountDTO> = await apiClient.get('/account/me', accessToken);
     return extractApiData(response);
   }
 

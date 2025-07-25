@@ -1,7 +1,7 @@
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { JWT } from "next-auth/jwt"
-import { AuthService } from "@/lib/auth-service"
+import { AuthService } from "@/lib/services/auth-service"
 import { JWTToken } from "@/types/auth"
 import { AccountDTO, UserState } from "@/types/account"
 

@@ -1,4 +1,4 @@
-import { ApiResponse, ApiError, extractApiData, hasApiErrors } from '@/types/api';
+import {ApiError, ApiResponse, extractApiData, hasApiErrors} from '@/types/api';
 
 /**
  * Base API configuration
@@ -24,7 +24,7 @@ interface ApiRequestOptions {
  * API client class for making requests to the backend
  */
 class ApiClient {
-  private baseUrl: string;
+  private readonly baseUrl: string;
 
   constructor(baseUrl: string = API_BASE_URL) {
     this.baseUrl = baseUrl;
@@ -66,11 +66,8 @@ class ApiClient {
     try {
       const response = await fetch(url, requestOptions);
       
-      // Parse JSON response
-      const data: ApiResponse<T> = await response.json();
-      
       // Return the standardized response structure
-      return data;
+      return await response.json();
     } catch (error) {
       // Handle network errors or JSON parsing errors
       const networkError: ApiError = {
