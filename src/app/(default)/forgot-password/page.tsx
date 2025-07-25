@@ -93,10 +93,10 @@ export default function ForgotPasswordPage() {
       </CardHeader>
       <CardContent>
         <Form {...verificationForm}>
-          <form onSubmit={onVerificationSubmit} className="space-y-4">
+          <form onSubmit={onVerificationSubmit} className="space-y-4" key={`verification-${currentStep}`}>
             <FormField
               control={verificationForm.control}
-              name="verificationCode"
+              name="otp"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t('auth.verificationCode', { default: 'Verification Code' })}</FormLabel>
@@ -104,10 +104,23 @@ export default function ForgotPasswordPage() {
                     <Input
                       {...field}
                       type="text"
+                      name="otp-code"
                       placeholder="123456"
                       maxLength={6}
                       disabled={isSubmitting}
                       className="text-center text-lg tracking-widest"
+                      autoComplete="one-time-code"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      data-lpignore="true"
+                      data-form-type="other"
+                      onFocus={(e) => {
+                        // Clear field on focus to ensure it's editable
+                        if (e.target.value && e.target.value.length > 6) {
+                          e.target.value = '';
+                          field.onChange('');
+                        }
+                      }}
                     />
                   </FormControl>
                   <FormMessage />
@@ -132,7 +145,8 @@ export default function ForgotPasswordPage() {
           >
             {resendCooldown > 0 
               ? t('auth.verification.resendIn', { 
-                  default: `Resend in ${resendCooldown}s`
+                  default: `Resend in ${resendCooldown}s`,
+                  seconds: resendCooldown
                 })
               : t('auth.verification.resend', { default: 'Resend Code' })
             }

@@ -142,6 +142,9 @@
     "profileComplete": {
       "title": "Complete Your Profile",
       "description": "Please provide your details to complete your account setup",
+      "personalInfo": "Personal Information",
+      "security": "Security",
+      "role": "Your Role",
       "submit": "Complete Profile",
       "submitting": "Completing Profile...",
       "success": "Profile completed successfully!",

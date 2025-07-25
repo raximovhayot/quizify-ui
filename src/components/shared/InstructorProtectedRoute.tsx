@@ -4,6 +4,8 @@ import {useNextAuth} from '@/hooks/useNextAuth';
 import {UserRole} from '@/types/account';
 import {useRouter} from 'next/navigation';
 import {useEffect, ReactNode} from 'react';
+import {PageLoading} from "@/components/ui/loading-spinner";
+import {useTranslations} from "next-intl";
 
 interface InstructorProtectedRouteProps {
     children: ReactNode;
@@ -12,6 +14,7 @@ interface InstructorProtectedRouteProps {
 export default function InstructorProtectedRoute({children}: InstructorProtectedRouteProps) {
     const {hasRole, isLoading, isAuthenticated} = useNextAuth();
     const router = useRouter();
+    const t = useTranslations('common');
 
     useEffect(() => {
         if (!isLoading) {
@@ -36,25 +39,11 @@ export default function InstructorProtectedRoute({children}: InstructorProtected
     }, [isAuthenticated, hasRole, isLoading, router]);
 
     if (isLoading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-                    <p className="text-gray-600">Loading...</p>
-                </div>
-            </div>
-        );
+        return <PageLoading text={t('loading', { default: 'Loading...' })} />;
     }
 
     if (!isAuthenticated || !hasRole(UserRole.INSTRUCTOR)) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-                    <p className="text-gray-600">Redirecting...</p>
-                </div>
-            </div>
-        );
+        return <PageLoading text={t('redirecting')} />;
     }
 
     return (

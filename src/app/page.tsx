@@ -45,7 +45,7 @@ export default function RootPage() {
 
   // Show loading state while checking authentication
   if (isLoading) {
-    return <PageLoading text={t('authenticating')} />;
+    return <PageLoading text={t('loading', { default: 'Loading...' })} />;
   }
 
   // Show redirecting state (this should be brief as useEffect will handle the redirect)

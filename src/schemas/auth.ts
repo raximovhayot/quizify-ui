@@ -112,7 +112,7 @@ export const forgotPasswordPhoneFormDefaults: ForgotPasswordPhoneFormData = {
  */
 export const createForgotPasswordVerificationSchema = (t: (key: string) => string) => {
     return z.object({
-        verificationCode: z.string()
+        otp: z.string()
             .min(1, t('auth.validation.otpRequired'))
             .length(6, t('auth.validation.otpLength'))
             .regex(/^\d{6}$/, t('auth.validation.otpPattern')),
@@ -128,7 +128,7 @@ export type ForgotPasswordVerificationFormData = z.infer<ReturnType<typeof creat
  * Default values for forgot password verification form
  */
 export const forgotPasswordVerificationFormDefaults: ForgotPasswordVerificationFormData = {
-    verificationCode: '',
+    otp: '',
 };
 
 /**

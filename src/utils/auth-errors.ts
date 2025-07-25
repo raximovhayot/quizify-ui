@@ -37,6 +37,16 @@ export function handleAuthError<T extends Record<string, unknown>>(
             hasFieldErrors = true;
         }
         
+        // Handle OTP field errors
+        if (error.hasFieldErrors('otp') && 'otp' in form.getValues()) {
+            const otpErrors = error.getFieldErrors('otp');
+            form.setError('otp' as FieldPath<T>, {
+                type: 'server',
+                message: otpErrors[0].message
+            });
+            hasFieldErrors = true;
+        }
+        
         // If no field-specific errors, show general error as toast
         if (!hasFieldErrors) {
             const firstError = error.getFirstError();

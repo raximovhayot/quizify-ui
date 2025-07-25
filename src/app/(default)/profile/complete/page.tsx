@@ -7,7 +7,7 @@ import { AuthLayout } from '@/components/shared/layouts/AppLayout';
 import { InlineLoading } from '@/components/ui/loading-spinner';
 import { Form } from '@/components/ui/form';
 import { useProfileComplete } from '@/hooks/useProfileComplete';
-import { ProfileCompleteSteps } from '@/components/features/profile/ProfileCompleteSteps';
+import { ProfileCompleteForm } from '@/components/features/profile/ProfileCompleteForm';
 import { hasRole, AccountDTO, UserState } from '@/types/account';
 
 export default function ProfileCompletePage() {
@@ -16,7 +16,9 @@ export default function ProfileCompletePage() {
   const {
     form,
     user,
-    isLoading
+    isLoading,
+    isSubmitting,
+    onSubmit
   } = useProfileComplete();
 
   // Handle immediate redirection for users who shouldn't be on this page
@@ -70,7 +72,11 @@ export default function ProfileCompletePage() {
   return (
     <AuthLayout>
       <Form {...form}>
-        <ProfileCompleteSteps />
+        <ProfileCompleteForm 
+          form={form}
+          isSubmitting={isSubmitting}
+          onSubmit={onSubmit}
+        />
       </Form>
     </AuthLayout>
   );

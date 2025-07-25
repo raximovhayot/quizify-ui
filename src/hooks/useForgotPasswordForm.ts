@@ -82,6 +82,10 @@ export function useForgotPasswordForm() {
     try {
       const prepareResponse = await AuthService.forgotPasswordPrepare(data.phone);
       setPhoneNumber(prepareResponse.phoneNumber);
+      
+      // Reset verification form to ensure clean state
+      verificationForm.reset(forgotPasswordVerificationFormDefaults);
+      
       setCurrentStep('verification');
       setResendCooldown(prepareResponse.waitingTime);
       toast.success(t('auth.forgotPassword.codeSent', { 
@@ -102,7 +106,7 @@ export function useForgotPasswordForm() {
     clearFormErrors(verificationForm);
 
     try {
-      const response = await AuthService.forgotPasswordVerify(phoneNumber, data.verificationCode);
+      const response = await AuthService.forgotPasswordVerify(phoneNumber, data.otp);
       
       // Store the verification token for the next step (fix: use 'token' not 'verificationToken')
       setVerificationToken(response.token);
