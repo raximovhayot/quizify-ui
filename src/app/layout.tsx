@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { Toaster } from "@/components/ui/sonner";
 import { SessionProvider } from "@/components/shared/providers/SessionProvider";
+import { LoadingProvider } from "@/components/ui/top-loader";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -37,8 +38,10 @@ export default async function RootLayout({
       >
         <SessionProvider>
           <NextIntlClientProvider messages={messages}>
-            {children}
-            <Toaster />
+            <LoadingProvider>
+              {children}
+              <Toaster />
+            </LoadingProvider>
           </NextIntlClientProvider>
         </SessionProvider>
       </body>

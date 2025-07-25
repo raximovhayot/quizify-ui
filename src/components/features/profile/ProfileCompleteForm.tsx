@@ -152,14 +152,14 @@ export function ProfileCompleteForm({ form, isSubmitting, onSubmit }: ProfileCom
                     </FormLabel>
                     <FormControl>
                       <RadioGroup
-                        onValueChange={field.onChange}
-                        value={field.value}
+                        onValueChange={(value) => field.onChange(value as unknown as DashboardType)}
+                        value={field.value as unknown as string}
                         className="grid grid-cols-1 gap-4"
                         disabled={isSubmitting}
                       >
                         <div>
                           <RadioGroupItem 
-                            value={DashboardType.STUDENT} 
+                            value={DashboardType.STUDENT as unknown as string}
                             id="student" 
                             className="peer sr-only" 
                           />
@@ -187,7 +187,7 @@ export function ProfileCompleteForm({ form, isSubmitting, onSubmit }: ProfileCom
 
                         <div>
                           <RadioGroupItem 
-                            value={DashboardType.INSTRUCTOR} 
+                            value={DashboardType.INSTRUCTOR as unknown as string}
                             id="instructor" 
                             className="peer sr-only" 
                           />

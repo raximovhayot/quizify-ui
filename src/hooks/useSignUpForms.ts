@@ -8,6 +8,7 @@ import { useNextAuth } from '@/hooks/useNextAuth';
 import { AuthService } from '@/lib/services/auth-service';
 import { BackendError } from '@/types/api';
 import { handleAuthError, clearFormErrors } from '@/utils/auth-errors';
+import { useGlobalLoading } from '@/components/ui/top-loader';
 import {
   createSignUpPhoneSchema,
   SignUpPhoneFormData,
@@ -72,6 +73,7 @@ export function useSignUpForms(): UseSignUpFormsReturn {
   const router = useRouter();
   const searchParams = useSearchParams();
   const t = useTranslations();
+  const { startLoading, stopLoading } = useGlobalLoading();
 
   // Create validation schemas with localized messages
   const phoneSchema = createSignUpPhoneSchema(t);
@@ -147,17 +149,25 @@ export function useSignUpForms(): UseSignUpFormsReturn {
       // The profile completion page will handle creating the session after completion
       sessionStorage.setItem('signupToken', JSON.stringify(jwtToken));
 
-      // OTP verified successfully, now user needs to complete profile
-      verificationForm.reset();
+      // Show success message before navigation
+      toast.success(t('auth.verification.success', {
+        default: 'Phone verified successfully! Redirecting to profile setup...'
+      }));
+
+      // Start the top loader for navigation
+      startLoading();
 
       // NextAuth middleware will handle redirect to /profile/complete for NEW users
       router.push('/profile/complete');
+      
+      // Stop the loader after navigation (will be cleaned up when component unmounts)
+      setTimeout(() => stopLoading(), 100);
     } catch (error: unknown) {
       handleAuthError(error, verificationForm, t);
     } finally {
       setIsSubmitting(false);
     }
-  }, [phoneNumber, verificationForm, router, t]);
+  }, [phoneNumber, verificationForm, router, t, startLoading, stopLoading]);
 
   // Resend OTP handler
   const handleResendOTP = useCallback(async () => {

@@ -6,7 +6,7 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import {toast} from 'sonner';
 import {useNextAuth} from '@/hooks/useNextAuth';
 import {signIn} from 'next-auth/react';
-import {AuthService} from '@/lib/services/auth-service';
+import {AccountService} from '@/lib/services/account-service';
 import {DashboardType, AccountCompleteRequest} from '@/types/account';
 import {handleAuthError, clearFormErrors} from '@/utils/auth-errors';
 import {z} from 'zod';
@@ -26,7 +26,7 @@ const createProfileCompleteSchema = (t: TranslationFunction) => z.object({
             t('auth.validation.passwordPattern', {
                 default: 'Password must contain at least one uppercase letter, one lowercase letter, and one number'
             })),
-    dashboardType: z.nativeEnum(DashboardType, {message: t('auth.validation.dashboardTypeRequired', {default: 'Please select your role'})}),
+    dashboardType: z.enum(DashboardType, {message: t('auth.validation.dashboardTypeRequired', {default: 'Please select your role'})}),
 });
 
 export type ProfileCompleteFormData = z.infer<ReturnType<typeof createProfileCompleteSchema>>;
@@ -97,8 +97,8 @@ export function useProfileComplete() {
                 dashboardType: data.dashboardType,
             };
 
-            // Complete account using AuthService
-            await AuthService.completeAccount(accountCompleteRequest, accessToken);
+            // Complete account using AccountService
+            await AccountService.completeAccount(accountCompleteRequest, accessToken);
 
             // Clear the signup token from sessionStorage
             sessionStorage.removeItem('signupToken');

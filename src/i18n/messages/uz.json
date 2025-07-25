@@ -97,7 +97,7 @@
       "verifying": "Tasdiqlanmoqda...",
       "resend": "Kodni qayta yuborish",
       "resendIn": "{seconds}s ichida qayta yuborish",
-      "success": "Telefon raqami muvaffaqiyatli tasdiqlandi",
+      "success": "Telefon muvaffaqiyatli tasdiqlandi! Profil sozlashga yo'naltirilmoqda...",
       "resendSuccess": "Yangi tasdiqlash kodi yuborildi"
     },
     "forgotPassword": {
@@ -139,6 +139,9 @@
     "profileComplete": {
       "title": "Profilingizni to'ldiring",
       "description": "Hisob sozlamalarini yakunlash uchun ma'lumotlaringizni kiriting",
+      "personalInfo": "Shaxsiy ma'lumotlar",
+      "security": "Xavfsizlik",
+      "role": "Sizning rolingiz",
       "submit": "Profilni yakunlash",
       "submitting": "Profil yakunlanmoqda...",
       "success": "Profil muvaffaqiyatli yakunlandi!",

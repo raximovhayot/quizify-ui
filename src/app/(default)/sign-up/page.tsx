@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useTranslations } from 'next-intl';
 import { AuthLayout } from '@/components/shared/layouts/AppLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,7 +11,7 @@ import {
   VerificationStep,
 } from '@/components/features/auth/SignUpSteps';
 
-export default function SignUpPage() {
+function SignUpContent() {
   const t = useTranslations();
   const {
     currentStep,
@@ -114,5 +115,23 @@ export default function SignUpPage() {
         </CardContent>
       </Card>
     </AuthLayout>
+  );
+}
+
+export default function SignUpPage() {
+  return (
+    <Suspense fallback={
+      <AuthLayout>
+        <div className="container mx-auto px-4 py-8 max-w-md">
+          <Card>
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl font-bold">Loading...</CardTitle>
+            </CardHeader>
+          </Card>
+        </div>
+      </AuthLayout>
+    }>
+      <SignUpContent />
+    </Suspense>
   );
 }

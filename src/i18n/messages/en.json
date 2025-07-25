@@ -97,7 +97,7 @@
       "verifying": "Verifying...",
       "resend": "Resend Code",
       "resendIn": "Resend in {seconds}s",
-      "success": "Phone number verified successfully",
+      "success": "Phone verified successfully! Redirecting to profile setup...",
       "resendSuccess": "New verification code sent"
     },
     "forgotPassword": {

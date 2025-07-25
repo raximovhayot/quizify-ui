@@ -92,7 +92,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             lastName: jwtToken.user.lastName,
             state: jwtToken.user.state,
             roles: jwtToken.user.roles || [],
-            dashboardType: jwtToken.user.dashboardType,
+            dashboardType: jwtToken.user.dashboardType?.toString(),
             accessToken: jwtToken.accessToken,
             refreshToken: jwtToken.refreshToken,
           }
@@ -124,7 +124,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             phone: user.phone,
             state: user.state,
             language: 'en' as const,
-            dashboardType: user.dashboardType,
+            dashboardType: user.dashboardType?.toString(),
           },
           accessTokenExpires: Date.now() + 15 * 60 * 1000, // 15 minutes
         } as JWT
@@ -148,7 +148,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           lastName: token.user.lastName,
           state: token.user.state,
           roles: token.user.roles,
-          dashboardType: token.user.dashboardType,
+          dashboardType: token.user.dashboardType?.toString(),
         } as unknown as typeof session.user
         session.accessToken = token.accessToken
         session.refreshToken = token.refreshToken

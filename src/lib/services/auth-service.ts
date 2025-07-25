@@ -11,7 +11,6 @@ import {
   ForgotPasswordUpdateRequest,
   RefreshTokenRequest
 } from '@/types/auth';
-import { AccountDTO, AccountCompleteRequest } from '@/types/account';
 import { ApiResponse, extractApiData } from '@/types/api';
 
 /**
@@ -109,28 +108,6 @@ export class AuthService {
     return extractApiData(response);
   }
 
-  /**
-   * Complete user account profile (step 3 of sign-up process)
-   * 
-   * @param data - Account completion data (name, password, dashboard type)
-   * @param accessToken - JWT access token from signUpVerify step
-   * @returns Promise resolving to updated account data
-   * @throws BackendError if token is invalid or data validation fails
-   * 
-   * @example
-   * ```typescript
-   * const account = await AuthService.completeAccount({
-   *   firstName: 'John',
-   *   lastName: 'Doe',
-   *   password: 'newPassword123',
-   *   dashboardType: DashboardType.STUDENT
-   * }, accessToken);
-   * ```
-   */
-  static async completeAccount(data: AccountCompleteRequest, accessToken: string): Promise<AccountDTO> {
-    const response: ApiResponse<AccountDTO> = await apiClient.put('/account/complete', data, accessToken);
-    return extractApiData(response);
-  }
 
   // ============================================================================
   // FORGOT PASSWORD METHODS
