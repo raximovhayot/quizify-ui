@@ -74,10 +74,7 @@
       "label": "Password",
       "placeholder": "Enter your password"
     },
-    "confirmPassword": {
-      "label": "Confirm Password",
-      "placeholder": "Confirm your password"
-    },
+    "confirmPassword": "Confirm Password",
     "firstName": {
       "label": "First Name",
       "placeholder": "John"
@@ -198,7 +195,6 @@
     },
     "verificationCode": "Verification Code",
     "newPassword": "New Password",
-    "confirmPassword": "Confirm Password",
     "backToSignIn": "Back to Sign In",
     "goToSignIn": "Go to Sign In",
     "signOut": "Sign Out",

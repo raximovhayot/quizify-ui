@@ -74,10 +74,7 @@
       "label": "Parol",
       "placeholder": "Parolni kiriting"
     },
-    "confirmPassword": {
-      "label": "Parolni tasdiqlang",
-      "placeholder": "Parolni tasdiqlang"
-    },
+    "confirmPassword": "Parolni tasdiqlang",
     "firstName": {
       "label": "Ism",
       "placeholder": "Ahmadjon"
@@ -176,7 +173,6 @@
     },
     "verificationCode": "Tasdiqlash kodi",
     "newPassword": "Yangi parol",
-    "confirmPassword": "Parolni tasdiqlang",
     "goToSignIn": "Kirishga o'tish",
     "signOut": "Chiqish",
     "backToSignIn": "Kirishga qaytish",

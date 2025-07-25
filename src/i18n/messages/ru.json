@@ -74,10 +74,7 @@
       "label": "Пароль",
       "placeholder": "Введите пароль"
     },
-    "confirmPassword": {
-      "label": "Подтвердите пароль",
-      "placeholder": "Подтвердите пароль"
-    },
+    "confirmPassword": "Подтвердите пароль",
     "firstName": {
       "label": "Имя",
       "placeholder": "Иван"
@@ -176,7 +173,6 @@
     },
     "verificationCode": "Код подтверждения",
     "newPassword": "Новый пароль",
-    "confirmPassword": "Подтвердите пароль",
     "backToSignIn": "Вернуться к входу",
     "goToSignIn": "Перейти к входу",
     "signOut": "Выйти",
