@@ -46,12 +46,9 @@ export function useNextAuthSignIn() {
         clearFormErrors(form);
 
         try {
-            await login(data.phone, data.password);
-
+            const response = await login(data.phone, data.password);
+            console.log(response);
             toast.success(t('auth.loginSuccess'));
-            
-            // Don't redirect here - let the useEffect handle it based on user state
-            // This ensures NEW users are handled by middleware redirect
         } catch (error: unknown) {
             handleAuthError(error, form, t);
         } finally {

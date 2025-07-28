@@ -1,6 +1,6 @@
-import { useSession, signIn, signOut } from "next-auth/react"
-import { useRouter } from "next/navigation"
-import { UserState } from "@/components/features/profile/types/account"
+import {signIn, signOut, useSession} from "next-auth/react"
+import {useRouter} from "next/navigation"
+import {UserState} from "@/components/features/profile/types/account"
 
 /**
  * Custom hook that wraps NextAuth session management
@@ -16,17 +16,11 @@ export function useNextAuth() {
   const user = session?.user || null
 
   const login = async (phone: string, password: string) => {
-    const result = await signIn("credentials", {
+    return await signIn("credentials", {
       phone,
       password,
       redirect: false,
     })
-
-    if (result?.error) {
-      throw new Error(result.error)
-    }
-
-    return result
   }
 
   const logout = async () => {

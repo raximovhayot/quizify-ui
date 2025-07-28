@@ -49,6 +49,7 @@ export function handleAuthError<T extends Record<string, unknown>>(
         
         // If no field-specific errors, show general error as toast
         if (!hasFieldErrors) {
+            console.error(error);
             const firstError = error.getFirstError();
             if (firstError) {
                 toast.error(firstError.message);
