@@ -3,7 +3,7 @@
  * This file contains all account/user/profile related types and interfaces
  */
 
-import { Language } from './common';
+import { Language } from '@/types/common';
 
 // User state enum based on backend-filesystem MCP server
 export enum UserState {
