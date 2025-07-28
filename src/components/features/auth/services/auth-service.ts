@@ -10,7 +10,7 @@ import {
   ForgotPasswordVerifyResponse,
   ForgotPasswordUpdateRequest,
   RefreshTokenRequest
-} from '@/types/auth';
+} from '@/components/features/auth/types/auth';
 import { ApiResponse, extractApiData } from '@/types/api';
 
 /**

@@ -3,8 +3,8 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { useNextAuth } from '@/hooks/useNextAuth';
-import { UserRole, UserState } from '@/types/account';
+import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
+import { UserRole, UserState } from '@/components/features/profile/types/account';
 import { PageLoading } from '@/components/ui/loading-spinner';
 
 export default function RootPage() {

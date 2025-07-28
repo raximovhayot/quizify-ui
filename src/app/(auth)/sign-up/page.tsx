@@ -5,11 +5,11 @@ import { useTranslations } from 'next-intl';
 import { AuthLayout } from '@/components/shared/layouts/AppLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
-import { useSignUpForms } from '@/hooks/useSignUpForms';
+import { useSignUpForms } from '@/components/features/auth/hooks/useSignUpForms';
 import {
   PhoneStep,
   VerificationStep,
-} from '@/components/features/auth/SignUpSteps';
+} from '@/components/features/auth/components/SignUpSteps';
 
 function SignUpContent() {
   const t = useTranslations();

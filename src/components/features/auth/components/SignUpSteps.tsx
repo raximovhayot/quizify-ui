@@ -14,7 +14,7 @@ import {
 import {
     SignUpPhoneFormData,
     VerificationFormData,
-} from '@/schemas/auth';
+} from '@/components/features/auth/schemas/auth';
 
 interface PhoneStepProps {
     form: UseFormReturn<SignUpPhoneFormData>;

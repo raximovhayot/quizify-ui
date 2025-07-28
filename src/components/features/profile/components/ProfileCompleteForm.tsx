@@ -15,8 +15,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { UseFormReturn } from 'react-hook-form';
-import { ProfileCompleteFormData } from '@/hooks/useProfileComplete';
-import { DashboardType } from '@/types/account';
+import { ProfileCompleteFormData } from '@/components/features/profile/hooks/useProfileComplete';
+import { DashboardType } from '@/components/features/profile/types/account';
 import { GraduationCap, Users } from 'lucide-react';
 
 interface ProfileCompleteFormProps {

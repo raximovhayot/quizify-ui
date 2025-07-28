@@ -6,9 +6,9 @@ import { useTranslations } from 'next-intl';
 import { AuthLayout } from '@/components/shared/layouts/AppLayout';
 import { InlineLoading } from '@/components/ui/loading-spinner';
 import { Form } from '@/components/ui/form';
-import { useProfileComplete } from '@/hooks/useProfileComplete';
-import { ProfileCompleteForm } from '@/components/features/profile/ProfileCompleteForm';
-import { hasRole, AccountDTO, UserState } from '@/types/account';
+import { useProfileComplete } from '@/components/features/profile/hooks/useProfileComplete';
+import { ProfileCompleteForm } from '@/components/features/profile/components/ProfileCompleteForm';
+import { hasRole, AccountDTO, UserState } from '@/components/features/profile/types/account';
 
 export default function ProfileCompletePage() {
   const t = useTranslations();

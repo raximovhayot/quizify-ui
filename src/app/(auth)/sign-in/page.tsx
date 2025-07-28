@@ -16,7 +16,7 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import Link from 'next/link';
-import {useNextAuthSignIn} from '@/hooks/useNextAuthSignIn';
+import {useNextAuthSignIn} from '@/components/features/auth/hooks/useNextAuthSignIn';
 
 function SignInForm() {
     const t = useTranslations();

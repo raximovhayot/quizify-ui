@@ -4,10 +4,10 @@ import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { useNextAuth } from '@/hooks/useNextAuth';
-import { UserState } from '@/types/account';
-import { createSignInSchema, SignInFormData, signInFormDefaults } from '@/schemas/auth';
-import { handleAuthError, clearFormErrors } from '@/utils/auth-errors';
+import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
+import { UserState } from '@/components/features/profile/types/account';
+import { createSignInSchema, SignInFormData, signInFormDefaults } from '@/components/features/auth/schemas/auth';
+import { handleAuthError, clearFormErrors } from '@/components/features/auth/lib/auth-errors';
 
 /**
  * Custom hook for NextAuth sign-in form logic

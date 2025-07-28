@@ -4,11 +4,11 @@ import {useTranslations} from 'next-intl';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {toast} from 'sonner';
-import {useNextAuth} from '@/hooks/useNextAuth';
+import {useNextAuth} from '@/components/features/auth/hooks/useNextAuth';
 import {signIn} from 'next-auth/react';
-import {AccountService} from '@/lib/services/account-service';
-import {DashboardType, AccountCompleteRequest} from '@/types/account';
-import {handleAuthError, clearFormErrors} from '@/utils/auth-errors';
+import {AccountService} from '@/components/features/profile/services/account-service';
+import {DashboardType, AccountCompleteRequest} from '@/components/features/profile/types/account';
+import {handleAuthError, clearFormErrors} from '@/components/features/auth/lib/auth-errors';
 import {z} from 'zod';
 
 // Types for helper functions

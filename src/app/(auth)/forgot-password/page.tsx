@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import Link from 'next/link';
-import { useForgotPasswordForm } from '@/hooks/useForgotPasswordForm';
+import { useForgotPasswordForm } from '@/components/features/auth/hooks/useForgotPasswordForm';
 
 export default function ForgotPasswordPage() {
   const t = useTranslations();

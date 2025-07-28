@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
-import { useNextAuth } from '@/hooks/useNextAuth';
+import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
 import { User, LogOut, Settings } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 

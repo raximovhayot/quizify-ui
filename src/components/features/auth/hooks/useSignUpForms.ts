@@ -4,10 +4,10 @@ import { useTranslations } from 'next-intl';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { useNextAuth } from '@/hooks/useNextAuth';
-import { AuthService } from '@/lib/services/auth-service';
+import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
+import { AuthService } from '@/components/features/auth/services/auth-service';
 import { BackendError } from '@/types/api';
-import { handleAuthError, clearFormErrors } from '@/utils/auth-errors';
+import { handleAuthError, clearFormErrors } from '@/components/features/auth/lib/auth-errors';
 import { useGlobalLoading } from '@/components/ui/top-loader';
 import {
   createSignUpPhoneSchema,
@@ -16,7 +16,7 @@ import {
   signUpPhoneFormDefaults,
   createVerificationSchema, 
   verificationFormDefaults,
-} from '@/schemas/auth';
+} from '@/components/features/auth/schemas/auth';
 
 
 export type SignUpStep = 'phone' | 'verification';

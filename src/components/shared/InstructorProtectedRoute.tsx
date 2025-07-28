@@ -1,7 +1,7 @@
 'use client';
 
-import {useNextAuth} from '@/hooks/useNextAuth';
-import {UserRole} from '@/types/account';
+import {useNextAuth} from '@/components/features/auth/hooks/useNextAuth';
+import {UserRole} from '@/components/features/profile/types/account';
 import {useRouter} from 'next/navigation';
 import {useEffect, ReactNode} from 'react';
 import {PageLoading} from "@/components/ui/loading-spinner";
