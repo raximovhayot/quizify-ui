@@ -1,4 +1,4 @@
-import { AccountDTO } from "./account";
+import { AccountDTO } from "@/components/features/profile/types/account";
 
 export interface SignInRequest {
   phone: string;

@@ -1,5 +1,5 @@
-import { apiClient } from '../api';
-import { AccountDTO, AccountCompleteRequest } from '@/types/account';
+import { apiClient } from '@/lib/api';
+import { AccountDTO, AccountCompleteRequest } from '@/components/features/profile/types/account';
 import { ApiResponse, extractApiData } from '@/types/api';
 
 /**
@@ -24,15 +24,6 @@ export class AccountService {
    * @returns Promise resolving to complete account information
    * @throws BackendError if validation fails or account completion is not allowed
    * 
-   * @example
-   * ```typescript
-   * const account = await AccountService.completeAccount({
-   *   firstName: 'John',
-   *   lastName: 'Doe',
-   *   password: 'newPassword123',
-   *   dashboardType: DashboardType.STUDENT
-   * }, accessToken);
-   * ```
    */
   static async completeAccount(data: AccountCompleteRequest, accessToken: string): Promise<AccountDTO> {
     const response: ApiResponse<AccountDTO> = await apiClient.put('/account/complete', data, accessToken);

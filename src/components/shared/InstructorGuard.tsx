@@ -7,11 +7,11 @@ import {useEffect, ReactNode} from 'react';
 import {PageLoading} from "@/components/ui/loading-spinner";
 import {useTranslations} from "next-intl";
 
-interface InstructorProtectedRouteProps {
+interface InstructorGuardProps {
     children: ReactNode;
 }
 
-export default function InstructorGuard({children}: InstructorProtectedRouteProps) {
+export default function InstructorGuard({children}: InstructorGuardProps) {
     const {hasRole, isLoading, isAuthenticated} = useNextAuth();
     const router = useRouter();
     const t = useTranslations('common');
@@ -46,9 +46,5 @@ export default function InstructorGuard({children}: InstructorProtectedRouteProp
         return <PageLoading text={t('redirecting')} />;
     }
 
-    return (
-        <>
-            {children}
-        </>
-    );
+    return children;
 }

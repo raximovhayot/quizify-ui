@@ -1,9 +1,9 @@
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { JWT } from "next-auth/jwt"
-import { AuthService } from "@/lib/services/auth-service"
-import { JWTToken } from "@/types/auth"
-import { AccountDTO, UserState } from "@/types/account"
+import { AuthService } from "@/components/features/auth/services/auth-service"
+import { JWTToken } from "@/components/features/auth/types/auth"
+import { AccountDTO, UserState } from "@/components/features/profile/types/account"
 
 // Override NextAuth types to completely replace AdapterUser requirements
 declare module "next-auth" {
@@ -165,7 +165,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   events: {
     async signOut() {
       // Clean up any additional logout logic if needed
-      console.log("User signed out")
     },
   },
 })

@@ -1,6 +1,6 @@
 import * as z from 'zod';
 import {PASSWORD_MIN_LENGTH, PASSWORD_REGEX} from "@/constants/validation";
-import {DashboardType} from "@/types/account";
+import {DashboardType} from "@/components/features/profile/types/account";
 
 // ============================================================================
 // PROFILE COMPLETE SCHEMAS
