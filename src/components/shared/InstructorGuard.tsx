@@ -11,7 +11,7 @@ interface InstructorProtectedRouteProps {
     children: ReactNode;
 }
 
-export default function InstructorProtectedRoute({children}: InstructorProtectedRouteProps) {
+export default function InstructorGuard({children}: InstructorProtectedRouteProps) {
     const {hasRole, isLoading, isAuthenticated} = useNextAuth();
     const router = useRouter();
     const t = useTranslations('common');
