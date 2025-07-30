@@ -84,7 +84,7 @@
       "placeholder": "Doe"
     },
     "dashboardType": {
-      "label": "I am a",
+      "label": "Default Dashboard Selection",
       "student": "Student",
       "instructor": "Instructor"
     },

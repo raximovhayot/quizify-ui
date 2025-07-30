@@ -19,7 +19,7 @@ interface RoleSelectionSectionProps {
   isSubmitting: boolean;
 }
 
-export function RoleSelectionSection({ form, isSubmitting }: RoleSelectionSectionProps) {
+export function DefaultDashboardSelection({ form, isSubmitting }: RoleSelectionSectionProps) {
   const t = useTranslations();
 
   return (
@@ -34,7 +34,7 @@ export function RoleSelectionSection({ form, isSubmitting }: RoleSelectionSectio
         render={({ field }) => (
           <FormItem>
             <FormLabel>
-              {t('auth.dashboardType.label', { default: 'I am a...' })}
+              {t('auth.dashboardType.label', { default: 'Default Dashboard Selection' })}
             </FormLabel>
             <FormControl>
               <RadioGroup

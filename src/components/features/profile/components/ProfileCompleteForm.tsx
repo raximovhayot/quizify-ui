@@ -8,7 +8,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { ProfileCompleteFormData } from '@/components/features/profile/hooks/useProfileComplete';
 import { PersonalInfoSection } from './PersonalInfoSection';
 import { SecuritySection } from './SecuritySection';
-import { RoleSelectionSection } from './RoleSelectionSection';
+import { DefaultDashboardSelection } from './DefaultDashboardSelection';
 
 interface ProfileCompleteFormProps {
   form: UseFormReturn<ProfileCompleteFormData>;
@@ -35,7 +35,7 @@ export function ProfileCompleteForm({ form, isSubmitting, onSubmit }: ProfileCom
           <div className="space-y-6">
             <PersonalInfoSection form={form} isSubmitting={isSubmitting} />
             <SecuritySection form={form} isSubmitting={isSubmitting} />
-            <RoleSelectionSection form={form} isSubmitting={isSubmitting} />
+            <DefaultDashboardSelection form={form} isSubmitting={isSubmitting} />
 
             <Button
               type="button"

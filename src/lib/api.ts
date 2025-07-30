@@ -1,4 +1,4 @@
-import {ApiError, ApiResponse, extractApiData, hasApiErrors} from '@/types/api';
+import {ApiError, ApiResponse} from '@/types/api';
 
 /**
  * Base API configuration
@@ -120,27 +120,3 @@ class ApiClient {
 
 // Export a singleton instance
 export const apiClient = new ApiClient();
-
-/**
- * Convenience function to make API requests with automatic data extraction
- * Throws an error if the API response contains errors
- */
-export async function apiRequest<T>(
-  endpoint: string, 
-  options: ApiRequestOptions = {}
-): Promise<T> {
-  const response = await apiClient.request<T>(endpoint, options);
-  return extractApiData(response);
-}
-
-/**
- * Convenience function to make API requests and handle errors gracefully
- * Returns null if there are errors, otherwise returns the data
- */
-export async function safeApiRequest<T>(
-  endpoint: string, 
-  options: ApiRequestOptions = {}
-): Promise<T | null> {
-  const response = await apiClient.request<T>(endpoint, options);
-  return hasApiErrors(response) ? null : response.data;
-}

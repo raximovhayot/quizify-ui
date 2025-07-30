@@ -84,7 +84,7 @@
       "placeholder": "Иванов"
     },
     "dashboardType": {
-      "label": "Я",
+      "label": "Выбор панели управления по умолчанию",
       "student": "Студент",
       "instructor": "Преподаватель"
     },
