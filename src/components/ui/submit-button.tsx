@@ -16,9 +16,9 @@ export function SubmitButton({
   loadingText,
   submitText,
   disabled = false,
-  className = "w-full",
-  type = "submit",
-  onClick
+  className = 'w-full',
+  type = 'submit',
+  onClick,
 }: SubmitButtonProps) {
   return (
     <Button
@@ -27,11 +27,7 @@ export function SubmitButton({
       disabled={isSubmitting || disabled}
       className={className}
     >
-      {isSubmitting ? (
-        <InlineLoading text={loadingText} />
-      ) : (
-        submitText
-      )}
+      {isSubmitting ? <InlineLoading text={loadingText} /> : submitText}
     </Button>
   );
 }

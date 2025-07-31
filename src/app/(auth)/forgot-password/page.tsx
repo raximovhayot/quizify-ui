@@ -1,11 +1,18 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
+
+import { useForgotPasswordForm } from '@/components/features/auth/hooks/useForgotPasswordForm';
 import { AuthLayout } from '@/components/shared/layouts/AppLayout';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { InlineLoading } from '@/components/ui/loading-spinner';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import {
   Form,
   FormControl,
@@ -14,8 +21,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import Link from 'next/link';
-import { useForgotPasswordForm } from '@/components/features/auth/hooks/useForgotPasswordForm';
+import { Input } from '@/components/ui/input';
+import { InlineLoading } from '@/components/ui/loading-spinner';
 
 export default function ForgotPasswordPage() {
   const t = useTranslations();
@@ -35,10 +42,12 @@ export default function ForgotPasswordPage() {
   const renderPhoneStep = () => (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="text-center">
-        <CardTitle>{t('auth.forgotPassword.title', { default: 'Reset Password' })}</CardTitle>
+        <CardTitle>
+          {t('auth.forgotPassword.title', { default: 'Reset Password' })}
+        </CardTitle>
         <CardDescription>
-          {t('auth.forgotPassword.description', { 
-            default: 'Enter your phone number to receive a verification code' 
+          {t('auth.forgotPassword.description', {
+            default: 'Enter your phone number to receive a verification code',
           })}
         </CardDescription>
       </CardHeader>
@@ -50,7 +59,9 @@ export default function ForgotPasswordPage() {
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('auth.phone.label', { default: 'Phone Number' })}</FormLabel>
+                  <FormLabel>
+                    {t('auth.phone.label', { default: 'Phone Number' })}
+                  </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -65,15 +76,22 @@ export default function ForgotPasswordPage() {
             />
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? (
-                <InlineLoading text={t('common.sending', { default: 'Sending...' })} />
+                <InlineLoading
+                  text={t('common.sending', { default: 'Sending...' })}
+                />
               ) : (
-                t('auth.forgotPassword.sendCode', { default: 'Send Verification Code' })
+                t('auth.forgotPassword.sendCode', {
+                  default: 'Send Verification Code',
+                })
               )}
             </Button>
           </form>
         </Form>
         <div className="mt-4 text-center">
-          <Link href="/sign-in" className="text-sm text-muted-foreground hover:underline">
+          <Link
+            href="/sign-in"
+            className="text-sm text-muted-foreground hover:underline"
+          >
             {t('auth.backToSignIn', { default: 'Back to Sign In' })}
           </Link>
         </div>
@@ -84,22 +102,32 @@ export default function ForgotPasswordPage() {
   const renderVerificationStep = () => (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="text-center">
-        <CardTitle>{t('auth.verification.title', { default: 'Verify Your Phone' })}</CardTitle>
+        <CardTitle>
+          {t('auth.verification.title', { default: 'Verify Your Phone' })}
+        </CardTitle>
         <CardDescription>
-          {t('auth.verification.description', { 
-            default: 'Enter the 6-digit code sent to your phone'
+          {t('auth.verification.description', {
+            default: 'Enter the 6-digit code sent to your phone',
           })}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...verificationForm}>
-          <form onSubmit={onVerificationSubmit} className="space-y-4" key={`verification-${currentStep}`}>
+          <form
+            onSubmit={onVerificationSubmit}
+            className="space-y-4"
+            key={`verification-${currentStep}`}
+          >
             <FormField
               control={verificationForm.control}
               name="otp"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('auth.verificationCode', { default: 'Verification Code' })}</FormLabel>
+                  <FormLabel>
+                    {t('auth.verificationCode', {
+                      default: 'Verification Code',
+                    })}
+                  </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -129,7 +157,9 @@ export default function ForgotPasswordPage() {
             />
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? (
-                <InlineLoading text={t('common.verifying', { default: 'Verifying...' })} />
+                <InlineLoading
+                  text={t('common.verifying', { default: 'Verifying...' })}
+                />
               ) : (
                 t('auth.verification.verify', { default: 'Verify Code' })
               )}
@@ -143,13 +173,12 @@ export default function ForgotPasswordPage() {
             onClick={handleResendOTP}
             disabled={resendCooldown > 0 || isSubmitting}
           >
-            {resendCooldown > 0 
-              ? t('auth.verification.resendIn', { 
+            {resendCooldown > 0
+              ? t('auth.verification.resendIn', {
                   default: `Resend in ${resendCooldown}s`,
-                  seconds: resendCooldown
+                  seconds: resendCooldown,
                 })
-              : t('auth.verification.resend', { default: 'Resend Code' })
-            }
+              : t('auth.verification.resend', { default: 'Resend Code' })}
           </Button>
         </div>
       </CardContent>
@@ -159,10 +188,14 @@ export default function ForgotPasswordPage() {
   const renderNewPasswordStep = () => (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="text-center">
-        <CardTitle>{t('auth.forgotPassword.newPassword.title', { default: 'Set New Password' })}</CardTitle>
+        <CardTitle>
+          {t('auth.forgotPassword.newPassword.title', {
+            default: 'Set New Password',
+          })}
+        </CardTitle>
         <CardDescription>
-          {t('auth.forgotPassword.newPassword.description', { 
-            default: 'Enter your new password' 
+          {t('auth.forgotPassword.newPassword.description', {
+            default: 'Enter your new password',
           })}
         </CardDescription>
       </CardHeader>
@@ -174,13 +207,11 @@ export default function ForgotPasswordPage() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('auth.newPassword', { default: 'New Password' })}</FormLabel>
+                  <FormLabel>
+                    {t('auth.newPassword', { default: 'New Password' })}
+                  </FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      type="password"
-                      disabled={isSubmitting}
-                    />
+                    <Input {...field} type="password" disabled={isSubmitting} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -191,13 +222,11 @@ export default function ForgotPasswordPage() {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('auth.confirmPassword', { default: 'Confirm Password' })}</FormLabel>
+                  <FormLabel>
+                    {t('auth.confirmPassword', { default: 'Confirm Password' })}
+                  </FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      type="password"
-                      disabled={isSubmitting}
-                    />
+                    <Input {...field} type="password" disabled={isSubmitting} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -205,9 +234,13 @@ export default function ForgotPasswordPage() {
             />
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? (
-                <InlineLoading text={t('common.updating', { default: 'Updating...' })} />
+                <InlineLoading
+                  text={t('common.updating', { default: 'Updating...' })}
+                />
               ) : (
-                t('auth.forgotPassword.updatePassword', { default: 'Update Password' })
+                t('auth.forgotPassword.updatePassword', {
+                  default: 'Update Password',
+                })
               )}
             </Button>
           </form>
@@ -220,11 +253,14 @@ export default function ForgotPasswordPage() {
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="text-center">
         <CardTitle className="text-green-600">
-          {t('auth.forgotPassword.success.title', { default: 'Password Reset Complete' })}
+          {t('auth.forgotPassword.success.title', {
+            default: 'Password Reset Complete',
+          })}
         </CardTitle>
         <CardDescription>
-          {t('auth.forgotPassword.success.description', { 
-            default: 'Your password has been successfully reset. You will be redirected to the sign-in page shortly.' 
+          {t('auth.forgotPassword.success.description', {
+            default:
+              'Your password has been successfully reset. You will be redirected to the sign-in page shortly.',
           })}
         </CardDescription>
       </CardHeader>
@@ -253,9 +289,5 @@ export default function ForgotPasswordPage() {
     }
   };
 
-  return (
-    <AuthLayout>
-      {renderCurrentStep()}
-    </AuthLayout>
-  );
+  return <AuthLayout>{renderCurrentStep()}</AuthLayout>;
 }

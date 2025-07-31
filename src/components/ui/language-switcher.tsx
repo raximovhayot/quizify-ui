@@ -1,7 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+
+import { Check, Globe } from 'lucide-react';
 import { useLocale } from 'next-intl';
+
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -9,7 +12,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Globe, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface Language {
@@ -35,7 +37,7 @@ const languages: Language[] = [
   {
     code: 'uz',
     name: 'Uzbek',
-    nativeName: 'O\'zbek',
+    nativeName: "O'zbek",
     flag: '🇺🇿',
   },
 ];
@@ -45,14 +47,15 @@ interface LanguageSwitcherProps {
   className?: string;
 }
 
-export function LanguageSwitcher({ 
-  variant = 'default', 
-  className 
+export function LanguageSwitcher({
+  variant = 'default',
+  className,
 }: LanguageSwitcherProps) {
   const currentLocale = useLocale();
   const [isChanging, setIsChanging] = useState(false);
 
-  const currentLanguage = languages.find(lang => lang.code === currentLocale) || languages[0];
+  const currentLanguage =
+    languages.find((lang) => lang.code === currentLocale) || languages[0];
 
   const handleLanguageChange = async (newLocale: string) => {
     if (newLocale === currentLocale || isChanging) return;
@@ -62,11 +65,11 @@ export function LanguageSwitcher({
     try {
       // Store the language preference in both localStorage and cookies
       localStorage.setItem('preferredLanguage', newLocale);
-      
+
       // Set cookie that can be read by server-side rendering
       document.cookie = `preferredLanguage=${newLocale}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
-      
-      // Since we don't use locale-based routing anymore, 
+
+      // Since we don't use locale-based routing anymore,
       // we need to reload the page to apply the new language
       window.location.reload();
     } catch (error) {
@@ -79,14 +82,16 @@ export function LanguageSwitcher({
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className={cn("h-9 px-3 flex items-center space-x-2", className)}
+          <Button
+            variant="ghost"
+            size="sm"
+            className={cn('h-9 px-3 flex items-center space-x-2', className)}
             disabled={isChanging}
           >
             <span className="text-lg">{currentLanguage.flag}</span>
-            <span className="text-sm font-medium">{currentLanguage.nativeName}</span>
+            <span className="text-sm font-medium">
+              {currentLanguage.nativeName}
+            </span>
             <span className="sr-only">Change language</span>
           </Button>
         </DropdownMenuTrigger>
@@ -116,14 +121,16 @@ export function LanguageSwitcher({
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className={cn("h-8", className)}
+          <Button
+            variant="outline"
+            size="sm"
+            className={cn('h-8', className)}
             disabled={isChanging}
           >
             <span className="mr-1">{currentLanguage.flag}</span>
-            <span className="text-xs font-medium">{currentLanguage.code.toUpperCase()}</span>
+            <span className="text-xs font-medium">
+              {currentLanguage.code.toUpperCase()}
+            </span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
@@ -152,9 +159,9 @@ export function LanguageSwitcher({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button 
-          variant="outline" 
-          className={cn("justify-between min-w-[140px]", className)}
+        <Button
+          variant="outline"
+          className={cn('justify-between min-w-[140px]', className)}
           disabled={isChanging}
         >
           <div className="flex items-center space-x-2">
@@ -181,7 +188,9 @@ export function LanguageSwitcher({
               <span className="text-lg">{language.flag}</span>
               <div>
                 <div className="font-medium">{language.nativeName}</div>
-                <div className="text-xs text-muted-foreground">{language.name}</div>
+                <div className="text-xs text-muted-foreground">
+                  {language.name}
+                </div>
               </div>
             </div>
             {language.code === currentLocale && (

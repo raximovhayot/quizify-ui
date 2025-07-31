@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { auth } from '@/auth';
+
+import { auth } from '@/components/features/auth/config';
 import { UserState } from '@/components/features/profile/types/account';
 
 export async function middleware(request: NextRequest) {
@@ -19,9 +20,11 @@ export async function middleware(request: NextRequest) {
 
     // User is authenticated, redirect based on roles
     const userRoles = user.roles || [];
-    const hasStudentRole = userRoles.some(role => role.name === 'STUDENT');
-    const hasInstructorRole = userRoles.some(role => role.name === 'INSTRUCTOR');
-    
+    const hasStudentRole = userRoles.some((role) => role.name === 'STUDENT');
+    const hasInstructorRole = userRoles.some(
+      (role) => role.name === 'INSTRUCTOR'
+    );
+
     if (hasStudentRole && hasInstructorRole) {
       // User has both roles, redirect to student dashboard as default
       return NextResponse.redirect(new URL('/student', request.url));
@@ -69,21 +72,27 @@ export async function middleware(request: NextRequest) {
 
   // If user is authenticated but has NEW state, redirect to profile completion
   // Exclude profile completion page itself to avoid infinite redirect loop
-  if (user && user.state === UserState.NEW && !pathname.startsWith('/profile/complete')) {
+  if (
+    user &&
+    user.state === UserState.NEW &&
+    !pathname.startsWith('/profile/complete')
+  ) {
     return NextResponse.redirect(new URL('/profile/complete', request.url));
   }
 
   // Check if user has required roles
   const userRoles = user.roles || [];
-  const hasRequiredRole = requiredRoles.some((role: string) => 
-    userRoles.some(userRole => userRole.name === role)
+  const hasRequiredRole = requiredRoles.some((role: string) =>
+    userRoles.some((userRole) => userRole.name === role)
   );
 
   if (!hasRequiredRole) {
     // Redirect based on user's roles
-    const hasStudentRole = userRoles.some(role => role.name === 'STUDENT');
-    const hasInstructorRole = userRoles.some(role => role.name === 'INSTRUCTOR');
-    
+    const hasStudentRole = userRoles.some((role) => role.name === 'STUDENT');
+    const hasInstructorRole = userRoles.some(
+      (role) => role.name === 'INSTRUCTOR'
+    );
+
     if (hasStudentRole && hasInstructorRole) {
       // User has both roles, redirect to a role selection page or default
       return NextResponse.redirect(new URL('/', request.url));

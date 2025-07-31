@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -119,51 +119,51 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
   }
-  
+
   /* Minimalist Typography */
   h1 {
     @apply text-3xl font-bold tracking-tight lg:text-4xl;
   }
-  
+
   h2 {
     @apply text-2xl font-semibold tracking-tight;
   }
-  
+
   h3 {
     @apply text-xl font-semibold tracking-tight;
   }
-  
+
   h4 {
     @apply text-lg font-medium tracking-tight;
   }
-  
+
   p {
     @apply leading-7 [&:not(:first-child)]:mt-6;
   }
-  
+
   /* Clean focus styles */
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-ring;
   }
-  
+
   /* Smooth scrolling */
   html {
     scroll-behavior: smooth;
   }
-  
+
   /* Custom scrollbar for webkit browsers */
   ::-webkit-scrollbar {
     @apply w-2;
   }
-  
+
   ::-webkit-scrollbar-track {
     @apply bg-muted;
   }
-  
+
   ::-webkit-scrollbar-thumb {
     @apply bg-muted-foreground/30 rounded-full;
   }
-  
+
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-muted-foreground/50;
   }

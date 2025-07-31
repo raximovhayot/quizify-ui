@@ -1,15 +1,23 @@
 'use client';
 
 import { Suspense } from 'react';
+
 import { useTranslations } from 'next-intl';
-import { AuthLayout } from '@/components/shared/layouts/AppLayout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
-import { useSignUpForms } from '@/components/features/auth/hooks/useSignUpForms';
+
 import {
   PhoneStep,
   VerificationStep,
 } from '@/components/features/auth/components/SignUpSteps';
+import { useSignUpForms } from '@/components/features/auth/hooks/useSignUpForms';
+import { AuthLayout } from '@/components/shared/layouts/AppLayout';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 
 function SignUpContent() {
   const t = useTranslations();
@@ -64,7 +72,9 @@ function SignUpContent() {
       case 'phone':
         return t('auth.signUp.phone.title', { default: 'Sign Up' });
       case 'verification':
-        return t('auth.signUp.verification.title', { default: 'Verify Phone Number' });
+        return t('auth.signUp.verification.title', {
+          default: 'Verify Phone Number',
+        });
       default:
         return 'Sign Up';
     }
@@ -74,11 +84,11 @@ function SignUpContent() {
     switch (currentStep) {
       case 'phone':
         return t('auth.signUp.phone.description', {
-          default: 'Enter your phone number to get started'
+          default: 'Enter your phone number to get started',
         });
       case 'verification':
         return t('auth.signUp.verification.description', {
-          default: 'We sent a verification code to your phone'
+          default: 'We sent a verification code to your phone',
         });
       default:
         return '';
@@ -89,12 +99,8 @@ function SignUpContent() {
     <AuthLayout>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">
-            {getStepTitle()}
-          </CardTitle>
-          <CardDescription>
-            {getStepDescription()}
-          </CardDescription>
+          <CardTitle className="text-2xl font-bold">{getStepTitle()}</CardTitle>
+          <CardDescription>{getStepDescription()}</CardDescription>
         </CardHeader>
         <CardContent>
           {renderStepContent()}
@@ -102,11 +108,10 @@ function SignUpContent() {
           {currentStep === 'phone' && (
             <div className="mt-6 text-center">
               <div className="text-sm text-muted-foreground">
-                {t('auth.signIn.prompt', { default: 'Already have an account?' })}{' '}
-                <Link
-                  href="/sign-in"
-                  className="text-primary hover:underline"
-                >
+                {t('auth.signIn.prompt', {
+                  default: 'Already have an account?',
+                })}{' '}
+                <Link href="/sign-in" className="text-primary hover:underline">
                   {t('auth.signIn.link', { default: 'Sign in' })}
                 </Link>
               </div>
@@ -120,17 +125,19 @@ function SignUpContent() {
 
 export default function SignUpPage() {
   return (
-    <Suspense fallback={
-      <AuthLayout>
-        <div className="container mx-auto px-4 py-8 max-w-md">
-          <Card>
-            <CardHeader className="text-center">
-              <CardTitle className="text-2xl font-bold">Loading...</CardTitle>
-            </CardHeader>
-          </Card>
-        </div>
-      </AuthLayout>
-    }>
+    <Suspense
+      fallback={
+        <AuthLayout>
+          <div className="container mx-auto px-4 py-8 max-w-md">
+            <Card>
+              <CardHeader className="text-center">
+                <CardTitle className="text-2xl font-bold">Loading...</CardTitle>
+              </CardHeader>
+            </Card>
+          </div>
+        </AuthLayout>
+      }
+    >
       <SignUpContent />
     </Suspense>
   );

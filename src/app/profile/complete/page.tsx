@@ -1,28 +1,32 @@
 'use client';
 
 import { Suspense, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+
 import { useTranslations } from 'next-intl';
-import { AuthLayout } from '@/components/shared/layouts/AppLayout';
-import { InlineLoading } from '@/components/ui/loading-spinner';
-import { Form } from '@/components/ui/form';
-import { useProfileComplete } from '@/components/features/profile/hooks/useProfileComplete';
+import { useRouter } from 'next/navigation';
+
 import { ProfileCompleteForm } from '@/components/features/profile/components/ProfileCompleteForm';
-import { hasRole, AccountDTO, UserState } from '@/components/features/profile/types/account';
+import { useProfileComplete } from '@/components/features/profile/hooks/useProfileComplete';
+import {
+  AccountDTO,
+  UserState,
+  hasRole,
+} from '@/components/features/profile/types/account';
+import { AuthLayout } from '@/components/shared/layouts/AppLayout';
+import { Form } from '@/components/ui/form';
+import { InlineLoading } from '@/components/ui/loading-spinner';
 
 function ProfileCompleteContent() {
   const router = useRouter();
-  const {
-    form,
-    user,
-    isSubmitting,
-    onSubmit
-  } = useProfileComplete();
+  const { form, user, isSubmitting, onSubmit } = useProfileComplete();
 
   // Handle immediate redirection for users who shouldn't be on this page
   useEffect(() => {
     if (user && user.state !== UserState.NEW) {
-      const userWithLanguage = {...user, language: 'en' as const} as unknown as AccountDTO;
+      const userWithLanguage = {
+        ...user,
+        language: 'en' as const,
+      } as unknown as AccountDTO;
       if (hasRole(userWithLanguage, 'STUDENT')) {
         router.replace('/student');
       } else if (hasRole(userWithLanguage, 'INSTRUCTOR')) {
@@ -55,7 +59,7 @@ function ProfileCompleteContent() {
   return (
     <AuthLayout>
       <Form {...form}>
-        <ProfileCompleteForm 
+        <ProfileCompleteForm
           form={form}
           isSubmitting={isSubmitting}
           onSubmit={onSubmit}
@@ -67,12 +71,14 @@ function ProfileCompleteContent() {
 
 function ProfileCompleteLoading() {
   const t = useTranslations();
-  
+
   return (
     <AuthLayout>
       <div className="container mx-auto px-4 py-8 max-w-md">
         <div className="flex justify-center">
-          <InlineLoading text={t('common.loading', { default: 'Loading...' })} />
+          <InlineLoading
+            text={t('common.loading', { default: 'Loading...' })}
+          />
         </div>
       </div>
     </AuthLayout>

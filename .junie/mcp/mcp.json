@@ -3,9 +3,7 @@
     {
       "name": "backend-filesystem",
       "command": "mcp-server-filesystem",
-      "args": [
-        "/home/xmpl/Idea/Quizify/quizify-backend"
-      ]
+      "args": ["/home/xmpl/Idea/Quizify/quizify-backend"]
     },
     {
       "name": "swagger",
@@ -13,6 +11,11 @@
       "args": [
         "https://quizifybackend-b86e8709a4d9.herokuapp.com/swagger-ui/index.html"
       ]
+    },
+    {
+      "name": "start-ui",
+      "command": "mcp-server-filesystem",
+      "args": ["/home/xmpl/Idea/Learn/start-ui"]
     }
   ]
 }

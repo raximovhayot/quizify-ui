@@ -1,26 +1,35 @@
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
-import { useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+
 import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
-import { AuthService } from '@/components/features/auth/services/auth-service';
-import { BackendError } from '@/types/api';
-import { handleAuthError, clearFormErrors } from '@/components/features/auth/lib/auth-errors';
 import {
-  createForgotPasswordPhoneSchema,
-  createForgotPasswordVerificationSchema,
-  createForgotPasswordNewPasswordSchema,
+  clearFormErrors,
+  handleAuthError,
+} from '@/components/features/auth/lib/auth-errors';
+import {
+  ForgotPasswordNewPasswordFormData,
   ForgotPasswordPhoneFormData,
   ForgotPasswordVerificationFormData,
-  ForgotPasswordNewPasswordFormData,
+  createForgotPasswordNewPasswordSchema,
+  createForgotPasswordPhoneSchema,
+  createForgotPasswordVerificationSchema,
+  forgotPasswordNewPasswordFormDefaults,
   forgotPasswordPhoneFormDefaults,
   forgotPasswordVerificationFormDefaults,
-  forgotPasswordNewPasswordFormDefaults,
 } from '@/components/features/auth/schemas/auth';
+import { AuthService } from '@/components/features/auth/services/auth-service';
+import { BackendError } from '@/types/api';
 
-export type ForgotPasswordStep = 'phone' | 'verification' | 'new-password' | 'completed';
+export type ForgotPasswordStep =
+  | 'phone'
+  | 'verification'
+  | 'new-password'
+  | 'completed';
 
 /**
  * Custom hook for managing forgot password form state and logic
@@ -67,7 +76,10 @@ export function useForgotPasswordForm() {
   // Countdown timer for resend button
   useEffect(() => {
     if (resendCooldown > 0) {
-      const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
+      const timer = setTimeout(
+        () => setResendCooldown(resendCooldown - 1),
+        1000
+      );
       return () => clearTimeout(timer);
     }
   }, [resendCooldown]);
@@ -75,22 +87,26 @@ export function useForgotPasswordForm() {
   // Phone submission handler
   const onPhoneSubmit = async (data: ForgotPasswordPhoneFormData) => {
     setIsSubmitting(true);
-    
+
     // Clear any previous errors
     clearFormErrors(phoneForm);
 
     try {
-      const prepareResponse = await AuthService.forgotPasswordPrepare(data.phone);
+      const prepareResponse = await AuthService.forgotPasswordPrepare(
+        data.phone
+      );
       setPhoneNumber(prepareResponse.phoneNumber);
-      
+
       // Reset verification form to ensure clean state
       verificationForm.reset(forgotPasswordVerificationFormDefaults);
-      
+
       setCurrentStep('verification');
       setResendCooldown(prepareResponse.waitingTime);
-      toast.success(t('auth.forgotPassword.codeSent', { 
-        default: 'Verification code sent to your phone' 
-      }));
+      toast.success(
+        t('auth.forgotPassword.codeSent', {
+          default: 'Verification code sent to your phone',
+        })
+      );
     } catch (error: unknown) {
       handleAuthError(error, phoneForm, t);
     } finally {
@@ -99,24 +115,31 @@ export function useForgotPasswordForm() {
   };
 
   // Verification submission handler
-  const onVerificationSubmit = async (data: ForgotPasswordVerificationFormData) => {
+  const onVerificationSubmit = async (
+    data: ForgotPasswordVerificationFormData
+  ) => {
     setIsSubmitting(true);
-    
+
     // Clear any previous errors
     clearFormErrors(verificationForm);
 
     try {
-      const response = await AuthService.forgotPasswordVerify(phoneNumber, data.otp);
-      
+      const response = await AuthService.forgotPasswordVerify(
+        phoneNumber,
+        data.otp
+      );
+
       // Store the verification token for the next step (fix: use 'token' not 'verificationToken')
       setVerificationToken(response.token);
       setCurrentStep('new-password');
-      toast.success(t('auth.verification.success', { 
-        default: 'Code verified successfully' 
-      }));
+      toast.success(
+        t('auth.verification.success', {
+          default: 'Code verified successfully',
+        })
+      );
     } catch (error: unknown) {
       handleAuthError(error, verificationForm, t);
-      
+
       // Handle specific error cases - if code expired, go back to phone step
       if (error instanceof BackendError) {
         const firstError = error.getFirstError();
@@ -130,32 +153,40 @@ export function useForgotPasswordForm() {
   };
 
   // New password submission handler
-  const onNewPasswordSubmit = async (data: ForgotPasswordNewPasswordFormData) => {
+  const onNewPasswordSubmit = async (
+    data: ForgotPasswordNewPasswordFormData
+  ) => {
     setIsSubmitting(true);
-    
+
     // Clear any previous errors
     clearFormErrors(newPasswordForm);
 
     try {
       await AuthService.forgotPasswordUpdate(verificationToken, data.password);
-      
+
       setCurrentStep('completed');
-      toast.success(t('auth.forgotPassword.success.message', { 
-        default: 'Password reset successfully. You can now sign in with your new password.' 
-      }));
-      
+      toast.success(
+        t('auth.forgotPassword.success.message', {
+          default:
+            'Password reset successfully. You can now sign in with your new password.',
+        })
+      );
+
       // Redirect to sign-in page after a short delay
       setTimeout(() => {
         router.push('/sign-in');
       }, 2000);
     } catch (error: unknown) {
       handleAuthError(error, newPasswordForm, t);
-      
+
       // Handle specific error cases - if token is invalid/expired, go back to phone step
       if (error instanceof BackendError) {
         const firstError = error.getFirstError();
-        if (firstError?.message.includes('token') && 
-            (firstError.message.includes('invalid') || firstError.message.includes('expired'))) {
+        if (
+          firstError?.message.includes('token') &&
+          (firstError.message.includes('invalid') ||
+            firstError.message.includes('expired'))
+        ) {
           setCurrentStep('phone');
         }
       }
@@ -173,9 +204,11 @@ export function useForgotPasswordForm() {
     try {
       const response = await AuthService.forgotPasswordPrepare(phoneNumber);
       setResendCooldown(response.waitingTime);
-      toast.success(t('auth.verification.resendSuccess', {
-        default: 'New verification code sent'
-      }));
+      toast.success(
+        t('auth.verification.resendSuccess', {
+          default: 'New verification code sent',
+        })
+      );
     } catch (error: unknown) {
       // For resend OTP, we don't have a specific form to set field errors on
       // So we'll handle it with toast messages only
@@ -184,11 +217,15 @@ export function useForgotPasswordForm() {
         if (firstError) {
           toast.error(firstError.message);
         } else {
-          const genericError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
+          const genericError = t('common.unexpectedError', {
+            default: 'An unexpected error occurred.',
+          });
           toast.error(genericError);
         }
       } else {
-        const unexpectedError = t('common.unexpectedError', {default: 'An unexpected error occurred.'});
+        const unexpectedError = t('common.unexpectedError', {
+          default: 'An unexpected error occurred.',
+        });
         toast.error(unexpectedError);
       }
     } finally {
@@ -203,12 +240,12 @@ export function useForgotPasswordForm() {
     phoneNumber,
     resendCooldown,
     isAuthenticated,
-    
+
     // Forms
     phoneForm,
     verificationForm,
     newPasswordForm,
-    
+
     // Handlers
     onPhoneSubmit: phoneForm.handleSubmit(onPhoneSubmit),
     onVerificationSubmit: verificationForm.handleSubmit(onVerificationSubmit),

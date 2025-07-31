@@ -1,5 +1,6 @@
 import { useTranslations } from 'next-intl';
-import { Input } from '@/components/ui/input';
+import { Control, FieldPath, FieldValues } from 'react-hook-form';
+
 import {
   FormControl,
   FormField,
@@ -7,7 +8,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Control, FieldPath, FieldValues } from 'react-hook-form';
+import { Input } from '@/components/ui/input';
 
 interface BaseFormFieldProps<T extends FieldValues> {
   control: Control<T>;
@@ -15,10 +16,10 @@ interface BaseFormFieldProps<T extends FieldValues> {
   disabled?: boolean;
 }
 
-export function PhoneField<T extends FieldValues>({ 
-  control, 
-  name, 
-  disabled = false 
+export function PhoneField<T extends FieldValues>({
+  control,
+  name,
+  disabled = false,
 }: BaseFormFieldProps<T>) {
   const t = useTranslations();
 
@@ -34,7 +35,9 @@ export function PhoneField<T extends FieldValues>({
           <FormControl>
             <Input
               type="tel"
-              placeholder={t('auth.phone.placeholder', { default: '+1234567890' })}
+              placeholder={t('auth.phone.placeholder', {
+                default: '+1234567890',
+              })}
               disabled={disabled}
               {...field}
             />
@@ -46,15 +49,16 @@ export function PhoneField<T extends FieldValues>({
   );
 }
 
-interface PasswordFieldProps<T extends FieldValues> extends BaseFormFieldProps<T> {
+interface PasswordFieldProps<T extends FieldValues>
+  extends BaseFormFieldProps<T> {
   placeholder?: string;
 }
 
-export function PasswordField<T extends FieldValues>({ 
-  control, 
-  name, 
+export function PasswordField<T extends FieldValues>({
+  control,
+  name,
   disabled = false,
-  placeholder 
+  placeholder,
 }: PasswordFieldProps<T>) {
   const t = useTranslations();
 
@@ -70,7 +74,12 @@ export function PasswordField<T extends FieldValues>({
           <FormControl>
             <Input
               type="password"
-              placeholder={placeholder || t('auth.password.placeholder', { default: 'Enter your password' })}
+              placeholder={
+                placeholder ||
+                t('auth.password.placeholder', {
+                  default: 'Enter your password',
+                })
+              }
               disabled={disabled}
               {...field}
             />
@@ -88,13 +97,13 @@ interface TextFieldProps<T extends FieldValues> extends BaseFormFieldProps<T> {
   type?: string;
 }
 
-export function TextField<T extends FieldValues>({ 
-  control, 
-  name, 
+export function TextField<T extends FieldValues>({
+  control,
+  name,
   disabled = false,
   label,
   placeholder,
-  type = 'text'
+  type = 'text',
 }: TextFieldProps<T>) {
   return (
     <FormField

@@ -1,9 +1,10 @@
-import {ApiError, ApiResponse} from '@/types/api';
-
 /**
  * Base API configuration
  */
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080/api';
+import { env } from '@/env.mjs';
+import { ApiError, ApiResponse } from '@/types/api';
+
+const API_BASE_URL = env.NEXT_PUBLIC_API_BASE_URL;
 
 /**
  * HTTP methods supported by the API client
@@ -33,19 +34,17 @@ class ApiClient {
   /**
    * Make an API request and return the standardized response
    */
-  async request<T>(endpoint: string, options: ApiRequestOptions = {}): Promise<ApiResponse<T>> {
-    const {
-      method = 'GET',
-      headers = {},
-      body,
-      token
-    } = options;
+  async request<T>(
+    endpoint: string,
+    options: ApiRequestOptions = {}
+  ): Promise<ApiResponse<T>> {
+    const { method = 'GET', headers = {}, body, token } = options;
 
     const url = `${this.baseUrl}${endpoint}`;
-    
+
     const requestHeaders: Record<string, string> = {
       'Content-Type': 'application/json',
-      ...headers
+      ...headers,
     };
 
     // Add authorization header if token is provided
@@ -65,19 +64,20 @@ class ApiClient {
 
     try {
       const response = await fetch(url, requestOptions);
-      
+
       // Return the standardized response structure
       return await response.json();
     } catch (error) {
       // Handle network errors or JSON parsing errors
       const networkError: ApiError = {
         code: 'NETWORK_ERROR',
-        message: error instanceof Error ? error.message : 'Network request failed'
+        message:
+          error instanceof Error ? error.message : 'Network request failed',
       };
 
       return {
         data: null as T,
-        errors: [networkError]
+        errors: [networkError],
       };
     }
   }
@@ -92,14 +92,22 @@ class ApiClient {
   /**
    * POST request
    */
-  async post<T>(endpoint: string, body?: unknown, token?: string): Promise<ApiResponse<T>> {
+  async post<T>(
+    endpoint: string,
+    body?: unknown,
+    token?: string
+  ): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, { method: 'POST', body, token });
   }
 
   /**
    * PUT request
    */
-  async put<T>(endpoint: string, body?: unknown, token?: string): Promise<ApiResponse<T>> {
+  async put<T>(
+    endpoint: string,
+    body?: unknown,
+    token?: string
+  ): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, { method: 'PUT', body, token });
   }
 
@@ -113,7 +121,11 @@ class ApiClient {
   /**
    * PATCH request
    */
-  async patch<T>(endpoint: string, body?: unknown, token?: string): Promise<ApiResponse<T>> {
+  async patch<T>(
+    endpoint: string,
+    body?: unknown,
+    token?: string
+  ): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, { method: 'PATCH', body, token });
   }
 }

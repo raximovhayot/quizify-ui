@@ -2,28 +2,27 @@
  * Account-related type definitions
  * This file contains all account/user/profile related types and interfaces
  */
-
 import { Language } from '@/types/common';
 
 // User state enum based on backend-filesystem MCP server
 export enum UserState {
-    NEW = 'new',
-    ACTIVE = 'active',
-    BLOCKED = 'blocked',
-    DELETED = 'deleted'
+  NEW = 'new',
+  ACTIVE = 'active',
+  BLOCKED = 'blocked',
+  DELETED = 'deleted',
 }
 
 // User role enum to match backend
 export enum UserRole {
   ADMIN = 'ADMIN',
   INSTRUCTOR = 'INSTRUCTOR',
-  STUDENT = 'STUDENT'
+  STUDENT = 'STUDENT',
 }
 
 // Dashboard type enum to match backend
 export enum DashboardType {
   INSTRUCTOR,
-  STUDENT
+  STUDENT,
 }
 
 // Role DTO based on backend-filesystem MCP server
@@ -69,9 +68,12 @@ export interface UpdatePasswordRequest {
 
 // Helper functions for role checking
 export function hasRole(user: AccountDTO | null, roleName: string): boolean {
-  return user?.roles?.some(role => role.name === roleName) ?? false;
+  return user?.roles?.some((role) => role.name === roleName) ?? false;
 }
 
-export function hasAnyRole(user: AccountDTO | null, roleNames: string[]): boolean {
-  return user?.roles?.some(role => roleNames.includes(role.name)) ?? false;
+export function hasAnyRole(
+  user: AccountDTO | null,
+  roleNames: string[]
+): boolean {
+  return user?.roles?.some((role) => roleNames.includes(role.name)) ?? false;
 }

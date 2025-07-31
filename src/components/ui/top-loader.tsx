@@ -1,6 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+// Context for global loading state
+import { ReactNode, createContext, useContext } from 'react';
+
 import { cn } from '@/lib/utils';
 
 interface TopLoaderProps {
@@ -18,17 +21,17 @@ export function TopLoader({
   showSpinner = true,
   speed = 200,
   className,
-  isLoading = false
+  isLoading = false,
 }: TopLoaderProps) {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     let progressInterval: NodeJS.Timeout;
-    
+
     if (isLoading) {
       setProgress(0);
       progressInterval = setInterval(() => {
-        setProgress(prev => {
+        setProgress((prev) => {
           if (prev >= 90) return prev;
           return prev + Math.random() * 10;
         });
@@ -94,9 +97,6 @@ export function useTopLoader() {
     stopLoading,
   };
 }
-
-// Context for global loading state
-import { createContext, useContext, ReactNode } from 'react';
 
 interface LoadingContextType {
   isLoading: boolean;

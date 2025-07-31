@@ -1,23 +1,27 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useTranslations } from 'next-intl';
-import { useForm, UseFormReturn } from 'react-hook-form';
+import { useCallback, useEffect, useState } from 'react';
+
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { UseFormReturn, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+
 import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
-import { AuthService } from '@/components/features/auth/services/auth-service';
-import { BackendError } from '@/types/api';
-import { handleAuthError, clearFormErrors } from '@/components/features/auth/lib/auth-errors';
-import { useGlobalLoading } from '@/components/ui/top-loader';
 import {
-  createSignUpPhoneSchema,
+  clearFormErrors,
+  handleAuthError,
+} from '@/components/features/auth/lib/auth-errors';
+import {
   SignUpPhoneFormData,
   VerificationFormData,
+  createSignUpPhoneSchema,
+  createVerificationSchema,
   signUpPhoneFormDefaults,
-  createVerificationSchema, 
   verificationFormDefaults,
 } from '@/components/features/auth/schemas/auth';
-
+import { AuthService } from '@/components/features/auth/services/auth-service';
+import { useGlobalLoading } from '@/components/ui/top-loader';
+import { BackendError } from '@/types/api';
 
 export type SignUpStep = 'phone' | 'verification';
 
@@ -29,11 +33,11 @@ export interface UseSignUpFormsReturn {
   phoneNumber: string;
   resendCooldown: number;
   isAuthenticated: boolean;
-  
+
   // Forms
   phoneForm: UseFormReturn<SignUpPhoneFormData>;
   verificationForm: UseFormReturn<VerificationFormData>;
-  
+
   // Handlers
   onPhoneSubmit: () => void;
   onVerificationSubmit: () => void;
@@ -52,11 +56,15 @@ const handleGenericError = (error: unknown, t: TranslationFunction): void => {
     if (firstError) {
       toast.error(firstError.message);
     } else {
-      const genericError = t('common.unexpectedError', { default: 'An unexpected error occurred.' });
+      const genericError = t('common.unexpectedError', {
+        default: 'An unexpected error occurred.',
+      });
       toast.error(genericError);
     }
   } else {
-    const unexpectedError = t('common.unexpectedError', { default: 'An unexpected error occurred.' });
+    const unexpectedError = t('common.unexpectedError', {
+      default: 'An unexpected error occurred.',
+    });
     toast.error(unexpectedError);
   }
 };
@@ -105,69 +113,80 @@ export function useSignUpForms(): UseSignUpFormsReturn {
   // Countdown timer for resend button
   useEffect(() => {
     if (resendCooldown > 0) {
-      const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
+      const timer = setTimeout(
+        () => setResendCooldown(resendCooldown - 1),
+        1000
+      );
       return () => clearTimeout(timer);
     }
   }, [resendCooldown]);
 
-
   // Phone submission handler
-  const onPhoneSubmit = useCallback(async (data: SignUpPhoneFormData) => {
-    setIsSubmitting(true);
-    
-    // Clear any previous errors
-    clearFormErrors(phoneForm);
+  const onPhoneSubmit = useCallback(
+    async (data: SignUpPhoneFormData) => {
+      setIsSubmitting(true);
 
-    try {
-      const prepareResponse = await AuthService.signUpPrepare(data.phone);
-      setPhoneNumber(prepareResponse.phoneNumber);
-      setCurrentStep('verification');
-      setResendCooldown(prepareResponse.waitingTime);
-    } catch (error: unknown) {
-      handleAuthError(error, phoneForm, t);
-    } finally {
-      setIsSubmitting(false);
-    }
-  }, [phoneForm, t]);
+      // Clear any previous errors
+      clearFormErrors(phoneForm);
+
+      try {
+        const prepareResponse = await AuthService.signUpPrepare(data.phone);
+        setPhoneNumber(prepareResponse.phoneNumber);
+        setCurrentStep('verification');
+        setResendCooldown(prepareResponse.waitingTime);
+      } catch (error: unknown) {
+        handleAuthError(error, phoneForm, t);
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [phoneForm, t]
+  );
 
   // Verification submission handler
-  const onVerificationSubmit = useCallback(async (data: VerificationFormData) => {
-    setIsSubmitting(true);
-    
-    // Clear any previous errors
-    clearFormErrors(verificationForm);
+  const onVerificationSubmit = useCallback(
+    async (data: VerificationFormData) => {
+      setIsSubmitting(true);
 
-    try {
-      // Verify OTP with backend (step 2 of sign-up process)
-      const jwtToken = await AuthService.signUpVerify({
-        phone: phoneNumber,
-        otp: data.otp,
-      });
+      // Clear any previous errors
+      clearFormErrors(verificationForm);
 
-      // Store the JWT token temporarily for profile completion
-      // We can't create a NextAuth session yet because the user hasn't set a password
-      // The profile completion page will handle creating the session after completion
-      sessionStorage.setItem('signupToken', JSON.stringify(jwtToken));
+      try {
+        // Verify OTP with backend (step 2 of sign-up process)
+        const jwtToken = await AuthService.signUpVerify({
+          phone: phoneNumber,
+          otp: data.otp,
+        });
 
-      // Show success message before navigation
-      toast.success(t('auth.verification.success', {
-        default: 'Phone verified successfully! Redirecting to profile setup...'
-      }));
+        // Store the JWT token temporarily for profile completion
+        // We can't create a NextAuth session yet because the user hasn't set a password
+        // The profile completion page will handle creating the session after completion
+        sessionStorage.setItem('signupToken', JSON.stringify(jwtToken));
 
-      // Start the top loader for navigation
-      startLoading();
+        // Show success message before navigation
+        toast.success(
+          t('auth.verification.success', {
+            default:
+              'Phone verified successfully! Redirecting to profile setup...',
+          })
+        );
 
-      // NextAuth middleware will handle redirect to /profile/complete for NEW users
-      router.push('/profile/complete');
-      
-      // Stop the loader after navigation (will be cleaned up when component unmounts)
-      setTimeout(() => stopLoading(), 100);
-    } catch (error: unknown) {
-      handleAuthError(error, verificationForm, t);
-    } finally {
-      setIsSubmitting(false);
-    }
-  }, [phoneNumber, verificationForm, router, t, startLoading, stopLoading]);
+        // Start the top loader for navigation
+        startLoading();
+
+        // NextAuth middleware will handle redirect to /profile/complete for NEW users
+        router.push('/profile/complete');
+
+        // Stop the loader after navigation (will be cleaned up when component unmounts)
+        setTimeout(() => stopLoading(), 100);
+      } catch (error: unknown) {
+        handleAuthError(error, verificationForm, t);
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [phoneNumber, verificationForm, router, t, startLoading, stopLoading]
+  );
 
   // Resend OTP handler
   const handleResendOTP = useCallback(async () => {
@@ -178,9 +197,11 @@ export function useSignUpForms(): UseSignUpFormsReturn {
     try {
       const response = await AuthService.signUpPrepare(phoneNumber);
       setResendCooldown(response.waitingTime);
-      toast.success(t('auth.verification.resendSuccess', {
-        default: 'New verification code sent'
-      }));
+      toast.success(
+        t('auth.verification.resendSuccess', {
+          default: 'New verification code sent',
+        })
+      );
     } catch (error: unknown) {
       // For resend OTP, we don't have a specific form to set field errors on
       // So we'll handle it with toast messages only using helper function
@@ -197,11 +218,11 @@ export function useSignUpForms(): UseSignUpFormsReturn {
     phoneNumber,
     resendCooldown,
     isAuthenticated,
-    
+
     // Forms
     phoneForm,
     verificationForm,
-    
+
     // Handlers
     onPhoneSubmit: phoneForm.handleSubmit(onPhoneSubmit),
     onVerificationSubmit: verificationForm.handleSubmit(onVerificationSubmit),

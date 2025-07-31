@@ -1,6 +1,10 @@
 'use client';
 
+import { LogOut, Settings, User } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
+
+import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -10,9 +14,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
-import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
-import { User, LogOut, Settings } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 
 interface HeaderProps {
   title?: string;
@@ -32,7 +33,6 @@ export function Header({ title, showUserMenu = true }: HeaderProps) {
       console.error('Logout error:', error);
     }
   };
-
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -61,8 +61,12 @@ export function Header({ title, showUserMenu = true }: HeaderProps) {
               <DropdownMenuContent align="end" className="w-56">
                 <div className="flex items-center justify-start gap-2 p-2">
                   <div className="flex flex-col space-y-1 leading-none">
-                    <p className="font-medium">{user.firstName} {user.lastName}</p>
-                    <p className="text-xs text-muted-foreground">{user.phone}</p>
+                    <p className="font-medium">
+                      {user.firstName} {user.lastName}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {user.phone}
+                    </p>
                   </div>
                 </div>
                 <DropdownMenuSeparator />
@@ -81,8 +85,8 @@ export function Header({ title, showUserMenu = true }: HeaderProps) {
 
           {/* Sign In Button for unauthenticated users */}
           {showUserMenu && !isAuthenticated && (
-            <Button 
-              variant="default" 
+            <Button
+              variant="default"
               size="sm"
               onClick={() => router.push('/sign-in')}
             >

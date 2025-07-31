@@ -10,12 +10,12 @@ export * from './common';
 export * from './api';
 
 export type {
-    // API responses
-    ApiResponse,
-    ApiError,
+  // API responses
+  ApiResponse,
+  ApiError,
 } from './api';
 
 export type {
-    // Common
-    Language,
+  // Common
+  Language,
 } from './common';
