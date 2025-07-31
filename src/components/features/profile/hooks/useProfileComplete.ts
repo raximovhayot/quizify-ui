@@ -43,7 +43,7 @@ const profileCompleteDefaults: ProfileCompleteFormData = {
  * Handles form state, validation, submission, and error handling
  */
 export function useProfileComplete() {
-    const {user, session, isLoading} = useNextAuth();
+    const {user, session} = useNextAuth();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
     const t = useTranslations();
@@ -141,7 +141,6 @@ export function useProfileComplete() {
     return {
         form,
         isSubmitting,
-        isLoading,
         user,
         onSubmit: form.handleSubmit(onSubmit),
     };

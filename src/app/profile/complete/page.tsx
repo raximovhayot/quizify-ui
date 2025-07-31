@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { AuthLayout } from '@/components/shared/layouts/AppLayout';
@@ -10,52 +10,35 @@ import { useProfileComplete } from '@/components/features/profile/hooks/useProfi
 import { ProfileCompleteForm } from '@/components/features/profile/components/ProfileCompleteForm';
 import { hasRole, AccountDTO, UserState } from '@/components/features/profile/types/account';
 
-export default function ProfileCompletePage() {
-  const t = useTranslations();
+function ProfileCompleteContent() {
   const router = useRouter();
   const {
     form,
     user,
-    isLoading,
     isSubmitting,
     onSubmit
   } = useProfileComplete();
 
   // Handle immediate redirection for users who shouldn't be on this page
   useEffect(() => {
-    if (!isLoading) {
-      if (user && user.state !== UserState.NEW) {
-        const userWithLanguage = {...user, language: 'en' as const} as unknown as AccountDTO;
-        if (hasRole(userWithLanguage, 'STUDENT')) {
-          router.replace('/student');
-        } else if (hasRole(userWithLanguage, 'INSTRUCTOR')) {
-          router.replace('/instructor');
-        } else {
-          router.replace('/');
-        }
-      } else if (!user) {
-        // No user session, check for signup token
-        const signupToken = sessionStorage.getItem('signupToken');
-        if (!signupToken) {
-          // No signup token either, redirect to signup immediately
-          router.replace('/sign-up');
-        }
+    if (user && user.state !== UserState.NEW) {
+      const userWithLanguage = {...user, language: 'en' as const} as unknown as AccountDTO;
+      if (hasRole(userWithLanguage, 'STUDENT')) {
+        router.replace('/student');
+      } else if (hasRole(userWithLanguage, 'INSTRUCTOR')) {
+        router.replace('/instructor');
+      } else {
+        router.replace('/');
+      }
+    } else if (!user) {
+      // No user session, check for signup token
+      const signupToken = sessionStorage.getItem('signupToken');
+      if (!signupToken) {
+        // No signup token either, redirect to signup immediately
+        router.replace('/sign-up');
       }
     }
-  }, [isLoading, user, router]);
-
-  // Show loading while checking authentication status
-  if (isLoading) {
-    return (
-      <AuthLayout>
-        <div className="container mx-auto px-4 py-8 max-w-md">
-          <div className="flex justify-center">
-            <InlineLoading text={t('common.loading', { default: 'Loading...' })} />
-          </div>
-        </div>
-      </AuthLayout>
-    );
-  }
+  }, [user, router]);
 
   // Only render the profile completion form for authenticated users with NEW state
   // or users with valid signup tokens
@@ -79,5 +62,27 @@ export default function ProfileCompletePage() {
         />
       </Form>
     </AuthLayout>
+  );
+}
+
+function ProfileCompleteLoading() {
+  const t = useTranslations();
+  
+  return (
+    <AuthLayout>
+      <div className="container mx-auto px-4 py-8 max-w-md">
+        <div className="flex justify-center">
+          <InlineLoading text={t('common.loading', { default: 'Loading...' })} />
+        </div>
+      </div>
+    </AuthLayout>
+  );
+}
+
+export default function ProfileCompletePage() {
+  return (
+    <Suspense fallback={<ProfileCompleteLoading />}>
+      <ProfileCompleteContent />
+    </Suspense>
   );
 }

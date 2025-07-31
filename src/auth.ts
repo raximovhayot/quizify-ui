@@ -2,7 +2,6 @@ import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import {JWT} from "next-auth/jwt"
 import {AuthService} from "@/components/features/auth/services/auth-service"
-import {JWTToken} from "@/components/features/auth/types/auth"
 import {AccountDTO, UserState} from "@/components/features/profile/types/account"
 
 // Override NextAuth types to completely replace AdapterUser requirements
@@ -77,11 +76,16 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                     return null
                 }
 
-                const jwtToken: JWTToken = await AuthService.signIn(
+                const response = await AuthService.signIn(
                     credentials.phone as string,
                     credentials.password as string
                 )
 
+                if (response.errors) {
+
+                }
+
+                const jwtToken = response.data;
                 return {
                     id: jwtToken.user.id.toString(),
                     phone: jwtToken.user.phone,

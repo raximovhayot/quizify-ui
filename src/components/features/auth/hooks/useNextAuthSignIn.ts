@@ -14,7 +14,7 @@ import { handleAuthError, clearFormErrors } from '@/components/features/auth/lib
  * Handles form state, validation, submission, and error handling
  */
 export function useNextAuthSignIn() {
-    const { login, isAuthenticated, user, isLoading } = useNextAuth();
+    const { login, isAuthenticated, user } = useNextAuth();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -60,7 +60,6 @@ export function useNextAuthSignIn() {
         form,
         isSubmitting,
         isAuthenticated,
-        isLoading,
         onSubmit: form.handleSubmit(onSubmit),
     };
 }
