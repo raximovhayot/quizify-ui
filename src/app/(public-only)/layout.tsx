@@ -1,6 +1,6 @@
 import type {Metadata} from 'next';
 import {ReactNode, Suspense} from 'react';
-import {GuardPublicOnly} from "@/components/shared/guards";
+import {GuardPublicOnly} from "@/components/features/auth/guards";
 import {AppPublicOnlyLayout} from '@/components/shared/layouts/AppLayout';
 
 export const metadata: Metadata = {

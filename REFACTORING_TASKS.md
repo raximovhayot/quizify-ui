@@ -107,7 +107,7 @@ This document outlines the comprehensive refactoring tasks to improve code quali
   - Add compound component patterns for complex forms
   - Implement consistent prop interfaces across similar components
 - **4.3** Optimize imports/exports
-  - Add barrel exports (`index.ts`) for feature modules
+  - Add barrel exports (`next-auth.config.ts`) for feature modules
   - Standardize import/export patterns
   - Remove unused imports and exports
 

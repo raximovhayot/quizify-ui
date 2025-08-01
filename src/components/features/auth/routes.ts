@@ -1,6 +1,6 @@
 export const ROUTES_AUTH = {
-    login: () => `/login`,
-    register: () => `/register`,
+    login: () => `/sign-in`,
+    register: () => `/sign-up`,
     registerVerify: (params: { phone: string }) =>
         `${ROUTES_AUTH.register()}/verify?phone=${encodeURIComponent(params.phone)}`,
     forgotPassword: () => `/forgot-password`,

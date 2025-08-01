@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
 
-import { PageRegister } from '@/components/features/auth/components/PageRegister';
+import { PageSignUp } from '@/components/features/auth/components/PageSignUp';
 
-export default function RegisterPage() {
+export default function SignUpPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <PageRegister />
+    <Suspense>
+      <PageSignUp />
     </Suspense>
   );
 }

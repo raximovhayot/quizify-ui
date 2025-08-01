@@ -19,7 +19,6 @@ import {
   signUpPhoneFormDefaults,
   verificationFormDefaults,
 } from '@/components/features/auth/schemas/auth';
-import { useGlobalLoading } from '@/components/ui/top-loader';
 import { ROUTES_AUTH } from '@/components/features/auth/routes';
 
 export type SignUpStep = 'phone' | 'verification';
@@ -51,7 +50,6 @@ export function useSignUpForms(): UseSignUpFormsReturn {
   const router = useRouter();
   const searchParams = useSearchParams();
   const t = useTranslations();
-  const { startLoading, stopLoading } = useGlobalLoading();
 
   // React Query mutations
   const signUpPrepareMutation = useSignUpPrepareMutation();
@@ -141,19 +139,13 @@ export function useSignUpForms(): UseSignUpFormsReturn {
               })
             );
 
-            // Start the top loader for navigation
-            startLoading();
-
             // NextAuth middleware will handle redirect to /profile/complete for NEW users
             router.push('/profile/complete');
-
-            // Stop the loader after navigation (will be cleaned up when component unmounts)
-            setTimeout(() => stopLoading(), 100);
           },
         }
       );
     },
-    [phoneNumber, signUpVerifyMutation, router, t, startLoading, stopLoading]
+    [phoneNumber, signUpVerifyMutation, router, t]
   );
 
   // Resend OTP handler

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-import { auth } from '@/components/features/auth/config';
+import { auth } from '@/components/features/auth/config/next-auth.config';
 import { UserState } from '@/components/features/profile/types/account';
 
 export async function middleware(request: NextRequest) {

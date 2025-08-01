@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
 
-import { PageRegisterVerify } from '@/components/features/auth/components/PageRegisterVerify';
+import { PageSignUpVerify } from '@/components/features/auth/components/PageSignUpVerify';
 
-export default function RegisterVerifyPage() {
+export default function SignUpVerifyPage() {
   return (
     <Suspense>
-      <PageRegisterVerify />
+      <PageSignUpVerify />
     </Suspense>
   );
 }
