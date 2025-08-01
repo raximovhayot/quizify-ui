@@ -43,7 +43,7 @@ export function extractApiData<T>(response: ApiResponse<T>): T {
  */
 export function getFirstApiError<T>(response: ApiResponse<T>): ApiError | null {
   return response.errors && response.errors.length > 0
-    ? response.errors[0]
+    ? response.errors[0]!
     : null;
 }
 
@@ -88,7 +88,7 @@ export class BackendError extends Error {
    * Get the first error
    */
   getFirstError(): ApiError | null {
-    return this.errors.length > 0 ? this.errors[0] : null;
+    return this.errors.length > 0 ? this.errors[0]! : null;
   }
 
   /**

@@ -27,22 +27,18 @@ interface TranslationFunction {
 // Profile completion form schema
 const createProfileCompleteSchema = (t: TranslationFunction) =>
   z.object({
-    firstName: z
-      .string()
-      .min(
-        1,
-        t('auth.validation.firstNameRequired', {
-          default: 'First name is required',
-        })
-      ),
-    lastName: z
-      .string()
-      .min(
-        1,
-        t('auth.validation.lastNameRequired', {
-          default: 'Last name is required',
-        })
-      ),
+    firstName: z.string().min(
+      1,
+      t('auth.validation.firstNameRequired', {
+        default: 'First name is required',
+      })
+    ),
+    lastName: z.string().min(
+      1,
+      t('auth.validation.lastNameRequired', {
+        default: 'Last name is required',
+      })
+    ),
     password: z
       .string()
       .min(

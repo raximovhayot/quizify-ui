@@ -23,7 +23,7 @@ export function handleAuthError<T extends Record<string, unknown>>(
       const phoneErrors = error.getFieldErrors('phone');
       form.setError('phone' as FieldPath<T>, {
         type: 'server',
-        message: phoneErrors[0].message,
+        message: phoneErrors[0]!.message,
       });
       hasFieldErrors = true;
     }
@@ -33,7 +33,7 @@ export function handleAuthError<T extends Record<string, unknown>>(
       const passwordErrors = error.getFieldErrors('password');
       form.setError('password' as FieldPath<T>, {
         type: 'server',
-        message: passwordErrors[0].message,
+        message: passwordErrors[0]!.message,
       });
       hasFieldErrors = true;
     }
@@ -43,7 +43,7 @@ export function handleAuthError<T extends Record<string, unknown>>(
       const otpErrors = error.getFieldErrors('otp');
       form.setError('otp' as FieldPath<T>, {
         type: 'server',
-        message: otpErrors[0].message,
+        message: otpErrors[0]!.message,
       });
       hasFieldErrors = true;
     }

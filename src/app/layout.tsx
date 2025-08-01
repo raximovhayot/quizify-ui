@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getMessages, getLocale } from 'next-intl/server';
+import { getLocale, getMessages } from 'next-intl/server';
 import { Geist, Geist_Mono } from 'next/font/google';
 
 import { Providers } from '@/app/Providers';

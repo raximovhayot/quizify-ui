@@ -6,11 +6,11 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { UseFormReturn, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
 import {
   useSignUpPrepareMutation,
   useSignUpVerifyMutation,
 } from '@/components/features/auth/hooks/useAuthMutations';
+import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
 import {
   SignUpPhoneFormData,
   VerificationFormData,
@@ -20,7 +20,6 @@ import {
   verificationFormDefaults,
 } from '@/components/features/auth/schemas/auth';
 import { useGlobalLoading } from '@/components/ui/top-loader';
-import { BackendError } from '@/types/api';
 
 export type SignUpStep = 'phone' | 'verification';
 
@@ -43,12 +42,6 @@ export interface UseSignUpFormsReturn {
   handleResendOTP: () => void;
 }
 
-// Types for helper functions
-interface TranslationFunction {
-  (key: string, options?: { default?: string }): string;
-}
-
-
 /**
  * Custom hook for managing sign-up form state and logic
  * Handles all three steps of the sign-up process: phone, verification, and user details
@@ -70,7 +63,8 @@ export function useSignUpForms(): UseSignUpFormsReturn {
   const [resendCooldown, setResendCooldown] = useState(0);
 
   // Derive isSubmitting from mutations
-  const isSubmitting = signUpPrepareMutation.isPending || signUpVerifyMutation.isPending;
+  const isSubmitting =
+    signUpPrepareMutation.isPending || signUpVerifyMutation.isPending;
 
   // Create validation schemas with localized messages
   const phoneSchema = createSignUpPhoneSchema(t);
@@ -87,9 +81,6 @@ export function useSignUpForms(): UseSignUpFormsReturn {
     resolver: zodResolver(verificationSchema),
     defaultValues: verificationFormDefaults,
   });
-
-  // State for resend cooldown
-  const [resendCooldown, setResendCooldown] = useState(0);
 
   // Handle authentication redirect for authenticated users
   useEffect(() => {
@@ -108,7 +99,7 @@ export function useSignUpForms(): UseSignUpFormsReturn {
       );
       return () => clearTimeout(timer);
     }
-  }, [resendCooldown]);
+  }, [resendCooldown, setResendCooldown]);
 
   // Phone submission handler
   const onPhoneSubmit = useCallback(
@@ -124,7 +115,7 @@ export function useSignUpForms(): UseSignUpFormsReturn {
         }
       );
     },
-    [signUpPrepareMutation]
+    [signUpPrepareMutation, setResendCooldown]
   );
 
   // Verification submission handler
@@ -182,7 +173,13 @@ export function useSignUpForms(): UseSignUpFormsReturn {
         },
       }
     );
-  }, [resendCooldown, phoneNumber, signUpPrepareMutation, t]);
+  }, [
+    resendCooldown,
+    phoneNumber,
+    signUpPrepareMutation,
+    t,
+    setResendCooldown,
+  ]);
 
   return {
     // State

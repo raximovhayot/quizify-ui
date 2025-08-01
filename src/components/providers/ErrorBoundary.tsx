@@ -1,7 +1,8 @@
 'use client';
 
 import React, { Component, ReactNode } from 'react';
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+
+import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
@@ -28,7 +29,10 @@ interface ErrorBoundaryProps {
   translations?: ErrorBoundaryTranslations;
 }
 
-export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class ErrorBoundary extends Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };
@@ -53,7 +57,10 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     }
 
     // Log error to console in development
-    if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+    if (
+      typeof window !== 'undefined' &&
+      window.location.hostname === 'localhost'
+    ) {
       console.error('ErrorBoundary caught an error:', error, errorInfo);
     }
 
@@ -79,10 +86,11 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       // Default translations fallback
       const translations = this.props.translations || {
         title: 'Something went wrong',
-        description: 'An unexpected error occurred. This has been logged and we\'ll look into it.',
+        description:
+          "An unexpected error occurred. This has been logged and we'll look into it.",
         errorDetails: 'Error Details (Development)',
         tryAgain: 'Try Again',
-        goHome: 'Go Home'
+        goHome: 'Go Home',
       };
 
       // Default error UI
@@ -100,15 +108,19 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             <CardContent className="space-y-4">
               <div className="text-center text-muted-foreground">
                 <p>{translations.description}</p>
-                {typeof window !== 'undefined' && window.location.hostname === 'localhost' && this.state.error && (
-                  <details className="mt-4 text-left">
-                    <summary className="cursor-pointer font-medium">{translations.errorDetails}</summary>
-                    <pre className="mt-2 text-xs bg-muted p-2 rounded overflow-auto">
-                      {this.state.error.toString()}
-                      {this.state.errorInfo?.componentStack}
-                    </pre>
-                  </details>
-                )}
+                {typeof window !== 'undefined' &&
+                  window.location.hostname === 'localhost' &&
+                  this.state.error && (
+                    <details className="mt-4 text-left">
+                      <summary className="cursor-pointer font-medium">
+                        {translations.errorDetails}
+                      </summary>
+                      <pre className="mt-2 text-xs bg-muted p-2 rounded overflow-auto">
+                        {this.state.error.toString()}
+                        {this.state.errorInfo?.componentStack}
+                      </pre>
+                    </details>
+                  )}
               </div>
               <div className="flex flex-col sm:flex-row gap-2 justify-center">
                 <Button variant="outline" onClick={this.handleRetry}>
@@ -131,15 +143,19 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 }
 
 // Wrapper component that provides translations to the ErrorBoundary class component
-export function ErrorBoundaryWithTranslations({ children, fallback, onError }: Omit<ErrorBoundaryProps, 'translations'>) {
+export function ErrorBoundaryWithTranslations({
+  children,
+  fallback,
+  onError,
+}: Omit<ErrorBoundaryProps, 'translations'>) {
   const t = useTranslations('errorBoundary');
-  
+
   const translations: ErrorBoundaryTranslations = {
     title: t('title'),
     description: t('description'),
     errorDetails: t('errorDetails'),
     tryAgain: t('tryAgain'),
-    goHome: t('goHome')
+    goHome: t('goHome'),
   };
 
   return (

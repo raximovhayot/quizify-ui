@@ -1,8 +1,9 @@
 'use client';
 
 import { ReactNode, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+
 import { useTranslations } from 'next-intl';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
 import { PageLoading } from '@/components/ui/loading-spinner';
@@ -30,7 +31,7 @@ export default function GuardPublicOnly({
     if (isAuthenticated && user) {
       // Get redirect path from query params or use provided redirectPath
       const redirect = searchParams?.get('redirect') || redirectPath;
-      
+
       if (redirect) {
         router.replace(redirect);
         return;
@@ -39,7 +40,9 @@ export default function GuardPublicOnly({
       // Default redirect based on user roles
       const userRoles = user.roles || [];
       const hasStudentRole = userRoles.some((role) => role.name === 'STUDENT');
-      const hasInstructorRole = userRoles.some((role) => role.name === 'INSTRUCTOR');
+      const hasInstructorRole = userRoles.some(
+        (role) => role.name === 'INSTRUCTOR'
+      );
 
       if (hasStudentRole && hasInstructorRole) {
         // User has both roles, redirect to student dashboard as default

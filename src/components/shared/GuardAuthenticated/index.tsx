@@ -1,11 +1,15 @@
 'use client';
 
 import { ReactNode, Suspense, useEffect } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+
 import { useTranslations } from 'next-intl';
+import { usePathname, useRouter } from 'next/navigation';
 
 import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
-import { UserRole, UserState } from '@/components/features/profile/types/account';
+import {
+  UserRole,
+  UserState,
+} from '@/components/features/profile/types/account';
 import { ErrorPage } from '@/components/ui/error-page';
 import { FullScreenLoaderWithText } from '@/components/ui/full-screen-loader';
 
@@ -24,7 +28,8 @@ function GuardAuthenticatedContent({
   fallbackRoles = [],
   showUnauthorizedError = false,
 }: GuardAuthenticatedProps) {
-  const { isAuthenticated, isLoading, user, hasAnyRole, hasRole } = useNextAuth();
+  const { isAuthenticated, isLoading, user, hasAnyRole, hasRole } =
+    useNextAuth();
   const router = useRouter();
   const pathname = usePathname();
   const t = useTranslations('common');
@@ -48,7 +53,11 @@ function GuardAuthenticatedContent({
     }
 
     // Check role authorization if roles are specified
-    if (isAuthenticated && requiredRoles.length > 0 && !hasAnyRole(requiredRoles)) {
+    if (
+      isAuthenticated &&
+      requiredRoles.length > 0 &&
+      !hasAnyRole(requiredRoles)
+    ) {
       // Check fallback roles
       for (const fallback of fallbackRoles) {
         if (hasRole(fallback.role)) {
@@ -64,8 +73,12 @@ function GuardAuthenticatedContent({
       } else {
         // Redirect based on user's actual roles
         const userRoles = user?.roles || [];
-        const hasStudentRole = userRoles.some((role) => role.name === 'STUDENT');
-        const hasInstructorRole = userRoles.some((role) => role.name === 'INSTRUCTOR');
+        const hasStudentRole = userRoles.some(
+          (role) => role.name === 'STUDENT'
+        );
+        const hasInstructorRole = userRoles.some(
+          (role) => role.name === 'INSTRUCTOR'
+        );
 
         if (hasStudentRole && hasInstructorRole) {
           router.replace('/student'); // Default to student dashboard
@@ -95,7 +108,11 @@ function GuardAuthenticatedContent({
 
   // Show loading while checking authentication
   if (isLoading) {
-    return <FullScreenLoaderWithText text={t('loading', { default: 'Loading...' })} />;
+    return (
+      <FullScreenLoaderWithText
+        text={t('loading', { default: 'Loading...' })}
+      />
+    );
   }
 
   // Show loading while redirecting unauthenticated users
@@ -104,7 +121,11 @@ function GuardAuthenticatedContent({
   }
 
   // Show loading while redirecting users with incomplete profiles
-  if (user && user.state === UserState.NEW && !pathname.startsWith('/profile/complete')) {
+  if (
+    user &&
+    user.state === UserState.NEW &&
+    !pathname.startsWith('/profile/complete')
+  ) {
     return <FullScreenLoaderWithText text={t('redirecting')} />;
   }
 
@@ -123,7 +144,9 @@ function GuardAuthenticatedContent({
 
 function GuardAuthenticatedLoading() {
   const t = useTranslations('common');
-  return <FullScreenLoaderWithText text={t('loading', { default: 'Loading...' })} />;
+  return (
+    <FullScreenLoaderWithText text={t('loading', { default: 'Loading...' })} />
+  );
 }
 
 /**

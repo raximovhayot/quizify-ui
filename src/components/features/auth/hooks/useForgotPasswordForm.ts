@@ -6,12 +6,12 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
 import {
   useForgotPasswordPrepareMutation,
-  useForgotPasswordVerifyMutation,
   useForgotPasswordUpdateMutation,
+  useForgotPasswordVerifyMutation,
 } from '@/components/features/auth/hooks/useAuthMutations';
+import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
 import {
   ForgotPasswordNewPasswordFormData,
   ForgotPasswordPhoneFormData,
@@ -52,9 +52,9 @@ export function useForgotPasswordForm() {
   const [resendCooldown, setResendCooldown] = useState(0);
 
   // Derive isSubmitting from mutations
-  const isSubmitting = 
-    forgotPasswordPrepareMutation.isPending || 
-    forgotPasswordVerifyMutation.isPending || 
+  const isSubmitting =
+    forgotPasswordPrepareMutation.isPending ||
+    forgotPasswordVerifyMutation.isPending ||
     forgotPasswordUpdateMutation.isPending;
 
   // Create validation schemas with localized messages
@@ -157,7 +157,7 @@ export function useForgotPasswordForm() {
     forgotPasswordUpdateMutation.mutate(
       {
         token: verificationToken,
-        password: data.password,
+        newPassword: data.password,
       },
       {
         onSuccess: () => {

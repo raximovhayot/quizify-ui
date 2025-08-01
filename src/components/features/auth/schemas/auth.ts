@@ -1,27 +1,25 @@
 import * as z from 'zod';
 
 import {
-  PASSWORD_MIN_LENGTH,
-  PASSWORD_REGEX,
-  PHONE_REGEX,
-} from '@/constants/validation';
+  type OTPFormData,
+  type PasswordWithConfirmationFormData,
+  type PhoneFormData,
+  composeSchemas,
+  createOTPSchema,
+  createPasswordSchema,
+  createPasswordWithConfirmationSchema,
+  createPhoneSchema,
+  otpFormDefaults,
+  passwordWithConfirmationFormDefaults,
+  phoneFormDefaults,
+} from '@/lib/validation';
 
 /**
  * Sign-in form validation schema factory
  * Creates a validation schema with localized error messages
  */
 export const createSignInSchema = (t: (key: string) => string) => {
-  return z.object({
-    phone: z
-      .string()
-      .min(1, t('auth.validation.phoneRequired'))
-      .regex(PHONE_REGEX, t('auth.validation.phoneInvalid')),
-    password: z
-      .string()
-      .min(1, t('auth.validation.passwordRequired'))
-      .min(PASSWORD_MIN_LENGTH, t('auth.validation.passwordMinLength'))
-      .regex(PASSWORD_REGEX, t('auth.validation.passwordPattern')),
-  });
+  return composeSchemas(createPhoneSchema(t), createPasswordSchema(t));
 };
 
 /**
@@ -39,57 +37,34 @@ export const signInFormDefaults: SignInFormData = {
 
 /**
  * Sign-up phone validation schema factory
- * Uses more restrictive phone regex for SMS verification
+ * Uses phone validation for SMS verification
  */
-export const createSignUpPhoneSchema = (t: (key: string) => string) => {
-  return z.object({
-    phone: z
-      .string()
-      .min(1, t('auth.validation.phoneRequired'))
-      .regex(PHONE_REGEX, t('auth.validation.phoneInvalid')),
-  });
-};
+export const createSignUpPhoneSchema = createPhoneSchema;
 
 /**
  * Sign-up phone form data type
  */
-export type SignUpPhoneFormData = z.infer<
-  ReturnType<typeof createSignUpPhoneSchema>
->;
+export type SignUpPhoneFormData = PhoneFormData;
 
 /**
  * Default values for sign-up phone form
  */
-export const signUpPhoneFormDefaults: SignUpPhoneFormData = {
-  phone: '',
-};
+export const signUpPhoneFormDefaults = phoneFormDefaults;
 
 /**
  * OTP verification schema factory
  */
-export const createVerificationSchema = (t: (key: string) => string) => {
-  return z.object({
-    otp: z
-      .string()
-      .min(1, t('auth.validation.otpRequired'))
-      .length(6, t('auth.validation.otpLength'))
-      .regex(/^\d{6}$/, t('auth.validation.otpPattern')),
-  });
-};
+export const createVerificationSchema = createOTPSchema;
 
 /**
  * OTP verification form data type
  */
-export type VerificationFormData = z.infer<
-  ReturnType<typeof createVerificationSchema>
->;
+export type VerificationFormData = OTPFormData;
 
 /**
  * Default values for OTP verification form
  */
-export const verificationFormDefaults: VerificationFormData = {
-  otp: '',
-};
+export const verificationFormDefaults = otpFormDefaults;
 
 // ============================================================================
 // FORGOT PASSWORD SCHEMAS
@@ -99,95 +74,48 @@ export const verificationFormDefaults: VerificationFormData = {
  * Forgot password phone validation schema factory
  * Uses the same phone validation as sign-up for SMS verification
  */
-export const createForgotPasswordPhoneSchema = (t: (key: string) => string) => {
-  return z.object({
-    phone: z
-      .string()
-      .min(1, t('auth.validation.phoneRequired'))
-      .regex(PHONE_REGEX, t('auth.validation.phoneInvalid')),
-  });
-};
+export const createForgotPasswordPhoneSchema = createPhoneSchema;
 
 /**
  * Forgot password phone form data type
  */
-export type ForgotPasswordPhoneFormData = z.infer<
-  ReturnType<typeof createForgotPasswordPhoneSchema>
->;
+export type ForgotPasswordPhoneFormData = PhoneFormData;
 
 /**
  * Default values for forgot password phone form
  */
-export const forgotPasswordPhoneFormDefaults: ForgotPasswordPhoneFormData = {
-  phone: '',
-};
+export const forgotPasswordPhoneFormDefaults = phoneFormDefaults;
 
 /**
  * Forgot password verification schema factory
  * Uses the same OTP validation as other flows
  */
-export const createForgotPasswordVerificationSchema = (
-  t: (key: string) => string
-) => {
-  return z.object({
-    otp: z
-      .string()
-      .min(1, t('auth.validation.otpRequired'))
-      .length(6, t('auth.validation.otpLength'))
-      .regex(/^\d{6}$/, t('auth.validation.otpPattern')),
-  });
-};
+export const createForgotPasswordVerificationSchema = createOTPSchema;
 
 /**
  * Forgot password verification form data type
  */
-export type ForgotPasswordVerificationFormData = z.infer<
-  ReturnType<typeof createForgotPasswordVerificationSchema>
->;
+export type ForgotPasswordVerificationFormData = OTPFormData;
 
 /**
  * Default values for forgot password verification form
  */
-export const forgotPasswordVerificationFormDefaults: ForgotPasswordVerificationFormData =
-  {
-    otp: '',
-  };
+export const forgotPasswordVerificationFormDefaults = otpFormDefaults;
 
 /**
  * Forgot password new password schema factory
  */
-export const createForgotPasswordNewPasswordSchema = (
-  t: (key: string) => string
-) => {
-  return z
-    .object({
-      password: z
-        .string()
-        .min(1, t('auth.validation.passwordRequired'))
-        .min(PASSWORD_MIN_LENGTH, t('auth.validation.passwordMinLength'))
-        .regex(PASSWORD_REGEX, t('auth.validation.passwordPattern')),
-      confirmPassword: z
-        .string()
-        .min(1, t('auth.validation.confirmPasswordRequired')),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-      message: t('auth.validation.passwordsNotMatch'),
-      path: ['confirmPassword'],
-    });
-};
+export const createForgotPasswordNewPasswordSchema =
+  createPasswordWithConfirmationSchema;
 
 /**
  * Forgot password new password form data type
  */
-export type ForgotPasswordNewPasswordFormData = z.infer<
-  ReturnType<typeof createForgotPasswordNewPasswordSchema>
->;
+export type ForgotPasswordNewPasswordFormData =
+  PasswordWithConfirmationFormData;
 
 /**
  * Default values for forgot password new password form
  */
-export const forgotPasswordNewPasswordFormDefaults: ForgotPasswordNewPasswordFormData =
-  {
-    password: '',
-    confirmPassword: '',
-  };
+export const forgotPasswordNewPasswordFormDefaults =
+  passwordWithConfirmationFormDefaults;

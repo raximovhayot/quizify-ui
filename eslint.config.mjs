@@ -22,8 +22,8 @@ const eslintConfig = [
       '**/*.svg',
       'node_modules/**',
       '.next/**',
-      'out/**'
-    ]
+      'out/**',
+    ],
   },
   ...compat.extends(
     'next/core-web-vitals',

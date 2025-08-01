@@ -5,8 +5,8 @@ import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 
-import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
 import { useLoginMutation } from '@/components/features/auth/hooks/useAuthMutations';
+import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
 import {
   SignInFormData,
   createSignInSchema,

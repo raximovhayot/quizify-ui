@@ -1,13 +1,18 @@
 'use client';
 
 import React, { ReactNode, useState } from 'react';
-import { AbstractIntlMessages, NextIntlClientProvider } from 'next-intl';
-import { QueryClient, QueryClientProvider, MutationCache } from '@tanstack/react-query';
+
+import {
+  MutationCache,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { AbstractIntlMessages, NextIntlClientProvider } from 'next-intl';
 import { ThemeProvider } from 'next-themes';
 
-import { SessionProvider } from '@/components/shared/providers/SessionProvider';
 import ErrorBoundary from '@/components/providers/ErrorBoundary';
+import { SessionProvider } from '@/components/shared/providers/SessionProvider';
 import { Toaster } from '@/components/ui/sonner';
 import { env } from '@/env.mjs';
 
@@ -20,7 +25,7 @@ interface ProvidersProps {
 /**
  * Unified Provider component that wraps all application providers.
  * Inspired by StartUI's provider pattern for clean organization.
- * 
+ *
  * Provider hierarchy (outermost to innermost):
  * 1. ErrorBoundary - Catches and handles React errors
  * 2. SessionProvider - NextAuth authentication context
