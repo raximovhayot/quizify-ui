@@ -8,9 +8,9 @@ import { toast } from 'sonner';
 
 import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
 import {
-  clearFormErrors,
-  handleAuthError,
-} from '@/components/features/auth/lib/auth-errors';
+  useSignUpPrepareMutation,
+  useSignUpVerifyMutation,
+} from '@/components/features/auth/hooks/useAuthMutations';
 import {
   SignUpPhoneFormData,
   VerificationFormData,
@@ -19,7 +19,6 @@ import {
   signUpPhoneFormDefaults,
   verificationFormDefaults,
 } from '@/components/features/auth/schemas/auth';
-import { AuthService } from '@/components/features/auth/services/auth-service';
 import { useGlobalLoading } from '@/components/ui/top-loader';
 import { BackendError } from '@/types/api';
 
@@ -49,25 +48,6 @@ interface TranslationFunction {
   (key: string, options?: { default?: string }): string;
 }
 
-// Helper functions
-const handleGenericError = (error: unknown, t: TranslationFunction): void => {
-  if (error instanceof BackendError) {
-    const firstError = error.getFirstError();
-    if (firstError) {
-      toast.error(firstError.message);
-    } else {
-      const genericError = t('common.unexpectedError', {
-        default: 'An unexpected error occurred.',
-      });
-      toast.error(genericError);
-    }
-  } else {
-    const unexpectedError = t('common.unexpectedError', {
-      default: 'An unexpected error occurred.',
-    });
-    toast.error(unexpectedError);
-  }
-};
 
 /**
  * Custom hook for managing sign-up form state and logic
@@ -75,13 +55,22 @@ const handleGenericError = (error: unknown, t: TranslationFunction): void => {
  */
 export function useSignUpForms(): UseSignUpFormsReturn {
   const { isAuthenticated, user } = useNextAuth();
-  const [currentStep, setCurrentStep] = useState<SignUpStep>('phone');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState<string>('');
   const router = useRouter();
   const searchParams = useSearchParams();
   const t = useTranslations();
   const { startLoading, stopLoading } = useGlobalLoading();
+
+  // React Query mutations
+  const signUpPrepareMutation = useSignUpPrepareMutation();
+  const signUpVerifyMutation = useSignUpVerifyMutation();
+
+  // Form state
+  const [currentStep, setCurrentStep] = useState<SignUpStep>('phone');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [resendCooldown, setResendCooldown] = useState(0);
+
+  // Derive isSubmitting from mutations
+  const isSubmitting = signUpPrepareMutation.isPending || signUpVerifyMutation.isPending;
 
   // Create validation schemas with localized messages
   const phoneSchema = createSignUpPhoneSchema(t);
@@ -124,92 +113,76 @@ export function useSignUpForms(): UseSignUpFormsReturn {
   // Phone submission handler
   const onPhoneSubmit = useCallback(
     async (data: SignUpPhoneFormData) => {
-      setIsSubmitting(true);
-
-      // Clear any previous errors
-      clearFormErrors(phoneForm);
-
-      try {
-        const prepareResponse = await AuthService.signUpPrepare(data.phone);
-        setPhoneNumber(prepareResponse.phoneNumber);
-        setCurrentStep('verification');
-        setResendCooldown(prepareResponse.waitingTime);
-      } catch (error: unknown) {
-        handleAuthError(error, phoneForm, t);
-      } finally {
-        setIsSubmitting(false);
-      }
+      signUpPrepareMutation.mutate(
+        { phone: data.phone },
+        {
+          onSuccess: (prepareResponse) => {
+            setPhoneNumber(prepareResponse.phoneNumber);
+            setCurrentStep('verification');
+            setResendCooldown(prepareResponse.waitingTime);
+          },
+        }
+      );
     },
-    [phoneForm, t]
+    [signUpPrepareMutation]
   );
 
   // Verification submission handler
   const onVerificationSubmit = useCallback(
     async (data: VerificationFormData) => {
-      setIsSubmitting(true);
-
-      // Clear any previous errors
-      clearFormErrors(verificationForm);
-
-      try {
-        // Verify OTP with backend (step 2 of sign-up process)
-        const jwtToken = await AuthService.signUpVerify({
+      signUpVerifyMutation.mutate(
+        {
           phone: phoneNumber,
           otp: data.otp,
-        });
+        },
+        {
+          onSuccess: (jwtToken) => {
+            // Store the JWT token temporarily for profile completion
+            // We can't create a NextAuth session yet because the user hasn't set a password
+            // The profile completion page will handle creating the session after completion
+            sessionStorage.setItem('signupToken', JSON.stringify(jwtToken));
 
-        // Store the JWT token temporarily for profile completion
-        // We can't create a NextAuth session yet because the user hasn't set a password
-        // The profile completion page will handle creating the session after completion
-        sessionStorage.setItem('signupToken', JSON.stringify(jwtToken));
+            // Show success message before navigation
+            toast.success(
+              t('auth.verification.success', {
+                default:
+                  'Phone verified successfully! Redirecting to profile setup...',
+              })
+            );
 
-        // Show success message before navigation
-        toast.success(
-          t('auth.verification.success', {
-            default:
-              'Phone verified successfully! Redirecting to profile setup...',
-          })
-        );
+            // Start the top loader for navigation
+            startLoading();
 
-        // Start the top loader for navigation
-        startLoading();
+            // NextAuth middleware will handle redirect to /profile/complete for NEW users
+            router.push('/profile/complete');
 
-        // NextAuth middleware will handle redirect to /profile/complete for NEW users
-        router.push('/profile/complete');
-
-        // Stop the loader after navigation (will be cleaned up when component unmounts)
-        setTimeout(() => stopLoading(), 100);
-      } catch (error: unknown) {
-        handleAuthError(error, verificationForm, t);
-      } finally {
-        setIsSubmitting(false);
-      }
+            // Stop the loader after navigation (will be cleaned up when component unmounts)
+            setTimeout(() => stopLoading(), 100);
+          },
+        }
+      );
     },
-    [phoneNumber, verificationForm, router, t, startLoading, stopLoading]
+    [phoneNumber, signUpVerifyMutation, router, t, startLoading, stopLoading]
   );
 
   // Resend OTP handler
   const handleResendOTP = useCallback(async () => {
     if (resendCooldown > 0) return;
 
-    setIsSubmitting(true);
-
-    try {
-      const response = await AuthService.signUpPrepare(phoneNumber);
-      setResendCooldown(response.waitingTime);
-      toast.success(
-        t('auth.verification.resendSuccess', {
-          default: 'New verification code sent',
-        })
-      );
-    } catch (error: unknown) {
-      // For resend OTP, we don't have a specific form to set field errors on
-      // So we'll handle it with toast messages only using helper function
-      handleGenericError(error, t);
-    } finally {
-      setIsSubmitting(false);
-    }
-  }, [resendCooldown, phoneNumber, t]);
+    signUpPrepareMutation.mutate(
+      { phone: phoneNumber },
+      {
+        onSuccess: (response) => {
+          setResendCooldown(response.waitingTime);
+          toast.success(
+            t('auth.verification.resendSuccess', {
+              default: 'New verification code sent',
+            })
+          );
+        },
+      }
+    );
+  }, [resendCooldown, phoneNumber, signUpPrepareMutation, t]);
 
   return {
     // State

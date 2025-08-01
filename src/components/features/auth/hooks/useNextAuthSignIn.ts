@@ -1,16 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 
 import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
-import {
-  clearFormErrors,
-  handleAuthError,
-} from '@/components/features/auth/lib/auth-errors';
+import { useLoginMutation } from '@/components/features/auth/hooks/useAuthMutations';
 import {
   SignInFormData,
   createSignInSchema,
@@ -23,8 +19,8 @@ import { UserState } from '@/components/features/profile/types/account';
  * Handles form state, validation, submission, and error handling
  */
 export function useNextAuthSignIn() {
-  const { login, isAuthenticated, user } = useNextAuth();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { isAuthenticated, user } = useNextAuth();
+  const loginMutation = useLoginMutation();
   const router = useRouter();
   const searchParams = useSearchParams();
   const t = useTranslations();
@@ -47,27 +43,17 @@ export function useNextAuthSignIn() {
     }
   }, [isAuthenticated, user, router, searchParams]);
 
-  // Form submission handler
+  // Form submission handler using React Query mutation
   const onSubmit = async (data: SignInFormData) => {
-    setIsSubmitting(true);
-
-    // Clear any previous errors
-    clearFormErrors(form);
-
-    try {
-      const response = await login(data.phone, data.password);
-      console.log(response);
-      toast.success(t('auth.loginSuccess'));
-    } catch (error: unknown) {
-      handleAuthError(error, form, t);
-    } finally {
-      setIsSubmitting(false);
-    }
+    loginMutation.mutate({
+      phone: data.phone,
+      password: data.password,
+    });
   };
 
   return {
     form,
-    isSubmitting,
+    isSubmitting: loginMutation.isPending,
     isAuthenticated,
     onSubmit: form.handleSubmit(onSubmit),
   };

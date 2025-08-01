@@ -8,9 +8,10 @@ import { toast } from 'sonner';
 
 import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
 import {
-  clearFormErrors,
-  handleAuthError,
-} from '@/components/features/auth/lib/auth-errors';
+  useForgotPasswordPrepareMutation,
+  useForgotPasswordVerifyMutation,
+  useForgotPasswordUpdateMutation,
+} from '@/components/features/auth/hooks/useAuthMutations';
 import {
   ForgotPasswordNewPasswordFormData,
   ForgotPasswordPhoneFormData,
@@ -22,7 +23,6 @@ import {
   forgotPasswordPhoneFormDefaults,
   forgotPasswordVerificationFormDefaults,
 } from '@/components/features/auth/schemas/auth';
-import { AuthService } from '@/components/features/auth/services/auth-service';
 import { BackendError } from '@/types/api';
 
 export type ForgotPasswordStep =
@@ -37,13 +37,25 @@ export type ForgotPasswordStep =
  */
 export function useForgotPasswordForm() {
   const { isAuthenticated } = useNextAuth();
+  const router = useRouter();
+  const t = useTranslations();
+
+  // React Query mutations
+  const forgotPasswordPrepareMutation = useForgotPasswordPrepareMutation();
+  const forgotPasswordVerifyMutation = useForgotPasswordVerifyMutation();
+  const forgotPasswordUpdateMutation = useForgotPasswordUpdateMutation();
+
+  // Form state
   const [currentStep, setCurrentStep] = useState<ForgotPasswordStep>('phone');
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [verificationToken, setVerificationToken] = useState<string>('');
   const [resendCooldown, setResendCooldown] = useState(0);
-  const router = useRouter();
-  const t = useTranslations();
+
+  // Derive isSubmitting from mutations
+  const isSubmitting = 
+    forgotPasswordPrepareMutation.isPending || 
+    forgotPasswordVerifyMutation.isPending || 
+    forgotPasswordUpdateMutation.isPending;
 
   // Create validation schemas with localized messages
   const phoneSchema = createForgotPasswordPhoneSchema(t);
@@ -86,151 +98,114 @@ export function useForgotPasswordForm() {
 
   // Phone submission handler
   const onPhoneSubmit = async (data: ForgotPasswordPhoneFormData) => {
-    setIsSubmitting(true);
+    forgotPasswordPrepareMutation.mutate(
+      { phone: data.phone },
+      {
+        onSuccess: (prepareResponse) => {
+          setPhoneNumber(prepareResponse.phoneNumber);
 
-    // Clear any previous errors
-    clearFormErrors(phoneForm);
+          // Reset verification form to ensure clean state
+          verificationForm.reset(forgotPasswordVerificationFormDefaults);
 
-    try {
-      const prepareResponse = await AuthService.forgotPasswordPrepare(
-        data.phone
-      );
-      setPhoneNumber(prepareResponse.phoneNumber);
-
-      // Reset verification form to ensure clean state
-      verificationForm.reset(forgotPasswordVerificationFormDefaults);
-
-      setCurrentStep('verification');
-      setResendCooldown(prepareResponse.waitingTime);
-      toast.success(
-        t('auth.forgotPassword.codeSent', {
-          default: 'Verification code sent to your phone',
-        })
-      );
-    } catch (error: unknown) {
-      handleAuthError(error, phoneForm, t);
-    } finally {
-      setIsSubmitting(false);
-    }
+          setCurrentStep('verification');
+          setResendCooldown(prepareResponse.waitingTime);
+          toast.success(
+            t('auth.forgotPassword.codeSent', {
+              default: 'Verification code sent to your phone',
+            })
+          );
+        },
+      }
+    );
   };
 
   // Verification submission handler
   const onVerificationSubmit = async (
     data: ForgotPasswordVerificationFormData
   ) => {
-    setIsSubmitting(true);
-
-    // Clear any previous errors
-    clearFormErrors(verificationForm);
-
-    try {
-      const response = await AuthService.forgotPasswordVerify(
-        phoneNumber,
-        data.otp
-      );
-
-      // Store the verification token for the next step (fix: use 'token' not 'verificationToken')
-      setVerificationToken(response.token);
-      setCurrentStep('new-password');
-      toast.success(
-        t('auth.verification.success', {
-          default: 'Code verified successfully',
-        })
-      );
-    } catch (error: unknown) {
-      handleAuthError(error, verificationForm, t);
-
-      // Handle specific error cases - if code expired, go back to phone step
-      if (error instanceof BackendError) {
-        const firstError = error.getFirstError();
-        if (firstError?.message.includes('expired')) {
-          setCurrentStep('phone');
-        }
+    forgotPasswordVerifyMutation.mutate(
+      {
+        phone: phoneNumber,
+        otp: data.otp,
+      },
+      {
+        onSuccess: (response) => {
+          // Store the verification token for the next step
+          setVerificationToken(response.token);
+          setCurrentStep('new-password');
+          toast.success(
+            t('auth.verification.success', {
+              default: 'Code verified successfully',
+            })
+          );
+        },
+        onError: (error: BackendError) => {
+          // Handle specific error cases - if code expired, go back to phone step
+          const firstError = error.getFirstError();
+          if (firstError?.message.includes('expired')) {
+            setCurrentStep('phone');
+          }
+        },
       }
-    } finally {
-      setIsSubmitting(false);
-    }
+    );
   };
 
   // New password submission handler
   const onNewPasswordSubmit = async (
     data: ForgotPasswordNewPasswordFormData
   ) => {
-    setIsSubmitting(true);
+    forgotPasswordUpdateMutation.mutate(
+      {
+        token: verificationToken,
+        password: data.password,
+      },
+      {
+        onSuccess: () => {
+          setCurrentStep('completed');
+          toast.success(
+            t('auth.forgotPassword.success.message', {
+              default:
+                'Password reset successfully. You can now sign in with your new password.',
+            })
+          );
 
-    // Clear any previous errors
-    clearFormErrors(newPasswordForm);
-
-    try {
-      await AuthService.forgotPasswordUpdate(verificationToken, data.password);
-
-      setCurrentStep('completed');
-      toast.success(
-        t('auth.forgotPassword.success.message', {
-          default:
-            'Password reset successfully. You can now sign in with your new password.',
-        })
-      );
-
-      // Redirect to sign-in page after a short delay
-      setTimeout(() => {
-        router.push('/sign-in');
-      }, 2000);
-    } catch (error: unknown) {
-      handleAuthError(error, newPasswordForm, t);
-
-      // Handle specific error cases - if token is invalid/expired, go back to phone step
-      if (error instanceof BackendError) {
-        const firstError = error.getFirstError();
-        if (
-          firstError?.message.includes('token') &&
-          (firstError.message.includes('invalid') ||
-            firstError.message.includes('expired'))
-        ) {
-          setCurrentStep('phone');
-        }
+          // Redirect to sign-in page after a short delay
+          setTimeout(() => {
+            router.push('/sign-in');
+          }, 2000);
+        },
+        onError: (error: BackendError) => {
+          // Handle specific error cases - if token is invalid/expired, go back to phone step
+          const firstError = error.getFirstError();
+          if (
+            firstError?.message.includes('token') &&
+            (firstError.message.includes('invalid') ||
+              firstError.message.includes('expired'))
+          ) {
+            setCurrentStep('phone');
+          }
+        },
       }
-    } finally {
-      setIsSubmitting(false);
-    }
+    );
   };
 
   // Resend OTP handler
   const handleResendOTP = async () => {
     if (resendCooldown > 0) return;
 
-    setIsSubmitting(true);
-
-    try {
-      const response = await AuthService.forgotPasswordPrepare(phoneNumber);
-      setResendCooldown(response.waitingTime);
-      toast.success(
-        t('auth.verification.resendSuccess', {
-          default: 'New verification code sent',
-        })
-      );
-    } catch (error: unknown) {
-      // For resend OTP, we don't have a specific form to set field errors on
-      // So we'll handle it with toast messages only
-      if (error instanceof BackendError) {
-        const firstError = error.getFirstError();
-        if (firstError) {
-          toast.error(firstError.message);
-        } else {
-          const genericError = t('common.unexpectedError', {
-            default: 'An unexpected error occurred.',
-          });
-          toast.error(genericError);
-        }
-      } else {
-        const unexpectedError = t('common.unexpectedError', {
-          default: 'An unexpected error occurred.',
-        });
-        toast.error(unexpectedError);
+    forgotPasswordPrepareMutation.mutate(
+      { phone: phoneNumber },
+      {
+        onSuccess: (response) => {
+          setResendCooldown(response.waitingTime);
+          toast.success(
+            t('auth.verification.resendSuccess', {
+              default: 'New verification code sent',
+            })
+          );
+        },
       }
-    } finally {
-      setIsSubmitting(false);
-    }
+    );
   };
 
   return {
