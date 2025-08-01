@@ -28,6 +28,13 @@
     "verifying": "Verifying...",
     "updating": "Updating..."
   },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "description": "An unexpected error occurred. This has been logged and we'll look into it.",
+    "errorDetails": "Error Details (Development)",
+    "tryAgain": "Try Again",
+    "goHome": "Go Home"
+  },
   "auth": {
     "signIn": {
       "title": "Sign In",

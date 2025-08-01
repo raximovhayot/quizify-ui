@@ -1,11 +1,8 @@
 import type { Metadata } from 'next';
-import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { getMessages, getLocale } from 'next-intl/server';
 import { Geist, Geist_Mono } from 'next/font/google';
 
-import { SessionProvider } from '@/components/shared/providers/SessionProvider';
-import { Toaster } from '@/components/ui/sonner';
-import { LoadingProvider } from '@/components/ui/top-loader';
+import { Providers } from '@/app/Providers';
 
 import './globals.css';
 
@@ -29,24 +26,35 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // With next-intl middleware handling locale routing, we don't need to get locale from params
-  // The locale will be automatically detected by next-intl
+  // Get both locale and messages from next-intl
+  const locale = await getLocale();
   const messages = await getMessages();
 
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <SessionProvider>
-          <NextIntlClientProvider messages={messages}>
-            <LoadingProvider>
-              {children}
-              <Toaster />
-            </LoadingProvider>
-          </NextIntlClientProvider>
-        </SessionProvider>
-      </body>
-    </html>
+    <>
+      {/* 
+        suppressHydrationWarning is required for next-themes to prevent hydration mismatches.
+        next-themes applies theme classes (e.g., "light", "dark") and styles to the html element
+        on the client side, but the server doesn't know the user's theme preference.
+        This causes a hydration mismatch where:
+        - Server renders: <html lang="en">
+        - Client expects: <html lang="en" className="light" style={{colorScheme:"light"}}>
+        
+        suppressHydrationWarning tells React to ignore this specific mismatch, which is safe
+        because next-themes handles theme application correctly on the client side.
+        
+        This is the standard solution recommended by next-themes documentation.
+        See: https://github.com/pacocoursey/next-themes#with-app
+      */}
+      <html lang={locale} suppressHydrationWarning>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <Providers messages={messages} locale={locale}>
+            {children}
+          </Providers>
+        </body>
+      </html>
+    </>
   );
 }

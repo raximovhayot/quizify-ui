@@ -28,6 +28,13 @@
     "verifying": "Tekshirilmoqda...",
     "updating": "Yangilanmoqda..."
   },
+  "errorBoundary": {
+    "title": "Nimadir noto'g'ri ketdi",
+    "description": "Kutilmagan xatolik yuz berdi. Bu qayd qilindi va biz buni ko'rib chiqamiz.",
+    "errorDetails": "Xatolik tafsilotlari (Ishlab chiqish)",
+    "tryAgain": "Qayta urinish",
+    "goHome": "Bosh sahifaga"
+  },
   "auth": {
     "signIn": {
       "title": "Kirish",
