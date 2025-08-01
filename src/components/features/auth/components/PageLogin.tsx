@@ -1,12 +1,9 @@
 'use client';
 
-import { Suspense } from 'react';
-
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
 import { useNextAuthSignIn } from '@/components/features/auth/hooks/useNextAuthSignIn';
-import { AuthLayout } from '@/components/shared/layouts/AppLayout';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -26,7 +23,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { InlineLoading } from '@/components/ui/loading-spinner';
 
-function SignInForm() {
+import { ROUTES_AUTH } from '../routes';
+
+export function PageLogin() {
   const t = useTranslations();
   const { form, isSubmitting, isAuthenticated, onSubmit } = useNextAuthSignIn();
 
@@ -36,7 +35,6 @@ function SignInForm() {
   }
 
   return (
-    <AuthLayout>
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">
@@ -118,7 +116,7 @@ function SignInForm() {
             <div className="text-center">
               <div className="text-sm text-muted-foreground">
                 <Link
-                  href="/forgot-password"
+                  href={ROUTES_AUTH.forgotPassword()}
                   className="text-primary hover:underline"
                 >
                   {t('auth.forgotPassword.link', {
@@ -131,7 +129,7 @@ function SignInForm() {
             <div className="text-center">
               <div className="text-sm text-muted-foreground">
                 {t('auth.signUp.prompt', { default: "Don't have an account?" })}{' '}
-                <Link href="/sign-up" className="text-primary hover:underline">
+                <Link href={ROUTES_AUTH.register()} className="text-primary hover:underline">
                   {t('auth.signUp.link', { default: 'Sign up' })}
                 </Link>
               </div>
@@ -139,14 +137,5 @@ function SignInForm() {
           </div>
         </CardContent>
       </Card>
-    </AuthLayout>
-  );
-}
-
-export default function SignInPage() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <SignInForm />
-    </Suspense>
   );
 }

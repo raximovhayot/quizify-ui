@@ -316,5 +316,11 @@
     "attempts": "Попытки",
     "submissions": "Отправки",
     "grade": "Оценка"
+  },
+  "theme": {
+    "changeTheme": "Изменить тему",
+    "light": "Светлая",
+    "dark": "Темная",
+    "system": "Системная"
   }
 }

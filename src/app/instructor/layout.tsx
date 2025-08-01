@@ -3,7 +3,7 @@
 import { ReactNode } from 'react';
 
 import { UserRole } from '@/components/features/profile/types/account';
-import GuardAuthenticated from '@/components/shared/GuardAuthenticated';
+import GuardAuthenticated from '@/components/shared/guards/GuardAuthenticated';
 
 interface InstructorLayoutProps {
   children: ReactNode;

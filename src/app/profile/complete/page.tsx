@@ -12,7 +12,7 @@ import {
   UserState,
   hasRole,
 } from '@/components/features/profile/types/account';
-import { AuthLayout } from '@/components/shared/layouts/AppLayout';
+import { AppPublicOnlyLayout } from '@/components/shared/layouts/AppLayout';
 import { Form } from '@/components/ui/form';
 import { InlineLoading } from '@/components/ui/loading-spinner';
 
@@ -57,7 +57,7 @@ function ProfileCompleteContent() {
   }
 
   return (
-    <AuthLayout>
+    <AppPublicOnlyLayout>
       <Form {...form}>
         <ProfileCompleteForm
           form={form}
@@ -65,7 +65,7 @@ function ProfileCompleteContent() {
           onSubmit={onSubmit}
         />
       </Form>
-    </AuthLayout>
+    </AppPublicOnlyLayout>
   );
 }
 
@@ -73,7 +73,7 @@ function ProfileCompleteLoading() {
   const t = useTranslations();
 
   return (
-    <AuthLayout>
+    <AppPublicOnlyLayout>
       <div className="container mx-auto px-4 py-8 max-w-md">
         <div className="flex justify-center">
           <InlineLoading
@@ -81,7 +81,7 @@ function ProfileCompleteLoading() {
           />
         </div>
       </div>
-    </AuthLayout>
+    </AppPublicOnlyLayout>
   );
 }
 

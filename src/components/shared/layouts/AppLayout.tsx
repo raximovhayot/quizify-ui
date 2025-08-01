@@ -1,10 +1,8 @@
-'use client';
-
 import { ReactNode } from 'react';
 
 import { Header } from '@/components/shared/navigation/Header';
 
-export function AuthLayout({
+export function AppPublicOnlyLayout({
   children,
   title,
 }: {

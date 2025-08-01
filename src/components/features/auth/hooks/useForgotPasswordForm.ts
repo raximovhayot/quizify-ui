@@ -24,6 +24,7 @@ import {
   forgotPasswordVerificationFormDefaults,
 } from '@/components/features/auth/schemas/auth';
 import { BackendError } from '@/types/api';
+import { ROUTES_AUTH } from '@/components/features/auth/routes';
 
 export type ForgotPasswordStep =
   | 'phone'
@@ -46,7 +47,6 @@ export function useForgotPasswordForm() {
   const forgotPasswordUpdateMutation = useForgotPasswordUpdateMutation();
 
   // Form state
-  const [currentStep, setCurrentStep] = useState<ForgotPasswordStep>('phone');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [verificationToken, setVerificationToken] = useState<string>('');
   const [resendCooldown, setResendCooldown] = useState(0);
@@ -107,13 +107,15 @@ export function useForgotPasswordForm() {
           // Reset verification form to ensure clean state
           verificationForm.reset(forgotPasswordVerificationFormDefaults);
 
-          setCurrentStep('verification');
           setResendCooldown(prepareResponse.waitingTime);
           toast.success(
             t('auth.forgotPassword.codeSent', {
               default: 'Verification code sent to your phone',
             })
           );
+          
+          // Navigate to verification page with phone number as query param
+          router.push(ROUTES_AUTH.forgotPasswordVerify({ phone: prepareResponse.phoneNumber }));
         },
       }
     );
@@ -132,18 +134,20 @@ export function useForgotPasswordForm() {
         onSuccess: (response) => {
           // Store the verification token for the next step
           setVerificationToken(response.token);
-          setCurrentStep('new-password');
           toast.success(
             t('auth.verification.success', {
               default: 'Code verified successfully',
             })
           );
+          
+          // Navigate to reset password page with phone and token as query params
+          router.push(ROUTES_AUTH.resetPassword({ phone: phoneNumber, token: response.token }));
         },
         onError: (error: BackendError) => {
           // Handle specific error cases - if code expired, go back to phone step
           const firstError = error.getFirstError();
           if (firstError?.message.includes('expired')) {
-            setCurrentStep('phone');
+            router.push(ROUTES_AUTH.forgotPassword());
           }
         },
       }
@@ -161,7 +165,6 @@ export function useForgotPasswordForm() {
       },
       {
         onSuccess: () => {
-          setCurrentStep('completed');
           toast.success(
             t('auth.forgotPassword.success.message', {
               default:
@@ -171,7 +174,7 @@ export function useForgotPasswordForm() {
 
           // Redirect to sign-in page after a short delay
           setTimeout(() => {
-            router.push('/sign-in');
+            router.push(ROUTES_AUTH.login());
           }, 2000);
         },
         onError: (error: BackendError) => {
@@ -182,7 +185,7 @@ export function useForgotPasswordForm() {
             (firstError.message.includes('invalid') ||
               firstError.message.includes('expired'))
           ) {
-            setCurrentStep('phone');
+            router.push(ROUTES_AUTH.forgotPassword());
           }
         },
       }
@@ -210,7 +213,6 @@ export function useForgotPasswordForm() {
 
   return {
     // State
-    currentStep,
     isSubmitting,
     phoneNumber,
     resendCooldown,

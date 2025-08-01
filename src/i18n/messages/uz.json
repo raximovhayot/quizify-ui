@@ -316,5 +316,11 @@
     "attempts": "Urinishlar",
     "submissions": "Topshirilganlar",
     "grade": "Baho"
+  },
+  "theme": {
+    "changeTheme": "Mavzuni o'zgartirish",
+    "light": "Yorug'",
+    "dark": "Qorong'u",
+    "system": "Tizim"
   }
 }

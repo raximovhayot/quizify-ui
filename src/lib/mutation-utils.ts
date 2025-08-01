@@ -89,7 +89,7 @@ export function createMutation<TData = unknown, TVariables = void>(
 }
 
 /**
- * Create a mutation hook with authentication patterns (login/logout)
+ * Create a mutation hook with authentication patterns (sign-in/logout)
  */
 export function createAuthMutation<TData = unknown, TVariables = void>(
   options: BaseMutationOptions<TData, TVariables> & {

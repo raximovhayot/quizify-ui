@@ -105,7 +105,12 @@
       "resend": "Resend Code",
       "resendIn": "Resend in {seconds}s",
       "success": "Phone verified successfully! Redirecting to profile setup...",
-      "resendSuccess": "New verification code sent"
+      "resendSuccess": "New verification code sent",
+      "sentTo": "Code sent to",
+      "changePhone": "Change phone number",
+      "code": {
+        "label": "Verification Code"
+      }
     },
     "forgotPassword": {
       "link": "Forgot your password?",
@@ -298,5 +303,11 @@
     "attempts": "Attempts",
     "submissions": "Submissions",
     "grade": "Grade"
+  },
+  "theme": {
+    "changeTheme": "Change theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
   }
 }

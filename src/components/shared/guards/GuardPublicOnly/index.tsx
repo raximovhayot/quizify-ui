@@ -16,7 +16,7 @@ interface GuardPublicOnlyProps {
 /**
  * Guard component that only allows access to unauthenticated users.
  * Redirects authenticated users to their appropriate dashboard or specified path.
- * Useful for login, register, and other public-only pages.
+ * Useful for sign-in, sign-up, and other public-only pages.
  */
 export default function GuardPublicOnly({
   children,

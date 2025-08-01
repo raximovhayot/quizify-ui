@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
+import { ThemeSwitcher } from '@/components/ui/theme-switcher';
 
 interface HeaderProps {
   title?: string;
@@ -44,8 +45,11 @@ export function Header({ title, showUserMenu = true }: HeaderProps) {
           </h1>
         </div>
 
-        {/* Right side - Language & User Menu */}
+        {/* Right side - Theme, Language & User Menu */}
         <div className="flex items-center space-x-2">
+          {/* Theme Selector */}
+          <ThemeSwitcher variant="icon-only" />
+          
           {/* Language Selector */}
           <LanguageSwitcher variant="icon-only" />
 

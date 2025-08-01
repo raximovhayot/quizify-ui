@@ -35,7 +35,7 @@ function GuardAuthenticatedContent({
   const t = useTranslations('common');
 
   useEffect(() => {
-    // Redirect to login if not authenticated
+    // Redirect to sign-in if not authenticated
     if (!isLoading && !isAuthenticated) {
       router.replace(`${loginPath}?redirect=${encodeURIComponent(pathname)}`);
       return;
@@ -153,7 +153,7 @@ function GuardAuthenticatedLoading() {
  * Enhanced authentication guard component inspired by StartUI patterns.
  * Provides comprehensive authentication and authorization checking with:
  * - Role-based access control
- * - Configurable login paths
+ * - Configurable sign-in paths
  * - Fallback role handling
  * - User state management (NEW user profile completion)
  * - Error handling (403 pages or redirects)

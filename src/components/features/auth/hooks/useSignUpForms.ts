@@ -20,13 +20,13 @@ import {
   verificationFormDefaults,
 } from '@/components/features/auth/schemas/auth';
 import { useGlobalLoading } from '@/components/ui/top-loader';
+import { ROUTES_AUTH } from '@/components/features/auth/routes';
 
 export type SignUpStep = 'phone' | 'verification';
 
 // Hook return type for better type safety
 export interface UseSignUpFormsReturn {
   // State
-  currentStep: SignUpStep;
   isSubmitting: boolean;
   phoneNumber: string;
   resendCooldown: number;
@@ -58,7 +58,6 @@ export function useSignUpForms(): UseSignUpFormsReturn {
   const signUpVerifyMutation = useSignUpVerifyMutation();
 
   // Form state
-  const [currentStep, setCurrentStep] = useState<SignUpStep>('phone');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [resendCooldown, setResendCooldown] = useState(0);
 
@@ -109,13 +108,14 @@ export function useSignUpForms(): UseSignUpFormsReturn {
         {
           onSuccess: (prepareResponse) => {
             setPhoneNumber(prepareResponse.phoneNumber);
-            setCurrentStep('verification');
             setResendCooldown(prepareResponse.waitingTime);
+            // Navigate to verification page with phone number as query param
+            router.push(ROUTES_AUTH.registerVerify({ phone: prepareResponse.phoneNumber }));
           },
         }
       );
     },
-    [signUpPrepareMutation, setResendCooldown]
+    [signUpPrepareMutation, setResendCooldown, router]
   );
 
   // Verification submission handler
@@ -183,7 +183,6 @@ export function useSignUpForms(): UseSignUpFormsReturn {
 
   return {
     // State
-    currentStep,
     isSubmitting,
     phoneNumber,
     resendCooldown,
