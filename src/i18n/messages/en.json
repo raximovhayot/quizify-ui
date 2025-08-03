@@ -28,13 +28,6 @@
     "verifying": "Verifying...",
     "updating": "Updating..."
   },
-  "errorBoundary": {
-    "title": "Something went wrong",
-    "description": "An unexpected error occurred. This has been logged and we'll look into it.",
-    "errorDetails": "Error Details (Development)",
-    "tryAgain": "Try Again",
-    "goHome": "Go Home"
-  },
   "auth": {
     "signIn": {
       "title": "Sign In",
@@ -45,7 +38,6 @@
       "prompt": "Already have an account?"
     },
     "signUp": {
-      "title": "Sign Up",
       "prompt": "Don't have an account?",
       "link": "Sign up",
       "phone": {
@@ -56,22 +48,8 @@
         "title": "Verify Phone Number",
         "description": "We sent a verification code to your phone"
       },
-      "details": {
-        "title": "Complete Your Profile",
-        "description": "Tell us a bit about yourself"
-      },
-      "completed": {
-        "title": "Welcome!",
-        "description": "Your account is ready to use"
-      },
       "sendCode": "Send Verification Code",
-      "sendingCode": "Sending Code...",
-      "creating": "Creating Account...",
-      "create": "Create Account",
-      "success": {
-        "title": "Account Created Successfully!",
-        "message": "Your account has been created. You will be redirected to the sign-in page shortly."
-      }
+      "sendingCode": "Sending Code..."
     },
     "phone": {
       "label": "Phone Number",
@@ -81,7 +59,6 @@
       "label": "Password",
       "placeholder": "Enter your password"
     },
-    "confirmPassword": "Confirm Password",
     "firstName": {
       "label": "First Name",
       "placeholder": "John"
@@ -116,37 +93,11 @@
       "link": "Forgot your password?",
       "title": "Reset Password",
       "description": "Enter your phone number to receive a verification code",
-      "phone": {
-        "title": "Reset Password",
-        "description": "Enter your phone number to receive a verification code"
-      },
-      "verification": {
-        "title": "Verify Code",
-        "description": "Enter the verification code sent to your phone"
-      },
-      "newPassword": {
-        "title": "Set New Password",
-        "description": "Enter your new password"
-      },
-      "completed": {
-        "title": "Password Reset Complete",
-        "description": "Your password has been successfully reset"
-      },
       "sendCode": "Send Verification Code",
-      "sendingCode": "Sending Code...",
-      "verifyCode": "Verify Code",
-      "verifying": "Verifying...",
-      "updatePassword": "Update Password",
-      "resetPassword": "Reset Password",
-      "resetting": "Resetting Password...",
       "success": {
-        "title": "Password Reset Complete",
-        "description": "Your password has been successfully reset. You will be redirected to the sign-in page shortly.",
         "message": "Password reset successfully. You can now sign in with your new password."
       },
-      "codeSent": "Verification code sent to your phone",
-      "rememberPassword": "Remember your password?",
-      "backToPhone": "← Back to phone entry"
+      "codeSent": "Verification code sent to your phone"
     },
     "profileComplete": {
       "title": "Complete Your Profile",
@@ -157,34 +108,17 @@
       "submit": "Complete Profile",
       "submitting": "Completing Profile...",
       "success": "Profile completed successfully!",
-      "step": "Step",
-      "steps": {
-        "personalInfo": {
-          "title": "Personal Information",
-          "description": "Tell us about yourself"
-        },
-        "password": {
-          "title": "Create Password",
-          "description": "Secure your account"
-        },
-        "role": {
-          "title": "Choose Your Role",
-          "description": "How will you use Quizify?"
-        }
-      },
       "passwordRequirements": "Password must contain at least:",
       "passwordLength": "8 characters minimum",
       "passwordUppercase": "One uppercase letter",
       "passwordLowercase": "One lowercase letter",
       "passwordNumber": "One number",
       "studentDescription": "Take quizzes and track your progress",
-      "instructorDescription": "Create quizzes and manage assignments",
-      "alreadyCompleted": "Your profile is already completed. Redirecting to dashboard..."
+      "instructorDescription": "Create quizzes and manage assignments"
     },
     "error": {
       "noSignupToken": "No signup session found. Please start the signup process again.",
-      "sessionCreation": "Profile completed but failed to create session. Please sign in manually.",
-      "noToken": "Authentication token not found. Please sign in again."
+      "sessionCreation": "Profile completed but failed to create session. Please sign in manually."
     },
     "validation": {
       "phoneRequired": "Phone number is required",
@@ -205,104 +139,11 @@
       "otpPattern": "Verification code must contain only digits",
       "dashboardTypeRequired": "Please select your role"
     },
-    "verificationCode": "Verification Code",
-    "newPassword": "New Password",
     "backToSignIn": "Back to Sign In",
-    "goToSignIn": "Go to Sign In",
-    "signOut": "Sign Out",
-    "invalidCredentials": "Invalid phone number or password",
-    "accountCreated": "Account created successfully",
-    "loginSuccess": "Login successful",
-    "logoutSuccess": "Logout successful"
+    "signOut": "Sign Out"
   },
   "navigation": {
-    "dashboard": "Dashboard",
-    "quizzes": "Quizzes",
-    "assignments": "Assignments",
-    "analytics": "Analytics",
-    "results": "Results",
-    "profile": "Profile",
-    "settings": "Settings",
-    "help": "Help",
-    "home": "Home"
-  },
-  "profile": {
-    "settings": {
-      "title": "Profile Settings",
-      "description": "Manage your account settings and preferences",
-      "personalInfo": "Personal Information",
-      "firstName": "First Name",
-      "lastName": "Last Name",
-      "language": "Language",
-      "dashboardType": "Dashboard Type",
-      "updateProfile": "Update Profile",
-      "updating": "Updating...",
-      "profileUpdated": "Profile updated successfully",
-      "profileUpdateFailed": "Failed to update profile. Please try again.",
-      "passwordSection": "Change Password",
-      "currentPassword": "Current Password",
-      "newPassword": "New Password",
-      "confirmNewPassword": "Confirm New Password",
-      "changePassword": "Change Password",
-      "changing": "Changing...",
-      "passwordChanged": "Password changed successfully",
-      "passwordChangeFailed": "Failed to change password. Please try again.",
-      "phoneNotice": {
-        "title": "Phone Number Updates",
-        "message": "Phone number updates are currently not supported through this interface. Please contact support if you need to change your phone number."
-      },
-      "languages": {
-        "en": "English",
-        "uz": "O'zbek",
-        "ru": "Русский"
-      },
-      "dashboardTypes": {
-        "instructor": "Instructor",
-        "student": "Student"
-      }
-    }
-  },
-  "dashboard": {
-    "welcome": "Welcome",
-    "overview": "Overview",
-    "recentActivity": "Recent Activity",
-    "quickStats": "Quick Stats",
-    "upcomingQuizzes": "Upcoming Quizzes",
-    "recentResults": "Recent Results"
-  },
-  "quiz": {
-    "createQuiz": "Create Quiz",
-    "editQuiz": "Edit Quiz",
-    "deleteQuiz": "Delete Quiz",
-    "quizTitle": "Quiz Title",
-    "quizDescription": "Quiz Description",
-    "questions": "Questions",
-    "addQuestion": "Add Question",
-    "questionType": "Question Type",
-    "multipleChoice": "Multiple Choice",
-    "trueFalse": "True/False",
-    "shortAnswer": "Short Answer",
-    "startQuiz": "Start Quiz",
-    "submitQuiz": "Submit Quiz",
-    "timeRemaining": "Time Remaining",
-    "question": "Question",
-    "answer": "Answer",
-    "correct": "Correct",
-    "incorrect": "Incorrect",
-    "score": "Score",
-    "results": "Results"
-  },
-  "assignment": {
-    "createAssignment": "Create Assignment",
-    "editAssignment": "Edit Assignment",
-    "assignmentTitle": "Assignment Title",
-    "assignmentCode": "Assignment Code",
-    "joinAssignment": "Join Assignment",
-    "enterCode": "Enter Assignment Code",
-    "dueDate": "Due Date",
-    "attempts": "Attempts",
-    "submissions": "Submissions",
-    "grade": "Grade"
+    "profile": "Profile"
   },
   "theme": {
     "changeTheme": "Change theme",

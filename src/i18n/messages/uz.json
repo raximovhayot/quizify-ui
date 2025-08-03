@@ -28,13 +28,6 @@
     "verifying": "Tekshirilmoqda...",
     "updating": "Yangilanmoqda..."
   },
-  "errorBoundary": {
-    "title": "Nimadir noto'g'ri ketdi",
-    "description": "Kutilmagan xatolik yuz berdi. Bu qayd qilindi va biz buni ko'rib chiqamiz.",
-    "errorDetails": "Xatolik tafsilotlari (Ishlab chiqish)",
-    "tryAgain": "Qayta urinish",
-    "goHome": "Bosh sahifaga"
-  },
   "auth": {
     "signIn": {
       "title": "Kirish",
@@ -45,7 +38,6 @@
       "prompt": "Hisobingiz bormi?"
     },
     "signUp": {
-      "title": "Ro'yxatdan o'tish",
       "prompt": "Hisobingiz yo'qmi?",
       "link": "Ro'yxatdan o'ting",
       "phone": {
@@ -56,22 +48,8 @@
         "title": "Telefon raqamini tasdiqlang",
         "description": "Telefoningizga tasdiqlash kodi yubordik"
       },
-      "details": {
-        "title": "Profilingizni to'ldiring",
-        "description": "O'zingiz haqingizda ma'lumot bering"
-      },
-      "completed": {
-        "title": "Xush kelibsiz!",
-        "description": "Hisobingiz foydalanishga tayyor"
-      },
       "sendCode": "Tasdiqlash kodini yuborish",
-      "sendingCode": "Kod yuborilmoqda...",
-      "creating": "Hisob yaratilmoqda...",
-      "create": "Hisob yaratish",
-      "success": {
-        "title": "Hisob muvaffaqiyatli yaratildi!",
-        "message": "Hisobingiz yaratildi. Tez orada kirish sahifasiga yo'naltirilasiz."
-      }
+      "sendingCode": "Kod yuborilmoqda..."
     },
     "phone": {
       "label": "Telefon raqami",
@@ -81,7 +59,6 @@
       "label": "Parol",
       "placeholder": "Parolni kiriting"
     },
-    "confirmPassword": "Parolni tasdiqlang",
     "firstName": {
       "label": "Ism",
       "placeholder": "Ahmadjon"
@@ -111,37 +88,11 @@
       "link": "Parolni unutdingizmi?",
       "title": "Parolni tiklash",
       "description": "Tasdiqlash kodini olish uchun telefon raqamingizni kiriting",
-      "phone": {
-        "title": "Parolni tiklash",
-        "description": "Tasdiqlash kodini olish uchun telefon raqamingizni kiriting"
-      },
-      "verification": {
-        "title": "Kodni tasdiqlang",
-        "description": "Telefoningizga yuborilgan tasdiqlash kodini kiriting"
-      },
-      "newPassword": {
-        "title": "Yangi parol o'rnating",
-        "description": "Yangi parolni kiriting"
-      },
-      "completed": {
-        "title": "Parol tiklash tugallandi",
-        "description": "Parolingiz muvaffaqiyatli tiklandi"
-      },
       "sendCode": "Tasdiqlash kodini yuborish",
-      "sendingCode": "Kod yuborilmoqda...",
-      "verifyCode": "Kodni tasdiqlash",
-      "verifying": "Tasdiqlanmoqda...",
-      "updatePassword": "Parolni yangilash",
-      "resetPassword": "Parolni tiklash",
-      "resetting": "Parol tiklanmoqda...",
       "success": {
-        "title": "Parol tiklash tugallandi",
-        "description": "Parolingiz muvaffaqiyatli tiklandi. Tez orada kirish sahifasiga yo'naltirilasiz.",
         "message": "Parol muvaffaqiyatli tiklandi. Endi yangi parol bilan kirishingiz mumkin."
       },
-      "codeSent": "Tasdiqlash kodi telefoningizga yuborildi",
-      "rememberPassword": "Parolni eslaysizmi?",
-      "backToPhone": "← Telefon kiritishga qaytish"
+      "codeSent": "Tasdiqlash kodi telefoningizga yuborildi"
     },
     "profileComplete": {
       "title": "Profilingizni to'ldiring",
@@ -152,44 +103,20 @@
       "submit": "Profilni yakunlash",
       "submitting": "Profil yakunlanmoqda...",
       "success": "Profil muvaffaqiyatli yakunlandi!",
-      "step": "Qadam",
-      "steps": {
-        "personalInfo": {
-          "title": "Shaxsiy ma'lumotlar",
-          "description": "O'zingiz haqingizda ma'lumot bering"
-        },
-        "password": {
-          "title": "Parol yaratish",
-          "description": "Hisobingizni himoyalang"
-        },
-        "role": {
-          "title": "Rolingizni tanlang",
-          "description": "Quizify'dan qanday foydalanasiz?"
-        }
-      },
       "passwordRequirements": "Parol kamida quyidagilarni o'z ichiga olishi kerak:",
       "passwordLength": "8 ta belgi minimum",
       "passwordUppercase": "Bitta katta harf",
       "passwordLowercase": "Bitta kichik harf",
       "passwordNumber": "Bitta raqam",
       "studentDescription": "Testlarni yechib, o'z rivojlanishingizni kuzating",
-      "instructorDescription": "Testlar yarating va topshiriqlarni boshqaring",
-      "alreadyCompleted": "Profilingiz allaqachon yakunlangan. Boshqaruv paneliga yo'naltirilmoqda..."
+      "instructorDescription": "Testlar yarating va topshiriqlarni boshqaring"
     },
     "error": {
       "noSignupToken": "Ro'yxatdan o'tish sessiyasi topilmadi. Iltimos, ro'yxatdan o'tish jarayonini qaytadan boshlang.",
-      "sessionCreation": "Profil yakunlandi, lekin sessiya yaratib bo'lmadi. Iltimos, qo'lda kiring.",
-      "noToken": "Autentifikatsiya tokeni topilmadi. Iltimos, qaytadan kiring."
+      "sessionCreation": "Profil yakunlandi, lekin sessiya yaratib bo'lmadi. Iltimos, qo'lda kiring."
     },
-    "verificationCode": "Tasdiqlash kodi",
-    "newPassword": "Yangi parol",
-    "goToSignIn": "Kirishga o'tish",
     "signOut": "Chiqish",
     "backToSignIn": "Kirishga qaytish",
-    "invalidCredentials": "Noto'g'ri telefon raqami yoki parol",
-    "accountCreated": "Hisob muvaffaqiyatli yaratildi",
-    "loginSuccess": "Kirish muvaffaqiyatli",
-    "logoutSuccess": "Chiqish muvaffaqiyatli",
     "errors": {
       "accountNotFound": "Hisob topilmadi. Telefon raqamingizni tekshiring yoki ro'yxatdan o'ting.",
       "accountLocked": "Hisob vaqtincha bloklangan. Keyinroq urinib ko'ring.",
@@ -229,93 +156,7 @@
     }
   },
   "navigation": {
-    "dashboard": "Boshqaruv paneli",
-    "quizzes": "Testlar",
-    "assignments": "Topshiriqlar",
-    "analytics": "Analitika",
-    "results": "Natijalar",
-    "profile": "Profil",
-    "settings": "Sozlamalar",
-    "help": "Yordam",
-    "home": "Bosh sahifa"
-  },
-  "profile": {
-    "settings": {
-      "title": "Profil sozlamalari",
-      "description": "Hisob sozlamalaringiz va afzalliklaringizni boshqaring",
-      "personalInfo": "Shaxsiy ma'lumotlar",
-      "firstName": "Ism",
-      "lastName": "Familiya",
-      "language": "Til",
-      "dashboardType": "Boshqaruv paneli turi",
-      "updateProfile": "Profilni yangilash",
-      "updating": "Yangilanmoqda...",
-      "profileUpdated": "Profil muvaffaqiyatli yangilandi",
-      "profileUpdateFailed": "Profilni yangilab bo'lmadi. Qayta urinib ko'ring.",
-      "passwordSection": "Parolni o'zgartirish",
-      "currentPassword": "Joriy parol",
-      "newPassword": "Yangi parol",
-      "confirmNewPassword": "Yangi parolni tasdiqlang",
-      "changePassword": "Parolni o'zgartirish",
-      "changing": "O'zgartirilmoqda...",
-      "passwordChanged": "Parol muvaffaqiyatli o'zgartirildi",
-      "passwordChangeFailed": "Parolni o'zgartirib bo'lmadi. Qayta urinib ko'ring.",
-      "phoneNotice": {
-        "title": "Telefon raqamini yangilash",
-        "message": "Telefon raqamini yangilash hozircha ushbu interfeys orqali qo'llab-quvvatlanmaydi. Telefon raqamingizni o'zgartirish kerak bo'lsa, qo'llab-quvvatlash xizmatiga murojaat qiling."
-      },
-      "languages": {
-        "en": "English",
-        "uz": "O'zbek",
-        "ru": "Русский"
-      },
-      "dashboardTypes": {
-        "instructor": "O'qituvchi",
-        "student": "Talaba"
-      }
-    }
-  },
-  "dashboard": {
-    "welcome": "Xush kelibsiz",
-    "overview": "Umumiy ko'rinish",
-    "recentActivity": "So'nggi faollik",
-    "quickStats": "Tezkor statistika",
-    "upcomingQuizzes": "Kelayotgan testlar",
-    "recentResults": "So'nggi natijalar"
-  },
-  "quiz": {
-    "createQuiz": "Test yaratish",
-    "editQuiz": "Testni tahrirlash",
-    "deleteQuiz": "Testni o'chirish",
-    "quizTitle": "Test nomi",
-    "quizDescription": "Test tavsifi",
-    "questions": "Savollar",
-    "addQuestion": "Savol qo'shish",
-    "questionType": "Savol turi",
-    "multipleChoice": "Ko'p tanlovli",
-    "trueFalse": "To'g'ri/Noto'g'ri",
-    "shortAnswer": "Qisqa javob",
-    "startQuiz": "Testni boshlash",
-    "submitQuiz": "Testni yuborish",
-    "timeRemaining": "Qolgan vaqt",
-    "question": "Savol",
-    "answer": "Javob",
-    "correct": "To'g'ri",
-    "incorrect": "Noto'g'ri",
-    "score": "Ball",
-    "results": "Natijalar"
-  },
-  "assignment": {
-    "createAssignment": "Topshiriq yaratish",
-    "editAssignment": "Topshiriqni tahrirlash",
-    "assignmentTitle": "Topshiriq nomi",
-    "assignmentCode": "Topshiriq kodi",
-    "joinAssignment": "Topshiriqqa qo'shilish",
-    "enterCode": "Topshiriq kodini kiriting",
-    "dueDate": "Topshirish muddati",
-    "attempts": "Urinishlar",
-    "submissions": "Topshirilganlar",
-    "grade": "Baho"
+    "profile": "Profil"
   },
   "theme": {
     "changeTheme": "Mavzuni o'zgartirish",
