@@ -82,7 +82,8 @@
       "resend": "Kodni qayta yuborish",
       "resendIn": "{seconds}s ichida qayta yuborish",
       "success": "Telefon muvaffaqiyatli tasdiqlandi! Profil sozlashga yo'naltirilmoqda...",
-      "resendSuccess": "Yangi tasdiqlash kodi yuborildi"
+      "resendSuccess": "Yangi tasdiqlash kodi yuborildi",
+      "changePhone": "Telefon raqamini o'zgartirish"
     },
     "forgotPassword": {
       "link": "Parolni unutdingizmi?",

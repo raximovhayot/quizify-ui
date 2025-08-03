@@ -54,8 +54,8 @@ export function LanguageSwitcher({
   const currentLocale = useLocale();
   const [isChanging, setIsChanging] = useState(false);
 
-  const currentLanguage =
-    languages.find((lang) => lang.code === currentLocale) || languages[0];
+  const currentLanguage: Language =
+    languages.find((lang) => lang.code === currentLocale) || languages[0]!;
 
   const handleLanguageChange = async (newLocale: string) => {
     if (newLocale === currentLocale || isChanging) return;

@@ -1,6 +1,10 @@
 import { getRequestConfig } from 'next-intl/server';
 import { cookies } from 'next/headers';
 
+// Set global timezone to prevent markup mismatches
+// eslint-disable-next-line no-process-env
+process.env.TZ = 'UTC';
+
 // Can be imported from a shared config
 export const locales = ['en', 'ru', 'uz'] as const;
 export type Locale = (typeof locales)[number];
