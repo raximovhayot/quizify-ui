@@ -39,33 +39,6 @@
 
 ---
 
-## Testing
-
-- **Jest** + **React Testing Library**
-  ```bash
-  npm test         # Run all tests
-  npm test:watch   # Watch mode
-  ```
-- Config: `jest.config.js`, setup: `jest.setup.js` (includes `@testing-library/jest-dom`)
-- DOM env: jsdom
-- Path alias: `@/*` → `src/*`
-- Place tests as `.test.tsx` or in `__tests__` folders alongside components.
-
-**Example:**
-```typescript
-import { render, screen } from '@testing-library/react'
-import { ComponentName } from '../component-name'
-
-describe('ComponentName', () => {
-  it('renders correctly', () => {
-    render(<ComponentName>Test</ComponentName>)
-    expect(screen.getByText('Test')).toBeInTheDocument()
-  })
-})
-```
-
----
-
 ## Code Style & Project Structure
 
 - **TypeScript**: Strict mode, explicit types, avoid `any`
@@ -80,7 +53,7 @@ describe('ComponentName', () => {
 - **Shared UI**: `src/components/ui/`
 - **Hooks**: `src/components/features/[feature]/hooks/`
 - **Schemas**: `src/components/features/[feature]/schemas/`
-- Co-locate tests, styles, and types with related code
+- Co-locate styles and types with related code
 
 ---
 
@@ -141,7 +114,6 @@ describe('ComponentName', () => {
 - Validate API requests/responses with Zod
 - Handle errors and loading states gracefully
 - Externalize all text for i18n
-- Maintain tests for components, hooks, and services
 
 ---
 
@@ -167,6 +139,6 @@ describe('ComponentName', () => {
 
 - Follow code style and commit guidelines
 - Document components, hooks, and services
-- Review and test code before merging
+- Review code before merging
 
 ---
