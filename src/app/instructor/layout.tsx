@@ -3,7 +3,7 @@
 import { ReactNode } from 'react';
 
 import GuardAuthenticated from '@/components/features/auth/guards/GuardAuthenticated';
-import { InstructorHeader } from '@/components/features/instructor/components/header/InstructorHeader';
+import { InstructorHeader } from '@/components/features/instructor/header/InstructorHeader';
 import { UserRole } from '@/components/features/profile/types/account';
 
 interface InstructorLayoutProps {

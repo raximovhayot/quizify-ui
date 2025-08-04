@@ -1,6 +1,7 @@
 import { GraduationCap, Users } from 'lucide-react';
-import { useTranslations } from 'next-intl';
 import { UseFormReturn } from 'react-hook-form';
+
+import { useTranslations } from 'next-intl';
 
 import { ProfileCompleteFormData } from '@/components/features/profile/hooks/useProfileComplete';
 import { DashboardType } from '@/components/features/profile/types/account';
@@ -74,7 +75,7 @@ export function DefaultDashboardSelection({
                           </CardTitle>
                           <CardDescription className="text-sm">
                             {t('auth.profileComplete.studentDescription', {
-                              default: 'Take quizzes and track your progress',
+                              default: 'Take quiz and track your progress',
                             })}
                           </CardDescription>
                         </div>
@@ -101,7 +102,7 @@ export function DefaultDashboardSelection({
                           </CardTitle>
                           <CardDescription className="text-sm">
                             {t('auth.profileComplete.instructorDescription', {
-                              default: 'Create quizzes and manage assignments',
+                              default: 'Create quiz and manage assignments',
                             })}
                           </CardDescription>
                         </div>

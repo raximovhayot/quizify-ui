@@ -2,6 +2,7 @@
  * API endpoint type definitions for enhanced type safety
  * Provides strict typing for all API endpoints and their request/response types
  */
+import { AttachmentDTO } from '@/components/features/attachment/attachmentService';
 import {
   ForgotPasswordPrepareRequest,
   ForgotPasswordUpdateRequest,
@@ -13,6 +14,14 @@ import {
   SignUpPrepareRequest,
   SignUpVerifyRequest,
 } from '@/components/features/auth/types/auth';
+import {
+  BasicQuizDataDTO,
+  FullQuizDataDTO,
+  InstructorQuizCreateRequest,
+  InstructorQuizUpdateRequest,
+  InstructorQuizUpdateStatusRequest,
+  QuizFilter,
+} from '@/components/features/instructor/quiz/types/quiz';
 import { AccountDTO } from '@/components/features/profile/types/account';
 
 import { IApiResponse } from './api';
@@ -65,14 +74,30 @@ export interface ProfileEndpoints {
 }
 
 /**
- * Quiz endpoints (placeholder for future implementation)
+ * Quiz endpoints for instructor operations
  */
 export interface QuizEndpoints {
-  getQuizzes: ApiEndpoint<ISearchParams, IPageableList<unknown>>;
-  getQuiz: ApiEndpoint<{ id: string }, unknown>;
-  createQuiz: ApiEndpoint<unknown, unknown>;
-  updateQuiz: ApiEndpoint<{ id: string; data: unknown }, unknown>;
+  getQuizzes: ApiEndpoint<QuizFilter, IPageableList<BasicQuizDataDTO>>;
+  getQuiz: ApiEndpoint<{ id: string }, FullQuizDataDTO>;
+  createQuiz: ApiEndpoint<InstructorQuizCreateRequest, FullQuizDataDTO>;
+  updateQuiz: ApiEndpoint<
+    { id: string; data: InstructorQuizUpdateRequest },
+    FullQuizDataDTO
+  >;
+  updateQuizStatus: ApiEndpoint<
+    { id: string; data: InstructorQuizUpdateStatusRequest },
+    void
+  >;
   deleteQuiz: ApiEndpoint<{ id: string }, void>;
+}
+
+/**
+ * Attachment endpoints for file management
+ */
+export interface AttachmentEndpoints {
+  uploadAttachment: ApiEndpoint<FormData, AttachmentDTO>;
+  getAttachment: ApiEndpoint<{ id: string }, AttachmentDTO>;
+  deleteAttachment: ApiEndpoint<{ id: string }, void>;
 }
 
 /**
@@ -82,6 +107,7 @@ export interface ApiEndpoints {
   auth: AuthEndpoints;
   profile: ProfileEndpoints;
   quiz: QuizEndpoints;
+  attachment: AttachmentEndpoints;
 }
 
 /**
@@ -105,11 +131,17 @@ export const API_PATHS = {
     UPLOAD_AVATAR: '/profile/avatar',
   },
   QUIZ: {
-    LIST: '/quizzes',
-    GET: '/quizzes/:id',
-    CREATE: '/quizzes',
-    UPDATE: '/quizzes/:id',
-    DELETE: '/quizzes/:id',
+    LIST: '/instructor/quizzes',
+    GET: '/instructor/quizzes/:id',
+    CREATE: '/instructor/quizzes',
+    UPDATE: '/instructor/quizzes/:id',
+    UPDATE_STATUS: '/instructor/quizzes/:id/status',
+    DELETE: '/instructor/quizzes/:id',
+  },
+  ATTACHMENT: {
+    UPLOAD: '/instructor/attachments',
+    GET: '/instructor/attachments/:id',
+    DELETE: '/instructor/attachments/:id',
   },
 } as const;
 
@@ -202,9 +234,31 @@ export const API_ENDPOINTS: ApiEndpoints = {
       path: API_PATHS.QUIZ.UPDATE,
       requiresAuth: true,
     },
+    updateQuizStatus: {
+      method: 'PATCH',
+      path: API_PATHS.QUIZ.UPDATE_STATUS,
+      requiresAuth: true,
+    },
     deleteQuiz: {
       method: 'DELETE',
       path: API_PATHS.QUIZ.DELETE,
+      requiresAuth: true,
+    },
+  },
+  attachment: {
+    uploadAttachment: {
+      method: 'POST',
+      path: API_PATHS.ATTACHMENT.UPLOAD,
+      requiresAuth: true,
+    },
+    getAttachment: {
+      method: 'GET',
+      path: API_PATHS.ATTACHMENT.GET,
+      requiresAuth: true,
+    },
+    deleteAttachment: {
+      method: 'DELETE',
+      path: API_PATHS.ATTACHMENT.DELETE,
       requiresAuth: true,
     },
   },

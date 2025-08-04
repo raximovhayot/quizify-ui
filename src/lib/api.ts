@@ -118,9 +118,13 @@ class ApiClient {
     let url = `${this.baseUrl}${endpoint}`;
 
     const requestHeaders: Record<string, string> = {
-      'Content-Type': 'application/json',
       ...headers,
     };
+
+    // Set Content-Type only if not FormData (FormData sets its own boundary)
+    if (!(body instanceof FormData)) {
+      requestHeaders['Content-Type'] = 'application/json';
+    }
 
     // Add authorization header if token is provided
     if (token) {
@@ -138,7 +142,11 @@ class ApiClient {
 
     // Add body for non-GET requests
     if (body && method !== 'GET') {
-      requestOptions.body = JSON.stringify(body);
+      if (body instanceof FormData) {
+        requestOptions.body = body;
+      } else {
+        requestOptions.body = JSON.stringify(body);
+      }
     }
 
     // Apply request interceptors

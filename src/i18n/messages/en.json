@@ -26,7 +26,23 @@
     "info": "Information",
     "sending": "Sending...",
     "verifying": "Verifying...",
-    "updating": "Updating..."
+    "updating": "Updating...",
+    "retry": "Try Again",
+    "actions": "Actions",
+    "pagination": {
+      "first": "Go to first page",
+      "previous": "Go to previous page",
+      "next": "Go to next page",
+      "last": "Go to last page",
+      "current": "Page {page}, current page",
+      "goto": "Go to page {page}",
+      "info": "Page {current} of {total}"
+    },
+    "error": {
+      "title": "Something went wrong",
+      "description": "There was a problem loading the data. Please try again.",
+      "unknown": "An unknown error occurred"
+    }
   },
   "auth": {
     "signIn": {
@@ -210,7 +226,7 @@
     "search": {
       "placeholder": "Search quizzes, students..."
     },
-    "quizzes": {
+    "quiz": {
       "title": "Quizzes",
       "subtitle": "Create and manage your quizzes",
       "createNew": "Create Quiz",
@@ -226,7 +242,77 @@
       "avgScore": "Avg Score",
       "created": "Created",
       "noResults": "No quizzes found matching your search.",
-      "noQuizzes": "No quizzes created yet."
+      "noQuizzes": "No quizzes created yet.",
+      "no": {
+        "quizzes": "No quizzes created yet."
+      },
+      "status": {
+        "published": "Published",
+        "draft": "Draft"
+      },
+      "time": {
+        "unlimited": "Unlimited",
+        "minutes": "{minutes}m",
+        "hours": "{hours}h",
+        "hoursMinutes": "{hours}h {minutes}m"
+      },
+      "attempts": {
+        "unlimited": "Unlimited",
+        "count": "{count} attempts"
+      },
+      "action": {
+        "view": "View",
+        "edit": "Edit",
+        "delete": "Delete",
+        "publish": "Publish",
+        "unpublish": "Unpublish"
+      },
+      "shuffle": {
+        "questions": "Shuffle Questions",
+        "answers": "Shuffle Answers"
+      },
+      "create": {
+        "button": "Create Quiz",
+        "first": "Create Your First Quiz",
+        "success": "Quiz created successfully",
+        "error": "Failed to create quiz"
+      },
+      "update": {
+        "success": "Quiz updated successfully",
+        "error": "Failed to update quiz"
+      },
+      "delete": {
+        "success": "Quiz deleted successfully",
+        "error": "Failed to delete quiz",
+        "confirm": {
+          "title": "Delete Quiz",
+          "description": "Are you sure you want to delete this quiz? This action cannot be undone."
+        }
+      },
+      "status": {
+        "update": {
+          "success": "Quiz status updated successfully",
+          "error": "Failed to update quiz status"
+        }
+      },
+      "search": {
+        "placeholder": "Search quizzes..."
+      },
+      "filter": {
+        "all": "All Status"
+      },
+      "results": {
+        "summary": "Showing {start} to {end} of {total} quizzes"
+      },
+      "list": {
+        "error": {
+          "title": "Failed to load quizzes",
+          "description": "There was an error loading your quizzes. Please try again."
+        },
+        "no": {
+          "data": "No quiz data available"
+        }
+      }
     },
     "userMenu": {
       "title": "User menu",

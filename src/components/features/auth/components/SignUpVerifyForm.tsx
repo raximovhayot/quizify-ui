@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
 import { useSignUpForms } from '@/components/features/auth/hooks/useSignUpForms';
@@ -20,8 +21,15 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from '@/components/ui/input-otp';
 import { InlineLoading } from '@/components/ui/loading-spinner';
+
+import { ROUTES_AUTH } from '../routes';
 
 export function SignUpVerifyForm() {
   const t = useTranslations();
@@ -73,13 +81,22 @@ export function SignUpVerifyForm() {
                     })}
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="123456"
+                    <InputOTP
                       maxLength={6}
                       disabled={isSubmitting}
+                      containerClassName="w-full"
                       {...field}
-                    />
+                    >
+                      <InputOTPGroup className="w-full justify-center">
+                        <InputOTPSlot index={0} className="flex-1 max-w-12" />
+                        <InputOTPSlot index={1} className="flex-1 max-w-12" />
+                        <InputOTPSlot index={2} className="flex-1 max-w-12" />
+                        <InputOTPSeparator />
+                        <InputOTPSlot index={3} className="flex-1 max-w-12" />
+                        <InputOTPSlot index={4} className="flex-1 max-w-12" />
+                        <InputOTPSlot index={5} className="flex-1 max-w-12" />
+                      </InputOTPGroup>
+                    </InputOTP>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -115,6 +132,17 @@ export function SignUpVerifyForm() {
                     })
                   : t('auth.verification.resend', { default: 'Resend Code' })}
               </Button>
+            </div>
+
+            <div className="text-center">
+              <Link
+                href={ROUTES_AUTH.register()}
+                className="text-sm text-muted-foreground hover:underline"
+              >
+                {t('auth.verification.changePhone', {
+                  default: 'Change phone number',
+                })}
+              </Link>
             </div>
           </form>
         </Form>

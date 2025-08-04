@@ -63,8 +63,7 @@ export default function InstructorDashboard() {
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground mt-1">
             {t('instructor.dashboard.subtitle', {
-              fallback:
-                "Welcome back! Here's what's happening with your quizzes.",
+              fallback: "Welcome back! Here's what's happening with your quiz.",
             })}
           </p>
         </div>

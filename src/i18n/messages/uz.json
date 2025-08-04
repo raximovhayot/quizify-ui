@@ -26,7 +26,23 @@
     "info": "Ma'lumot",
     "sending": "Yuborilmoqda...",
     "verifying": "Tekshirilmoqda...",
-    "updating": "Yangilanmoqda..."
+    "updating": "Yangilanmoqda...",
+    "retry": "Qayta urinish",
+    "actions": "Harakatlar",
+    "pagination": {
+      "first": "Birinchi sahifaga o'tish",
+      "previous": "Oldingi sahifaga o'tish",
+      "next": "Keyingi sahifaga o'tish",
+      "last": "Oxirgi sahifaga o'tish",
+      "current": "{page}-sahifa, joriy sahifa",
+      "goto": "{page}-sahifaga o'tish",
+      "info": "{current}-sahifa, jami {total}"
+    },
+    "error": {
+      "title": "Nimadir noto'g'ri ketdi",
+      "description": "Ma'lumotlarni yuklashda muammo yuz berdi. Iltimos, qayta urinib ko'ring.",
+      "unknown": "Noma'lum xatolik yuz berdi"
+    }
   },
   "auth": {
     "signIn": {
@@ -224,7 +240,7 @@
     "search": {
       "placeholder": "Testlar, talabalarni qidirish..."
     },
-    "quizzes": {
+    "quiz": {
       "title": "Testlar",
       "subtitle": "Testlaringizni yarating va boshqaring",
       "createNew": "Test yaratish",
@@ -240,7 +256,77 @@
       "avgScore": "O'rtacha ball",
       "created": "Yaratilgan",
       "noResults": "Qidiruv bo'yicha testlar topilmadi.",
-      "noQuizzes": "Hali testlar yaratilmagan."
+      "noQuizzes": "Hali testlar yaratilmagan.",
+      "no": {
+        "quizzes": "Hali testlar yaratilmagan."
+      },
+      "status": {
+        "published": "Nashr etilgan",
+        "draft": "Qoralama"
+      },
+      "time": {
+        "unlimited": "Cheklanmagan",
+        "minutes": "{minutes}d",
+        "hours": "{hours}s",
+        "hoursMinutes": "{hours}s {minutes}d"
+      },
+      "attempts": {
+        "unlimited": "Cheklanmagan",
+        "count": "{count} urinish"
+      },
+      "action": {
+        "view": "Ko'rish",
+        "edit": "Tahrirlash",
+        "delete": "O'chirish",
+        "publish": "Nashr etish",
+        "unpublish": "Nashrdan olib tashlash"
+      },
+      "shuffle": {
+        "questions": "Savollarni aralashtirish",
+        "answers": "Javoblarni aralashtirish"
+      },
+      "create": {
+        "button": "Test yaratish",
+        "first": "Birinchi testingizni yarating",
+        "success": "Test muvaffaqiyatli yaratildi",
+        "error": "Testni yaratib bo'lmadi"
+      },
+      "update": {
+        "success": "Test muvaffaqiyatli yangilandi",
+        "error": "Testni yangilab bo'lmadi"
+      },
+      "delete": {
+        "success": "Test muvaffaqiyatli o'chirildi",
+        "error": "Testni o'chirib bo'lmadi",
+        "confirm": {
+          "title": "Testni o'chirish",
+          "description": "Ushbu testni o'chirishni xohlaysizmi? Bu amalni bekor qilib bo'lmaydi."
+        }
+      },
+      "status": {
+        "update": {
+          "success": "Test holati muvaffaqiyatli yangilandi",
+          "error": "Test holatini yangilab bo'lmadi"
+        }
+      },
+      "search": {
+        "placeholder": "Testlarni qidirish..."
+      },
+      "filter": {
+        "all": "Barcha holatlar"
+      },
+      "results": {
+        "summary": "{start} dan {end} gacha, jami {total} test"
+      },
+      "list": {
+        "error": {
+          "title": "Testlarni yuklab bo'lmadi",
+          "description": "Testlaringizni yuklashda xatolik yuz berdi. Iltimos, qayta urinib ko'ring."
+        },
+        "no": {
+          "data": "Test ma'lumotlari mavjud emas"
+        }
+      }
     },
     "userMenu": {
       "title": "Foydalanuvchi menyusi",

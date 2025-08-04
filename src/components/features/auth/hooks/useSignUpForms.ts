@@ -1,16 +1,18 @@
-import { useCallback, useEffect, useState } from 'react';
-
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useTranslations } from 'next-intl';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { UseFormReturn, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+
+import { useCallback, useEffect, useState } from 'react';
+
+import { useTranslations } from 'next-intl';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import {
   useSignUpPrepareMutation,
   useSignUpVerifyMutation,
 } from '@/components/features/auth/hooks/useAuthMutations';
 import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
+import { ROUTES_AUTH } from '@/components/features/auth/routes';
 import {
   SignUpPhoneFormData,
   VerificationFormData,
@@ -19,7 +21,7 @@ import {
   signUpPhoneFormDefaults,
   verificationFormDefaults,
 } from '@/components/features/auth/schemas/auth';
-import { ROUTES_AUTH } from '@/components/features/auth/routes';
+import { BackendError } from '@/types/api';
 
 export type SignUpStep = 'phone' | 'verification';
 
@@ -55,9 +57,13 @@ export function useSignUpForms(): UseSignUpFormsReturn {
   const signUpPrepareMutation = useSignUpPrepareMutation();
   const signUpVerifyMutation = useSignUpVerifyMutation();
 
-  // Form state
-  const [phoneNumber, setPhoneNumber] = useState<string>('');
-  const [resendCooldown, setResendCooldown] = useState(0);
+  // State management for sign-up flow - using URL params like forgot password
+  const [phoneNumber, setPhoneNumber] = useState(
+    searchParams.get('phone') || ''
+  );
+  const [resendCooldown, setResendCooldown] = useState(
+    Number(searchParams.get('resendTime')) || 0
+  );
 
   // Derive isSubmitting from mutations
   const isSubmitting =
@@ -105,15 +111,33 @@ export function useSignUpForms(): UseSignUpFormsReturn {
         { phone: data.phone },
         {
           onSuccess: (prepareResponse) => {
-            setPhoneNumber(prepareResponse.phoneNumber);
+            // Update phone number state
+            setPhoneNumber(data.phone);
+
+            // Set the initial cooldown timer
             setResendCooldown(prepareResponse.waitingTime);
-            // Navigate to verification page with phone number as query param
-            router.push(ROUTES_AUTH.registerVerify({ phone: prepareResponse.phoneNumber }));
+
+            // Reset verification form to ensure clean state
+            verificationForm.reset(verificationFormDefaults);
+
+            toast.success(
+              t('auth.signUp.codeSent', {
+                default: 'Verification code sent to your phone',
+              })
+            );
+
+            // Navigate to verification page with phone number and waiting time as query params
+            router.push(
+              ROUTES_AUTH.registerVerify({
+                phone: prepareResponse.phoneNumber,
+                resendTime: prepareResponse.waitingTime,
+              })
+            );
           },
         }
       );
     },
-    [signUpPrepareMutation, setResendCooldown, router]
+    [signUpPrepareMutation, setResendCooldown, router, verificationForm, t]
   );
 
   // Verification submission handler
@@ -142,6 +166,19 @@ export function useSignUpForms(): UseSignUpFormsReturn {
             // NextAuth middleware will handle redirect to /profile/complete for NEW users
             router.push('/profile/complete');
           },
+          onError: (error: BackendError) => {
+            // Handle specific error cases - if code expired, go back to phone step
+            const firstError = error.getFirstError();
+            if (firstError?.message.includes('expired')) {
+              toast.error(
+                t('auth.verification.expired', {
+                  default:
+                    'Verification code has expired. Please request a new one.',
+                })
+              );
+              router.push(ROUTES_AUTH.register());
+            }
+          },
         }
       );
     },
@@ -150,7 +187,7 @@ export function useSignUpForms(): UseSignUpFormsReturn {
 
   // Resend OTP handler
   const handleResendOTP = useCallback(async () => {
-    if (resendCooldown > 0) return;
+    if (resendCooldown > 0 || !phoneNumber) return;
 
     signUpPrepareMutation.mutate(
       { phone: phoneNumber },

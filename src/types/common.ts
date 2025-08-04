@@ -43,3 +43,8 @@ export interface IOption<T = string> {
   disabled?: boolean;
   description?: string;
 }
+
+export interface SortDto {
+  field: string;
+  direction: string; // 'ASC' | 'DESC'
+}
