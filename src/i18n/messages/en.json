@@ -57,7 +57,14 @@
     },
     "password": {
       "label": "Password",
-      "placeholder": "Enter your password"
+      "placeholder": "Enter your password",
+      "new": {
+        "label": "New Password"
+      },
+      "confirm": {
+        "label": "Confirm Password",
+        "placeholder": "Confirm your password"
+      }
     },
     "firstName": {
       "label": "First Name",
@@ -98,6 +105,13 @@
         "message": "Password reset successfully. You can now sign in with your new password."
       },
       "codeSent": "Verification code sent to your phone"
+    },
+    "resetPassword": {
+      "title": "Set New Password",
+      "description": "Enter your new password",
+      "update": "Update Password",
+      "updating": "Updating Password...",
+      "forPhone": "Resetting password for"
     },
     "profileComplete": {
       "title": "Complete Your Profile",

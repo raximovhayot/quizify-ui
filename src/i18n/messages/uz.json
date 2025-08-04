@@ -57,7 +57,14 @@
     },
     "password": {
       "label": "Parol",
-      "placeholder": "Parolni kiriting"
+      "placeholder": "Parolni kiriting",
+      "new": {
+        "label": "Yangi parol"
+      },
+      "confirm": {
+        "label": "Parolni tasdiqlang",
+        "placeholder": "Parolni tasdiqlang"
+      }
     },
     "firstName": {
       "label": "Ism",
@@ -94,6 +101,13 @@
         "message": "Parol muvaffaqiyatli tiklandi. Endi yangi parol bilan kirishingiz mumkin."
       },
       "codeSent": "Tasdiqlash kodi telefoningizga yuborildi"
+    },
+    "resetPassword": {
+      "title": "Yangi parol o'rnatish",
+      "description": "Yangi parolni kiriting",
+      "update": "Parolni yangilash",
+      "updating": "Parol yangilanmoqda...",
+      "forPhone": "Parol tiklanmoqda"
     },
     "profileComplete": {
       "title": "Profilingizni to'ldiring",
