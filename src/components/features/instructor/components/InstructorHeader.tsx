@@ -1,21 +1,6 @@
 'use client';
 
-import {
-  BarChart3,
-  Bell,
-  BookOpen,
-  ChevronDown,
-  FileText,
-  Home,
-  LogOut,
-  Menu,
-  PlusCircle,
-  Settings,
-  User,
-  UserCircle,
-  Users,
-  X,
-} from 'lucide-react';
+import { BarChart3, Bell, BookOpen, Home, Menu } from 'lucide-react';
 
 import { useState } from 'react';
 
@@ -25,7 +10,7 @@ import { usePathname } from 'next/navigation';
 
 import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
 import { Logo } from '@/components/shared/brand/Logo';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -359,10 +344,6 @@ export function InstructorHeader({ title }: InstructorHeaderProps) {
                   className="relative h-10 w-10 rounded-full p-0 ml-2"
                 >
                   <Avatar className="h-9 w-9">
-                    <AvatarImage
-                      src={user.avatar || user.profileImage}
-                      alt={`${user.firstName} ${user.lastName}`}
-                    />
                     <AvatarFallback className="bg-primary text-primary-foreground text-sm font-medium">
                       {user.firstName?.[0]}
                       {user.lastName?.[0]}
@@ -380,7 +361,7 @@ export function InstructorHeader({ title }: InstructorHeaderProps) {
                       {user.firstName} {user.lastName}
                     </p>
                     <p className="text-xs leading-none text-muted-foreground">
-                      {user.email || user.phone}
+                      {user.phone}
                     </p>
                     <p className="text-xs leading-none text-muted-foreground">
                       {t('instructor.role', { fallback: 'Instructor' })}

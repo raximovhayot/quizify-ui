@@ -4,7 +4,6 @@ import { BookOpen } from 'lucide-react';
 
 import * as React from 'react';
 
-import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
 import { cn } from '@/lib/utils';
@@ -46,7 +45,6 @@ export function Logo({
   iconClassName,
   textClassName,
 }: LogoProps) {
-  const t = useTranslations();
   const sizeConfig = sizeClasses[size];
 
   const logoContent = (
