@@ -55,6 +55,14 @@
 - **Schemas**: `src/components/features/[feature]/schemas/`
 - Co-locate styles and types with related code
 
+**Naming Conventions:**
+- **Components**: PascalCase with `.tsx` extension (`UserProfile.tsx`)
+- **Hooks**: camelCase with `use` prefix (`useUsers.ts`)
+- **Services**: camelCase with `Service` suffix (`userService.ts`)
+- **Schemas**: camelCase with `Schema` suffix (`userSchema.ts`)
+- **Utils**: camelCase with descriptive names (`formatDate.ts`)
+- **Types/Interfaces**: PascalCase, prefixed with `T` for types, `I` for interfaces (`TUser`, `IUserProps`)
+
 ---
 
 ## Component & State Management
