@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
 
-import { PageSignIn } from '@/components/features/auth/components/PageSignIn';
+import { SignInForm } from '@/components/features/auth/components/SignInForm';
 
 export default function SignInPage() {
   return (
     <Suspense>
-      <PageSignIn />
+      <SignInForm />
     </Suspense>
   );
 }

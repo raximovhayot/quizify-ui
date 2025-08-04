@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
 
-import { PageForgotPassword } from '@/components/features/auth/components/PageForgotPassword';
+import { ForgotPasswordForm } from '@/components/features/auth/components/ForgotPasswordForm';
 
 export default function ForgotPasswordPage() {
   return (
     <Suspense>
-      <PageForgotPassword />
+      <ForgotPasswordForm />
     </Suspense>
   );
 }

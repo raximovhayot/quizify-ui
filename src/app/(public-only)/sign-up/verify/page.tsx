@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
 
-import { PageSignUpVerify } from '@/components/features/auth/components/PageSignUpVerify';
+import { SignUpVerifyForm } from '@/components/features/auth/components/SignUpVerifyForm';
 
 export default function SignUpVerifyPage() {
   return (
     <Suspense>
-      <PageSignUpVerify />
+      <SignUpVerifyForm />
     </Suspense>
   );
 }

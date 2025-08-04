@@ -31,7 +31,7 @@ import { InlineLoading } from '@/components/ui/loading-spinner';
 
 import { ROUTES_AUTH } from '../routes';
 
-export function PageForgotPasswordVerify() {
+export function ForgotPasswordVerifyForm() {
   const t = useTranslations();
   const searchParams = useSearchParams();
   const phoneFromUrl = searchParams.get('phone') || '';
