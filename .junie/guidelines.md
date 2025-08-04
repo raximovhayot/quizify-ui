@@ -74,6 +74,37 @@
 - API/server logic lives in API routes or service layer, not in components
 - Validate forms with Zod, manage forms with React Hook Form
 
+**Example - Container/Presentational Pattern:**
+```tsx
+// UserListContainer.tsx (Container)
+export function UserListContainer() {
+  const { data, isLoading, error } = useQuery({ 
+    queryKey: ['users'], 
+    queryFn: userService.getUsers 
+  });
+  
+  if (isLoading) return <LoadingSpinner />;
+  if (error) return <ErrorDisplay error={error} />;
+  
+  return <UserList users={data} />;
+}
+
+// UserList.tsx (Presentational)
+interface UserListProps {
+  users: TUser[];
+}
+
+export function UserList({ users }: UserListProps) {
+  return (
+    <ul>
+      {users.map(user => (
+        <li key={user.id}>{user.name}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
 ---
 
 ## API Integration & Authentication
