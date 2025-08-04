@@ -2,7 +2,7 @@ import NextAuth from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import Credentials from 'next-auth/providers/credentials';
 
-import { AuthService } from '@/components/features/auth/services/auth-service';
+import { AuthService } from '@/components/features/auth/services/authService';
 import {
   AccountDTO,
   UserState,

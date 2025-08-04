@@ -3,7 +3,7 @@ import {
   AccountDTO,
 } from '@/components/features/profile/types/account';
 import { apiClient } from '@/lib/api';
-import { ApiResponse, extractApiData } from '@/types/api';
+import { IApiResponse, extractApiData } from '@/types/api';
 
 /**
  * AccountService - Handles account-related operations
@@ -32,7 +32,7 @@ export class AccountService {
     data: AccountCompleteRequest,
     accessToken: string
   ): Promise<AccountDTO> {
-    const response: ApiResponse<AccountDTO> = await apiClient.put(
+    const response: IApiResponse<AccountDTO> = await apiClient.put(
       '/account/complete',
       data,
       accessToken

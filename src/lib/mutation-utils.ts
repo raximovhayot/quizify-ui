@@ -4,16 +4,17 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
+
 import { useRouter } from 'next/navigation';
 
 import { handleApiResponse, showSuccessToast } from '@/lib/api-utils';
-import { ApiResponse, BackendError } from '@/types/api';
+import { BackendError, IApiResponse } from '@/types/api';
 
 /**
  * Base mutation configuration options
  */
 interface BaseMutationOptions<TData, TVariables> {
-  mutationFn: (variables: TVariables) => Promise<ApiResponse<TData>>;
+  mutationFn: (variables: TVariables) => Promise<IApiResponse<TData>>;
   onSuccess?: (data: TData, variables: TVariables) => void | Promise<void>;
   onError?: (
     error: BackendError,
@@ -126,7 +127,7 @@ export function createAuthMutation<TData = unknown, TVariables = void>(
  * Create a simple mutation hook for basic CRUD operations
  */
 export function createSimpleMutation<TData = unknown, TVariables = void>(
-  mutationFn: (variables: TVariables) => Promise<ApiResponse<TData>>,
+  mutationFn: (variables: TVariables) => Promise<IApiResponse<TData>>,
   successMessage?: string
 ): () => UseMutationResult<TData, BackendError, TVariables> {
   return createMutation({

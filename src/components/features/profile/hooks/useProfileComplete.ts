@@ -1,19 +1,20 @@
-import { useState } from 'react';
-
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signIn } from 'next-auth/react';
-import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
+
+import { useState } from 'react';
+
+import { signIn } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 
 import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
 import {
   clearFormErrors,
   handleAuthError,
 } from '@/components/features/auth/lib/auth-errors';
-import { AccountService } from '@/components/features/profile/services/account-service';
+import { AccountService } from '@/components/features/profile/services/accountService';
 import {
   AccountCompleteRequest,
   DashboardType,

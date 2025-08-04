@@ -1,22 +1,40 @@
 /**
  * Enhanced Error Boundary with comprehensive error handling
- * 
+ *
  * Provides feature-specific error boundaries with error reporting, logging,
  * and user-friendly fallback components for better error handling throughout
  * the application.
- * 
+ *
  * @fileoverview Enhanced error boundary components and utilities
  * @version 1.0.0
  * @since 2025-01-01
  */
-
 'use client';
 
+import { AlertTriangle, Bug, Home, RefreshCw } from 'lucide-react';
+
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { AlertTriangle, RefreshCw, Home, Bug } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+
+/**
+ * Enhanced Error Boundary with comprehensive error handling
+ *
+ * Provides feature-specific error boundaries with error reporting, logging,
+ * and user-friendly fallback components for better error handling throughout
+ * the application.
+ *
+ * @fileoverview Enhanced error boundary components and utilities
+ * @version 1.0.0
+ * @since 2025-01-01
+ */
 
 // =============================================================================
 // ERROR TYPES AND INTERFACES
@@ -73,7 +91,11 @@ interface ErrorBoundaryProps {
   /** Whether to show detailed error information in development */
   showDetails?: boolean;
   /** Custom error handler */
-  onError?: (error: Error, errorInfo: ErrorInfo, context?: ErrorContext) => void;
+  onError?: (
+    error: Error,
+    errorInfo: ErrorInfo,
+    context?: ErrorContext
+  ) => void;
   /** Whether to enable automatic retry */
   enableRetry?: boolean;
 }
@@ -102,7 +124,8 @@ class ErrorReportingService {
   private isDevelopment: boolean;
 
   private constructor() {
-    this.isDevelopment = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+    this.isDevelopment =
+      typeof window !== 'undefined' && window.location.hostname === 'localhost';
   }
 
   static getInstance(): ErrorReportingService {
@@ -118,7 +141,7 @@ class ErrorReportingService {
   logError(error: Error, errorInfo: ErrorInfo, context?: ErrorContext): string {
     const errorId = this.generateErrorId();
     const timestamp = new Date().toISOString();
-    
+
     const errorReport = {
       errorId,
       timestamp,
@@ -126,7 +149,8 @@ class ErrorReportingService {
       stack: error.stack,
       componentStack: errorInfo.componentStack,
       context,
-      userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : 'unknown',
+      userAgent:
+        typeof window !== 'undefined' ? window.navigator.userAgent : 'unknown',
       url: typeof window !== 'undefined' ? window.location.href : 'unknown',
     };
 
@@ -147,7 +171,11 @@ class ErrorReportingService {
   /**
    * Report error to external service (placeholder for actual implementation)
    */
-  async reportError(error: Error, errorInfo: ErrorInfo, context?: ErrorContext): Promise<void> {
+  async reportError(
+    error: Error,
+    errorInfo: ErrorInfo,
+    context?: ErrorContext
+  ): Promise<void> {
     if (!context?.reportable) return;
 
     try {
@@ -194,8 +222,9 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
   canRetry,
   retryCount,
 }) => {
-  const isDevelopment = typeof window !== 'undefined' && window.location.hostname === 'localhost';
-  
+  const isDevelopment =
+    typeof window !== 'undefined' && window.location.hostname === 'localhost';
+
   return (
     <Card className="w-full max-w-md mx-auto mt-8">
       <CardHeader className="text-center">
@@ -204,25 +233,26 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
         </div>
         <CardTitle className="text-red-900">Something went wrong</CardTitle>
         <CardDescription>
-          {context?.feature 
+          {context?.feature
             ? `An error occurred in the ${context.feature} feature.`
-            : 'An unexpected error occurred.'
-          }
+            : 'An unexpected error occurred.'}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {isDevelopment && (
           <div className="p-3 bg-gray-100 rounded-md">
-            <p className="text-sm font-medium text-gray-900 mb-1">Error Details:</p>
+            <p className="text-sm font-medium text-gray-900 mb-1">
+              Error Details:
+            </p>
             <p className="text-xs text-gray-600 font-mono">{error.message}</p>
           </div>
         )}
-        
+
         <div className="flex flex-col sm:flex-row gap-2">
           {canRetry && (
-            <Button 
-              onClick={retry} 
-              variant="default" 
+            <Button
+              onClick={retry}
+              variant="default"
               className="flex-1"
               disabled={retryCount >= 3}
             >
@@ -230,9 +260,9 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
               {retryCount > 0 ? `Retry (${retryCount}/3)` : 'Try Again'}
             </Button>
           )}
-          
-          <Button 
-            onClick={() => window.location.href = '/'} 
+
+          <Button
+            onClick={() => (window.location.href = '/')}
             variant="outline"
             className="flex-1"
           >
@@ -242,12 +272,12 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
         </div>
 
         {isDevelopment && (
-          <Button 
+          <Button
             onClick={() => {
               console.error('Error details:', { error, context });
               alert('Error details logged to console');
             }}
-            variant="ghost" 
+            variant="ghost"
             size="sm"
             className="w-full"
           >
@@ -291,13 +321,16 @@ export const MinimalErrorFallback: React.FC<ErrorFallbackProps> = ({
 /**
  * Enhanced Error Boundary with comprehensive error handling
  */
-export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class ErrorBoundary extends Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   private errorReportingService: ErrorReportingService;
   private retryTimeoutId: NodeJS.Timeout | null = null;
 
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    
+
     this.state = {
       hasError: false,
       error: null,
@@ -318,9 +351,13 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     const { context, onError } = this.props;
-    
+
     // Log and report error
-    const errorId = this.errorReportingService.logError(error, errorInfo, context);
+    const errorId = this.errorReportingService.logError(
+      error,
+      errorInfo,
+      context
+    );
     this.errorReportingService.reportError(error, errorInfo, context);
 
     // Update state with error information
@@ -372,19 +409,19 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   };
 
   render() {
-    const { 
-      children, 
-      fallback: CustomFallback, 
-      context, 
-      maxRetries = 3, 
-      enableRetry = true 
+    const {
+      children,
+      fallback: CustomFallback,
+      context,
+      maxRetries = 3,
+      enableRetry = true,
     } = this.props;
-    
+
     const { hasError, error, errorInfo, retryCount } = this.state;
 
     if (hasError && error && errorInfo) {
       const FallbackComponent = CustomFallback || DefaultErrorFallback;
-      
+
       return (
         <FallbackComponent
           error={error}
@@ -408,7 +445,9 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 /**
  * Authentication feature error boundary
  */
-export const AuthErrorBoundary: React.FC<{ children: ReactNode }> = ({ children }) => (
+export const AuthErrorBoundary: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => (
   <ErrorBoundary
     context={{
       feature: 'authentication',
@@ -424,7 +463,9 @@ export const AuthErrorBoundary: React.FC<{ children: ReactNode }> = ({ children 
 /**
  * Profile feature error boundary
  */
-export const ProfileErrorBoundary: React.FC<{ children: ReactNode }> = ({ children }) => (
+export const ProfileErrorBoundary: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => (
   <ErrorBoundary
     context={{
       feature: 'profile',
@@ -440,7 +481,9 @@ export const ProfileErrorBoundary: React.FC<{ children: ReactNode }> = ({ childr
 /**
  * Quiz feature error boundary
  */
-export const QuizErrorBoundary: React.FC<{ children: ReactNode }> = ({ children }) => (
+export const QuizErrorBoundary: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => (
   <ErrorBoundary
     context={{
       feature: 'quiz',
@@ -456,10 +499,10 @@ export const QuizErrorBoundary: React.FC<{ children: ReactNode }> = ({ children 
 /**
  * Form error boundary for form-specific errors
  */
-export const FormErrorBoundary: React.FC<{ children: ReactNode; formName?: string }> = ({ 
-  children, 
-  formName 
-}) => (
+export const FormErrorBoundary: React.FC<{
+  children: ReactNode;
+  formName?: string;
+}> = ({ children, formName }) => (
   <ErrorBoundary
     context={{
       feature: 'form',
@@ -484,15 +527,15 @@ export const FormErrorBoundary: React.FC<{ children: ReactNode; formName?: strin
 export const useErrorHandler = () => {
   return (error: Error, context?: ErrorContext) => {
     const errorReportingService = ErrorReportingService.getInstance();
-    
+
     // Create mock error info for manual errors
     const errorInfo: ErrorInfo = {
       componentStack: 'Manual error trigger',
     };
-    
+
     errorReportingService.logError(error, errorInfo, context);
     errorReportingService.reportError(error, errorInfo, context);
-    
+
     // Re-throw to trigger error boundary
     throw error;
   };
@@ -510,8 +553,8 @@ export function withErrorBoundary<P extends object>(
       <Component {...props} />
     </ErrorBoundary>
   );
-  
+
   WrappedComponent.displayName = `withErrorBoundary(${Component.displayName || Component.name})`;
-  
+
   return WrappedComponent;
 }

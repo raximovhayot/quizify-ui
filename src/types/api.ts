@@ -3,35 +3,35 @@
  * Format: {data: T, errors: [ { code, message, field } ]}
  */
 
-export interface ApiError {
+export interface IApiError {
   code: string;
   message: string;
   field?: string;
 }
 
-export interface ApiResponse<T = unknown> {
+export interface IApiResponse<T = unknown> {
   data: T;
-  errors: ApiError[];
+  errors: IApiError[];
 }
 
 /**
  * Type guard to check if an API response has errors
  */
-export function hasApiErrors<T>(response: ApiResponse<T>): boolean {
+export function hasApiErrors<T>(response: IApiResponse<T>): boolean {
   return response.errors && response.errors.length > 0;
 }
 
 /**
  * Type guard to check if an API response is successful (no errors)
  */
-export function isApiSuccess<T>(response: ApiResponse<T>): boolean {
+export function isApiSuccess<T>(response: IApiResponse<T>): boolean {
   return !hasApiErrors(response);
 }
 
 /**
  * Extract data from API response if successful, otherwise throw error
  */
-export function extractApiData<T>(response: ApiResponse<T>): T {
+export function extractApiData<T>(response: IApiResponse<T>): T {
   if (hasApiErrors(response)) {
     throw new BackendError(response);
   }
@@ -41,7 +41,9 @@ export function extractApiData<T>(response: ApiResponse<T>): T {
 /**
  * Get the first error from API response
  */
-export function getFirstApiError<T>(response: ApiResponse<T>): ApiError | null {
+export function getFirstApiError<T>(
+  response: IApiResponse<T>
+): IApiError | null {
   return response.errors && response.errors.length > 0
     ? response.errors[0]!
     : null;
@@ -51,9 +53,9 @@ export function getFirstApiError<T>(response: ApiResponse<T>): ApiError | null {
  * Get errors for a specific field from API response
  */
 export function getFieldErrors<T>(
-  response: ApiResponse<T>,
+  response: IApiResponse<T>,
   field: string
-): ApiError[] {
+): IApiError[] {
   return response.errors
     ? response.errors.filter((error) => error.field === field)
     : [];
@@ -64,10 +66,10 @@ export function getFieldErrors<T>(
  * This allows pages to access individual error details while maintaining backward compatibility
  */
 export class BackendError extends Error {
-  public readonly errors: ApiError[];
-  public readonly response: ApiResponse<unknown>;
+  public readonly errors: IApiError[];
+  public readonly response: IApiResponse<unknown>;
 
-  constructor(response: ApiResponse<unknown>) {
+  constructor(response: IApiResponse<unknown>) {
     const errorMessages = response.errors
       .map((error) => error.message)
       .join(', ');
@@ -80,21 +82,21 @@ export class BackendError extends Error {
   /**
    * Get errors for a specific field
    */
-  getFieldErrors(field: string): ApiError[] {
+  getFieldErrors(field: string): IApiError[] {
     return this.errors.filter((error) => error.field === field);
   }
 
   /**
    * Get the first error
    */
-  getFirstError(): ApiError | null {
+  getFirstError(): IApiError | null {
     return this.errors.length > 0 ? this.errors[0]! : null;
   }
 
   /**
    * Get errors by code
    */
-  getErrorsByCode(code: string): ApiError[] {
+  getErrorsByCode(code: string): IApiError[] {
     return this.errors.filter((error) => error.code === code);
   }
 

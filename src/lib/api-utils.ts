@@ -1,12 +1,12 @@
 import { toast } from 'sonner';
 
-import { ApiResponse, BackendError, hasApiErrors } from '@/types/api';
+import { BackendError, IApiResponse, hasApiErrors } from '@/types/api';
 
 /**
  * Handle API response and show appropriate toast messages
  * Throws BackendError if response has errors
  */
-export function handleApiResponse<T>(response: ApiResponse<T>): T {
+export function handleApiResponse<T>(response: IApiResponse<T>): T {
   if (hasApiErrors(response)) {
     // Show error toast with the first error message
     const firstError = response.errors[0];

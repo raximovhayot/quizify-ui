@@ -11,7 +11,7 @@ import {
   SignUpVerifyRequest,
 } from '@/components/features/auth/types/auth';
 import { apiClient } from '@/lib/api';
-import { ApiResponse, extractApiData } from '@/types/api';
+import { IApiResponse, extractApiData } from '@/types/api';
 
 export class AuthService {
   // ============================================================================
@@ -21,7 +21,7 @@ export class AuthService {
   static async signIn(
     phone: string,
     password: string
-  ): Promise<ApiResponse<JWTToken>> {
+  ): Promise<IApiResponse<JWTToken>> {
     const request: SignInRequest = { phone, password };
     return await apiClient.post('/auth/sign-in', request);
   }
@@ -45,7 +45,7 @@ export class AuthService {
    */
   static async signUpPrepare(phone: string): Promise<SignInPrepareResponse> {
     const request: SignUpPrepareRequest = { phone };
-    const response: ApiResponse<SignInPrepareResponse> = await apiClient.post(
+    const response: IApiResponse<SignInPrepareResponse> = await apiClient.post(
       '/auth/sign-up/prepare',
       request
     );
@@ -69,7 +69,7 @@ export class AuthService {
    * ```
    */
   static async signUpVerify(data: SignUpVerifyRequest): Promise<JWTToken> {
-    const response: ApiResponse<JWTToken> = await apiClient.post(
+    const response: IApiResponse<JWTToken> = await apiClient.post(
       '/auth/sign-up/verify',
       data
     );
@@ -97,7 +97,7 @@ export class AuthService {
     phone: string
   ): Promise<SignInPrepareResponse> {
     const request: ForgotPasswordPrepareRequest = { phone };
-    const response: ApiResponse<SignInPrepareResponse> = await apiClient.post(
+    const response: IApiResponse<SignInPrepareResponse> = await apiClient.post(
       '/auth/forgot-password/prepare',
       request
     );
@@ -123,7 +123,7 @@ export class AuthService {
     otp: string
   ): Promise<ForgotPasswordVerifyResponse> {
     const request: ForgotPasswordVerifyRequest = { phone, otp };
-    const response: ApiResponse<ForgotPasswordVerifyResponse> =
+    const response: IApiResponse<ForgotPasswordVerifyResponse> =
       await apiClient.post('/auth/forgot-password/verify', request);
     return extractApiData(response);
   }
@@ -147,7 +147,7 @@ export class AuthService {
     newPassword: string
   ): Promise<string> {
     const request: ForgotPasswordUpdateRequest = { token, newPassword };
-    const response: ApiResponse<string> = await apiClient.post(
+    const response: IApiResponse<string> = await apiClient.post(
       '/auth/forgot-password/update',
       request
     );
@@ -173,7 +173,7 @@ export class AuthService {
    */
   static async refreshToken(refreshToken: string): Promise<JWTToken> {
     const request: RefreshTokenRequest = { refreshToken };
-    const response: ApiResponse<JWTToken> = await apiClient.post(
+    const response: IApiResponse<JWTToken> = await apiClient.post(
       '/auth/refresh-token',
       request
     );

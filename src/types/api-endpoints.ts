@@ -2,21 +2,21 @@
  * API endpoint type definitions for enhanced type safety
  * Provides strict typing for all API endpoints and their request/response types
  */
-
-import { ApiResponse } from './api';
 import {
+  ForgotPasswordPrepareRequest,
+  ForgotPasswordUpdateRequest,
+  ForgotPasswordVerifyRequest,
+  ForgotPasswordVerifyResponse,
   JWTToken,
+  SignInPrepareResponse,
   SignInRequest,
   SignUpPrepareRequest,
   SignUpVerifyRequest,
-  ForgotPasswordPrepareRequest,
-  ForgotPasswordVerifyRequest,
-  ForgotPasswordUpdateRequest,
-  SignInPrepareResponse,
-  ForgotPasswordVerifyResponse,
 } from '@/components/features/auth/types/auth';
 import { AccountDTO } from '@/components/features/profile/types/account';
-import { PageableList, SearchParams } from './common';
+
+import { IApiResponse } from './api';
+import { IPageableList, ISearchParams } from './common';
 
 /**
  * HTTP methods supported by the API
@@ -41,8 +41,14 @@ export interface AuthEndpoints {
   signIn: ApiEndpoint<SignInRequest, JWTToken>;
   signUpPrepare: ApiEndpoint<SignUpPrepareRequest, SignInPrepareResponse>;
   signUpVerify: ApiEndpoint<SignUpVerifyRequest, JWTToken>;
-  forgotPasswordPrepare: ApiEndpoint<ForgotPasswordPrepareRequest, SignInPrepareResponse>;
-  forgotPasswordVerify: ApiEndpoint<ForgotPasswordVerifyRequest, ForgotPasswordVerifyResponse>;
+  forgotPasswordPrepare: ApiEndpoint<
+    ForgotPasswordPrepareRequest,
+    SignInPrepareResponse
+  >;
+  forgotPasswordVerify: ApiEndpoint<
+    ForgotPasswordVerifyRequest,
+    ForgotPasswordVerifyResponse
+  >;
   forgotPasswordUpdate: ApiEndpoint<ForgotPasswordUpdateRequest, string>;
   refreshToken: ApiEndpoint<{ refreshToken: string }, JWTToken>;
   logout: ApiEndpoint<void, void>;
@@ -62,7 +68,7 @@ export interface ProfileEndpoints {
  * Quiz endpoints (placeholder for future implementation)
  */
 export interface QuizEndpoints {
-  getQuizzes: ApiEndpoint<SearchParams, PageableList<unknown>>;
+  getQuizzes: ApiEndpoint<ISearchParams, IPageableList<unknown>>;
   getQuiz: ApiEndpoint<{ id: string }, unknown>;
   createQuiz: ApiEndpoint<unknown, unknown>;
   updateQuiz: ApiEndpoint<{ id: string; data: unknown }, unknown>;
@@ -207,35 +213,39 @@ export const API_ENDPOINTS: ApiEndpoints = {
 /**
  * Type helper to extract request type from endpoint
  */
-export type EndpointRequest<T> = T extends ApiEndpoint<infer R, unknown> ? R : never;
+export type EndpointRequest<T> =
+  T extends ApiEndpoint<infer R, unknown> ? R : never;
 
 /**
  * Type helper to extract response type from endpoint
  */
-export type EndpointResponse<T> = T extends ApiEndpoint<unknown, infer R> ? R : never;
+export type EndpointResponse<T> =
+  T extends ApiEndpoint<unknown, infer R> ? R : never;
 
 /**
  * Type helper to create typed API response
  */
-export type TypedApiResponse<T> = ApiResponse<T>;
+export type TypedApiResponse<T> = IApiResponse<T>;
 
 /**
  * Utility type for endpoint path parameters
  */
-export type PathParams<T extends string> = T extends `${string}:${infer Param}/${infer Rest}`
-  ? { [K in Param]: string } & PathParams<Rest>
-  : T extends `${string}:${infer Param}`
-  ? { [K in Param]: string }
-  : Record<string, never>;
+export type PathParams<T extends string> =
+  T extends `${string}:${infer Param}/${infer Rest}`
+    ? { [K in Param]: string } & PathParams<Rest>
+    : T extends `${string}:${infer Param}`
+      ? { [K in Param]: string }
+      : Record<string, never>;
 
 /**
  * Type-safe path parameter extraction
  */
-export type ExtractPathParams<T extends keyof ApiEndpoints[keyof ApiEndpoints]> = 
-  T extends keyof AuthEndpoints
-    ? PathParams<AuthEndpoints[T]['path']>
-    : T extends keyof ProfileEndpoints
+export type ExtractPathParams<
+  T extends keyof ApiEndpoints[keyof ApiEndpoints],
+> = T extends keyof AuthEndpoints
+  ? PathParams<AuthEndpoints[T]['path']>
+  : T extends keyof ProfileEndpoints
     ? PathParams<ProfileEndpoints[T]['path']>
     : T extends keyof QuizEndpoints
-    ? PathParams<QuizEndpoints[T]['path']>
-    : Record<string, never>;
+      ? PathParams<QuizEndpoints[T]['path']>
+      : Record<string, never>;

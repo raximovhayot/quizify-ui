@@ -15,7 +15,7 @@ export enum Language {
 /**
  * Pageable list interface (existing, enhanced with better typing)
  */
-export interface PageableList<T> {
+export interface IPageableList<T> {
   content: T[];
   totalElements: number;
   totalPages: number;
@@ -26,7 +26,7 @@ export interface PageableList<T> {
 /**
  * Generic search parameters
  */
-export interface SearchParams {
+export interface ISearchParams {
   query?: string;
   page?: number;
   size?: number;
@@ -37,7 +37,7 @@ export interface SearchParams {
 /**
  * Generic option type for dropdowns/selects
  */
-export interface Option<T = string> {
+export interface IOption<T = string> {
   label: string;
   value: T;
   disabled?: boolean;
