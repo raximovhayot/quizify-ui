@@ -122,15 +122,13 @@ export function LanguageSwitcher({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
             className={cn('h-8', className)}
             disabled={isChanging}
           >
             <span className="mr-1">{currentLanguage.flag}</span>
-            <span className="text-xs font-medium">
-              {currentLanguage.code.toUpperCase()}
-            </span>
+            <span className="font-medium">{currentLanguage.nativeName}</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">

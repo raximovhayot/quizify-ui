@@ -1,10 +1,12 @@
 'use client';
 
 import { LogOut, Settings, User } from 'lucide-react';
+
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
 import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
+import Logo from '@/components/shared/brand/Logo';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -39,19 +41,15 @@ export function Header({ title, showUserMenu = true }: HeaderProps) {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-16 items-center justify-between px-4">
         {/* Logo/Title */}
-        <div className="flex items-center space-x-4">
-          <h1 className="text-xl font-semibold tracking-tight">
-            {title || 'Quizify'}
-          </h1>
-        </div>
+        <Logo />
 
         {/* Right side - Theme, Language & User Menu */}
         <div className="flex items-center space-x-2">
           {/* Theme Selector */}
-          <ThemeSwitcher variant="icon-only" />
-          
+          <ThemeSwitcher variant="compact" />
+
           {/* Language Selector */}
-          <LanguageSwitcher variant="icon-only" />
+          <LanguageSwitcher variant="compact" />
 
           {/* User Menu */}
           {showUserMenu && isAuthenticated && user && (
