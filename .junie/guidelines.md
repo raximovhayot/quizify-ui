@@ -50,7 +50,8 @@
 **Structure:**
 - All source in `src/`
 - **Features**: `src/components/features/[feature]/`
-- **Shared UI**: `src/components/ui/`
+- **shadcn components**: `src/components/ui/`
+- **Shared UI components**: `src/components/shared/ui/`
 - **Hooks**: `src/components/features/[feature]/hooks/`
 - **Schemas**: `src/components/features/[feature]/schemas/`
 - Co-locate styles and types with related code
@@ -62,6 +63,7 @@
 - **Schemas**: camelCase with `Schema` suffix (`userSchema.ts`)
 - **Utils**: camelCase with descriptive names (`formatDate.ts`)
 - **Types/Interfaces**: PascalCase, prefixed with `T` for types, `I` for interfaces (`TUser`, `IUserProps`)
+- Do not change shadcn ui components name
 
 ---
 
