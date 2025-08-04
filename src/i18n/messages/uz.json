@@ -178,5 +178,75 @@
     "light": "Yorug'",
     "dark": "Qorong'u",
     "system": "Tizim"
+  },
+  "instructor": {
+    "role": "O'qituvchi",
+    "dashboard": {
+      "title": "Boshqaruv paneli",
+      "subtitle": "Xush kelibsiz! Testlaringiz bilan nima sodir bo'layotgani haqida ma'lumot.",
+      "createQuiz": "Yangi test yaratish",
+      "totalQuizzes": "Jami testlar",
+      "active": "faol",
+      "totalStudents": "Jami talabalar",
+      "enrolled": "ro'yxatdan o'tgan",
+      "submissions": "Javoblar",
+      "thisWeek": "shu hafta",
+      "averageScore": "O'rtacha ball",
+      "fromLastWeek": "o'tgan haftadan",
+      "recentActivity": "So'nggi faollik",
+      "viewAll": "Barchasini ko'rish",
+      "quickActions": "Tezkor harakatlar",
+      "viewAnalytics": "Analitikani ko'rish",
+      "manageStudents": "Talabalarni boshqarish"
+    },
+    "navigation": {
+      "title": "O'qituvchi paneli",
+      "dashboard": "Boshqaruv paneli",
+      "quizzes": "Testlar",
+      "allQuizzes": "Barcha testlar",
+      "createQuiz": "Test yaratish",
+      "analytics": "Analitika",
+      "students": "Talabalar",
+      "settings": "Sozlamalar",
+      "version": "Quizify v1.0",
+      "toggleMenu": "Navigatsiya menyusini almashtirish"
+    },
+    "notifications": {
+      "title": "Bildirishnomalar",
+      "newSubmission": "Yangi test javobi",
+      "submissionMessage": "Talaba Test #1 ni yakunladi",
+      "lowScore": "Past ball haqida ogohlantirish",
+      "lowScoreMessage": "Bir nechta talaba 60% dan kam ball oldi",
+      "quizCompleted": "Test yakunlandi",
+      "quizCompletedMessage": "Barcha talabalar Test #2 ni yakunladi",
+      "viewAll": "Barcha bildirishnomalarni ko'rish"
+    },
+    "search": {
+      "placeholder": "Testlar, talabalarni qidirish..."
+    },
+    "quizzes": {
+      "title": "Testlar",
+      "subtitle": "Testlaringizni yarating va boshqaring",
+      "createNew": "Test yaratish",
+      "searchPlaceholder": "Testlarni qidirish...",
+      "filter": "Filtr",
+      "actions": "Test harakatlari",
+      "view": "Ko'rish",
+      "edit": "Tahrirlash",
+      "delete": "O'chirish",
+      "questions": "Savollar",
+      "duration": "Davomiyligi",
+      "submissions": "Javoblar",
+      "avgScore": "O'rtacha ball",
+      "created": "Yaratilgan",
+      "noResults": "Qidiruv bo'yicha testlar topilmadi.",
+      "noQuizzes": "Hali testlar yaratilmagan."
+    },
+    "userMenu": {
+      "title": "Foydalanuvchi menyusi",
+      "profile": "Profil",
+      "settings": "Sozlamalar",
+      "logout": "Chiqish"
+    }
   }
 }

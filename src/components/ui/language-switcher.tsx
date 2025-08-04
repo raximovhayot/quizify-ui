@@ -1,8 +1,9 @@
 'use client';
 
+import { Check, Globe } from 'lucide-react';
+
 import { useState } from 'react';
 
-import { Check, Globe } from 'lucide-react';
 import { useLocale } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
@@ -85,14 +86,13 @@ export function LanguageSwitcher({
           <Button
             variant="ghost"
             size="sm"
-            className={cn('h-9 px-3 flex items-center space-x-2', className)}
+            className={cn('h-9 w-9 p-0', className)}
             disabled={isChanging}
           >
             <span className="text-lg">{currentLanguage.flag}</span>
-            <span className="text-sm font-medium">
-              {currentLanguage.nativeName}
+            <span className="sr-only">
+              Change language - {currentLanguage.nativeName}
             </span>
-            <span className="sr-only">Change language</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">

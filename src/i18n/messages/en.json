@@ -164,5 +164,75 @@
     "light": "Light",
     "dark": "Dark",
     "system": "System"
+  },
+  "instructor": {
+    "role": "Instructor",
+    "dashboard": {
+      "title": "Dashboard",
+      "subtitle": "Welcome back! Here's what's happening with your quizzes.",
+      "createQuiz": "Create New Quiz",
+      "totalQuizzes": "Total Quizzes",
+      "active": "active",
+      "totalStudents": "Total Students",
+      "enrolled": "enrolled",
+      "submissions": "Submissions",
+      "thisWeek": "this week",
+      "averageScore": "Average Score",
+      "fromLastWeek": "from last week",
+      "recentActivity": "Recent Activity",
+      "viewAll": "View All",
+      "quickActions": "Quick Actions",
+      "viewAnalytics": "View Analytics",
+      "manageStudents": "Manage Students"
+    },
+    "navigation": {
+      "title": "Instructor Panel",
+      "dashboard": "Dashboard",
+      "quizzes": "Quizzes",
+      "allQuizzes": "All Quizzes",
+      "createQuiz": "Create Quiz",
+      "analytics": "Analytics",
+      "students": "Students",
+      "settings": "Settings",
+      "version": "Quizify v1.0",
+      "toggleMenu": "Toggle navigation menu"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "newSubmission": "New quiz submission",
+      "submissionMessage": "Student completed Quiz #1",
+      "lowScore": "Low score alert",
+      "lowScoreMessage": "Multiple students scored below 60%",
+      "quizCompleted": "Quiz completed",
+      "quizCompletedMessage": "All students completed Quiz #2",
+      "viewAll": "View all notifications"
+    },
+    "search": {
+      "placeholder": "Search quizzes, students..."
+    },
+    "quizzes": {
+      "title": "Quizzes",
+      "subtitle": "Create and manage your quizzes",
+      "createNew": "Create Quiz",
+      "searchPlaceholder": "Search quizzes...",
+      "filter": "Filter",
+      "actions": "Quiz actions",
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete",
+      "questions": "Questions",
+      "duration": "Duration",
+      "submissions": "Submissions",
+      "avgScore": "Avg Score",
+      "created": "Created",
+      "noResults": "No quizzes found matching your search.",
+      "noQuizzes": "No quizzes created yet."
+    },
+    "userMenu": {
+      "title": "User menu",
+      "profile": "Profile",
+      "settings": "Settings",
+      "logout": "Log out"
+    }
   }
 }

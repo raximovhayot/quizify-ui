@@ -178,5 +178,75 @@
     "light": "Светлая",
     "dark": "Темная",
     "system": "Системная"
+  },
+  "instructor": {
+    "role": "Преподаватель",
+    "dashboard": {
+      "title": "Панель управления",
+      "subtitle": "Добро пожаловать! Вот что происходит с вашими тестами.",
+      "createQuiz": "Создать новый тест",
+      "totalQuizzes": "Всего тестов",
+      "active": "активных",
+      "totalStudents": "Всего студентов",
+      "enrolled": "зарегистрировано",
+      "submissions": "Ответы",
+      "thisWeek": "на этой неделе",
+      "averageScore": "Средний балл",
+      "fromLastWeek": "с прошлой недели",
+      "recentActivity": "Недавняя активность",
+      "viewAll": "Посмотреть все",
+      "quickActions": "Быстрые действия",
+      "viewAnalytics": "Посмотреть аналитику",
+      "manageStudents": "Управление студентами"
+    },
+    "navigation": {
+      "title": "Панель преподавателя",
+      "dashboard": "Панель управления",
+      "quizzes": "Тесты",
+      "allQuizzes": "Все тесты",
+      "createQuiz": "Создать тест",
+      "analytics": "Аналитика",
+      "students": "Студенты",
+      "settings": "Настройки",
+      "version": "Quizify v1.0",
+      "toggleMenu": "Переключить меню навигации"
+    },
+    "notifications": {
+      "title": "Уведомления",
+      "newSubmission": "Новый ответ на тест",
+      "submissionMessage": "Студент завершил Тест #1",
+      "lowScore": "Предупреждение о низком балле",
+      "lowScoreMessage": "Несколько студентов набрали менее 60%",
+      "quizCompleted": "Тест завершен",
+      "quizCompletedMessage": "Все студенты завершили Тест #2",
+      "viewAll": "Посмотреть все уведомления"
+    },
+    "search": {
+      "placeholder": "Поиск тестов, студентов..."
+    },
+    "quizzes": {
+      "title": "Тесты",
+      "subtitle": "Создавайте и управляйте своими тестами",
+      "createNew": "Создать тест",
+      "searchPlaceholder": "Поиск тестов...",
+      "filter": "Фильтр",
+      "actions": "Действия с тестом",
+      "view": "Просмотр",
+      "edit": "Редактировать",
+      "delete": "Удалить",
+      "questions": "Вопросы",
+      "duration": "Длительность",
+      "submissions": "Ответы",
+      "avgScore": "Средний балл",
+      "created": "Создано",
+      "noResults": "Тесты, соответствующие вашему поиску, не найдены.",
+      "noQuizzes": "Тесты еще не созданы."
+    },
+    "userMenu": {
+      "title": "Меню пользователя",
+      "profile": "Профиль",
+      "settings": "Настройки",
+      "logout": "Выйти"
+    }
   }
 }

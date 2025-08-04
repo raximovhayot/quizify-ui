@@ -2,8 +2,9 @@
 
 import { ReactNode } from 'react';
 
-import { UserRole } from '@/components/features/profile/types/account';
 import GuardAuthenticated from '@/components/features/auth/guards/GuardAuthenticated';
+import { InstructorHeader } from '@/components/features/instructor/components/InstructorHeader';
+import { UserRole } from '@/components/features/profile/types/account';
 
 interface InstructorLayoutProps {
   children: ReactNode;
@@ -15,8 +16,14 @@ export default function InstructorLayout({ children }: InstructorLayoutProps) {
       requiredRoles={[UserRole.INSTRUCTOR]}
       fallbackRoles={[{ role: UserRole.STUDENT, redirectTo: '/student' }]}
     >
-      <div className="min-h-screen bg-gray-50 flex">
-        <main className="flex-1 ml-64 p-6 overflow-y-auto">{children}</main>
+      <div className="min-h-screen bg-background">
+        {/* Header/Navbar */}
+        <InstructorHeader />
+
+        {/* Page Content */}
+        <main className="flex-1 p-4 lg:p-6">
+          <div className="mx-auto max-w-7xl">{children}</div>
+        </main>
       </div>
     </GuardAuthenticated>
   );
