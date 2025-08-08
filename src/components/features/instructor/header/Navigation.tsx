@@ -84,7 +84,7 @@ export function Navigation() {
   return (
     <div className="flex items-center gap-4 flex-1">
       {/* Brand/Logo (hidden on mobile; visible on lg+) */}
-      <Logo href="/instructor" size="md" />
+      <Logo href="/instructor" size="md" className="hidden lg:flex" />
 
       {/* Desktop Navigation */}
       <NavigationMenu className="hidden lg:flex">
