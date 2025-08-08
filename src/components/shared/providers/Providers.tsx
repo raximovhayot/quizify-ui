@@ -15,6 +15,7 @@ import { ThemeProvider } from 'next-themes';
 import { SessionProvider } from '@/components/shared/providers/SessionProvider';
 import { Toaster } from '@/components/ui/sonner';
 import { env } from '@/env.mjs';
+import { BackendError } from '@/types/api';
 
 import { ErrorBoundary } from './ErrorBoundary';
 
@@ -46,9 +47,25 @@ export function Providers({ children, messages, locale }: ProvidersProps) {
         defaultOptions: {
           queries: {
             networkMode,
+            retry: (failureCount, error) => {
+              // Do not retry on 4xx backend errors
+              if (error instanceof BackendError) {
+                if (error.errors?.some((e) => /^HTTP_4\d{2}$/.test(e.code))) {
+                  return false;
+                }
+              }
+              // Retry up to 2 times for network/timeouts/5xx
+              return failureCount < 2;
+            },
+            retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 8000),
+            staleTime: 30_000, // 30s
+            gcTime: 5 * 60_000, // 5m
+            refetchOnWindowFocus: true,
+            refetchOnReconnect: true,
           },
           mutations: {
             networkMode,
+            retry: false, // avoid duplicate writes
           },
         },
         mutationCache: new MutationCache({
