@@ -2,6 +2,9 @@ import { AttachmentDTO } from '@/components/features/attachment/attachment';
 import { apiClient } from '@/lib/api';
 import { IApiResponse, extractApiData } from '@/types/api';
 
+// Re-export AttachmentDTO for convenience imports
+export type { AttachmentDTO } from '@/components/features/attachment/attachment';
+
 /**
  * AttachmentService - Handles file attachment operations
  *

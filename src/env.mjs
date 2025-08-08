@@ -35,7 +35,6 @@ export const env = createEnv({
       ),
     NEXT_PUBLIC_ENV_EMOJI: z
       .string()
-      .emoji()
       .optional()
       .transform(
         (value) =>

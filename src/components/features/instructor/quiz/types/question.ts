@@ -1,8 +1,3 @@
-/**
- * Question-related types for instructors
- * Based on analysis of InstructorQuestionController
- */
-
 // Question type enum based on backend
 export enum QuestionType {
   MULTIPLE_CHOICE = 'multiple_choice',
@@ -23,7 +18,6 @@ export interface AnswerDataDto {
   attachmentId?: number;
 }
 
-// Question Data DTO - response from question endpoints
 export interface QuestionDataDto {
   id: number;
   questionType: QuestionType;
@@ -35,7 +29,6 @@ export interface QuestionDataDto {
   answers: AnswerDataDto[];
 }
 
-// Answer Save Request for question creation/update
 export interface InstructionAnswerSaveRequest {
   id?: number;
   content: string;
@@ -44,7 +37,6 @@ export interface InstructionAnswerSaveRequest {
   attachmentId?: number;
 }
 
-// Question Save Request - POST /instructor/questions and PUT /instructor/questions/{id}
 export interface InstructorQuestionSaveRequest {
   id?: number;
   questionType: QuestionType; // @NotNull
@@ -62,77 +54,8 @@ export interface InstructorQuestionSaveRequest {
   answers: InstructionAnswerSaveRequest[]; // @Valid, @NotNull, size varies by question type
 }
 
-// Question Filter for GET /instructor/questions/{quizId}/list
 export interface QuestionFilter {
-  parentId: number; // quizId
+  quizId: number; // quizId
   page?: number;
   size?: number;
-}
-
-// Helper types for form handling
-export type QuestionFormData = Omit<
-  InstructorQuestionSaveRequest,
-  'answers'
-> & {
-  answers: Partial<InstructionAnswerSaveRequest>[];
-};
-
-// Question-related helper functions
-export function getRequiredAnswersCount(questionType: QuestionType): {
-  min: number;
-  max?: number;
-} {
-  switch (questionType) {
-    case QuestionType.MULTIPLE_CHOICE:
-      return { min: 2 };
-    case QuestionType.TRUE_FALSE:
-      return { min: 2, max: 2 };
-    case QuestionType.SHORT_ANSWER:
-    case QuestionType.FILL_IN_BLANK:
-      return { min: 1 };
-    case QuestionType.MATCHING:
-      return { min: 4 };
-    case QuestionType.RANKING:
-      return { min: 2 };
-    case QuestionType.ESSAY:
-      return { min: 0 };
-    default:
-      return { min: 0 };
-  }
-}
-
-export function getQuestionTypeLabel(type: QuestionType): string {
-  const labels: Record<QuestionType, string> = {
-    [QuestionType.MULTIPLE_CHOICE]: 'Multiple Choice',
-    [QuestionType.TRUE_FALSE]: 'True/False',
-    [QuestionType.SHORT_ANSWER]: 'Short Answer',
-    [QuestionType.FILL_IN_BLANK]: 'Fill in the Blank',
-    [QuestionType.ESSAY]: 'Essay',
-    [QuestionType.MATCHING]: 'Matching',
-    [QuestionType.RANKING]: 'Ranking',
-  };
-  return labels[type];
-}
-
-export function requiresSpecialField(questionType: QuestionType): {
-  blankTemplate?: boolean;
-  gradingCriteria?: boolean;
-  matchingConfig?: boolean;
-  correctOrder?: boolean;
-  trueFalseAnswer?: boolean;
-} {
-  switch (questionType) {
-    case QuestionType.FILL_IN_BLANK:
-      return { blankTemplate: true };
-    case QuestionType.ESSAY:
-      return { gradingCriteria: true };
-    case QuestionType.MATCHING:
-      return { matchingConfig: true };
-    case QuestionType.RANKING:
-      return { correctOrder: true };
-    case QuestionType.TRUE_FALSE:
-      return { trueFalseAnswer: true };
-    default:
-      return {};
-  }
 }

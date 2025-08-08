@@ -20,16 +20,12 @@ import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 
-import {
-  AttachmentDTO,
-  AttachmentService,
-} from '../../../attachment/attachmentService';
-import { QuizService } from '../services/quizService';
+import { AttachmentService } from '../../../attachment/attachmentService';
+import type { AttachmentDTO } from '../../../attachment/attachmentService';
 import {
   FullQuizDataDTO,
   InstructorQuizCreateRequest,
   InstructorQuizUpdateRequest,
-  QuizFormData,
 } from '../types/quiz';
 
 // Form validation schema
@@ -189,8 +185,8 @@ export function QuizForm({
       | InstructorQuizUpdateRequest = {
       ...data,
       settings: {
-        time: data.settings.time || undefined,
-        attempt: data.settings.attempt || undefined,
+        time: data.settings.time ?? 0,
+        attempt: data.settings.attempt ?? 0,
         shuffleQuestions: data.settings.shuffleQuestions || false,
         shuffleAnswers: data.settings.shuffleAnswers || false,
       },
@@ -366,7 +362,7 @@ export function QuizForm({
                 selectedFile={selectedFile}
                 isUploading={isUploading}
                 uploadProgress={uploadProgress}
-                error={uploadError}
+                error={uploadError ?? undefined}
                 disabled={isSubmitting}
               />
             )}

@@ -96,6 +96,9 @@ export function FileUpload({
       }
 
       const file = acceptedFiles[0];
+      if (!file) {
+        return;
+      }
       const validationError = validateFile(file);
 
       if (validationError) {

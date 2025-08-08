@@ -19,7 +19,7 @@ export const quizDataDTOSchema = z.object({
   createdDate: z.string(),
   lastModifiedDate: z.string().optional(),
   numberOfQuestions: z.number(),
-  settings: quizSettingsSchema,
+  settings: z.preprocess((val) => (val == null ? {} : val), quizSettingsSchema),
   attachmentId: z.number().optional(),
 });
 

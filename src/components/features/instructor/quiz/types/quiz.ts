@@ -1,5 +1,3 @@
-import { SortDto } from '@/types/common';
-
 export enum QuizStatus {
   DRAFT = 'draft',
   PUBLISHED = 'published',
@@ -17,10 +15,10 @@ export interface QuizSettings {
 export interface QuizDataDTO {
   id: number; // Long in backend
   title: string;
-  description: string;
+  description?: string | null;
   status: QuizStatus;
   createdDate: string; // LocalDateTime in backend
-  lastModifiedDate: string; // LocalDateTime in backend
+  lastModifiedDate?: string; // LocalDateTime in backend
   numberOfQuestions: number; // Integer in backend
   settings: QuizSettings;
   attachmentId?: number; // Long in backend
@@ -32,8 +30,6 @@ export interface QuizFilter {
   size?: number; // default: 10
   search?: string;
   status?: QuizStatus;
-  userId?: number; // Long in backend
-  sorts?: SortDto[]; // default: []
 }
 
 // Quiz Create Request - POST /instructor/quizzes
@@ -63,3 +59,7 @@ export interface InstructorQuizUpdateStatusRequest {
 export type QuizFormData = Omit<InstructorQuizCreateRequest, 'settings'> & {
   settings: Partial<QuizSettings>; // Keep as Partial for form handling flexibility
 };
+
+// Backward-compatible type aliases for legacy imports
+export type BasicQuizDataDTO = QuizDataDTO;
+export type FullQuizDataDTO = QuizDataDTO;

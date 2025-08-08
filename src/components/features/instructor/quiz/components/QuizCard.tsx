@@ -125,7 +125,10 @@ export function QuizCard({
         <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-2">
-              <h3 className="text-lg font-semibold truncate">{quiz.title}</h3>
+              <h3 className="text-lg font-semibold truncate">
+                {quiz.title?.trim() ||
+                  t('instructor.quiz.untitled', { fallback: 'Untitled' })}
+              </h3>
               <Badge variant={getStatusColor(quiz.status)}>
                 {getStatusLabel(quiz.status)}
               </Badge>
@@ -191,54 +194,64 @@ export function QuizCard({
       </CardHeader>
       <CardContent className="pt-0">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
-          <div className="flex items-center gap-2">
-            <FileText className="h-4 w-4 text-muted-foreground" />
-            <span className="text-muted-foreground">
-              {t('instructor.quiz.questions', { fallback: 'Questions' })}:
-            </span>
-            <span className="font-medium">{quiz.numberOfQuestions}</span>
-          </div>
+          {typeof quiz.numberOfQuestions === 'number' && (
+            <div className="flex items-center gap-2">
+              <FileText className="h-4 w-4 text-muted-foreground" />
+              <span className="text-muted-foreground">
+                {t('instructor.quiz.questions', { fallback: 'Questions' })}:
+              </span>
+              <span className="font-medium">{quiz.numberOfQuestions}</span>
+            </div>
+          )}
 
-          <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4 text-muted-foreground" />
-            <span className="text-muted-foreground">
-              {t('instructor.quiz.time', { fallback: 'Time' })}:
-            </span>
-            <span className="font-medium">
-              {formatTime(quiz.settings.time)}
-            </span>
-          </div>
+          {typeof quiz.settings?.time === 'number' && (
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-muted-foreground" />
+              <span className="text-muted-foreground">
+                {t('instructor.quiz.time', { fallback: 'Time' })}:
+              </span>
+              <span className="font-medium">
+                {formatTime(quiz.settings?.time as number)}
+              </span>
+            </div>
+          )}
 
-          <div className="flex items-center gap-2">
-            <Users className="h-4 w-4 text-muted-foreground" />
-            <span className="text-muted-foreground">
-              {t('instructor.quiz.attempts', { fallback: 'Attempts' })}:
-            </span>
-            <span className="font-medium">
-              {formatAttempts(quiz.settings.attempt)}
-            </span>
-          </div>
+          {typeof quiz.settings?.attempt === 'number' && (
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4 text-muted-foreground" />
+              <span className="text-muted-foreground">
+                {t('instructor.quiz.attempts', { fallback: 'Attempts' })}:
+              </span>
+              <span className="font-medium">
+                {formatAttempts(quiz.settings?.attempt as number)}
+              </span>
+            </div>
+          )}
 
-          <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            <span className="text-muted-foreground">
-              {t('instructor.quiz.created', { fallback: 'Created' })}:
-            </span>
-            <span className="font-medium">{formatDate(quiz.createdDate)}</span>
-          </div>
+          {quiz.createdDate && (
+            <div className="flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <span className="text-muted-foreground">
+                {t('instructor.quiz.created', { fallback: 'Created' })}:
+              </span>
+              <span className="font-medium">
+                {formatDate(quiz.createdDate)}
+              </span>
+            </div>
+          )}
         </div>
 
-        {(quiz.settings.shuffleQuestions || quiz.settings.shuffleAnswers) && (
+        {(quiz.settings?.shuffleQuestions || quiz.settings?.shuffleAnswers) && (
           <div className="mt-3 pt-3 border-t">
             <div className="flex flex-wrap gap-2">
-              {quiz.settings.shuffleQuestions && (
+              {quiz.settings?.shuffleQuestions && (
                 <Badge variant="outline" className="text-xs">
                   {t('instructor.quiz.shuffle.questions', {
                     fallback: 'Shuffle Questions',
                   })}
                 </Badge>
               )}
-              {quiz.settings.shuffleAnswers && (
+              {quiz.settings?.shuffleAnswers && (
                 <Badge variant="outline" className="text-xs">
                   {t('instructor.quiz.shuffle.answers', {
                     fallback: 'Shuffle Answers',

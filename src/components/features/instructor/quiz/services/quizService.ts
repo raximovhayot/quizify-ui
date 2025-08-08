@@ -9,6 +9,7 @@ import {
   InstructorQuizUpdateStatusRequest,
   QuizDataDTO,
   QuizFilter,
+  QuizSettings,
 } from '../types/quiz';
 
 /**
@@ -206,17 +207,31 @@ export class QuizService {
    * @returns Formatted quiz data for UI display
    */
   static formatQuizForDisplay(quiz: QuizDataDTO | FullQuizDataDTO) {
+    const created = (quiz as { createdDate?: string }).createdDate;
+    const lastModified = (quiz as { lastModifiedDate?: string })
+      .lastModifiedDate;
+    const settings = (quiz as { settings?: Partial<QuizSettings> }).settings;
+    const attachmentId = (quiz as { attachmentId?: number }).attachmentId;
+
+    const formattedCreatedDate = created
+      ? new Date(created).toLocaleDateString()
+      : undefined;
+
+    const formattedLastModifiedDate = lastModified
+      ? new Date(lastModified).toLocaleDateString()
+      : undefined;
+
+    let timeDisplay: string | undefined;
+    if (typeof settings?.time === 'number') {
+      timeDisplay = settings.time === 0 ? 'No limit' : `${settings.time} min`;
+    }
+
     return {
       ...quiz,
-      formattedCreatedDate: new Date(quiz.createdDate).toLocaleDateString(),
-      formattedLastModifiedDate:
-        'lastModifiedDate' in quiz
-          ? new Date(quiz.lastModifiedDate).toLocaleDateString()
-          : undefined,
-      hasAttachment: !!quiz.attachmentId,
-      timeDisplay: quiz.settings.time
-        ? `${quiz.settings.time} min`
-        : 'No limit',
+      formattedCreatedDate,
+      formattedLastModifiedDate,
+      hasAttachment: !!attachmentId,
+      timeDisplay,
     };
   }
 }

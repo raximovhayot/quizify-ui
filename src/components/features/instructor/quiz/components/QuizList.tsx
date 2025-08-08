@@ -1,14 +1,6 @@
 'use client';
 
-import {
-  Edit,
-  Eye,
-  Filter,
-  MoreHorizontal,
-  Plus,
-  Search,
-  Trash2,
-} from 'lucide-react';
+import { Filter, Plus, Search } from 'lucide-react';
 
 import { useState } from 'react';
 
@@ -23,18 +15,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -119,17 +102,6 @@ export function QuizList({
     }
   };
 
-  const getStatusColor = (status: QuizStatus) => {
-    switch (status) {
-      case QuizStatus.PUBLISHED:
-        return 'default';
-      case QuizStatus.DRAFT:
-        return 'secondary';
-      default:
-        return 'secondary';
-    }
-  };
-
   return (
     <div className={`space-y-6 ${className || ''}`}>
       {/* Header */}
@@ -198,8 +170,11 @@ export function QuizList({
         <p className="text-sm text-muted-foreground">
           {t('instructor.quiz.results.summary', {
             fallback: 'Showing {start} to {end} of {total} quizzes',
-            start: currentPage * pageSize + 1,
-            end: Math.min((currentPage + 1) * pageSize, totalElements),
+            start: totalElements === 0 ? 0 : currentPage * pageSize + 1,
+            end:
+              totalElements === 0
+                ? 0
+                : Math.min((currentPage + 1) * pageSize, totalElements),
             total: totalElements,
           })}
         </p>

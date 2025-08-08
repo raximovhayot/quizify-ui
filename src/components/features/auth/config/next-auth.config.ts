@@ -37,18 +37,7 @@ declare module 'next-auth' {
   }
 }
 
-// Override AdapterUser to remove email requirements
-declare module '@auth/core/adapters' {
-  interface AdapterUser {
-    id: string;
-    phone: string;
-    firstName?: string;
-    lastName?: string;
-    state: UserState;
-    roles: Array<{ id: number; name: string }>;
-    dashboardType?: string;
-  }
-}
+// AdapterUser augmentation removed to avoid referencing non-existent module during type checks
 
 declare module 'next-auth/jwt' {
   interface JWT {

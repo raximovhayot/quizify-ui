@@ -34,7 +34,6 @@ export function QuizPagination({
   const getVisiblePages = () => {
     const delta = 2; // Number of pages to show on each side of current page
     const range = [];
-    const rangeWithDots = [];
 
     // Calculate start and end of the range
     const start = Math.max(0, currentPage - delta);

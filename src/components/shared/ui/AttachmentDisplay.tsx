@@ -1,6 +1,13 @@
 'use client';
 
-import { Archive, Download, File, FileText, Image, Trash2 } from 'lucide-react';
+import {
+  Archive,
+  Download,
+  File,
+  FileText,
+  Image as ImageIcon,
+  Trash2,
+} from 'lucide-react';
 
 import { useState } from 'react';
 
@@ -64,7 +71,7 @@ export function AttachmentDisplay({
 
   const getFileIcon = (contentType: string) => {
     if (contentType.startsWith('image/')) {
-      return <Image className="h-8 w-8 text-blue-500" />;
+      return <ImageIcon className="h-8 w-8 text-blue-500" />;
     }
     if (contentType === 'application/pdf') {
       return <FileText className="h-8 w-8 text-red-500" />;
