@@ -64,14 +64,27 @@ export function Navigation() {
     return pathname.startsWith(href);
   };
 
+  // Determine active section label for mobile title
+  const allItems: NavigationItem[] = navigationItems.flatMap((i) => [
+    i,
+    ...(i.children ?? []),
+  ]);
+  const activeItem = allItems.reduce<NavigationItem | undefined>(
+    (best, item) => {
+      if (!isActiveLink(item.href)) return best;
+      if (!best) return item;
+      return item.href.length > best.href.length ? item : best;
+    },
+    undefined
+  );
+  const activeLabel =
+    activeItem?.label ??
+    t('instructor.navigation.title', { fallback: 'Instructor Panel' });
+
   return (
     <div className="flex items-center gap-4 flex-1">
-      {/* Brand/Logo */}
-      <Logo
-        href="/instructor"
-        size="md"
-        textClassName="hidden font-bold sm:inline-block"
-      />
+      {/* Brand/Logo (hidden on mobile; visible on lg+) */}
+      <Logo href="/instructor" size="md" />
 
       {/* Desktop Navigation */}
       <NavigationMenu className="hidden lg:flex">
@@ -126,6 +139,9 @@ export function Navigation() {
           ))}
         </NavigationMenuList>
       </NavigationMenu>
+
+      {/* Mobile Title hidden per new mobile centered logo design */}
+      <span className="hidden">{activeLabel}</span>
 
       {/* Mobile Menu */}
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>

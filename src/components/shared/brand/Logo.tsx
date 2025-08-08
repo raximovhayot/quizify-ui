@@ -1,7 +1,5 @@
 'use client';
 
-import { BookOpen } from 'lucide-react';
-
 import * as React from 'react';
 
 import Link from 'next/link';
@@ -39,34 +37,18 @@ const sizeClasses = {
 export function Logo({
   href = '/',
   size = 'md',
-  variant = 'default',
+  variant: _variant = 'default',
   showText = true,
   className,
-  iconClassName,
+  iconClassName: _iconClassName,
   textClassName,
 }: LogoProps) {
   const sizeConfig = sizeClasses[size];
 
   const logoContent = (
     <>
-      <div
-        className={cn(
-          'flex items-center justify-center rounded-lg bg-primary text-primary-foreground',
-          sizeConfig.container,
-          iconClassName
-        )}
-      >
-        <BookOpen className={cn(sizeConfig.icon)} />
-      </div>
-      {showText && variant === 'default' && (
-        <span
-          className={cn(
-            'font-bold',
-            sizeConfig.text,
-            'hidden sm:inline-block',
-            textClassName
-          )}
-        >
+      {showText && (
+        <span className={cn('font-bold', sizeConfig.text, textClassName)}>
           Quizify
         </span>
       )}

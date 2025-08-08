@@ -12,6 +12,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { LanguageSwitcher } from '@/components/ui/language-switcher';
+import { ThemeSwitcher } from '@/components/ui/theme-switcher';
+
+import { NotificationsDropdown } from './NotificationsDropdown';
 
 interface User {
   firstName?: string;
@@ -59,6 +63,15 @@ export function UserMenu({ user, onLogout }: UserMenuProps) {
             </p>
           </div>
         </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {/* Mobile quick actions: Notifications, Theme, Language */}
+        <div className="lg:hidden px-2 py-1">
+          <div className="flex items-center justify-between gap-1">
+            <NotificationsDropdown />
+            <ThemeSwitcher variant="icon-only" />
+            <LanguageSwitcher variant="icon-only" />
+          </div>
+        </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="cursor-pointer">
           <span>
