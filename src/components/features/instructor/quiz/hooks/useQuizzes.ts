@@ -184,6 +184,43 @@ export function useUpdateQuizStatus() {
 
       await QuizService.updateQuizStatus(data.id, data, session.accessToken);
     },
+    onMutate: async (variables) => {
+      // Cancel outgoing refetches so we don't overwrite our optimistic update
+      await queryClient.cancelQueries({ queryKey: quizKeys.lists() });
+
+      // Snapshot previous lists
+      const previousLists = queryClient.getQueriesData<TQuizListResponse>({
+        queryKey: quizKeys.lists(),
+      });
+
+      // Optimistically update lists
+      previousLists.forEach(([key, data]) => {
+        if (!data) return;
+        const content = data.content.map((q) =>
+          q.id === variables.id ? { ...q, status: variables.status } : q
+        );
+        queryClient.setQueryData<TQuizListResponse>(key, {
+          ...data,
+          content,
+        });
+      });
+
+      // Snapshot and optimistically update detail
+      let previousDetail: QuizDataDTO | undefined;
+      if (variables?.id) {
+        previousDetail = queryClient.getQueryData<QuizDataDTO>(
+          quizKeys.detail(variables.id)
+        );
+        if (previousDetail) {
+          queryClient.setQueryData<QuizDataDTO>(quizKeys.detail(variables.id), {
+            ...previousDetail,
+            status: variables.status,
+          });
+        }
+      }
+
+      return { previousLists, previousDetail };
+    },
     onSuccess: (_, variables) => {
       // Invalidate and refetch quiz lists
       queryClient.invalidateQueries({ queryKey: quizKeys.lists() });
@@ -201,7 +238,20 @@ export function useUpdateQuizStatus() {
         })
       );
     },
-    onError: (error) => {
+    onError: (error, variables, context) => {
+      // Rollback on error
+      if (context?.previousLists) {
+        context.previousLists.forEach(([key, data]) => {
+          queryClient.setQueryData(key, data);
+        });
+      }
+      if (variables?.id && context?.previousDetail) {
+        queryClient.setQueryData(
+          quizKeys.detail(variables.id),
+          context.previousDetail
+        );
+      }
+
       console.error('Failed to update quiz status:', error);
       toast.error(
         t('instructor.quiz.status.update.error', {
@@ -226,11 +276,39 @@ export function useDeleteQuiz() {
 
       await QuizService.deleteQuiz(quizId, session.accessToken);
     },
+    onMutate: async (quizId) => {
+      // Cancel outgoing refetches so we don't overwrite our optimistic update
+      await queryClient.cancelQueries({ queryKey: quizKeys.lists() });
+
+      // Snapshot previous lists
+      const previousLists = queryClient.getQueriesData<TQuizListResponse>({
+        queryKey: quizKeys.lists(),
+      });
+
+      // Optimistically update lists by removing the quiz
+      previousLists.forEach(([key, data]) => {
+        if (!data) return;
+        const content = data.content.filter((q) => q.id !== quizId);
+        queryClient.setQueryData<TQuizListResponse>(key, {
+          ...data,
+          content,
+          totalElements: Math.max(0, data.totalElements - 1),
+        });
+      });
+
+      // Snapshot detail and optimistically remove it
+      const previousDetail = queryClient.getQueryData<QuizDataDTO>(
+        quizKeys.detail(quizId)
+      );
+      queryClient.removeQueries({ queryKey: quizKeys.detail(quizId) });
+
+      return { previousLists, previousDetail, quizId };
+    },
     onSuccess: (_, quizId) => {
       // Invalidate and refetch quiz lists
       queryClient.invalidateQueries({ queryKey: quizKeys.lists() });
 
-      // Remove the quiz from cache
+      // Ensure the quiz detail is removed from cache
       queryClient.removeQueries({ queryKey: quizKeys.detail(quizId) });
 
       toast.success(
@@ -239,7 +317,20 @@ export function useDeleteQuiz() {
         })
       );
     },
-    onError: (error) => {
+    onError: (error, quizId, context) => {
+      // Rollback on error
+      if (context?.previousLists) {
+        context.previousLists.forEach(([key, data]) => {
+          queryClient.setQueryData(key, data);
+        });
+      }
+      if (context?.previousDetail) {
+        queryClient.setQueryData(
+          quizKeys.detail(context.quizId),
+          context.previousDetail
+        );
+      }
+
       console.error('Failed to delete quiz:', error);
       toast.error(
         t('instructor.quiz.delete.error', {
