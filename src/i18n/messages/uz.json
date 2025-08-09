@@ -304,6 +304,8 @@
         }
       },
       "status": {
+        "published": "Nashr etilgan",
+        "draft": "Qoralama",
         "update": {
           "success": "Test holati muvaffaqiyatli yangilandi",
           "error": "Test holatini yangilab bo'lmadi"

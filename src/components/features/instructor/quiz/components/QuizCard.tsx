@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -45,6 +46,7 @@ export function QuizCard({
   className,
 }: QuizCardProps) {
   const t = useTranslations();
+  const router = useRouter();
 
   const getStatusColor = (status: QuizStatus) => {
     switch (status) {
@@ -154,11 +156,17 @@ export function QuizCard({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => router.push(`/instructor/quizzes/${quiz.id}`)}
+              >
                 <Eye className="mr-2 h-4 w-4" />
                 {t('instructor.quiz.action.view', { fallback: 'View' })}
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() =>
+                  router.push(`/instructor/quizzes/${quiz.id}/edit`)
+                }
+              >
                 <Edit className="mr-2 h-4 w-4" />
                 {t('instructor.quiz.action.edit', { fallback: 'Edit' })}
               </DropdownMenuItem>

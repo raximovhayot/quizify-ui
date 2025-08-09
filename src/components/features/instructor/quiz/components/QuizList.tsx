@@ -2,9 +2,10 @@
 
 import { Filter, Plus, Search } from 'lucide-react';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 
 import {
   AlertDialog,
@@ -74,6 +75,23 @@ export function QuizList({
   const [searchQuery, setSearchQuery] = useState(filter.search || '');
   const [deleteQuizId, setDeleteQuizId] = useState<number | null>(null);
 
+  // Keep input in sync when URL-derived filter changes (e.g., back/forward)
+  useEffect(() => {
+    const nextValue = filter.search || '';
+    setSearchQuery(nextValue);
+  }, [filter.search]);
+
+  // Debounce search updates to avoid excessive requests
+  useEffect(() => {
+    const trimmed = searchQuery.trim();
+    const current = filter.search || '';
+    if (trimmed === current) return;
+    const id = setTimeout(() => {
+      onSearch(searchQuery);
+    }, 400);
+    return () => clearTimeout(id);
+  }, [searchQuery, filter.search, onSearch]);
+
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSearch(searchQuery);
@@ -81,10 +99,6 @@ export function QuizList({
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
-    // Debounced search - trigger search after user stops typing
-    if (!value.trim()) {
-      onSearch('');
-    }
   };
 
   const handleStatusFilterChange = (value: string) => {
@@ -116,9 +130,11 @@ export function QuizList({
             })}
           </p>
         </div>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          {t('instructor.quiz.create.button', { fallback: 'Create Quiz' })}
+        <Button asChild>
+          <Link href="/instructor/quizzes/new">
+            <Plus className="mr-2 h-4 w-4" />
+            {t('instructor.quiz.create.button', { fallback: 'Create Quiz' })}
+          </Link>
         </Button>
       </div>
 
@@ -206,11 +222,13 @@ export function QuizList({
                 })}
           </p>
           {!filter.search && !filter.status && (
-            <Button className="mt-4">
-              <Plus className="mr-2 h-4 w-4" />
-              {t('instructor.quiz.create.first', {
-                fallback: 'Create Your First Quiz',
-              })}
+            <Button asChild className="mt-4">
+              <Link href="/instructor/quizzes/new">
+                <Plus className="mr-2 h-4 w-4" />
+                {t('instructor.quiz.create.first', {
+                  fallback: 'Create Your First Quiz',
+                })}
+              </Link>
             </Button>
           )}
         </Card>

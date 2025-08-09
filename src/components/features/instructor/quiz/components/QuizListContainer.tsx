@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { useTranslations } from 'next-intl';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { ErrorDisplay } from '@/components/shared/ui/ErrorDisplay';
-import { LoadingSpinner } from '@/components/shared/ui/LoadingSpinner';
 
 import {
   useDeleteQuiz,
@@ -14,6 +14,7 @@ import {
 } from '../hooks/useQuizzes';
 import { QuizFilter, QuizStatus } from '../types/quiz';
 import { QuizList } from './QuizList';
+import { QuizListSkeleton } from './QuizListSkeleton';
 
 export interface QuizListContainerProps {
   className?: string;
@@ -21,51 +22,102 @@ export interface QuizListContainerProps {
 
 export function QuizListContainer({ className }: QuizListContainerProps) {
   const t = useTranslations();
-  const [filter, setFilter] = useState<QuizFilter>({
-    page: 0,
-    size: 10,
-  });
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const filter: QuizFilter = useMemo(() => {
+    const pageParam = searchParams.get('page');
+    const sizeParam = searchParams.get('size');
+    const s = searchParams.get('search') || undefined;
+    const statusParam = searchParams.get('status') as QuizStatus | null;
+
+    const page = pageParam ? Math.max(0, parseInt(pageParam, 10) || 0) : 0;
+    const size = sizeParam
+      ? Math.min(100, Math.max(1, parseInt(sizeParam, 10) || 10))
+      : 10;
+
+    let status: QuizStatus | undefined;
+    if (
+      statusParam === QuizStatus.PUBLISHED ||
+      statusParam === QuizStatus.DRAFT
+    ) {
+      status = statusParam;
+    }
+
+    return { page, size, search: s, status };
+  }, [searchParams]);
+
+  const updateUrl = useCallback(
+    (params: URLSearchParams, method: 'push' | 'replace' = 'push') => {
+      const query = params.toString();
+      const url = query ? `${pathname}?${query}` : pathname;
+      if (method === 'replace') {
+        router.replace(url);
+      } else {
+        router.push(url);
+      }
+    },
+    [pathname, router]
+  );
+
+  const handleSearch = useCallback(
+    (search: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (search && search.trim()) {
+        params.set('search', search.trim());
+      } else {
+        params.delete('search');
+      }
+      params.set('page', '0');
+      updateUrl(params, 'replace');
+    },
+    [searchParams, updateUrl]
+  );
+
+  const handleStatusFilter = useCallback(
+    (status: QuizStatus | undefined) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (status) {
+        params.set('status', status);
+      } else {
+        params.delete('status');
+      }
+      params.set('page', '0');
+      updateUrl(params, 'push');
+    },
+    [searchParams, updateUrl]
+  );
+
+  const handlePageChange = useCallback(
+    (page: number) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('page', Math.max(0, page).toString());
+      updateUrl(params, 'push');
+    },
+    [searchParams, updateUrl]
+  );
+
+  const handlePageSizeChange = useCallback(
+    (size: number) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('size', Math.max(1, Math.min(100, size)).toString());
+      params.set('page', '0');
+      updateUrl(params, 'push');
+    },
+    [searchParams, updateUrl]
+  );
 
   const {
     data: quizzesResponse,
     isLoading,
+    isFetching,
     error,
     refetch,
   } = useQuizzes(filter);
 
   const deleteQuizMutation = useDeleteQuiz();
   const updateQuizStatusMutation = useUpdateQuizStatus();
-
-  const handleSearch = (search: string) => {
-    setFilter((prev) => ({
-      ...prev,
-      search: search || undefined,
-      page: 0, // Reset to first page when searching
-    }));
-  };
-
-  const handleStatusFilter = (status: QuizStatus | undefined) => {
-    setFilter((prev) => ({
-      ...prev,
-      status,
-      page: 0, // Reset to first page when filtering
-    }));
-  };
-
-  const handlePageChange = (page: number) => {
-    setFilter((prev) => ({
-      ...prev,
-      page,
-    }));
-  };
-
-  const handlePageSizeChange = (size: number) => {
-    setFilter((prev) => ({
-      ...prev,
-      size,
-      page: 0, // Reset to first page when changing page size
-    }));
-  };
 
   const handleDeleteQuiz = async (quizId: number) => {
     try {
@@ -89,12 +141,8 @@ export function QuizListContainer({ className }: QuizListContainerProps) {
     refetch();
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <LoadingSpinner size="lg" />
-      </div>
-    );
+  if (isLoading || (isFetching && !quizzesResponse)) {
+    return <QuizListSkeleton className={className} />;
   }
 
   if (error) {

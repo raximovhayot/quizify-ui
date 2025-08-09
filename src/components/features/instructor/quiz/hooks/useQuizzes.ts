@@ -177,27 +177,23 @@ export function useUpdateQuizStatus() {
   return useMutation({
     mutationFn: async (
       data: InstructorQuizUpdateStatusRequest
-    ): Promise<QuizDataDTO> => {
+    ): Promise<void> => {
       if (!session?.accessToken) {
         throw new Error('No access token available');
       }
 
-      const response = await QuizService.updateQuizStatus(
-        data.id,
-        data,
-        session.accessToken
-      );
-
-      // Validate response with Zod schema
-      const validatedResponse = quizDataDTOSchema.parse(response);
-      return validatedResponse;
+      await QuizService.updateQuizStatus(data.id, data, session.accessToken);
     },
-    onSuccess: (data) => {
+    onSuccess: (_, variables) => {
       // Invalidate and refetch quiz lists
       queryClient.invalidateQueries({ queryKey: quizKeys.lists() });
 
-      // Update the quiz in cache
-      queryClient.setQueryData(quizKeys.detail(data.id), data);
+      // Invalidate the quiz detail cache to refetch if needed
+      if (variables?.id) {
+        queryClient.invalidateQueries({
+          queryKey: quizKeys.detail(variables.id),
+        });
+      }
 
       toast.success(
         t('instructor.quiz.status.update.success', {

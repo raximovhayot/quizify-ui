@@ -290,6 +290,8 @@
         }
       },
       "status": {
+        "published": "Published",
+        "draft": "Draft",
         "update": {
           "success": "Quiz status updated successfully",
           "error": "Failed to update quiz status"
