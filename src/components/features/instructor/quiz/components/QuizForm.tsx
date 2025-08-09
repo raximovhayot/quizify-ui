@@ -258,14 +258,14 @@ export function QuizForm({
           <Separator />
 
           {/* Quiz Settings */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             <h3 className="text-lg font-medium">
               {t('quiz.form.settings', { fallback: 'Quiz Settings' })}
             </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
-                <Label htmlFor="time">
+                <Label htmlFor="time" className="text-sm">
                   {t('quiz.form.timeLimit', {
                     fallback: 'Time Limit (minutes)',
                   })}
@@ -274,6 +274,7 @@ export function QuizForm({
                   id="time"
                   type="number"
                   min="0"
+                  className="h-9"
                   {...form.register('settings.time', { valueAsNumber: true })}
                   placeholder={t('quiz.form.timeLimitPlaceholder', {
                     fallback: 'No limit',
@@ -288,13 +289,14 @@ export function QuizForm({
               </div>
 
               <div>
-                <Label htmlFor="attempt">
+                <Label htmlFor="attempt" className="text-sm">
                   {t('quiz.form.attemptLimit', { fallback: 'Attempt Limit' })}
                 </Label>
                 <Input
                   id="attempt"
                   type="number"
                   min="0"
+                  className="h-9"
                   {...form.register('settings.attempt', {
                     valueAsNumber: true,
                   })}
@@ -311,9 +313,9 @@ export function QuizForm({
               </div>
             </div>
 
-            <div className="space-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="shuffleQuestions">
+                <Label htmlFor="shuffleQuestions" className="text-sm">
                   {t('quiz.form.shuffleQuestions', {
                     fallback: 'Shuffle Questions',
                   })}
@@ -326,7 +328,7 @@ export function QuizForm({
               </div>
 
               <div className="flex items-center justify-between">
-                <Label htmlFor="shuffleAnswers">
+                <Label htmlFor="shuffleAnswers" className="text-sm">
                   {t('quiz.form.shuffleAnswers', {
                     fallback: 'Shuffle Answers',
                   })}

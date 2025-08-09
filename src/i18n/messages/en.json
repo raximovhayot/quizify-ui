@@ -27,6 +27,8 @@
     "sending": "Sending...",
     "verifying": "Verifying...",
     "updating": "Updating...",
+    "saving": "Saving...",
+    "update": "Update",
     "retry": "Try Again",
     "actions": "Actions",
     "pagination": {
@@ -181,6 +183,36 @@
     "dark": "Dark",
     "system": "System"
   },
+  "quiz": {
+    "form": {
+      "editTitle": "Edit Quiz",
+      "createTitle": "Create New Quiz",
+      "title": "Title",
+      "titlePlaceholder": "Enter quiz title",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter quiz description (optional)",
+      "settings": "Quiz Settings",
+      "timeLimit": "Time Limit (minutes)",
+      "timeLimitPlaceholder": "No limit",
+      "attemptLimit": "Attempt Limit",
+      "attemptLimitPlaceholder": "Unlimited",
+      "shuffleQuestions": "Shuffle Questions",
+      "shuffleAnswers": "Shuffle Answers",
+      "attachment": "Attachment",
+      "loadingAttachment": "Loading attachment..."
+    }
+  },
+  "fileUpload": {
+    "dropHere": "Drop file here",
+    "dragOrClick": "Drag and drop a file here, or click to select",
+    "maxSize": "Maximum file size: {maxSize}MB",
+    "uploading": "Uploading...",
+    "errors": {
+      "fileSize": "File size must be less than {maxSize}MB",
+      "fileType": "File type not supported",
+      "rejected": "Some files were rejected"
+    }
+  },
   "instructor": {
     "role": "Instructor",
     "dashboard": {
@@ -272,6 +304,7 @@
         "answers": "Shuffle Answers"
       },
       "create": {
+        "title": "Create Quiz",
         "button": "Create Quiz",
         "first": "Create Your First Quiz",
         "success": "Quiz created successfully",

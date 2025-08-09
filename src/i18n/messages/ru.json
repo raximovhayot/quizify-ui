@@ -27,6 +27,8 @@
     "sending": "Отправка...",
     "verifying": "Проверка...",
     "updating": "Обновление...",
+    "saving": "Сохранение...",
+    "update": "Обновить",
     "retry": "Попробовать снова",
     "actions": "Действия",
     "pagination": {
@@ -195,6 +197,36 @@
     "dark": "Темная",
     "system": "Системная"
   },
+  "quiz": {
+    "form": {
+      "editTitle": "Редактировать тест",
+      "createTitle": "Создать новый тест",
+      "title": "Название",
+      "titlePlaceholder": "Введите название теста",
+      "description": "Описание",
+      "descriptionPlaceholder": "Введите описание теста (необязательно)",
+      "settings": "Настройки теста",
+      "timeLimit": "Лимит времени (минуты)",
+      "timeLimitPlaceholder": "Без ограничений",
+      "attemptLimit": "Лимит попыток",
+      "attemptLimitPlaceholder": "Неограниченно",
+      "shuffleQuestions": "Перемешивать вопросы",
+      "shuffleAnswers": "Перемешивать ответы",
+      "attachment": "Вложение",
+      "loadingAttachment": "Загрузка вложения..."
+    }
+  },
+  "fileUpload": {
+    "dropHere": "Перетащите файл сюда",
+    "dragOrClick": "Перетащите файл сюда или нажмите, чтобы выбрать",
+    "maxSize": "Максимальный размер файла: {maxSize}МБ",
+    "uploading": "Загрузка...",
+    "errors": {
+      "fileSize": "Размер файла должен быть меньше {maxSize}МБ",
+      "fileType": "Тип файла не поддерживается",
+      "rejected": "Некоторые файлы были отклонены"
+    }
+  },
   "instructor": {
     "role": "Преподаватель",
     "dashboard": {
@@ -286,6 +318,7 @@
         "answers": "Перемешать ответы"
       },
       "create": {
+        "title": "Создать тест",
         "button": "Создать тест",
         "first": "Создать ваш первый тест",
         "success": "Тест успешно создан",

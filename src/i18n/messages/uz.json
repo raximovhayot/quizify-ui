@@ -27,6 +27,8 @@
     "sending": "Yuborilmoqda...",
     "verifying": "Tekshirilmoqda...",
     "updating": "Yangilanmoqda...",
+    "saving": "Saqlanmoqda...",
+    "update": "Yangilash",
     "retry": "Qayta urinish",
     "actions": "Harakatlar",
     "pagination": {
@@ -195,6 +197,36 @@
     "dark": "Qorong'u",
     "system": "Tizim"
   },
+  "quiz": {
+    "form": {
+      "editTitle": "Testni tahrirlash",
+      "createTitle": "Yangi test yaratish",
+      "title": "Sarlavha",
+      "titlePlaceholder": "Test sarlavhasini kiriting",
+      "description": "Tavsif",
+      "descriptionPlaceholder": "Test tavsifini kiriting (ixtiyoriy)",
+      "settings": "Test sozlamalari",
+      "timeLimit": "Vaqt limiti (daqiqalarda)",
+      "timeLimitPlaceholder": "Cheklanmagan",
+      "attemptLimit": "Urinishlar limiti",
+      "attemptLimitPlaceholder": "Cheklanmagan",
+      "shuffleQuestions": "Savollarni aralashtirish",
+      "shuffleAnswers": "Javoblarni aralashtirish",
+      "attachment": "Ilova",
+      "loadingAttachment": "Ilova yuklanmoqda..."
+    }
+  },
+  "fileUpload": {
+    "dropHere": "Faylni bu yerga tashlang",
+    "dragOrClick": "Faylni bu yerga tortib keling yoki tanlash uchun bosing",
+    "maxSize": "Maksimal fayl hajmi: {maxSize}MB",
+    "uploading": "Yuklanmoqda...",
+    "errors": {
+      "fileSize": "Fayl hajmi {maxSize}MB dan kichik bo'lishi kerak",
+      "fileType": "Fayl turi qo'llab-quvvatlanmaydi",
+      "rejected": "Ba'zi fayllar rad etildi"
+    }
+  },
   "instructor": {
     "role": "O'qituvchi",
     "dashboard": {
@@ -286,6 +318,8 @@
         "answers": "Javoblarni aralashtirish"
       },
       "create": {
+        "title": "Test yaratish",
+        "dialogTitle": "Test yaratish",
         "button": "Test yaratish",
         "first": "Birinchi testingizni yarating",
         "success": "Test muvaffaqiyatli yaratildi",

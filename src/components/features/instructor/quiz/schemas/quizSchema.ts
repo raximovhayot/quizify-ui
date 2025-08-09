@@ -4,10 +4,10 @@ import { QuizStatus } from '../types/quiz';
 
 // Quiz Settings Schema
 export const quizSettingsSchema = z.object({
-  time: z.number().min(0, 'Time limit cannot be negative').default(0),
-  attempt: z.number().min(0, 'Attempt limit cannot be negative').default(0),
-  shuffleQuestions: z.boolean().default(false),
-  shuffleAnswers: z.boolean().default(false),
+  time: z.number().min(0, 'Time limit cannot be negative'),
+  attempt: z.number().min(0, 'Attempt limit cannot be negative'),
+  shuffleQuestions: z.boolean(),
+  shuffleAnswers: z.boolean(),
 });
 
 // Quiz Data DTO Schema
@@ -19,7 +19,7 @@ export const quizDataDTOSchema = z.object({
   createdDate: z.string(),
   lastModifiedDate: z.string().optional(),
   numberOfQuestions: z.number(),
-  settings: z.preprocess((val) => (val == null ? {} : val), quizSettingsSchema),
+  settings: quizSettingsSchema,
   attachmentId: z.number().optional(),
 });
 
@@ -87,11 +87,11 @@ export const quizFormSchema = z.object({
 
 // API Response Schemas
 export const quizListResponseSchema = z.object({
-  content: z.array(quizDataDTOSchema).default([]),
-  totalElements: z.number().default(0),
-  totalPages: z.number().default(0),
-  size: z.number().default(10),
-  page: z.number().default(0),
+  content: z.array(quizDataDTOSchema).optional().default([]),
+  totalElements: z.number(),
+  totalPages: z.number(),
+  size: z.number(),
+  page: z.number(),
 });
 
 // Type exports for use in components

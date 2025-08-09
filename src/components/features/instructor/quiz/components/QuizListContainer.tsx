@@ -150,13 +150,8 @@ export function QuizListContainer({ className }: QuizListContainerProps) {
       <ErrorDisplay
         error={error}
         onRetry={handleRetry}
-        title={t('instructor.quiz.list.error.title', {
-          fallback: 'Failed to load quizzes',
-        })}
-        description={t('instructor.quiz.list.error.description', {
-          fallback:
-            'There was an error loading your quizzes. Please try again.',
-        })}
+        title={t('instructor.quiz.list.error.title')}
+        description={t('instructor.quiz.list.error.description')}
       />
     );
   }
@@ -165,9 +160,7 @@ export function QuizListContainer({ className }: QuizListContainerProps) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <p className="text-muted-foreground">
-          {t('instructor.quiz.list.no.data', {
-            fallback: 'No quiz data available',
-          })}
+          {t('instructor.quiz.list.no.data')}
         </p>
       </div>
     );
