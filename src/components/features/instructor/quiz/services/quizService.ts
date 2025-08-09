@@ -33,7 +33,8 @@ export class QuizService {
    */
   static async getQuizzes(
     filter: QuizFilter = {},
-    accessToken: string
+    accessToken: string,
+    signal?: AbortSignal
   ): Promise<IPageableList<QuizDataDTO>> {
     const queryParams = new URLSearchParams();
 
@@ -63,7 +64,7 @@ export class QuizService {
     const endpoint = `/instructor/quizzes${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
 
     const response: IApiResponse<IPageableList<QuizDataDTO>> =
-      await apiClient.get(endpoint, accessToken);
+      await apiClient.get(endpoint, accessToken, signal);
     return extractApiData(response);
   }
 
@@ -77,11 +78,13 @@ export class QuizService {
    */
   static async getQuiz(
     quizId: number,
-    accessToken: string
+    accessToken: string,
+    signal?: AbortSignal
   ): Promise<FullQuizDataDTO> {
     const response: IApiResponse<FullQuizDataDTO> = await apiClient.get(
       `/instructor/quizzes/${quizId}`,
-      accessToken
+      accessToken,
+      signal
     );
     return extractApiData(response);
   }

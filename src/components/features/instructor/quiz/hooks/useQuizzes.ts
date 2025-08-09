@@ -33,14 +33,15 @@ export function useQuizzes(filter: QuizFilter = {}) {
 
   return useQuery({
     queryKey: quizKeys.list(filter),
-    queryFn: async (): Promise<TQuizListResponse> => {
+    queryFn: async ({ signal }): Promise<TQuizListResponse> => {
       if (!session?.accessToken) {
         throw new Error('No access token available');
       }
 
       const response = await QuizService.getQuizzes(
         filter,
-        session.accessToken
+        session.accessToken,
+        signal
       );
 
       // Validate response with Zod schema
@@ -59,12 +60,16 @@ export function useQuiz(quizId: number) {
 
   return useQuery({
     queryKey: quizKeys.detail(quizId),
-    queryFn: async (): Promise<QuizDataDTO> => {
+    queryFn: async ({ signal }): Promise<QuizDataDTO> => {
       if (!session?.accessToken) {
         throw new Error('No access token available');
       }
 
-      const response = await QuizService.getQuiz(quizId, session.accessToken);
+      const response = await QuizService.getQuiz(
+        quizId,
+        session.accessToken,
+        signal
+      );
 
       // Validate response with Zod schema
       const validatedResponse = quizDataDTOSchema.parse(response);
