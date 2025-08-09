@@ -30,8 +30,6 @@ export interface QuizFilter {
   size?: number; // default: 10
   search?: string;
   status?: QuizStatus;
-  // Optional sorting (first item used by UI); aligns with schema sorts[].
-  sorts?: { field: string; direction: 'ASC' | 'DESC' }[];
 }
 
 // Quiz Create Request - POST /instructor/quizzes

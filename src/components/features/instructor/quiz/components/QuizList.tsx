@@ -43,7 +43,6 @@ export interface QuizListProps {
   filter: QuizFilter;
   onSearch: (search: string) => void;
   onStatusFilter: (status: QuizStatus | undefined) => void;
-  onSortChange: (field?: string, direction?: 'ASC' | 'DESC') => void;
   onPageChange: (page: number) => void;
   onPageSizeChange: (size: number) => void;
   onDeleteQuiz: (quizId: number) => void;
@@ -64,7 +63,6 @@ export function QuizList({
   filter,
   onSearch,
   onStatusFilter,
-  onSortChange,
   onPageChange,
   onPageSizeChange,
   onDeleteQuiz,
@@ -117,15 +115,6 @@ export function QuizList({
       setDeleteQuizId(null);
     }
   };
-
-  const currentSortField =
-    filter.sorts && filter.sorts[0]?.field
-      ? filter.sorts[0].field
-      : 'createdDate';
-  const currentSortDir: 'ASC' | 'DESC' =
-    filter.sorts && filter.sorts[0]?.direction
-      ? (filter.sorts[0].direction as 'ASC' | 'DESC')
-      : 'DESC';
 
   return (
     <div className={`space-y-6 ${className || ''}`}>
@@ -185,48 +174,6 @@ export function QuizList({
                 </SelectItem>
                 <SelectItem value={QuizStatus.DRAFT}>
                   {t('instructor.quiz.status.draft', { fallback: 'Draft' })}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-            <Select
-              value={`${currentSortField}:${currentSortDir}`}
-              onValueChange={(value) => {
-                const [field, dir] = value.split(':') as [
-                  string,
-                  'ASC' | 'DESC',
-                ];
-                onSortChange(field, dir);
-              }}
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="createdDate:DESC">
-                  {t('instructor.quiz.sort.newest', { fallback: 'Newest' })}
-                </SelectItem>
-                <SelectItem value="createdDate:ASC">
-                  {t('instructor.quiz.sort.oldest', { fallback: 'Oldest' })}
-                </SelectItem>
-                <SelectItem value="title:ASC">
-                  {t('instructor.quiz.sort.title.asc', {
-                    fallback: 'Title A–Z',
-                  })}
-                </SelectItem>
-                <SelectItem value="title:DESC">
-                  {t('instructor.quiz.sort.title.desc', {
-                    fallback: 'Title Z–A',
-                  })}
-                </SelectItem>
-                <SelectItem value="status:ASC">
-                  {t('instructor.quiz.sort.status.asc', {
-                    fallback: 'Status A–Z',
-                  })}
-                </SelectItem>
-                <SelectItem value="status:DESC">
-                  {t('instructor.quiz.sort.status.desc', {
-                    fallback: 'Status Z–A',
-                  })}
                 </SelectItem>
               </SelectContent>
             </Select>

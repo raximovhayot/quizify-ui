@@ -50,18 +50,39 @@ export class QuizService {
     if (filter.status) {
       queryParams.append('status', filter.status);
     }
-    if (filter.sorts && filter.sorts.length > 0) {
-      filter.sorts.forEach((sort, index) => {
-        if (sort.field) {
-          queryParams.append(`sorts[${index}].field`, sort.field);
-        }
-        if (sort.direction) {
-          queryParams.append(`sorts[${index}].direction`, sort.direction);
-        }
-      });
-    }
 
     const endpoint = `/instructor/quizzes${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+
+    const response: IApiResponse<IPageableList<QuizDataDTO>> =
+      await apiClient.get(endpoint, accessToken, signal);
+    return extractApiData(response);
+  }
+
+  /**
+   * Get current instructor's quizzes ("myquizzes") with optional filtering
+   * Mirrors getQuizzes but targets the myquizzes endpoint in InstructorQuizController
+   */
+  static async getMyQuizzes(
+    filter: QuizFilter = {},
+    accessToken: string,
+    signal?: AbortSignal
+  ): Promise<IPageableList<QuizDataDTO>> {
+    const queryParams = new URLSearchParams();
+
+    if (filter.page !== undefined) {
+      queryParams.append('page', filter.page.toString());
+    }
+    if (filter.size !== undefined) {
+      queryParams.append('size', filter.size.toString());
+    }
+    if (filter.search) {
+      queryParams.append('search', filter.search);
+    }
+    if (filter.status) {
+      queryParams.append('status', filter.status);
+    }
+
+    const endpoint = `/instructor/quizzes/myquizzes${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
 
     const response: IApiResponse<IPageableList<QuizDataDTO>> =
       await apiClient.get(endpoint, accessToken, signal);

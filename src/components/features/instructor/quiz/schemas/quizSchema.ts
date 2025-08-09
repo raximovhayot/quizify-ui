@@ -30,15 +30,6 @@ export const quizFilterSchema = z.object({
   search: z.string().optional(),
   status: z.nativeEnum(QuizStatus).optional(),
   userId: z.number().optional(),
-  sorts: z
-    .array(
-      z.object({
-        field: z.string(),
-        direction: z.enum(['ASC', 'DESC']),
-      })
-    )
-    .optional()
-    .default([]),
 });
 
 // Quiz Create Request Schema
