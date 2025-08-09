@@ -15,11 +15,10 @@ import {
   SignUpVerifyRequest,
 } from '@/components/features/auth/types/auth';
 import {
-  BasicQuizDataDTO,
-  FullQuizDataDTO,
   InstructorQuizCreateRequest,
   InstructorQuizUpdateRequest,
   InstructorQuizUpdateStatusRequest,
+  QuizDataDTO,
   QuizFilter,
 } from '@/components/features/instructor/quiz/types/quiz';
 import { AccountDTO } from '@/components/features/profile/types/account';
@@ -77,12 +76,12 @@ export interface ProfileEndpoints {
  * Quiz endpoints for instructor operations
  */
 export interface QuizEndpoints {
-  getQuizzes: ApiEndpoint<QuizFilter, IPageableList<BasicQuizDataDTO>>;
-  getQuiz: ApiEndpoint<{ id: string }, FullQuizDataDTO>;
-  createQuiz: ApiEndpoint<InstructorQuizCreateRequest, FullQuizDataDTO>;
+  getQuizzes: ApiEndpoint<QuizFilter, IPageableList<QuizDataDTO>>;
+  getQuiz: ApiEndpoint<{ id: string }, QuizDataDTO>;
+  createQuiz: ApiEndpoint<InstructorQuizCreateRequest, QuizDataDTO>;
   updateQuiz: ApiEndpoint<
     { id: string; data: InstructorQuizUpdateRequest },
-    FullQuizDataDTO
+    QuizDataDTO
   >;
   updateQuizStatus: ApiEndpoint<
     { id: string; data: InstructorQuizUpdateStatusRequest },

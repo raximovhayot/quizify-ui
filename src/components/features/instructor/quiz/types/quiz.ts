@@ -11,7 +11,7 @@ export interface QuizSettings {
   shuffleAnswers: boolean; // whether to shuffle answers (boolean in backend)
 }
 
-// Unified Quiz Data DTO - merges fields from BasicQuizDataDTO and FullQuizDataDTO (matches backend QuizDataDTO)
+// Quiz Data DTO (matches backend QuizDataDTO)
 export interface QuizDataDTO {
   id: number; // Long in backend
   title: string;
@@ -30,7 +30,6 @@ export interface QuizFilter {
   size?: number; // default: 10
   search?: string;
   status?: QuizStatus;
-  userId?: number; // optional filter by userId (supported by backend/Zod schema)
 }
 
 // Quiz Create Request - POST /instructor/quizzes
@@ -60,7 +59,3 @@ export interface InstructorQuizUpdateStatusRequest {
 export type QuizFormData = Omit<InstructorQuizCreateRequest, 'settings'> & {
   settings: Partial<QuizSettings>; // Keep as Partial for form handling flexibility
 };
-
-// Backward-compatible type aliases for legacy imports
-export type BasicQuizDataDTO = QuizDataDTO;
-export type FullQuizDataDTO = QuizDataDTO;

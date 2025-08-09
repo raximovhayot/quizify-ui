@@ -29,7 +29,6 @@ export const quizFilterSchema = z.object({
   size: z.number().min(1).max(100).optional().default(10),
   search: z.string().optional(),
   status: z.nativeEnum(QuizStatus).optional(),
-  userId: z.number().optional(),
 });
 
 // Quiz Create Request Schema

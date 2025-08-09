@@ -23,9 +23,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { AttachmentService } from '../../../attachment/attachmentService';
 import type { AttachmentDTO } from '../../../attachment/attachmentService';
 import {
-  FullQuizDataDTO,
   InstructorQuizCreateRequest,
   InstructorQuizUpdateRequest,
+  QuizDataDTO,
 } from '../types/quiz';
 
 // Form validation schema
@@ -50,7 +50,7 @@ const quizFormSchema = z.object({
 type QuizFormValues = z.infer<typeof quizFormSchema>;
 
 export interface QuizFormProps {
-  quiz?: FullQuizDataDTO;
+  quiz?: QuizDataDTO;
   onSubmit: (
     data: InstructorQuizCreateRequest | InstructorQuizUpdateRequest
   ) => Promise<void>;

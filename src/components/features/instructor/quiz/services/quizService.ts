@@ -3,7 +3,6 @@ import { IApiResponse, extractApiData } from '@/types/api';
 import { IPageableList } from '@/types/common';
 
 import {
-  FullQuizDataDTO,
   InstructorQuizCreateRequest,
   InstructorQuizUpdateRequest,
   InstructorQuizUpdateStatusRequest,
@@ -49,9 +48,6 @@ export class QuizService {
     if (filter.status) {
       queryParams.append('status', filter.status);
     }
-    if (filter.userId !== undefined) {
-      queryParams.append('userId', filter.userId.toString());
-    }
 
     const endpoint = `/instructor/quizzes${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
 
@@ -72,8 +68,8 @@ export class QuizService {
     quizId: number,
     accessToken: string,
     signal?: AbortSignal
-  ): Promise<FullQuizDataDTO> {
-    const response: IApiResponse<FullQuizDataDTO> = await apiClient.get(
+  ): Promise<QuizDataDTO> {
+    const response: IApiResponse<QuizDataDTO> = await apiClient.get(
       `/instructor/quizzes/${quizId}`,
       accessToken,
       signal
@@ -92,8 +88,8 @@ export class QuizService {
   static async createQuiz(
     data: InstructorQuizCreateRequest,
     accessToken: string
-  ): Promise<FullQuizDataDTO> {
-    const response: IApiResponse<FullQuizDataDTO> = await apiClient.post(
+  ): Promise<QuizDataDTO> {
+    const response: IApiResponse<QuizDataDTO> = await apiClient.post(
       '/instructor/quizzes',
       data,
       accessToken
@@ -114,8 +110,8 @@ export class QuizService {
     quizId: number,
     data: InstructorQuizUpdateRequest,
     accessToken: string
-  ): Promise<FullQuizDataDTO> {
-    const response: IApiResponse<FullQuizDataDTO> = await apiClient.put(
+  ): Promise<QuizDataDTO> {
+    const response: IApiResponse<QuizDataDTO> = await apiClient.put(
       `/instructor/quizzes/${quizId}`,
       data,
       accessToken
