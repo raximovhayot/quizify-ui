@@ -31,6 +31,9 @@ export function QuizListContainer({ className }: QuizListContainerProps) {
     const sizeParam = searchParams.get('size');
     const s = searchParams.get('search') || undefined;
     const statusParam = searchParams.get('status') as QuizStatus | null;
+    const sortField = searchParams.get('sortField') || undefined;
+    const sortDir =
+      (searchParams.get('sortDir') as 'ASC' | 'DESC' | null) || undefined;
 
     const page = pageParam ? Math.max(0, parseInt(pageParam, 10) || 0) : 0;
     const size = sizeParam
@@ -45,7 +48,12 @@ export function QuizListContainer({ className }: QuizListContainerProps) {
       status = statusParam;
     }
 
-    return { page, size, search: s, status };
+    const sorts =
+      sortField && sortDir
+        ? [{ field: sortField, direction: sortDir }]
+        : undefined;
+
+    return { page, size, search: s, status, sorts };
   }, [searchParams]);
 
   const updateUrl = useCallback(
@@ -102,6 +110,22 @@ export function QuizListContainer({ className }: QuizListContainerProps) {
     (size: number) => {
       const params = new URLSearchParams(searchParams.toString());
       params.set('size', Math.max(1, Math.min(100, size)).toString());
+      params.set('page', '0');
+      updateUrl(params, 'push');
+    },
+    [searchParams, updateUrl]
+  );
+
+  const handleSortChange = useCallback(
+    (field?: string, direction?: 'ASC' | 'DESC') => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (field && direction) {
+        params.set('sortField', field);
+        params.set('sortDir', direction);
+      } else {
+        params.delete('sortField');
+        params.delete('sortDir');
+      }
       params.set('page', '0');
       updateUrl(params, 'push');
     },
@@ -185,6 +209,7 @@ export function QuizListContainer({ className }: QuizListContainerProps) {
       filter={filter}
       onSearch={handleSearch}
       onStatusFilter={handleStatusFilter}
+      onSortChange={handleSortChange}
       onPageChange={handlePageChange}
       onPageSizeChange={handlePageSizeChange}
       onDeleteQuiz={handleDeleteQuiz}

@@ -49,6 +49,16 @@ export class QuizService {
     if (filter.status) {
       queryParams.append('status', filter.status);
     }
+    if (filter.sorts && filter.sorts.length > 0) {
+      filter.sorts.forEach((sort, index) => {
+        if (sort.field) {
+          queryParams.append(`sorts[${index}].field`, sort.field);
+        }
+        if (sort.direction) {
+          queryParams.append(`sorts[${index}].direction`, sort.direction);
+        }
+      });
+    }
 
     const endpoint = `/instructor/quizzes${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
 
