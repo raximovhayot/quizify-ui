@@ -38,7 +38,7 @@ export function useQuizzes(filter: QuizFilter = {}) {
         throw new Error('No access token available');
       }
 
-      const response = await QuizService.getMyQuizzes(
+      const response = await QuizService.getQuizzes(
         filter,
         session.accessToken,
         signal

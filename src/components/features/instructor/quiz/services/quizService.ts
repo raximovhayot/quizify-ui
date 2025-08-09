@@ -9,7 +9,6 @@ import {
   InstructorQuizUpdateStatusRequest,
   QuizDataDTO,
   QuizFilter,
-  QuizSettings,
 } from '../types/quiz';
 
 /**
@@ -50,39 +49,11 @@ export class QuizService {
     if (filter.status) {
       queryParams.append('status', filter.status);
     }
+    if (filter.userId !== undefined) {
+      queryParams.append('userId', filter.userId.toString());
+    }
 
     const endpoint = `/instructor/quizzes${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
-
-    const response: IApiResponse<IPageableList<QuizDataDTO>> =
-      await apiClient.get(endpoint, accessToken, signal);
-    return extractApiData(response);
-  }
-
-  /**
-   * Get current instructor's quizzes ("myquizzes") with optional filtering
-   * Mirrors getQuizzes but targets the myquizzes endpoint in InstructorQuizController
-   */
-  static async getMyQuizzes(
-    filter: QuizFilter = {},
-    accessToken: string,
-    signal?: AbortSignal
-  ): Promise<IPageableList<QuizDataDTO>> {
-    const queryParams = new URLSearchParams();
-
-    if (filter.page !== undefined) {
-      queryParams.append('page', filter.page.toString());
-    }
-    if (filter.size !== undefined) {
-      queryParams.append('size', filter.size.toString());
-    }
-    if (filter.search) {
-      queryParams.append('search', filter.search);
-    }
-    if (filter.status) {
-      queryParams.append('status', filter.status);
-    }
-
-    const endpoint = `/instructor/quizzes/myquizzes${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
 
     const response: IApiResponse<IPageableList<QuizDataDTO>> =
       await apiClient.get(endpoint, accessToken, signal);
@@ -188,84 +159,5 @@ export class QuizService {
       accessToken
     );
     extractApiData(response);
-  }
-
-  // ============================================================================
-  // UTILITY METHODS
-  // ============================================================================
-
-  /**
-   * Validate quiz data before submission
-   *
-   * @param data - Quiz data to validate
-   * @returns Validation result with error messages if invalid
-   */
-  static validateQuizData(
-    data: Partial<InstructorQuizCreateRequest | InstructorQuizUpdateRequest>
-  ): { isValid: boolean; errors: string[] } {
-    const errors: string[] = [];
-
-    // Title validation
-    if (!data.title || data.title.trim().length < 3) {
-      errors.push('Title must be at least 3 characters long');
-    }
-    if (data.title && data.title.length > 512) {
-      errors.push('Title must be less than 512 characters');
-    }
-
-    // Description validation
-    if (data.description && data.description.length > 1024) {
-      errors.push('Description must be less than 1024 characters');
-    }
-
-    // Settings validation
-    if (data.settings) {
-      if (data.settings.time !== undefined && data.settings.time < 0) {
-        errors.push('Time limit cannot be negative');
-      }
-      if (data.settings.attempt !== undefined && data.settings.attempt < 0) {
-        errors.push('Attempt limit cannot be negative');
-      }
-    }
-
-    return {
-      isValid: errors.length === 0,
-      errors,
-    };
-  }
-
-  /**
-   * Format quiz data for display
-   *
-   * @param quiz - Quiz data to format
-   * @returns Formatted quiz data for UI display
-   */
-  static formatQuizForDisplay(quiz: QuizDataDTO | FullQuizDataDTO) {
-    const created = (quiz as { createdDate?: string }).createdDate;
-    const lastModified = (quiz as { lastModifiedDate?: string })
-      .lastModifiedDate;
-    const settings = (quiz as { settings?: Partial<QuizSettings> }).settings;
-    const attachmentId = (quiz as { attachmentId?: number }).attachmentId;
-
-    const formattedCreatedDate = created
-      ? new Date(created).toLocaleDateString()
-      : undefined;
-
-    const formattedLastModifiedDate = lastModified
-      ? new Date(lastModified).toLocaleDateString()
-      : undefined;
-
-    let timeDisplay: string | undefined;
-    if (typeof settings?.time === 'number') {
-      timeDisplay = settings.time === 0 ? 'No limit' : `${settings.time} min`;
-    }
-
-    return {
-      ...quiz,
-      formattedCreatedDate,
-      formattedLastModifiedDate,
-      hasAttachment: !!attachmentId,
-      timeDisplay,
-    };
   }
 }

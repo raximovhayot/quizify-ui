@@ -30,6 +30,7 @@ export interface QuizFilter {
   size?: number; // default: 10
   search?: string;
   status?: QuizStatus;
+  userId?: number; // optional filter by userId (supported by backend/Zod schema)
 }
 
 // Quiz Create Request - POST /instructor/quizzes
