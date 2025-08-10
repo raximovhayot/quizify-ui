@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 
-export default function ViewQuizPage() {
+export default function QuizDetailsPage() {
   const t = useTranslations();
   const params = useParams<{ quizId: string }>();
   const quizId = Number(params.quizId);

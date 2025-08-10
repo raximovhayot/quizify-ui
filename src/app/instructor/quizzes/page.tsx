@@ -2,6 +2,6 @@
 
 import { QuizListContainer } from '@/components/features/instructor/quiz/components/QuizListContainer';
 
-export default function QuizzesPage() {
+export default function InstructorQuizzesPage() {
   return <QuizListContainer />;
 }

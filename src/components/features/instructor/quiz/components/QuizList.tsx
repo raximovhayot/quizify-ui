@@ -1,12 +1,13 @@
 'use client';
 
-import { Filter, Plus, Search } from 'lucide-react';
+import { Plus, Search } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
+import { AppPagination } from '@/components/shared/ui/AppPagination';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,7 +31,6 @@ import {
 
 import { QuizDataDTO, QuizFilter, QuizStatus } from '../types/quiz';
 import { QuizCard } from './QuizCard';
-import { QuizPagination } from './QuizPagination';
 
 export interface QuizListProps {
   quizzes: QuizDataDTO[];
@@ -58,8 +58,8 @@ export function QuizList({
   totalPages,
   currentPage,
   pageSize,
-  isFirst,
-  isLast,
+  isFirst: _isFirst,
+  isLast: _isLast,
   filter,
   onSearch,
   onStatusFilter,
@@ -155,7 +155,6 @@ export function QuizList({
             </div>
           </form>
           <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-muted-foreground" />
             <Select
               value={filter.status || 'all'}
               onValueChange={handleStatusFilterChange}
@@ -247,17 +246,6 @@ export function QuizList({
         </div>
       )}
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <QuizPagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          isFirst={isFirst}
-          isLast={isLast}
-          onPageChange={onPageChange}
-        />
-      )}
-
       {/* Delete Confirmation Dialog */}
       <AlertDialog
         open={!!deleteQuizId}
@@ -290,6 +278,15 @@ export function QuizList({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <AppPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={onPageChange}
+        />
+      )}
     </div>
   );
 }

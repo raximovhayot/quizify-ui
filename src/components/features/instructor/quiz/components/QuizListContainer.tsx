@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 import { useTranslations } from 'next-intl';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -115,6 +115,27 @@ export function QuizListContainer({ className }: QuizListContainerProps) {
     error,
     refetch,
   } = useQuizzes(filter);
+
+  // Normalize page in URL based on backend response to avoid out-of-range pages
+  useEffect(() => {
+    if (!quizzesResponse) return;
+
+    const backendPage = quizzesResponse.page;
+    const total = quizzesResponse.totalPages;
+
+    // Determine the desired page within valid bounds
+    let desiredPage = 0;
+    if (total > 0) {
+      desiredPage = Math.min(total - 1, Math.max(0, backendPage));
+    }
+
+    // If the URL-derived page differs from the backend (or is out of bounds), sync it
+    if (filter.page !== desiredPage) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('page', desiredPage.toString());
+      updateUrl(params, 'replace');
+    }
+  }, [quizzesResponse, filter.page, searchParams, updateUrl]);
 
   const deleteQuizMutation = useDeleteQuiz();
   const updateQuizStatusMutation = useUpdateQuizStatus();
