@@ -370,5 +370,20 @@
       "settings": "Sozlamalar",
       "logout": "Chiqish"
     }
+  },
+  "student": {
+    "role": "Talaba",
+    "navigation": {
+      "title": "Talaba paneli",
+      "toggleMenu": "Menyuni almashtirish",
+      "home": "Bosh sahifa",
+      "history": "Tarix"
+    },
+    "userMenu": {
+      "title": "Foydalanuvchi menyusi",
+      "profile": "Profil",
+      "settings": "Sozlamalar",
+      "logout": "Chiqish"
+    }
   }
 }

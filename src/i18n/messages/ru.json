@@ -369,5 +369,20 @@
       "settings": "Настройки",
       "logout": "Выйти"
     }
+  },
+  "student": {
+    "role": "Студент",
+    "navigation": {
+      "title": "Панель студента",
+      "toggleMenu": "Переключить меню",
+      "home": "Главная",
+      "history": "История"
+    },
+    "userMenu": {
+      "title": "Меню пользователя",
+      "profile": "Профиль",
+      "settings": "Настройки",
+      "logout": "Выйти"
+    }
   }
 }

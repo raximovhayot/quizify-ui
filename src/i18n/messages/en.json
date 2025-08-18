@@ -355,5 +355,20 @@
       "settings": "Settings",
       "logout": "Log out"
     }
+  },
+  "student": {
+    "role": "Student",
+    "navigation": {
+      "title": "Student Panel",
+      "toggleMenu": "Toggle menu",
+      "home": "Home",
+      "history": "History"
+    },
+    "userMenu": {
+      "title": "User menu",
+      "profile": "Profile",
+      "settings": "Settings",
+      "logout": "Log out"
+    }
   }
 }

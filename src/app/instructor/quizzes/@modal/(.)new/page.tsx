@@ -1,20 +1,32 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import { CreateQuizContainer } from '@/components/features/instructor/quiz/components/CreateQuizContainer';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 
 export default function CreateQuizModalPage() {
   const router = useRouter();
+  const pathname = usePathname();
   const t = useTranslations();
+  const [open, setOpen] = useState(true);
+
+  // Ensure the modal re-opens when navigating back to /instructor/quizzes/new
+  useEffect(() => {
+    if (pathname?.endsWith('/quizzes/new')) {
+      setOpen(true);
+    }
+  }, [pathname]);
 
   return (
     <Dialog
-      open
-      onOpenChange={(open) => {
-        if (!open) router.push('/instructor/quizzes');
+      open={open}
+      onOpenChange={(nextOpen) => {
+        setOpen(nextOpen);
+        if (!nextOpen) router.push('/instructor/quizzes');
       }}
     >
       <DialogContent>

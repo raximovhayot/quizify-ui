@@ -1,8 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { Controller, useForm } from 'react-hook-form';
 
 import { useEffect, useState } from 'react';
 
@@ -22,32 +21,12 @@ import { Textarea } from '@/components/ui/textarea';
 
 import { AttachmentService } from '../../../attachment/attachmentService';
 import type { AttachmentDTO } from '../../../attachment/attachmentService';
+import { TQuizFormData, quizFormSchema } from '../schemas/quizSchema';
 import {
   InstructorQuizCreateRequest,
   InstructorQuizUpdateRequest,
   QuizDataDTO,
 } from '../types/quiz';
-
-// Form validation schema
-const quizFormSchema = z.object({
-  title: z
-    .string()
-    .min(3, 'Title must be at least 3 characters')
-    .max(512, 'Title must be less than 512 characters'),
-  description: z
-    .string()
-    .max(1024, 'Description must be less than 1024 characters')
-    .optional(),
-  settings: z.object({
-    time: z.number().min(0, 'Time limit cannot be negative').optional(),
-    attempt: z.number().min(0, 'Attempt limit cannot be negative').optional(),
-    shuffleQuestions: z.boolean().optional(),
-    shuffleAnswers: z.boolean().optional(),
-  }),
-  attachmentId: z.number().optional(),
-});
-
-type QuizFormValues = z.infer<typeof quizFormSchema>;
 
 export interface QuizFormProps {
   quiz?: QuizDataDTO;
@@ -76,7 +55,7 @@ export function QuizForm({
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isLoadingAttachment, setIsLoadingAttachment] = useState(false);
 
-  const form = useForm<QuizFormValues>({
+  const form = useForm<TQuizFormData>({
     resolver: zodResolver(quizFormSchema),
     defaultValues: {
       title: quiz?.title || '',
@@ -179,7 +158,7 @@ export function QuizForm({
     window.open(attachment.downloadUrl, '_blank');
   };
 
-  const handleFormSubmit = async (data: QuizFormValues) => {
+  const handleFormSubmit = async (data: TQuizFormData) => {
     const submitData:
       | InstructorQuizCreateRequest
       | InstructorQuizUpdateRequest = {
@@ -275,7 +254,14 @@ export function QuizForm({
                   type="number"
                   min="0"
                   className="h-9"
-                  {...form.register('settings.time', { valueAsNumber: true })}
+                  {...form.register('settings.time', {
+                    setValueAs: (v) => {
+                      if (v === '' || v === null || typeof v === 'undefined')
+                        return undefined;
+                      const n = Number(v);
+                      return Number.isNaN(n) ? undefined : n;
+                    },
+                  })}
                   placeholder={t('quiz.form.timeLimitPlaceholder', {
                     fallback: 'No limit',
                   })}
@@ -298,7 +284,12 @@ export function QuizForm({
                   min="0"
                   className="h-9"
                   {...form.register('settings.attempt', {
-                    valueAsNumber: true,
+                    setValueAs: (v) => {
+                      if (v === '' || v === null || typeof v === 'undefined')
+                        return undefined;
+                      const n = Number(v);
+                      return Number.isNaN(n) ? undefined : n;
+                    },
                   })}
                   placeholder={t('quiz.form.attemptLimitPlaceholder', {
                     fallback: 'Unlimited',
@@ -320,10 +311,17 @@ export function QuizForm({
                     fallback: 'Shuffle Questions',
                   })}
                 </Label>
-                <Switch
-                  id="shuffleQuestions"
-                  {...form.register('settings.shuffleQuestions')}
-                  disabled={isSubmitting}
+                <Controller
+                  name="settings.shuffleQuestions"
+                  control={form.control}
+                  render={({ field }) => (
+                    <Switch
+                      id="shuffleQuestions"
+                      checked={!!field.value}
+                      onCheckedChange={field.onChange}
+                      disabled={isSubmitting}
+                    />
+                  )}
                 />
               </div>
 
@@ -333,10 +331,17 @@ export function QuizForm({
                     fallback: 'Shuffle Answers',
                   })}
                 </Label>
-                <Switch
-                  id="shuffleAnswers"
-                  {...form.register('settings.shuffleAnswers')}
-                  disabled={isSubmitting}
+                <Controller
+                  name="settings.shuffleAnswers"
+                  control={form.control}
+                  render={({ field }) => (
+                    <Switch
+                      id="shuffleAnswers"
+                      checked={!!field.value}
+                      onCheckedChange={field.onChange}
+                      disabled={isSubmitting}
+                    />
+                  )}
                 />
               </div>
             </div>

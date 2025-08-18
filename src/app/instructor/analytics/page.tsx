@@ -1,3 +1,7 @@
+'use client';
+
+import { AssignmentsListContainer } from '@/components/features/instructor/analytics/components/AssignmentsListContainer';
+
 export default function AnalyticsPage() {
-  return <>Analytics Page</>;
+  return <AssignmentsListContainer />;
 }
