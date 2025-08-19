@@ -1,152 +1,146 @@
 'use client';
 
-import {ReactNode, Suspense, useEffect} from 'react';
+import { ReactNode, Suspense, useEffect } from 'react';
 
-import {useTranslations} from 'next-intl';
-import {usePathname, useRouter} from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { usePathname, useRouter } from 'next/navigation';
 
-import {useNextAuth} from '@/components/features/auth/hooks/useNextAuth';
+import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
 import {
-    UserRole,
-    UserState,
+  UserRole,
+  UserState,
 } from '@/components/features/profile/types/account';
-import {ErrorPage} from '@/components/ui/error-page';
-import {PageLoading} from '@/components/ui/loading-spinner';
+import { ErrorPage } from '@/components/ui/error-page';
+import { PageLoading } from '@/components/ui/loading-spinner';
 
 interface GuardAuthenticatedProps {
-    children: ReactNode;
-    requiredRoles?: UserRole[];
-    loginPath?: string;
-    fallbackRoles?: { role: UserRole; redirectTo: string }[];
-    showUnauthorizedError?: boolean;
+  children: ReactNode;
+  requiredRoles?: UserRole[];
+  loginPath?: string;
+  fallbackRoles?: { role: UserRole; redirectTo: string }[];
+  showUnauthorizedError?: boolean;
 }
 
 function GuardAuthenticatedContent({
-                                       children,
-                                       requiredRoles = [],
-                                       loginPath = '/sign-in',
-                                       fallbackRoles = [],
-                                       showUnauthorizedError = false,
-                                   }: GuardAuthenticatedProps) {
-    const {isAuthenticated, isLoading, user, hasAnyRole, hasRole} =
-        useNextAuth();
-    const router = useRouter();
-    const pathname = usePathname();
-    const t = useTranslations('common');
+  children,
+  requiredRoles = [],
+  loginPath = '/sign-in',
+  fallbackRoles = [],
+  showUnauthorizedError = false,
+}: Readonly<GuardAuthenticatedProps>) {
+  const { isAuthenticated, isLoading, user, hasAnyRole, hasRole } =
+    useNextAuth();
+  const router = useRouter();
+  const pathname = usePathname();
+  const t = useTranslations('common');
 
-    useEffect(() => {
-        // Redirect to sign-in if not authenticated
-        if (!isLoading && !isAuthenticated) {
-            router.replace(`${loginPath}?redirect=${encodeURIComponent(pathname)}`);
-            return;
-        }
-
-        // Handle user state - redirect to profile completion if needed
-        if (
-            isAuthenticated &&
-            user &&
-            user.state === UserState.NEW &&
-            !pathname.startsWith('/profile/complete')
-        ) {
-            router.replace('/profile/complete');
-            return;
-        }
-
-        // Check role authorization if roles are specified
-        if (
-            isAuthenticated &&
-            requiredRoles.length > 0 &&
-            !hasAnyRole(requiredRoles)
-        ) {
-            // Check fallback roles
-            for (const fallback of fallbackRoles) {
-                if (hasRole(fallback.role)) {
-                    router.replace(fallback.redirectTo);
-                    return;
-                }
-            }
-
-            // No valid roles found
-            if (showUnauthorizedError) {
-                // Don't redirect, component will show 403 error
-                return;
-            } else {
-                // Redirect based on user's actual roles
-                const userRoles = user?.roles || [];
-                const hasStudentRole = userRoles.some(
-                    (role) => role.name === 'STUDENT'
-                );
-                const hasInstructorRole = userRoles.some(
-                    (role) => role.name === 'INSTRUCTOR'
-                );
-
-                if (hasStudentRole && hasInstructorRole) {
-                    router.replace('/student'); // Default to student dashboard
-                } else if (hasStudentRole) {
-                    router.replace('/student');
-                } else if (hasInstructorRole) {
-                    router.replace('/instructor');
-                } else {
-                    router.replace('/');
-                }
-                return;
-            }
-        }
-    }, [
-        isAuthenticated,
-        isLoading,
-        user,
-        hasAnyRole,
-        hasRole,
-        router,
-        pathname,
-        loginPath,
-        requiredRoles,
-        fallbackRoles,
-        showUnauthorizedError,
-    ]);
-
-    // Show loading while checking authentication
-    if (isLoading) {
-        return (
-            <PageLoading
-                text={t('loading', {default: 'Loading...'})}
-            />
-        );
+  useEffect(() => {
+    // Redirect to sign-in if not authenticated
+    if (!isLoading && !isAuthenticated) {
+      router.replace(`${loginPath}?redirect=${encodeURIComponent(pathname)}`);
+      return;
     }
 
-    // Show loading while redirecting unauthenticated users
-    if (!isAuthenticated) {
-        return <PageLoading text={t('redirecting')}/>;
-    }
-
-    // Show loading while redirecting users with incomplete profiles
+    // Handle user state - redirect to profile completion if needed
     if (
-        user &&
-        user.state === UserState.NEW &&
-        !pathname.startsWith('/profile/complete')
+      isAuthenticated &&
+      user &&
+      user.state === UserState.NEW &&
+      !pathname.startsWith('/profile/complete')
     ) {
-        return <PageLoading text={t('redirecting')}/>;
+      router.replace('/profile/complete');
+      return;
     }
 
-    // Check role authorization
-    if (requiredRoles.length > 0 && !hasAnyRole(requiredRoles)) {
-        if (showUnauthorizedError) {
-            return <ErrorPage errorCode={403}/>;
-        } else {
-            return <PageLoading text={t('redirecting')}/>;
+    // Check role authorization if roles are specified
+    if (
+      isAuthenticated &&
+      requiredRoles.length > 0 &&
+      !hasAnyRole(requiredRoles)
+    ) {
+      // Check fallback roles
+      for (const fallback of fallbackRoles) {
+        if (hasRole(fallback.role)) {
+          router.replace(fallback.redirectTo);
+          return;
         }
-    }
+      }
 
-    // All checks passed, render children
-    return <>{children}</>;
+      // No valid roles found
+      if (showUnauthorizedError) {
+        // Don't redirect, component will show 403 error
+        return;
+      } else {
+        // Redirect based on user's actual roles
+        const userRoles = user?.roles || [];
+        const hasStudentRole = userRoles.some(
+          (role) => role.name === 'STUDENT'
+        );
+        const hasInstructorRole = userRoles.some(
+          (role) => role.name === 'INSTRUCTOR'
+        );
+
+        if (hasStudentRole && hasInstructorRole) {
+          router.replace('/student'); // Default to student dashboard
+        } else if (hasStudentRole) {
+          router.replace('/student');
+        } else if (hasInstructorRole) {
+          router.replace('/instructor');
+        } else {
+          router.replace('/');
+        }
+        return;
+      }
+    }
+  }, [
+    isAuthenticated,
+    isLoading,
+    user,
+    hasAnyRole,
+    hasRole,
+    router,
+    pathname,
+    loginPath,
+    requiredRoles,
+    fallbackRoles,
+    showUnauthorizedError,
+  ]);
+
+  // Show loading while checking authentication
+  if (isLoading) {
+    return <PageLoading text={t('loading', { default: 'Loading...' })} />;
+  }
+
+  // Show loading while redirecting unauthenticated users
+  if (!isAuthenticated) {
+    return <PageLoading text={t('redirecting')} />;
+  }
+
+  // Show loading while redirecting users with incomplete profiles
+  if (
+    user &&
+    user.state === UserState.NEW &&
+    !pathname.startsWith('/profile/complete')
+  ) {
+    return <PageLoading text={t('redirecting')} />;
+  }
+
+  // Check role authorization
+  if (requiredRoles.length > 0 && !hasAnyRole(requiredRoles)) {
+    if (showUnauthorizedError) {
+      return <ErrorPage errorCode={403} />;
+    } else {
+      return <PageLoading text={t('redirecting')} />;
+    }
+  }
+
+  // All checks passed, render children
+  return <>{children}</>;
 }
 
 function GuardAuthenticatedLoading() {
-    const t = useTranslations('common');
-    return (
-        <PageLoading text={t('loading', {default: 'Loading...'})}/>
-    );
+  const t = useTranslations('common');
+  return <PageLoading text={t('loading', { default: 'Loading...' })} />;
 }
 
 /**
@@ -159,10 +153,12 @@ function GuardAuthenticatedLoading() {
  * - Error handling (403 pages or redirects)
  * - Full-screen loading states
  */
-export default function GuardAuthenticated(props: GuardAuthenticatedProps) {
-    return (
-        <Suspense fallback={<GuardAuthenticatedLoading/>}>
-            <GuardAuthenticatedContent {...props} />
-        </Suspense>
-    );
+export default function GuardAuthenticated(
+  props: Readonly<GuardAuthenticatedProps>
+) {
+  return (
+    <Suspense fallback={<GuardAuthenticatedLoading />}>
+      <GuardAuthenticatedContent {...props} />
+    </Suspense>
+  );
 }

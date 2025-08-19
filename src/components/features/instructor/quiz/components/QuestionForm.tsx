@@ -50,7 +50,7 @@ export function QuestionForm({
   onSubmit,
   onCancel,
   isSubmitting,
-}: QuestionFormProps) {
+}: Readonly<QuestionFormProps>) {
   const t = useTranslations();
   const { data: session } = useSession();
 

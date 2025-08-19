@@ -128,7 +128,7 @@ export function useViewport<T>(
 
   for (let i = currentIndex; i < orderedBreakpoints.length; i++) {
     const bp = orderedBreakpoints[i];
-    if (values[bp] !== undefined) {
+    if (bp !== undefined && values[bp] !== undefined) {
       return values[bp];
     }
   }

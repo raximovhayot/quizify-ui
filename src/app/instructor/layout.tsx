@@ -10,7 +10,9 @@ interface InstructorLayoutProps {
   children: ReactNode;
 }
 
-export default function InstructorLayout({ children }: InstructorLayoutProps) {
+export default function InstructorLayout({
+  children,
+}: Readonly<InstructorLayoutProps>) {
   return (
     <GuardAuthenticated
       requiredRoles={[UserRole.INSTRUCTOR]}

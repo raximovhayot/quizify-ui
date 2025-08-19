@@ -28,7 +28,7 @@ interface NotificationsDropdownProps {
 
 export function NotificationsDropdown({
   notifications = [],
-}: NotificationsDropdownProps) {
+}: Readonly<NotificationsDropdownProps>) {
   const t = useTranslations();
 
   // Mock notifications - in real app, this would come from API

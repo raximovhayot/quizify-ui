@@ -35,7 +35,7 @@ interface UserMenuProps {
   onLogout: () => void;
 }
 
-export function UserMenu({ user, onLogout }: UserMenuProps) {
+export function UserMenu({ user, onLogout }: Readonly<UserMenuProps>) {
   const t = useTranslations();
 
   return (

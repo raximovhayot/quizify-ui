@@ -202,8 +202,6 @@ export function QuizListContainer({ className }: QuizListContainerProps) {
       <ErrorDisplay
         error={error}
         onRetry={retryFetch}
-        isRetrying={isRetrying}
-        retryCount={retryCount}
         title={t('instructor.quiz.list.error.title', {
           fallback: 'Failed to load quizzes',
         })}

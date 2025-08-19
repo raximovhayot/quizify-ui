@@ -14,7 +14,6 @@ export default function CreateQuizModalPage() {
   const t = useTranslations();
   const [open, setOpen] = useState(true);
 
-  // Ensure the modal re-opens when navigating back to /instructor/quizzes/new
   useEffect(() => {
     if (pathname?.endsWith('/quizzes/new')) {
       setOpen(true);

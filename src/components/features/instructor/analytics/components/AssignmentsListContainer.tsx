@@ -17,7 +17,7 @@ export interface AssignmentsListContainerProps {
 
 export function AssignmentsListContainer({
   className,
-}: AssignmentsListContainerProps) {
+}: Readonly<AssignmentsListContainerProps>) {
   const t = useTranslations();
   const router = useRouter();
   const pathname = usePathname();

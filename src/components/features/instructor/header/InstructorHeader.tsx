@@ -12,7 +12,9 @@ interface InstructorHeaderProps {
   title?: string;
 }
 
-export function InstructorHeader({ title: _title }: InstructorHeaderProps) {
+export function InstructorHeader({
+  title: _title,
+}: Readonly<InstructorHeaderProps>) {
   const { user, logout } = useNextAuth();
 
   return (

@@ -12,7 +12,9 @@ export interface CreateQuizContainerProps {
   className?: string;
 }
 
-export function CreateQuizContainer({ className }: CreateQuizContainerProps) {
+export function CreateQuizContainer({
+  className,
+}: Readonly<CreateQuizContainerProps>) {
   const router = useRouter();
   const createQuizMutation = useCreateQuiz();
 

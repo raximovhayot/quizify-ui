@@ -22,7 +22,7 @@ export const QuizActions = memo(function QuizActions({
   isDeleting = false,
   isUpdatingStatus = false,
   className,
-}: QuizActionsProps) {
+}: Readonly<QuizActionsProps>) {
   const t = useTranslations();
 
   const handleDelete = useCallback(() => {

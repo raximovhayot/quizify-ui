@@ -21,7 +21,7 @@ interface GuardPublicOnlyProps {
 export default function GuardPublicOnly({
   children,
   redirectPath,
-}: GuardPublicOnlyProps) {
+}: Readonly<GuardPublicOnlyProps>) {
   const { isAuthenticated, isLoading, user } = useNextAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
