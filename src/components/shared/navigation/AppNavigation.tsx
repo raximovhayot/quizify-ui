@@ -106,9 +106,6 @@ export function AppNavigation({
                                 'bg-accent text-accent-foreground'
                             )}
                           >
-                            {child.icon ? (
-                              <child.icon className="h-4 w-4" />
-                            ) : null}
                             {child.label}
                           </Link>
                         </NavigationMenuLink>
@@ -126,7 +123,6 @@ export function AppNavigation({
                         'bg-accent text-accent-foreground'
                     )}
                   >
-                    {item.icon ? <item.icon className="h-4 w-4" /> : null}
                     {item.label}
                   </Link>
                 </NavigationMenuLink>

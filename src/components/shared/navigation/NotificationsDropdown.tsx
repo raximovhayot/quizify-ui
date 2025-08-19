@@ -30,47 +30,7 @@ export function NotificationsDropdown({
   notifications = [],
 }: Readonly<NotificationsDropdownProps>) {
   const t = useTranslations();
-
-  // Mock notifications - in real app, this would come from API
-  const defaultNotifications: Notification[] = [
-    {
-      id: 1,
-      title: t('notifications.newSubmission', {
-        fallback: 'New quiz submission',
-      }),
-      message: t('notifications.submissionMessage', {
-        fallback: 'Student completed Quiz #1',
-      }),
-      time: '5 min ago',
-      unread: true,
-    },
-    {
-      id: 2,
-      title: t('notifications.lowScore', {
-        fallback: 'Low score alert',
-      }),
-      message: t('notifications.lowScoreMessage', {
-        fallback: 'Multiple students scored below 60%',
-      }),
-      time: '1 hour ago',
-      unread: true,
-    },
-    {
-      id: 3,
-      title: t('notifications.quizCompleted', {
-        fallback: 'Quiz completed',
-      }),
-      message: t('notifications.quizCompletedMessage', {
-        fallback: 'All students completed Quiz #2',
-      }),
-      time: '2 hours ago',
-      unread: false,
-    },
-  ];
-
-  const notificationList =
-    notifications.length > 0 ? notifications : defaultNotifications;
-  const unreadCount = notificationList.filter((n) => n.unread).length;
+  const unreadCount = notifications.filter((n) => n.unread).length;
 
   return (
     <DropdownMenu>
@@ -103,7 +63,7 @@ export function NotificationsDropdown({
         </div>
         <DropdownMenuSeparator />
         <div className="max-h-64 overflow-y-auto">
-          {notificationList.map((notification) => (
+          {notifications.map((notification) => (
             <DropdownMenuItem
               key={notification.id}
               className="flex-col items-start p-3"
