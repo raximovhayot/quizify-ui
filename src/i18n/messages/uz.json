@@ -31,6 +31,9 @@
     "update": "Yangilash",
     "retry": "Qayta urinish",
     "actions": "Harakatlar",
+    "view": "Ko'rish",
+    "true": "To'g'ri",
+    "false": "Yolg'on",
     "pagination": {
       "first": "Birinchi sahifaga o'tish",
       "previous": "Oldingi sahifaga o'tish",
@@ -369,6 +372,33 @@
       "profile": "Profil",
       "settings": "Sozlamalar",
       "logout": "Chiqish"
+    },
+    "analytics": {
+      "assignments": {
+        "title": "Topshiriqlar",
+        "subtitle": "Biriktirilgan testlar umumiy ko‘rinishi",
+        "search": {
+          "placeholder": "Topshiriqlarni qidirish..."
+        },
+        "filter": {
+          "all": "Barcha holatlar"
+        },
+        "status": {
+          "published": "Nashr etilgan",
+          "draft": "Qoralama"
+        },
+        "empty": "Topshiriqlar topilmadi.",
+        "no": {
+          "results": "Mezonlarga mos keladigan topshiriqlar topilmadi.",
+          "data": "Ma’lumot yo‘q"
+        },
+        "meta": "Holat: {status} · Yaratilgan: {created} · Muddat: {due}",
+        "summary": "{start} dan {end} gacha, jami {total} topshiriq",
+        "error": {
+          "title": "Topshiriqlarni yuklab bo‘lmadi",
+          "description": "Iltimos, qayta urinib ko‘ring."
+        }
+      }
     }
   },
   "student": {
@@ -384,6 +414,30 @@
       "profile": "Profil",
       "settings": "Sozlamalar",
       "logout": "Chiqish"
+    },
+    "quiz": {
+      "questions": "Savollar",
+      "timeLimit": "Vaqt limiti",
+      "unlimited": "Cheklanmagan",
+      "minutes": "daq",
+      "attempts": "Urinishlar",
+      "shuffleQuestions": "Savollarni aralashtirish",
+      "shuffleAnswers": "Javoblarni aralashtirish",
+      "showAnswers": "Javoblarni ko‘rsatish",
+      "showExplanations": "Izohlarni ko‘rsatish",
+      "questionNumber": "{n}-savol",
+      "explanation": "Izoh",
+      "answers": "Javoblar",
+      "correctAnswer": "To'g'ri javob",
+      "types": {
+        "multipleChoice": "Bir nechta javob",
+        "trueFalse": "To‘g‘ri/Yolg‘on",
+        "shortAnswer": "Qisqa javob",
+        "fillInBlank": "Bo‘sh joyni to‘ldiring",
+        "essay": "Insho",
+        "matching": "Moslashtirish",
+        "ranking": "Tartiblash"
+      }
     }
   }
 }

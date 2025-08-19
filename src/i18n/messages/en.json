@@ -31,6 +31,9 @@
     "update": "Update",
     "retry": "Try Again",
     "actions": "Actions",
+    "view": "View",
+    "true": "True",
+    "false": "False",
     "pagination": {
       "first": "Go to first page",
       "previous": "Go to previous page",
@@ -354,6 +357,33 @@
       "profile": "Profile",
       "settings": "Settings",
       "logout": "Log out"
+    },
+    "analytics": {
+      "assignments": {
+        "title": "Assignments",
+        "subtitle": "Overview of assigned quizzes",
+        "search": {
+          "placeholder": "Search assignments..."
+        },
+        "filter": {
+          "all": "All Status"
+        },
+        "status": {
+          "published": "Published",
+          "draft": "Draft"
+        },
+        "empty": "No assignments found.",
+        "no": {
+          "results": "No assignments found matching your criteria.",
+          "data": "No data"
+        },
+        "meta": "Status: {status} · Created: {created} · Due: {due}",
+        "summary": "Showing {start} to {end} of {total} assignments",
+        "error": {
+          "title": "Failed to load assignments",
+          "description": "Please try again."
+        }
+      }
     }
   },
   "student": {
@@ -369,6 +399,30 @@
       "profile": "Profile",
       "settings": "Settings",
       "logout": "Log out"
+    },
+    "quiz": {
+      "questions": "Questions",
+      "timeLimit": "Time Limit",
+      "unlimited": "Unlimited",
+      "minutes": "min",
+      "attempts": "Attempts",
+      "shuffleQuestions": "Shuffle Questions",
+      "shuffleAnswers": "Shuffle Answers",
+      "showAnswers": "Show answers",
+      "showExplanations": "Show explanations",
+      "questionNumber": "Question {n}",
+      "explanation": "Explanation",
+      "answers": "Answers",
+      "correctAnswer": "Correct answer",
+      "types": {
+        "multipleChoice": "Multiple choice",
+        "trueFalse": "True/False",
+        "shortAnswer": "Short answer",
+        "fillInBlank": "Fill in the blank",
+        "essay": "Essay",
+        "matching": "Matching",
+        "ranking": "Ranking"
+      }
     }
   }
 }

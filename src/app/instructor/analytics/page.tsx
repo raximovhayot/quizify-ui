@@ -2,6 +2,6 @@
 
 import { AssignmentsListContainer } from '@/components/features/instructor/analytics/components/AssignmentsListContainer';
 
-export default function AnalyticsPage() {
+export default function InstructorAnalyticsPage() {
   return <AssignmentsListContainer />;
 }

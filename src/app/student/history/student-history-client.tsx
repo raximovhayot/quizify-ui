@@ -63,6 +63,7 @@ function AttemptList({
   items: StudentAttemptDTO[];
   emptyLabel: string;
 }) {
+  const t = useTranslations();
   if (!items || items.length === 0) {
     return <div className="text-sm text-muted-foreground">{emptyLabel}</div>;
   }
@@ -83,7 +84,7 @@ function AttemptList({
               className="text-primary text-sm"
               href={`${ROUTES_APP.baseUrl()}/quizzes/${a.quizId}`}
             >
-              {`View`}
+              {t('common.view', { fallback: 'View' })}
             </a>
           </div>
         </li>

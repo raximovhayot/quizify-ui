@@ -71,16 +71,17 @@ export function StudentHomeClient() {
   const hasError = upcomingQuery.isError || inProgressQuery.isError;
 
   return (
-    <div className="space-y-6">
-      <Card>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <Card className="md:col-span-2">
         <CardHeader data-slot="card-header">
           <div className="font-medium">
             {t('student.home.joinTitle', { fallback: 'Join a quiz' })}
           </div>
         </CardHeader>
         <CardContent data-slot="card-content">
-          <div className="flex items-center gap-2 max-w-md">
+          <div className="flex items-center gap-1 max-w-sm">
             <Input
+              className="h-8 text-sm"
               placeholder={t('student.home.joinPlaceholder', {
                 fallback: 'Enter join code',
               })}
@@ -90,7 +91,11 @@ export function StudentHomeClient() {
                 if (e.key === 'Enter') handleJoin();
               }}
             />
-            <Button onClick={handleJoin} disabled={joining || !code.trim()}>
+            <Button
+              size="sm"
+              onClick={handleJoin}
+              disabled={joining || !code.trim()}
+            >
               {joining
                 ? t('common.pleaseWait', { fallback: 'Please wait...' })
                 : t('student.home.joinButton', { fallback: 'Join' })}
@@ -169,6 +174,7 @@ function QuizSimpleList({
   items: QuizDataDTO[];
   emptyLabel: string;
 }) {
+  const t = useTranslations();
   if (!items || items.length === 0) {
     return <div className="text-sm text-muted-foreground">{emptyLabel}</div>;
   }
@@ -191,7 +197,7 @@ function QuizSimpleList({
             className="text-primary text-sm"
             href={`${ROUTES_APP.baseUrl()}/quizzes/${q.id}`}
           >
-            View
+            {t('common.view', { fallback: 'View' })}
           </a>
         </li>
       ))}

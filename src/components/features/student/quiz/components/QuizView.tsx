@@ -128,7 +128,7 @@ export function QuizView({ quiz, questions, className }: QuizViewProps) {
             </CardHeader>
             <CardContent data-slot="card-content" className="space-y-2">
               {/* Answers */}
-              {showAnswers && renderAnswers(q)}
+              {showAnswers && renderAnswers(q, t)}
 
               {/* Explanations */}
               {showExplanations && q.explanation && (
@@ -175,13 +175,20 @@ function formatQuestionType(
   }
 }
 
-function renderAnswers(q: QuestionDataDto) {
+function renderAnswers(
+  q: QuestionDataDto,
+  t: ReturnType<typeof useTranslations>
+) {
   if (q.questionType === QuestionType.TRUE_FALSE) {
     return (
       <div>
-        <div className="text-sm text-muted-foreground">Correct answer</div>
+        <div className="text-sm text-muted-foreground">
+          {t('student.quiz.correctAnswer', { fallback: 'Correct answer' })}
+        </div>
         <div className="text-sm font-medium">
-          {q.trueFalseAnswer ? 'True' : 'False'}
+          {q.trueFalseAnswer
+            ? t('common.true', { fallback: 'True' })
+            : t('common.false', { fallback: 'False' })}
         </div>
       </div>
     );
@@ -192,7 +199,9 @@ function renderAnswers(q: QuestionDataDto) {
   const sortedAnswers = [...q.answers].sort((a, b) => a.order - b.order);
   return (
     <div>
-      <div className="text-sm text-muted-foreground">Answers</div>
+      <div className="text-sm text-muted-foreground">
+        {t('student.quiz.answers', { fallback: 'Answers' })}
+      </div>
       <ul className="list-disc pl-5 text-sm">
         {sortedAnswers.map((a) => (
           <li key={a.order} className={a.correct ? 'font-semibold' : ''}>

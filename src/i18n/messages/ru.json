@@ -31,6 +31,9 @@
     "update": "Обновить",
     "retry": "Попробовать снова",
     "actions": "Действия",
+    "view": "Просмотр",
+    "true": "Истина",
+    "false": "Ложь",
     "pagination": {
       "first": "Перейти на первую страницу",
       "previous": "Перейти на предыдущую страницу",
@@ -368,6 +371,33 @@
       "profile": "Профиль",
       "settings": "Настройки",
       "logout": "Выйти"
+    },
+    "analytics": {
+      "assignments": {
+        "title": "Задания",
+        "subtitle": "Обзор назначенных тестов",
+        "search": {
+          "placeholder": "Поиск заданий..."
+        },
+        "filter": {
+          "all": "Все статусы"
+        },
+        "status": {
+          "published": "Опубликован",
+          "draft": "Черновик"
+        },
+        "empty": "Задания не найдены.",
+        "no": {
+          "results": "Задания, соответствующие вашим критериям, не найдены.",
+          "data": "Нет данных"
+        },
+        "meta": "Статус: {status} · Создано: {created} · Срок: {due}",
+        "summary": "Показано {start}–{end} из {total} заданий",
+        "error": {
+          "title": "Не удалось загрузить задания",
+          "description": "Пожалуйста, попробуйте снова."
+        }
+      }
     }
   },
   "student": {
@@ -383,6 +413,30 @@
       "profile": "Профиль",
       "settings": "Настройки",
       "logout": "Выйти"
+    },
+    "quiz": {
+      "questions": "Вопросы",
+      "timeLimit": "Лимит времени",
+      "unlimited": "Неограниченно",
+      "minutes": "мин",
+      "attempts": "Попытки",
+      "shuffleQuestions": "Перемешать вопросы",
+      "shuffleAnswers": "Перемешать ответы",
+      "showAnswers": "Показать ответы",
+      "showExplanations": "Показать объяснения",
+      "questionNumber": "Вопрос {n}",
+      "explanation": "Объяснение",
+      "answers": "Ответы",
+      "correctAnswer": "Правильный ответ",
+      "types": {
+        "multipleChoice": "Множественный выбор",
+        "trueFalse": "Верно/Неверно",
+        "shortAnswer": "Краткий ответ",
+        "fillInBlank": "Заполните пропуск",
+        "essay": "Эссе",
+        "matching": "Сопоставление",
+        "ranking": "Ранжирование"
+      }
     }
   }
 }
