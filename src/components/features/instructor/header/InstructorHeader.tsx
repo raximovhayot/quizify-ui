@@ -1,11 +1,13 @@
 'use client';
 
-import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
-import { Logo } from '@/components/shared/brand/Logo';
+import { BarChart3, BookOpen, Home } from 'lucide-react';
 
-import { HeaderActions } from './HeaderActions';
-import { Navigation } from './Navigation';
-import { NotificationsDropdown } from './NotificationsDropdown';
+import { useTranslations } from 'next-intl';
+
+import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
+import { AppHeader } from '@/components/shared/navigation/AppHeader';
+import { TNavigationItem } from '@/components/shared/navigation/AppNavigation';
+
 import { UserMenu } from './UserMenu';
 
 interface InstructorHeaderProps {
@@ -16,33 +18,41 @@ export function InstructorHeader({
   title: _title,
 }: Readonly<InstructorHeaderProps>) {
   const { user, logout } = useNextAuth();
+  const t = useTranslations();
+
+  const navItems: TNavigationItem[] = [
+    {
+      href: '/instructor',
+      icon: Home,
+      label: t('instructor.navigation.dashboard', { fallback: 'Dashboard' }),
+    },
+    {
+      href: '/instructor/quizzes',
+      icon: BookOpen,
+      label: t('instructor.navigation.quizzes', { fallback: 'Quizzes' }),
+    },
+    {
+      href: '/instructor/analytics',
+      icon: BarChart3,
+      label: t('instructor.navigation.analytics', { fallback: 'Analytics' }),
+    },
+  ];
+
+  const mobileTitle = t('instructor.navigation.title', {
+    fallback: 'Instructor Panel',
+  });
+  const toggleMenuLabel = t('instructor.navigation.toggleMenu', {
+    fallback: 'Toggle menu',
+  });
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="relative mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-3 md:px-0">
-        {/* Centered mobile logo */}
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center lg:hidden">
-          <Logo href="/instructor" size="md" className="pointer-events-auto" />
-        </div>
-        {/* Left side - Logo/Brand and Navigation */}
-        <Navigation />
-
-        {/* Right side - Actions and User Menu */}
-        <div className="flex items-center gap-2">
-          {/* Notifications (hidden on mobile) */}
-          <div className="hidden lg:block">
-            <NotificationsDropdown />
-          </div>
-
-          {/* Theme and Language Switchers (hidden on mobile) */}
-          <div className="hidden lg:flex">
-            <HeaderActions />
-          </div>
-
-          {/* User Menu */}
-          {user && <UserMenu user={user} onLogout={logout} />}
-        </div>
-      </div>
-    </header>
+    <AppHeader
+      logoHref="/instructor"
+      rootHref="/instructor"
+      navItems={navItems}
+      mobileTitle={mobileTitle}
+      toggleMenuLabel={toggleMenuLabel}
+      userMenu={user ? <UserMenu user={user} onLogout={logout} /> : null}
+    />
   );
 }

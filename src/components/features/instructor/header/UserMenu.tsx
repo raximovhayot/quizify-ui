@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 
+import { NotificationsDropdown } from '@/components/shared/navigation/NotificationsDropdown';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,8 +23,6 @@ import {
 } from '@/components/ui/sheet';
 import { ThemeSwitcher } from '@/components/ui/theme-switcher';
 
-import { NotificationsDropdown } from './NotificationsDropdown';
-
 interface User {
   firstName?: string;
   lastName?: string;
@@ -33,10 +32,18 @@ interface User {
 interface UserMenuProps {
   user: User;
   onLogout: () => void;
+  i18nNamespace?: 'student' | 'instructor';
+  showNotificationsQuickActions?: boolean;
 }
 
-export function UserMenu({ user, onLogout }: Readonly<UserMenuProps>) {
+export function UserMenu({
+  user,
+  onLogout,
+  i18nNamespace = 'instructor',
+  showNotificationsQuickActions = true,
+}: Readonly<UserMenuProps>) {
   const t = useTranslations();
+  const ns = i18nNamespace;
 
   return (
     <>
@@ -47,7 +54,7 @@ export function UserMenu({ user, onLogout }: Readonly<UserMenuProps>) {
             <Button
               variant="ghost"
               className="relative h-10 w-10 rounded-full p-0 ml-2"
-              aria-label={t('instructor.userMenu.title', {
+              aria-label={t(`${ns}.userMenu.title`, {
                 fallback: 'User menu',
               })}
             >
@@ -58,14 +65,14 @@ export function UserMenu({ user, onLogout }: Readonly<UserMenuProps>) {
                 </AvatarFallback>
               </Avatar>
               <span className="sr-only">
-                {t('instructor.userMenu.title', { fallback: 'User menu' })}
+                {t(`${ns}.userMenu.title`, { fallback: 'User menu' })}
               </span>
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-full sm:max-w-sm p-0">
             <SheetHeader className="p-4">
               <SheetTitle>
-                {t('instructor.userMenu.title', { fallback: 'User menu' })}
+                {t(`${ns}.userMenu.title`, { fallback: 'User menu' })}
               </SheetTitle>
             </SheetHeader>
 
@@ -88,7 +95,9 @@ export function UserMenu({ user, onLogout }: Readonly<UserMenuProps>) {
                     </p>
                   ) : null}
                   <p className="text-xs text-muted-foreground">
-                    {t('instructor.role', { fallback: 'Instructor' })}
+                    {t(`${ns}.role`, {
+                      fallback: ns === 'student' ? 'Student' : 'Instructor',
+                    })}
                   </p>
                 </div>
               </div>
@@ -97,7 +106,9 @@ export function UserMenu({ user, onLogout }: Readonly<UserMenuProps>) {
             {/* Quick actions */}
             <div className="px-4 pt-3">
               <div className="flex items-center justify-start gap-2">
-                <NotificationsDropdown />
+                {showNotificationsQuickActions ? (
+                  <NotificationsDropdown />
+                ) : null}
                 <ThemeSwitcher variant="icon-only" />
                 <LanguageSwitcher variant="icon-only" />
               </div>
@@ -106,10 +117,10 @@ export function UserMenu({ user, onLogout }: Readonly<UserMenuProps>) {
             {/* Menu items */}
             <div className="mt-2 flex flex-col gap-1 px-2 pb-4">
               <Button variant="ghost" className="h-12 justify-start text-base">
-                {t('instructor.userMenu.profile', { fallback: 'Profile' })}
+                {t(`${ns}.userMenu.profile`, { fallback: 'Profile' })}
               </Button>
               <Button variant="ghost" className="h-12 justify-start text-base">
-                {t('instructor.userMenu.settings', { fallback: 'Settings' })}
+                {t(`${ns}.userMenu.settings`, { fallback: 'Settings' })}
               </Button>
               <div className="my-2 h-px w-full bg-border" />
               <Button
@@ -117,7 +128,7 @@ export function UserMenu({ user, onLogout }: Readonly<UserMenuProps>) {
                 className="h-12 justify-start text-base text-red-600 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950"
                 onClick={onLogout}
               >
-                {t('instructor.userMenu.logout', { fallback: 'Log out' })}
+                {t(`${ns}.userMenu.logout`, { fallback: 'Log out' })}
               </Button>
             </div>
           </SheetContent>
@@ -131,7 +142,7 @@ export function UserMenu({ user, onLogout }: Readonly<UserMenuProps>) {
             <Button
               variant="ghost"
               className="relative h-10 w-10 rounded-full p-0 ml-2"
-              aria-label={t('instructor.userMenu.title', {
+              aria-label={t(`${ns}.userMenu.title`, {
                 fallback: 'User menu',
               })}
             >
@@ -142,7 +153,7 @@ export function UserMenu({ user, onLogout }: Readonly<UserMenuProps>) {
                 </AvatarFallback>
               </Avatar>
               <span className="sr-only">
-                {t('instructor.userMenu.title', { fallback: 'User menu' })}
+                {t(`${ns}.userMenu.title`, { fallback: 'User menu' })}
               </span>
             </Button>
           </DropdownMenuTrigger>
@@ -158,19 +169,21 @@ export function UserMenu({ user, onLogout }: Readonly<UserMenuProps>) {
                   </p>
                 ) : null}
                 <p className="text-xs leading-none text-muted-foreground">
-                  {t('instructor.role', { fallback: 'Instructor' })}
+                  {t(`${ns}.role`, {
+                    fallback: ns === 'student' ? 'Student' : 'Instructor',
+                  })}
                 </p>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="cursor-pointer">
               <span>
-                {t('instructor.userMenu.profile', { fallback: 'Profile' })}
+                {t(`${ns}.userMenu.profile`, { fallback: 'Profile' })}
               </span>
             </DropdownMenuItem>
             <DropdownMenuItem className="cursor-pointer">
               <span>
-                {t('instructor.userMenu.settings', { fallback: 'Settings' })}
+                {t(`${ns}.userMenu.settings`, { fallback: 'Settings' })}
               </span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
@@ -178,9 +191,7 @@ export function UserMenu({ user, onLogout }: Readonly<UserMenuProps>) {
               className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950"
               onClick={onLogout}
             >
-              <span>
-                {t('instructor.userMenu.logout', { fallback: 'Log out' })}
-              </span>
+              <span>{t(`${ns}.userMenu.logout`, { fallback: 'Log out' })}</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

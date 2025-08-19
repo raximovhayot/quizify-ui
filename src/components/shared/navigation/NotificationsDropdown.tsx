@@ -35,10 +35,10 @@ export function NotificationsDropdown({
   const defaultNotifications: Notification[] = [
     {
       id: 1,
-      title: t('instructor.notifications.newSubmission', {
+      title: t('notifications.newSubmission', {
         fallback: 'New quiz submission',
       }),
-      message: t('instructor.notifications.submissionMessage', {
+      message: t('notifications.submissionMessage', {
         fallback: 'Student completed Quiz #1',
       }),
       time: '5 min ago',
@@ -46,10 +46,10 @@ export function NotificationsDropdown({
     },
     {
       id: 2,
-      title: t('instructor.notifications.lowScore', {
+      title: t('notifications.lowScore', {
         fallback: 'Low score alert',
       }),
-      message: t('instructor.notifications.lowScoreMessage', {
+      message: t('notifications.lowScoreMessage', {
         fallback: 'Multiple students scored below 60%',
       }),
       time: '1 hour ago',
@@ -57,10 +57,10 @@ export function NotificationsDropdown({
     },
     {
       id: 3,
-      title: t('instructor.notifications.quizCompleted', {
+      title: t('notifications.quizCompleted', {
         fallback: 'Quiz completed',
       }),
-      message: t('instructor.notifications.quizCompletedMessage', {
+      message: t('notifications.quizCompletedMessage', {
         fallback: 'All students completed Quiz #2',
       }),
       time: '2 hours ago',
@@ -86,7 +86,7 @@ export function NotificationsDropdown({
             </Badge>
           )}
           <span className="sr-only">
-            {t('instructor.notifications.title', {
+            {t('notifications.title', {
               fallback: 'Notifications',
             })}
           </span>
@@ -95,7 +95,7 @@ export function NotificationsDropdown({
       <DropdownMenuContent align="end" className="w-80">
         <div className="flex items-center justify-between p-2">
           <h3 className="font-semibold">
-            {t('instructor.notifications.title', {
+            {t('notifications.title', {
               fallback: 'Notifications',
             })}
           </h3>
@@ -130,7 +130,7 @@ export function NotificationsDropdown({
         <DropdownMenuSeparator />
         <DropdownMenuItem className="justify-center">
           <span className="text-sm">
-            {t('instructor.notifications.viewAll', {
+            {t('notifications.viewAll', {
               fallback: 'View all notifications',
             })}
           </span>
@@ -139,3 +139,5 @@ export function NotificationsDropdown({
     </DropdownMenu>
   );
 }
+
+export default NotificationsDropdown;
