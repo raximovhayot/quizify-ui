@@ -1,32 +1,17 @@
 {
   "common": {
     "loading": "Yuklanmoqda...",
-    "authenticating": "Autentifikatsiya qilinmoqda...",
     "redirecting": "Yo'naltirilmoqda...",
     "save": "Saqlash",
     "cancel": "Bekor qilish",
     "delete": "O'chirish",
-    "edit": "Tahrirlash",
     "create": "Yaratish",
-    "submit": "Yuborish",
-    "back": "Orqaga",
-    "next": "Keyingi",
-    "previous": "Oldingi",
-    "search": "Qidirish",
-    "filter": "Filtr",
-    "clear": "Tozalash",
-    "yes": "Ha",
-    "no": "Yo'q",
-    "ok": "OK",
-    "of": "dan",
-    "error": "Xatolik",
-    "unexpectedError": "Kutilmagan xatolik yuz berdi.",
-    "success": "Muvaffaqiyatli",
-    "warning": "Ogohlantirish",
-    "info": "Ma'lumot",
+    "error": {
+      "title": "Nimadir noto'g'ri ketdi",
+      "description": "Ma'lumotlarni yuklashda muammo yuz berdi. Iltimos, qayta urinib ko'ring.",
+      "unknown": "Noma'lum xatolik yuz berdi"
+    },
     "sending": "Yuborilmoqda...",
-    "verifying": "Tekshirilmoqda...",
-    "updating": "Yangilanmoqda...",
     "saving": "Saqlanmoqda...",
     "update": "Yangilash",
     "retry": "Qayta urinish",
@@ -42,11 +27,6 @@
       "current": "{page}-sahifa, joriy sahifa",
       "goto": "{page}-sahifaga o'tish",
       "info": "{current}-sahifa, jami {total}"
-    },
-    "error": {
-      "title": "Nimadir noto'g'ri ketdi",
-      "description": "Ma'lumotlarni yuklashda muammo yuz berdi. Iltimos, qayta urinib ko'ring.",
-      "unknown": "Noma'lum xatolik yuz berdi"
     }
   },
   "auth": {
@@ -102,7 +82,6 @@
     },
     "verification": {
       "title": "Telefoningizni tasdiqlang",
-      "description": "Telefoningizga yuborilgan 6 xonali kodni kiriting",
       "label": "Tasdiqlash kodi",
       "instruction": "Quyidagi raqamga yuborilgan 6 xonali kodni kiriting",
       "verify": "Kodni tasdiqlash",
@@ -153,41 +132,11 @@
     },
     "signOut": "Chiqish",
     "backToSignIn": "Kirishga qaytish",
-    "errors": {
-      "accountNotFound": "Hisob topilmadi. Telefon raqamingizni tekshiring yoki ro'yxatdan o'ting.",
-      "accountLocked": "Hisob vaqtincha bloklangan. Keyinroq urinib ko'ring.",
-      "networkError": "Tarmoq xatosi. Ulanishni tekshiring va qayta urinib ko'ring.",
-      "signInFailed": "Kirish xatosi. Qayta urinib ko'ring.",
-      "phoneAlreadyExists": "Bu telefon raqami bilan hisob allaqachon mavjud. Iltimos, tizimga kiring.",
-      "phoneInvalid": "Iltimos, to'g'ri telefon raqamini kiriting.",
-      "sendCodeFailed": "Tasdiqlash kodini yuborib bo'lmadi. Qayta urinib ko'ring.",
-      "invalidOTP": "Noto'g'ri tasdiqlash kodi. Tekshiring va qayta urinib ko'ring.",
-      "otpExpired": "Tasdiqlash kodi muddati tugagan. Iltimos, yangisini so'rang.",
-      "verificationFailed": "Tasdiqlash xatosi. Qayta urinib ko'ring.",
-      "signUpFailed": "Hisob yaratib bo'lmadi. Qayta urinib ko'ring.",
-      "passwordWeak": "Parol juda zaif. Iltimos, kuchliroq parol tanlang.",
-      "rateLimitExceeded": "Juda ko'p so'rovlar. Yangi kod so'rashdan oldin kuting.",
-      "resendFailed": "Tasdiqlash kodini qayta yuborib bo'lmadi. Qayta urinib ko'ring.",
-      "resetPasswordFailed": "Parolni tiklab bo'lmadi. Qayta urinib ko'ring.",
-      "invalidResetToken": "Noto'g'ri yoki muddati tugagan tiklash tokeni. Iltimos, jarayonni qaytadan boshlang."
-    },
     "validation": {
-      "phoneRequired": "Telefon raqami kiritish shart",
-      "phoneInvalid": "To'g'ri O'zbek telefon raqamini kiriting (masalan, +998901234567)",
-      "passwordRequired": "Parol kiritish shart",
       "passwordMinLength": "Parol kamida 8 ta belgidan iborat bo'lishi kerak",
       "passwordPattern": "Parol kamida bitta katta harf, bitta kichik harf va bitta raqamdan iborat bo'lishi kerak",
-      "confirmPasswordRequired": "Parolni tasdiqlang",
-      "passwordsNotMatch": "Parollar mos kelmaydi",
       "firstNameRequired": "Ism kiritish shart",
-      "firstNameMinLength": "Ism kamida 2 ta belgidan iborat bo'lishi kerak",
-      "firstNameMaxLength": "Ism 50 ta belgidan kam bo'lishi kerak",
       "lastNameRequired": "Familiya kiritish shart",
-      "lastNameMinLength": "Familiya kamida 2 ta belgidan iborat bo'lishi kerak",
-      "lastNameMaxLength": "Familiya 50 ta belgidan kam bo'lishi kerak",
-      "otpRequired": "Tasdiqlash kodi kiritish shart",
-      "otpLength": "Tasdiqlash kodi 6 ta raqamdan iborat bo'lishi kerak",
-      "otpPattern": "Tasdiqlash kodi faqat raqamlardan iborat bo'lishi kerak",
       "dashboardTypeRequired": "Iltimos, rolingizni tanlang"
     }
   },
@@ -195,10 +144,7 @@
     "profile": "Profil"
   },
   "theme": {
-    "changeTheme": "Mavzuni o'zgartirish",
-    "light": "Yorug'",
-    "dark": "Qorong'u",
-    "system": "Tizim"
+    "changeTheme": "Mavzuni o'zgartirish"
   },
   "quiz": {
     "form": {
@@ -254,12 +200,7 @@
       "title": "O'qituvchi paneli",
       "dashboard": "Boshqaruv paneli",
       "quizzes": "Testlar",
-      "allQuizzes": "Barcha testlar",
-      "createQuiz": "Test yaratish",
       "analytics": "Analitika",
-      "students": "Talabalar",
-      "settings": "Sozlamalar",
-      "version": "Quizify v1.0",
       "toggleMenu": "Navigatsiya menyusini almashtirish"
     },
     "notifications": {
@@ -272,32 +213,34 @@
       "quizCompletedMessage": "Barcha talabalar Test #2 ni yakunladi",
       "viewAll": "Barcha bildirishnomalarni ko'rish"
     },
-    "search": {
-      "placeholder": "Testlar, talabalarni qidirish..."
-    },
     "quiz": {
       "title": "Testlar",
       "subtitle": "Testlaringizni yarating va boshqaring",
-      "createNew": "Test yaratish",
-      "searchPlaceholder": "Testlarni qidirish...",
-      "filter": "Filtr",
-      "actions": "Test harakatlari",
+      "filter": {
+        "all": "Barcha holatlar"
+      },
       "view": "Ko'rish",
       "edit": "Tahrirlash",
-      "delete": "O'chirish",
+      "delete": {
+        "success": "Test muvaffaqiyatli o'chirildi",
+        "error": "Testni o'chirib bo'lmadi",
+        "confirm": {
+          "title": "Testni o'chirish",
+          "description": "Ushbu testni o'chirishni xohlaysizmi? Bu amalni bekor qilib bo'lmaydi."
+        }
+      },
       "questions": "Savollar",
-      "duration": "Davomiyligi",
-      "submissions": "Javoblar",
-      "avgScore": "O'rtacha ball",
       "created": "Yaratilgan",
-      "noResults": "Qidiruv bo'yicha testlar topilmadi.",
-      "noQuizzes": "Hali testlar yaratilmagan.",
       "no": {
         "quizzes": "Hali testlar yaratilmagan."
       },
       "status": {
         "published": "Nashr etilgan",
-        "draft": "Qoralama"
+        "draft": "Qoralama",
+        "update": {
+          "success": "Test holati muvaffaqiyatli yangilandi",
+          "error": "Test holatini yangilab bo'lmadi"
+        }
       },
       "time": {
         "unlimited": "Cheklanmagan",
@@ -321,7 +264,6 @@
         "answers": "Javoblarni aralashtirish"
       },
       "create": {
-        "title": "Test yaratish",
         "dialogTitle": "Test yaratish",
         "button": "Test yaratish",
         "first": "Birinchi testingizni yarating",
@@ -332,27 +274,8 @@
         "success": "Test muvaffaqiyatli yangilandi",
         "error": "Testni yangilab bo'lmadi"
       },
-      "delete": {
-        "success": "Test muvaffaqiyatli o'chirildi",
-        "error": "Testni o'chirib bo'lmadi",
-        "confirm": {
-          "title": "Testni o'chirish",
-          "description": "Ushbu testni o'chirishni xohlaysizmi? Bu amalni bekor qilib bo'lmaydi."
-        }
-      },
-      "status": {
-        "published": "Nashr etilgan",
-        "draft": "Qoralama",
-        "update": {
-          "success": "Test holati muvaffaqiyatli yangilandi",
-          "error": "Test holatini yangilab bo'lmadi"
-        }
-      },
       "search": {
         "placeholder": "Testlarni qidirish..."
-      },
-      "filter": {
-        "all": "Barcha holatlar"
       },
       "results": {
         "summary": "{start} dan {end} gacha, jami {total} test"

@@ -1,32 +1,17 @@
 {
   "common": {
     "loading": "Loading...",
-    "authenticating": "Authenticating...",
     "redirecting": "Redirecting...",
     "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",
-    "edit": "Edit",
     "create": "Create",
-    "submit": "Submit",
-    "back": "Back",
-    "next": "Next",
-    "previous": "Previous",
-    "search": "Search",
-    "filter": "Filter",
-    "clear": "Clear",
-    "yes": "Yes",
-    "no": "No",
-    "ok": "OK",
-    "of": "of",
-    "error": "Error",
-    "unexpectedError": "An unexpected error occurred.",
-    "success": "Success",
-    "warning": "Warning",
-    "info": "Information",
+    "error": {
+      "title": "Something went wrong",
+      "description": "There was a problem loading the data. Please try again.",
+      "unknown": "An unknown error occurred"
+    },
     "sending": "Sending...",
-    "verifying": "Verifying...",
-    "updating": "Updating...",
     "saving": "Saving...",
     "update": "Update",
     "retry": "Try Again",
@@ -42,11 +27,6 @@
       "current": "Page {page}, current page",
       "goto": "Go to page {page}",
       "info": "Page {current} of {total}"
-    },
-    "error": {
-      "title": "Something went wrong",
-      "description": "There was a problem loading the data. Please try again.",
-      "unknown": "An unknown error occurred"
     }
   },
   "auth": {
@@ -102,7 +82,6 @@
     },
     "verification": {
       "title": "Verify Your Phone",
-      "description": "Enter the 6-digit code sent to your phone",
       "label": "Verification Code",
       "instruction": "Enter the 6-digit code sent to",
       "verify": "Verify Code",
@@ -111,11 +90,7 @@
       "resendIn": "Resend in {seconds}s",
       "success": "Phone verified successfully! Redirecting to profile setup...",
       "resendSuccess": "New verification code sent",
-      "sentTo": "Code sent to",
-      "changePhone": "Change phone number",
-      "code": {
-        "label": "Verification Code"
-      }
+      "changePhone": "Change phone number"
     },
     "forgotPassword": {
       "link": "Forgot your password?",
@@ -156,22 +131,10 @@
       "sessionCreation": "Profile completed but failed to create session. Please sign in manually."
     },
     "validation": {
-      "phoneRequired": "Phone number is required",
-      "phoneInvalid": "Please enter a valid Uzbek phone number (e.g., +998901234567)",
-      "passwordRequired": "Password is required",
       "passwordMinLength": "Password must be at least 8 characters",
       "passwordPattern": "Password must contain at least one uppercase letter, one lowercase letter, and one number",
-      "confirmPasswordRequired": "Please confirm your password",
-      "passwordsNotMatch": "Passwords do not match",
       "firstNameRequired": "First name is required",
-      "firstNameMinLength": "First name must be at least 2 characters",
-      "firstNameMaxLength": "First name must be less than 50 characters",
       "lastNameRequired": "Last name is required",
-      "lastNameMinLength": "Last name must be at least 2 characters",
-      "lastNameMaxLength": "Last name must be less than 50 characters",
-      "otpRequired": "Verification code is required",
-      "otpLength": "Verification code must be 6 digits",
-      "otpPattern": "Verification code must contain only digits",
       "dashboardTypeRequired": "Please select your role"
     },
     "backToSignIn": "Back to Sign In",
@@ -181,10 +144,7 @@
     "profile": "Profile"
   },
   "theme": {
-    "changeTheme": "Change theme",
-    "light": "Light",
-    "dark": "Dark",
-    "system": "System"
+    "changeTheme": "Change theme"
   },
   "quiz": {
     "form": {
@@ -240,12 +200,7 @@
       "title": "Instructor Panel",
       "dashboard": "Dashboard",
       "quizzes": "Quizzes",
-      "allQuizzes": "All Quizzes",
-      "createQuiz": "Create Quiz",
       "analytics": "Analytics",
-      "students": "Students",
-      "settings": "Settings",
-      "version": "Quizify v1.0",
       "toggleMenu": "Toggle navigation menu"
     },
     "notifications": {
@@ -258,32 +213,34 @@
       "quizCompletedMessage": "All students completed Quiz #2",
       "viewAll": "View all notifications"
     },
-    "search": {
-      "placeholder": "Search quizzes, students..."
-    },
     "quiz": {
       "title": "Quizzes",
       "subtitle": "Create and manage your quizzes",
-      "createNew": "Create Quiz",
-      "searchPlaceholder": "Search quizzes...",
-      "filter": "Filter",
-      "actions": "Quiz actions",
+      "filter": {
+        "all": "All Status"
+      },
       "view": "View",
       "edit": "Edit",
-      "delete": "Delete",
+      "delete": {
+        "success": "Quiz deleted successfully",
+        "error": "Failed to delete quiz",
+        "confirm": {
+          "title": "Delete Quiz",
+          "description": "Are you sure you want to delete this quiz? This action cannot be undone."
+        }
+      },
       "questions": "Questions",
-      "duration": "Duration",
-      "submissions": "Submissions",
-      "avgScore": "Avg Score",
       "created": "Created",
-      "noResults": "No quizzes found matching your search.",
-      "noQuizzes": "No quizzes created yet.",
       "no": {
         "quizzes": "No quizzes created yet."
       },
       "status": {
         "published": "Published",
-        "draft": "Draft"
+        "draft": "Draft",
+        "update": {
+          "success": "Quiz status updated successfully",
+          "error": "Failed to update quiz status"
+        }
       },
       "time": {
         "unlimited": "Unlimited",
@@ -307,7 +264,6 @@
         "answers": "Shuffle Answers"
       },
       "create": {
-        "title": "Create Quiz",
         "button": "Create Quiz",
         "first": "Create Your First Quiz",
         "success": "Quiz created successfully",
@@ -317,27 +273,8 @@
         "success": "Quiz updated successfully",
         "error": "Failed to update quiz"
       },
-      "delete": {
-        "success": "Quiz deleted successfully",
-        "error": "Failed to delete quiz",
-        "confirm": {
-          "title": "Delete Quiz",
-          "description": "Are you sure you want to delete this quiz? This action cannot be undone."
-        }
-      },
-      "status": {
-        "published": "Published",
-        "draft": "Draft",
-        "update": {
-          "success": "Quiz status updated successfully",
-          "error": "Failed to update quiz status"
-        }
-      },
       "search": {
         "placeholder": "Search quizzes..."
-      },
-      "filter": {
-        "all": "All Status"
       },
       "results": {
         "summary": "Showing {start} to {end} of {total} quizzes"
