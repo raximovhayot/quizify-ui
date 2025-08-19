@@ -30,10 +30,11 @@ import { QuizDataDTO, QuizStatus } from '../types/quiz';
 
 export interface QuizCardProps {
   quiz: QuizDataDTO;
-  onDelete: () => void;
-  onUpdateStatus: (status: QuizStatus) => void;
+  onDelete?: () => void;
+  onUpdateStatus?: (status: QuizStatus) => void;
   isDeleting?: boolean;
   isUpdatingStatus?: boolean;
+  children?: React.ReactNode;
   className?: string;
 }
 
@@ -43,6 +44,7 @@ export function QuizCard({
   onUpdateStatus,
   isDeleting = false,
   isUpdatingStatus = false,
+  children,
   className,
 }: QuizCardProps) {
   const t = useTranslations();
@@ -114,6 +116,8 @@ export function QuizCard({
   };
 
   const handleStatusToggle = () => {
+    if (!onUpdateStatus) return;
+
     const newStatus =
       quiz.status === QuizStatus.PUBLISHED
         ? QuizStatus.DRAFT
@@ -171,31 +175,35 @@ export function QuizCard({
                 {t('instructor.quiz.action.edit', { fallback: 'Edit' })}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleStatusToggle}>
-                {quiz.status === QuizStatus.PUBLISHED ? (
-                  <>
-                    <FileText className="mr-2 h-4 w-4" />
-                    {t('instructor.quiz.action.unpublish', {
-                      fallback: 'Unpublish',
-                    })}
-                  </>
-                ) : (
-                  <>
-                    <Users className="mr-2 h-4 w-4" />
-                    {t('instructor.quiz.action.publish', {
-                      fallback: 'Publish',
-                    })}
-                  </>
-                )}
-              </DropdownMenuItem>
+              {onUpdateStatus && (
+                <DropdownMenuItem onClick={handleStatusToggle}>
+                  {quiz.status === QuizStatus.PUBLISHED ? (
+                    <>
+                      <FileText className="mr-2 h-4 w-4" />
+                      {t('instructor.quiz.action.unpublish', {
+                        fallback: 'Unpublish',
+                      })}
+                    </>
+                  ) : (
+                    <>
+                      <Users className="mr-2 h-4 w-4" />
+                      {t('instructor.quiz.action.publish', {
+                        fallback: 'Publish',
+                      })}
+                    </>
+                  )}
+                </DropdownMenuItem>
+              )}
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={onDelete}
-                className="text-destructive focus:text-destructive"
-              >
-                <Trash2 className="mr-2 h-4 w-4" />
-                {t('instructor.quiz.action.delete', { fallback: 'Delete' })}
-              </DropdownMenuItem>
+              {onDelete && (
+                <DropdownMenuItem
+                  onClick={onDelete}
+                  className="text-destructive focus:text-destructive"
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  {t('instructor.quiz.action.delete', { fallback: 'Delete' })}
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -269,6 +277,8 @@ export function QuizCard({
             </div>
           </div>
         )}
+
+        {children && <div className="mt-3 pt-3 border-t">{children}</div>}
       </CardContent>
     </Card>
   );

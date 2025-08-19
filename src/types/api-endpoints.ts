@@ -24,7 +24,7 @@ import {
 import { AccountDTO } from '@/components/features/profile/types/account';
 
 import { IApiResponse } from './api';
-import { IPageableList, ISearchParams } from './common';
+import { IPageableList } from './common';
 
 /**
  * HTTP methods supported by the API

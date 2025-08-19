@@ -12,7 +12,7 @@ interface StudentHeaderProps {
   title?: string;
 }
 
-export function StudentHeader({ title }: StudentHeaderProps) {
+export function StudentHeader({ title: _title }: StudentHeaderProps) {
   const { user, logout } = useNextAuth();
 
   return (

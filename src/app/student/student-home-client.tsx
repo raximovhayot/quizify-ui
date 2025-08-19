@@ -25,17 +25,41 @@ export function StudentHomeClient() {
 
   const upcomingQuery = useQuery({
     queryKey: ['student', 'quizzes', 'upcoming'],
-    queryFn: async ({ signal }): Promise<QuizDataDTO[]> =>
-      StudentQuizService.getUpcomingQuizzes(session?.accessToken, signal),
-    enabled: true,
+    queryFn: async ({ signal }): Promise<QuizDataDTO[]> => {
+      if (!session?.accessToken) {
+        return [];
+      }
+      try {
+        return await StudentQuizService.getUpcomingQuizzes(
+          session.accessToken,
+          signal
+        );
+      } catch (error) {
+        console.error('Failed to fetch upcoming quizzes:', error);
+        return [];
+      }
+    },
+    enabled: !!session?.accessToken,
     staleTime: 60_000,
   });
 
   const inProgressQuery = useQuery({
     queryKey: ['student', 'quizzes', 'in-progress'],
-    queryFn: async ({ signal }): Promise<QuizDataDTO[]> =>
-      StudentQuizService.getInProgressQuizzes(session?.accessToken, signal),
-    enabled: true,
+    queryFn: async ({ signal }): Promise<QuizDataDTO[]> => {
+      if (!session?.accessToken) {
+        return [];
+      }
+      try {
+        return await StudentQuizService.getInProgressQuizzes(
+          session.accessToken,
+          signal
+        );
+      } catch (error) {
+        console.error('Failed to fetch in-progress quizzes:', error);
+        return [];
+      }
+    },
+    enabled: !!session?.accessToken,
     staleTime: 30_000,
   });
 
@@ -67,7 +91,8 @@ export function StudentHomeClient() {
     }
   }
 
-  const isLoading = upcomingQuery.isLoading || inProgressQuery.isLoading;
+  // Remove unused variable
+  // const _isLoading = upcomingQuery.isLoading || inProgressQuery.isLoading;
   const hasError = upcomingQuery.isError || inProgressQuery.isError;
 
   return (

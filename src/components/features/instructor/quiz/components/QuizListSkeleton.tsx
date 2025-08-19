@@ -1,5 +1,6 @@
 'use client';
 
+import { SkeletonCard } from '@/components/shared/ui/SkeletonCard';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -46,24 +47,7 @@ export function QuizListSkeleton({
       {/* List */}
       <div className="grid gap-4">
         {Array.from({ length: count }).map((_, idx) => (
-          <Card key={idx} className="p-4">
-            <div className="flex items-start justify-between">
-              <div className="flex-1 min-w-0 space-y-2">
-                <div className="flex items-center gap-2">
-                  <Skeleton className="h-5 w-56" />
-                  <Skeleton className="h-5 w-16" />
-                </div>
-                <Skeleton className="h-4 w-4/5" />
-              </div>
-              <Skeleton className="h-8 w-8" />
-            </div>
-            <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <Skeleton className="h-4 w-24" />
-              <Skeleton className="h-4 w-24" />
-              <Skeleton className="h-4 w-24" />
-              <Skeleton className="h-4 w-24" />
-            </div>
-          </Card>
+          <SkeletonCard key={idx} variant="detailed" />
         ))}
       </div>
 

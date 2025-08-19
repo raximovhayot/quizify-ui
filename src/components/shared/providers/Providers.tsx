@@ -7,17 +7,42 @@ import {
 } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 
 import { AbstractIntlMessages, NextIntlClientProvider } from 'next-intl';
 import { ThemeProvider } from 'next-themes';
 
+import { usePWA } from '@/components/shared/hooks/usePWA';
 import { SessionProvider } from '@/components/shared/providers/SessionProvider';
 import { Toaster } from '@/components/ui/sonner';
 import { env } from '@/env.mjs';
 import { BackendError } from '@/types/api';
 
 import { ErrorBoundary } from './ErrorBoundary';
+
+// PWA Manager component
+function PWAManager() {
+  const { isInstallable, isOnline, installPWA } = usePWA();
+
+  // Register service worker
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/sw.js')
+        .then((registration) => {
+          console.log('SW registered: ', registration);
+        })
+        .catch((registrationError) => {
+          console.log('SW registration failed: ', registrationError);
+        });
+    }
+  }, []);
+
+  // Optional: You could show an install prompt here
+  // For now, just making PWA functionality available
+
+  return null; // This component just manages PWA state
+}
 
 interface ProvidersProps {
   children: ReactNode;
@@ -58,14 +83,39 @@ export function Providers({ children, messages, locale }: ProvidersProps) {
               return failureCount < 2;
             },
             retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 8000),
-            staleTime: 30_000, // 30s
-            gcTime: 5 * 60_000, // 5m
-            refetchOnWindowFocus: true,
-            refetchOnReconnect: true,
+            staleTime: 2 * 60_000, // 2 minutes (optimized)
+            gcTime: 10 * 60_000, // 10 minutes
+            refetchOnWindowFocus: false, // Prevent aggressive refetching
+            refetchOnReconnect: 'always', // Always refetch on reconnect
+            refetchOnMount: 'always', // Always refetch on mount
+            // Background refetch interval for important data
+            refetchInterval: (query) => {
+              // Only auto-refresh for specific query types
+              if (query?.queryKey[0] === 'notifications') {
+                return 5 * 60_000; // 5 minutes for notifications
+              }
+              if (
+                query?.queryKey[0] === 'quizzes' &&
+                query?.queryKey[1] === 'live'
+              ) {
+                return 2 * 60_000; // 2 minutes for live quizzes
+              }
+              return false; // No auto-refresh for other queries
+            },
           },
           mutations: {
             networkMode,
-            retry: false, // avoid duplicate writes
+            retry: (failureCount, error) => {
+              // Retry idempotent mutations (GET-like operations)
+              if (error instanceof BackendError) {
+                const hasServerError = error.errors?.some((e) =>
+                  /^HTTP_5\d{2}$/.test(e.code)
+                );
+                return hasServerError && failureCount < 1;
+              }
+              return false;
+            },
+            retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 5000),
           },
         },
         mutationCache: new MutationCache({
@@ -75,7 +125,14 @@ export function Providers({ children, messages, locale }: ProvidersProps) {
               console.error('Mutation error:', error);
             }
           },
+          onSuccess: (data, variables, context, mutation) => {
+            // Log successful mutations in development
+            if (env.NEXT_PUBLIC_NODE_ENV !== 'production') {
+              console.log('Mutation success:', mutation.options.mutationKey);
+            }
+          },
         }),
+        // Note: Query cache configuration is handled by QueryClient constructor
       })
   );
 
@@ -90,6 +147,7 @@ export function Providers({ children, messages, locale }: ProvidersProps) {
         >
           <NextIntlClientProvider messages={messages} locale={locale}>
             <ErrorBoundary>
+              <PWAManager />
               {children}
               <Toaster />
             </ErrorBoundary>

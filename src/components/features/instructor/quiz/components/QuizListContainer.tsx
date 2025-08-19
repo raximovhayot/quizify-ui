@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
+import { useErrorRecovery } from '@/components/shared/hooks/useErrorRecovery';
 import { ErrorDisplay } from '@/components/shared/ui/ErrorDisplay';
 
 import {
@@ -13,8 +14,11 @@ import {
   useUpdateQuizStatus,
 } from '../hooks/useQuizzes';
 import { QuizFilter, QuizStatus } from '../types/quiz';
-import { QuizList } from './QuizList';
+import { QuizFilters } from './QuizFilters';
+import { QuizGrid } from './QuizGrid';
+import { QuizListControls } from './QuizListControls';
 import { QuizListSkeleton } from './QuizListSkeleton';
+import { QuizPagination } from './QuizPagination';
 
 export interface QuizListContainerProps {
   className?: string;
@@ -26,6 +30,7 @@ export function QuizListContainer({ className }: QuizListContainerProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  // Parse URL parameters into filter object
   const filter: QuizFilter = useMemo(() => {
     const pageParam = searchParams.get('page');
     const sizeParam = searchParams.get('size');
@@ -48,6 +53,7 @@ export function QuizListContainer({ className }: QuizListContainerProps) {
     return { page, size, search: s, status };
   }, [searchParams]);
 
+  // URL update utility
   const updateUrl = useCallback(
     (params: URLSearchParams, method: 'push' | 'replace' = 'push') => {
       const query = params.toString();
@@ -61,6 +67,7 @@ export function QuizListContainer({ className }: QuizListContainerProps) {
     [pathname, router]
   );
 
+  // Filter handlers
   const handleSearch = useCallback(
     (search: string) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -89,6 +96,7 @@ export function QuizListContainer({ className }: QuizListContainerProps) {
     [searchParams, updateUrl]
   );
 
+  // Pagination handlers
   const handlePageChange = useCallback(
     (page: number) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -108,6 +116,7 @@ export function QuizListContainer({ className }: QuizListContainerProps) {
     [searchParams, updateUrl]
   );
 
+  // Data fetching
   const {
     data: quizzesResponse,
     isLoading,
@@ -116,20 +125,39 @@ export function QuizListContainer({ className }: QuizListContainerProps) {
     refetch,
   } = useQuizzes(filter);
 
-  // Normalize page in URL based on backend response to avoid out-of-range pages
+  // Enhanced error recovery
+  const {
+    execute: retryFetch,
+    isRetrying,
+    retryCount,
+  } = useErrorRecovery(
+    async () => {
+      await refetch();
+    },
+    {
+      maxRetries: 3,
+      retryDelay: 1000,
+      onError: (error) => {
+        console.warn('Quiz fetch failed:', error);
+      },
+      onMaxRetriesReached: (error) => {
+        console.error('Max retries reached for quiz fetch:', error);
+      },
+    }
+  );
+
+  // Normalize page in URL based on backend response
   useEffect(() => {
     if (!quizzesResponse) return;
 
     const backendPage = quizzesResponse.page;
     const total = quizzesResponse.totalPages;
 
-    // Determine the desired page within valid bounds
     let desiredPage = 0;
     if (total > 0) {
       desiredPage = Math.min(total - 1, Math.max(0, backendPage));
     }
 
-    // If the URL-derived page differs from the backend (or is out of bounds), sync it
     if (filter.page !== desiredPage) {
       const params = new URLSearchParams(searchParams.toString());
       params.set('page', desiredPage.toString());
@@ -137,75 +165,101 @@ export function QuizListContainer({ className }: QuizListContainerProps) {
     }
   }, [quizzesResponse, filter.page, searchParams, updateUrl]);
 
+  // Mutations
   const deleteQuizMutation = useDeleteQuiz();
   const updateQuizStatusMutation = useUpdateQuizStatus();
 
-  const handleDeleteQuiz = async (quizId: number) => {
-    try {
-      await deleteQuizMutation.mutateAsync(quizId);
-    } catch (error) {
-      // Error handling is done in the hook
-      console.error('Failed to delete quiz:', error);
-    }
-  };
+  const handleDeleteQuiz = useCallback(
+    async (quizId: number) => {
+      try {
+        await deleteQuizMutation.mutateAsync(quizId);
+      } catch (error) {
+        console.error('Failed to delete quiz:', error);
+      }
+    },
+    [deleteQuizMutation]
+  );
 
-  const handleUpdateQuizStatus = async (quizId: number, status: QuizStatus) => {
-    try {
-      await updateQuizStatusMutation.mutateAsync({ id: quizId, status });
-    } catch (error) {
-      // Error handling is done in the hook
-      console.error('Failed to update quiz status:', error);
-    }
-  };
+  const handleUpdateQuizStatus = useCallback(
+    async (quizId: number, status: QuizStatus) => {
+      try {
+        await updateQuizStatusMutation.mutateAsync({ id: quizId, status });
+      } catch (error) {
+        console.error('Failed to update quiz status:', error);
+      }
+    },
+    [updateQuizStatusMutation]
+  );
 
-  const handleRetry = () => {
-    refetch();
-  };
-
+  // Loading state
   if (isLoading || (isFetching && !quizzesResponse)) {
     return <QuizListSkeleton className={className} />;
   }
 
+  // Error state
   if (error) {
     return (
       <ErrorDisplay
         error={error}
-        onRetry={handleRetry}
-        title={t('instructor.quiz.list.error.title')}
-        description={t('instructor.quiz.list.error.description')}
+        onRetry={retryFetch}
+        isRetrying={isRetrying}
+        retryCount={retryCount}
+        title={t('instructor.quiz.list.error.title', {
+          fallback: 'Failed to load quizzes',
+        })}
+        description={t('instructor.quiz.list.error.description', {
+          fallback: 'Please try again.',
+        })}
       />
     );
   }
 
+  // No data state
   if (!quizzesResponse) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <p className="text-muted-foreground">
-          {t('instructor.quiz.list.no.data')}
+          {t('instructor.quiz.list.no.data', { fallback: 'No quizzes found' })}
         </p>
       </div>
     );
   }
 
   return (
-    <QuizList
-      quizzes={quizzesResponse.content}
-      totalElements={quizzesResponse.totalElements}
-      totalPages={quizzesResponse.totalPages}
-      currentPage={quizzesResponse.page}
-      pageSize={quizzesResponse.size}
-      isFirst={quizzesResponse.page === 0}
-      isLast={quizzesResponse.page === quizzesResponse.totalPages - 1}
-      filter={filter}
-      onSearch={handleSearch}
-      onStatusFilter={handleStatusFilter}
-      onPageChange={handlePageChange}
-      onPageSizeChange={handlePageSizeChange}
-      onDeleteQuiz={handleDeleteQuiz}
-      onUpdateQuizStatus={handleUpdateQuizStatus}
-      isDeleting={deleteQuizMutation.isPending}
-      isUpdatingStatus={updateQuizStatusMutation.isPending}
-      className={className}
-    />
+    <div className={`space-y-6 ${className || ''}`}>
+      {/* Filters */}
+      <QuizFilters
+        filter={filter}
+        onSearch={handleSearch}
+        onStatusFilter={handleStatusFilter}
+      />
+
+      {/* Results count and page size control */}
+      <QuizListControls
+        totalElements={quizzesResponse.totalElements}
+        pageSize={quizzesResponse.size}
+        onPageSizeChange={handlePageSizeChange}
+      />
+
+      {/* Quiz grid */}
+      <QuizGrid
+        quizzes={quizzesResponse.content}
+        onDelete={handleDeleteQuiz}
+        onUpdateStatus={handleUpdateQuizStatus}
+        isDeleting={deleteQuizMutation.isPending}
+        isUpdatingStatus={updateQuizStatusMutation.isPending}
+      />
+
+      {/* Pagination */}
+      {quizzesResponse.totalPages > 1 && (
+        <QuizPagination
+          currentPage={quizzesResponse.page}
+          totalPages={quizzesResponse.totalPages}
+          onPageChange={handlePageChange}
+          isFirst={quizzesResponse.page === 0}
+          isLast={quizzesResponse.page === quizzesResponse.totalPages - 1}
+        />
+      )}
+    </div>
   );
 }

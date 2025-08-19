@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 
 import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
 import Logo from '@/components/shared/brand/Logo';
+import { useResponsive } from '@/components/shared/hooks/useResponsive';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -23,10 +24,11 @@ interface HeaderProps {
   showUserMenu?: boolean;
 }
 
-export function Header({ title, showUserMenu = true }: HeaderProps) {
+export function Header({ title: _title, showUserMenu = true }: HeaderProps) {
   const t = useTranslations();
   const { user, logout, isAuthenticated } = useNextAuth();
   const router = useRouter();
+  const { isMobile, isTablet } = useResponsive();
 
   const handleLogout = async () => {
     try {
@@ -39,25 +41,35 @@ export function Header({ title, showUserMenu = true }: HeaderProps) {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="flex h-16 items-center justify-between px-3 md:px-0">
+      <div
+        className={`flex h-16 items-center justify-between ${isMobile ? 'px-3' : 'px-6'}`}
+      >
         {/* Logo/Title */}
         <Logo />
 
         {/* Right side - Theme, Language & User Menu */}
-        <div className="flex items-center space-x-2">
+        <div
+          className={`flex items-center ${isMobile ? 'space-x-1' : 'space-x-2'}`}
+        >
           {/* Theme Selector */}
           <ThemeSwitcher variant="compact" />
 
-          {/* Language Selector */}
-          <LanguageSwitcher variant="compact" />
+          {/* Language Selector - Hide on mobile for space */}
+          {!isMobile && <LanguageSwitcher variant="compact" />}
 
           {/* User Menu */}
           {showUserMenu && isAuthenticated && user && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-9 w-9 p-0">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-9 w-9 p-0"
+                  aria-label={t('instructor.userMenu.title', {
+                    fallback: 'User menu',
+                  })}
+                >
                   <User className="h-4 w-4" />
-                  <span className="sr-only">User menu</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
@@ -91,8 +103,11 @@ export function Header({ title, showUserMenu = true }: HeaderProps) {
               variant="default"
               size="sm"
               onClick={() => router.push('/sign-in')}
+              aria-label={t('auth.signIn.title', {
+                fallback: 'Sign in to your account',
+              })}
             >
-              {t('auth.signIn')}
+              {t('auth.signIn.link', { fallback: 'Sign In' })}
             </Button>
           )}
         </div>

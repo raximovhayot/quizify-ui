@@ -144,7 +144,10 @@
     "profile": "Profile"
   },
   "theme": {
-    "changeTheme": "Change theme"
+    "changeTheme": "Change theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
   },
   "quiz": {
     "form": {

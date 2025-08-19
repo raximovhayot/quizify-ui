@@ -36,6 +36,18 @@ import {
  * @since 2025-01-01
  */
 
+/**
+ * Enhanced Error Boundary with comprehensive error handling
+ *
+ * Provides feature-specific error boundaries with error reporting, logging,
+ * and user-friendly fallback components for better error handling throughout
+ * the application.
+ *
+ * @fileoverview Enhanced error boundary components and utilities
+ * @version 1.0.0
+ * @since 2025-01-01
+ */
+
 // =============================================================================
 // ERROR TYPES AND INTERFACES
 // =============================================================================
@@ -262,6 +274,15 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
           )}
 
           <Button
+            onClick={() => window.location.reload()}
+            variant="outline"
+            className="flex-1"
+          >
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Reload Page
+          </Button>
+
+          <Button
             onClick={() => (window.location.href = '/')}
             variant="outline"
             className="flex-1"
@@ -294,7 +315,7 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
  * Minimal error fallback for inline components
  */
 export const MinimalErrorFallback: React.FC<ErrorFallbackProps> = ({
-  error,
+  error: _error,
   retry,
   canRetry,
 }) => (

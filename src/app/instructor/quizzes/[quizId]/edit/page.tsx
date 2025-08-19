@@ -13,10 +13,7 @@ import {
   useUpdateQuiz,
 } from '@/components/features/instructor/quiz/hooks/useQuizzes';
 import { toInstructorQuestionSaveRequest } from '@/components/features/instructor/quiz/schemas/questionSchema';
-import {
-  InstructorQuizUpdateRequest,
-  QuizDataDTO,
-} from '@/components/features/instructor/quiz/types/quiz';
+import { InstructorQuizUpdateRequest } from '@/components/features/instructor/quiz/types/quiz';
 import { ErrorDisplay } from '@/components/shared/ui/ErrorDisplay';
 import { Button } from '@/components/ui/button';
 import {

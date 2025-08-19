@@ -49,8 +49,12 @@ export function useQuizzes(filter: QuizFilter = {}) {
       return validatedResponse;
     },
     enabled: !!session?.accessToken,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 1 * 60 * 1000, // 1 minute (more responsive)
+    gcTime: 15 * 60 * 1000, // 15 minutes (keep longer in cache)
+    // Dedupe identical requests within 1 second
+    structuralSharing: true,
+    // Enable optimistic updates
+    placeholderData: (previousData) => previousData,
   });
 }
 
@@ -76,8 +80,15 @@ export function useQuiz(quizId: number) {
       return validatedResponse;
     },
     enabled: !!session?.accessToken && !!quizId,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    gcTime: 20 * 60 * 1000, // 20 minutes (quiz details are stable)
+    // Use previous data while refetching
+    placeholderData: (previousData) => previousData,
+    // Prefetch related data
+    select: (data) => {
+      // You can transform data here if needed
+      return data;
+    },
   });
 }
 

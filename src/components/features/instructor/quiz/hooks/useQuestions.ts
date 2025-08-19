@@ -49,7 +49,7 @@ export function useCreateQuestion() {
       );
       return res;
     },
-    onSuccess: (data) => {
+    onSuccess: (_data) => {
       // Invalidate relevant question lists
       queryClient.invalidateQueries({ queryKey: questionKeys.lists() });
       toast.success(
