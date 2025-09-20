@@ -17,6 +17,21 @@ export class AccountService {
   // ============================================================================
 
   /**
+   * Fetch the current user's profile
+   */
+  static async getProfile(
+    accessToken: string,
+    signal?: AbortSignal
+  ): Promise<AccountDTO> {
+    const response: IApiResponse<AccountDTO> = await apiClient.get(
+      '/account/profile',
+      accessToken,
+      signal
+    );
+    return extractApiData(response);
+  }
+
+  /**
    * Complete user account setup with profile information
    *
    * This method is used to finalize account creation by providing

@@ -9,11 +9,6 @@
       "name": "swagger",
       "command": "mcp-swagger-server",
       "args": ["https://quizifybackend-b86e8709a4d9.herokuapp.com/v3/api-docs"]
-    },
-    {
-      "name": "start-ui",
-      "command": "mcp-server-filesystem",
-      "args": ["/home/xmpl/Idea/Learn/start-ui"]
     }
   ]
 }

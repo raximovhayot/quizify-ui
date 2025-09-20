@@ -1,6 +1,5 @@
 import { QuestionDataDto } from '@/components/features/instructor/quiz/types/question';
 import { QuizDataDTO } from '@/components/features/instructor/quiz/types/quiz';
-import { StudentAttemptDTO } from '@/components/features/student/quiz/types/attempt';
 import { apiClient } from '@/lib/api';
 import { IApiResponse, extractApiData } from '@/types/api';
 import { IPageableList } from '@/types/common';

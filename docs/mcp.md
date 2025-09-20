@@ -5,7 +5,6 @@ This project is configured to work with Model Context Protocol (MCP) servers for
 Configured servers (.junie/mcp/mcp.json):
 - backend-filesystem: mcp-server-filesystem /home/xmpl/Idea/Quizify/quizify-backend
 - swagger: mcp-swagger-server https://quizifybackend-b86e8709a4d9.herokuapp.com/v3/api-docs
-- start-ui: mcp-server-filesystem /home/xmpl/Idea/Learn/start-ui
 
 Notes:
 - The swagger server now points to the OpenAPI JSON (/v3/api-docs) rather than the Swagger UI HTML. This is compatible with tools/codegen that consume OpenAPI documents.

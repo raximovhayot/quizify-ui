@@ -9,13 +9,11 @@ Date: 2025-08-08
 Current MCP Servers (.junie/mcp/mcp.json)
 - backend-filesystem: mcp-server-filesystem /home/xmpl/Idea/Quizify/quizify-backend
 - swagger: mcp-swagger-server https://quizifybackend-b86e8709a4d9.herokuapp.com/v3/api-docs
-- start-ui: mcp-server-filesystem /home/xmpl/Idea/Learn/start-ui
 
 How to leverage them for Quizzes
 - Swagger MCP: Explore endpoints and contracts for /instructor/quizzes; optionally generate types with:
   npx -y openapi-typescript https://quizifybackend-b86e8709a4d9.herokuapp.com/v3/api-docs -o src/types/generated/api.d.ts
 - Backend filesystem MCP: Cross-check controller/service for query params (e.g., status/search/sorts) and response shapes.
-- Start-UI filesystem MCP: Reference patterns for providers, query config, error handling, and list/filter/pagination UX.
 
 ---
 

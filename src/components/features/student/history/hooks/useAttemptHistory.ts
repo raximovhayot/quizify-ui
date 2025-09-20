@@ -1,17 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
+
 import { useSession } from 'next-auth/react';
 
-import { StudentQuizService } from '@/components/features/student/quiz/services/studentQuizService';
+import { StudentAttemptService } from '@/components/features/student/history/services/studentAttemptService';
 import { StudentAttemptDTO } from '@/components/features/student/quiz/types/attempt';
 import { IPageableList } from '@/types/common';
 
 export const attemptHistoryKeys = {
   all: ['student', 'attempts'] as const,
-  history: (status?: string, page?: number, size?: number) => [
-    ...attemptHistoryKeys.all,
-    'history',
-    { status: status || '', page: page ?? 0, size: size ?? 10 },
-  ] as const,
+  history: (status?: string, page?: number, size?: number) =>
+    [
+      ...attemptHistoryKeys.all,
+      'history',
+      { status: status || '', page: page ?? 0, size: size ?? 10 },
+    ] as const,
 };
 
 export interface AttemptHistoryFilter {
@@ -22,7 +24,8 @@ export interface AttemptHistoryFilter {
 
 export function useAttemptHistory(filter: AttemptHistoryFilter = {}) {
   const { data: session } = useSession();
-  const status = filter.status && filter.status.length > 0 ? filter.status : undefined;
+  const status =
+    filter.status && filter.status.length > 0 ? filter.status : undefined;
   const page = filter.page ?? 0;
   const size = filter.size ?? 10;
 
@@ -30,11 +33,15 @@ export function useAttemptHistory(filter: AttemptHistoryFilter = {}) {
     queryKey: attemptHistoryKeys.history(status, page, size),
     queryFn: async ({ signal }) => {
       if (!session?.accessToken) throw new Error('No access token available');
-      return StudentQuizService.getAttemptHistory(session.accessToken, signal, {
-        status,
-        page,
-        size,
-      });
+      return StudentAttemptService.getAttemptHistory(
+        session.accessToken,
+        signal,
+        {
+          status,
+          page,
+          size,
+        }
+      );
     },
     enabled: !!session?.accessToken,
     staleTime: 60_000,
