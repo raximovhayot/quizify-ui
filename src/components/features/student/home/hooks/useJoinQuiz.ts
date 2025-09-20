@@ -45,5 +45,5 @@ export function useJoinQuiz() {
         quizId = maybeJoin.quizId;
       return `/student/quizzes/${quizId ?? ''}`;
     },
-  });
+  })();
 }

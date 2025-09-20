@@ -526,7 +526,10 @@ class ApiClient {
       } else if (body instanceof ArrayBuffer) {
         xhr.send(body);
       } else if (body instanceof Uint8Array) {
-        xhr.send(body);
+        // Convert Uint8Array<ArrayBufferLike> to ArrayBuffer for XHR compatibility
+        const ab = new ArrayBuffer(body.byteLength);
+        new Uint8Array(ab).set(body);
+        xhr.send(ab);
       } else {
         // Fallback: stringify
         xhr.setRequestHeader('Content-Type', 'application/json');

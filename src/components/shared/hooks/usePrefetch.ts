@@ -59,9 +59,7 @@ export function usePrefetch() {
         const accountServiceModule = await import(
           '@/components/features/profile/services/accountService'
         );
-        return accountServiceModule.AccountService.getProfile(
-          session.accessToken
-        );
+        return accountServiceModule.AccountService.getProfile();
       },
       staleTime: 5 * 60 * 1000,
     });

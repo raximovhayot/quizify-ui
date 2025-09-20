@@ -35,5 +35,5 @@ export function useUpdateProfile() {
       fallback: 'Profile updated successfully',
     }),
     invalidateQueries: [profileKeys.me() as unknown as string[]],
-  });
+  })();
 }

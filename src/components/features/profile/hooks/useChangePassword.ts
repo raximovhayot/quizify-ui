@@ -32,5 +32,5 @@ export function useChangePassword() {
     successMessage: t('profile.password.success', {
       fallback: 'Password updated successfully',
     }),
-  });
+  })();
 }
