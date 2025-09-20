@@ -1,9 +1,16 @@
-export interface StudentAttemptDTO {
-  id: number;
-  quizId: number;
-  quizTitle: string;
-  startedAt?: string; // ISO date-time
-  finishedAt?: string; // ISO date-time
-  score?: number; // 0-100 or raw score depending on backend
-  status?: 'passed' | 'failed' | 'in_progress' | 'completed' | string;
+export enum AttemptStatus {
+    CREATED,
+    STARTED,
+    FINISHED
+}
+
+export interface AttemptListingData {
+    id: number;
+    title: string;
+    attempt: number; // which attempt is this
+    status: AttemptStatus;
+    correct: number;
+    incorrect: number;
+    notChosen: number;
+    total: number;
 }

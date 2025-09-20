@@ -8,7 +8,7 @@ import { IApiResponse, extractApiData } from '@/types/api';
 /**
  * AccountService - Handles account-related operations
  *
- * This service provides methods for managing user account operations
+ * This services provides methods for managing user account operations
  * such as completing account setup and profile management.
  */
 export class AccountService {

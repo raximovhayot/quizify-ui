@@ -86,7 +86,7 @@ export function usePWA() {
     }
   }, [deferredPrompt]);
 
-  // Register service worker
+  // Register services worker
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker

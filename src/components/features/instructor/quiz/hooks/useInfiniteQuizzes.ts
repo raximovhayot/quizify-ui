@@ -26,7 +26,7 @@ export function useInfiniteQuizzes(filter: Omit<QuizFilter, 'page'> = {}) {
         signal
       );
 
-      // Return response directly (validation handled by service layer)
+      // Return response directly (validation handled by services layer)
       return response;
     },
     enabled: !!session?.accessToken,

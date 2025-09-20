@@ -3,6 +3,7 @@ import { QuizDataDTO } from '@/components/features/instructor/quiz/types/quiz';
 import { StudentAttemptDTO } from '@/components/features/student/quiz/types/attempt';
 import { apiClient } from '@/lib/api';
 import { IApiResponse, extractApiData } from '@/types/api';
+import { IPageableList } from '@/types/common';
 
 /**
  * StudentQuizService - Fetches quiz details and questions for students
@@ -64,21 +65,6 @@ export class StudentQuizService {
   ): Promise<QuizDataDTO[]> {
     const response: IApiResponse<QuizDataDTO[]> = await apiClient.get(
       `/student/quizzes/in-progress`,
-      accessToken,
-      signal
-    );
-    return extractApiData(response);
-  }
-
-  /**
-   * Get student's quiz attempt history
-   */
-  static async getAttemptHistory(
-    accessToken?: string,
-    signal?: AbortSignal
-  ): Promise<StudentAttemptDTO[]> {
-    const response: IApiResponse<StudentAttemptDTO[]> = await apiClient.get(
-      `/student/attempts/history`,
       accessToken,
       signal
     );

@@ -8,7 +8,7 @@ export type { AttachmentDTO } from '@/components/features/attachment/attachment'
 /**
  * AttachmentService - Handles file attachment operations
  *
- * This service provides methods for uploading, downloading, and managing
+ * This services provides methods for uploading, downloading, and managing
  * file attachments for quizzes and questions.
  */
 export class AttachmentService {

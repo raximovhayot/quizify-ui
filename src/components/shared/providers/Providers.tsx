@@ -24,7 +24,7 @@ import { ErrorBoundary } from './ErrorBoundary';
 function PWAManager() {
   const { isInstallable, isOnline, installPWA } = usePWA();
 
-  // Register service worker
+  // Register services worker
   useEffect(() => {
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
       navigator.serviceWorker

@@ -1,11 +1,5 @@
-import { Suspense } from 'react';
-
-import { StudentHistoryClient } from './student-history-client';
+import { StudentHistoryPage as StudentHistoryFeaturePage } from '@/components/features/student/history';
 
 export default function StudentHistoryPage() {
-  return (
-    <Suspense>
-      <StudentHistoryClient />
-    </Suspense>
-  );
+  return <StudentHistoryFeaturePage />;
 }

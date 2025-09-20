@@ -13,7 +13,7 @@ import {
 /**
  * QuizService - Handles quiz-related operations for instructors
  *
- * This service provides methods for managing quizzes including
+ * This services provides methods for managing quizzes including
  * CRUD operations, status updates, and attachment handling.
  */
 export class QuizService {

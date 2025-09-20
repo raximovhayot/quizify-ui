@@ -90,7 +90,8 @@
       "resendIn": "{seconds}s ichida qayta yuborish",
       "success": "Telefon muvaffaqiyatli tasdiqlandi! Profil sozlashga yo'naltirilmoqda...",
       "resendSuccess": "Yangi tasdiqlash kodi yuborildi",
-      "changePhone": "Telefon raqamini o'zgartirish"
+      "changePhone": "Telefon raqamini o'zgartirish",
+      "phoneRequired": "Telefon raqamni kiritish majburiy"
     },
     "forgotPassword": {
       "link": "Parolni unutdingizmi?",
@@ -133,6 +134,14 @@
     "signOut": "Chiqish",
     "backToSignIn": "Kirishga qaytish",
     "validation": {
+      "phoneRequired": "Telefon raqami majburiy",
+      "phoneInvalid": "Telefon raqami formati noto'g'ri",
+      "otpRequired": "Tasdiqlash kodi majburiy",
+      "otpLength": "Tasdiqlash kodi 6 xonali bo'lishi kerak",
+      "otpPattern": "Tasdiqlash kodi faqat raqamlardan iborat bo'lishi kerak",
+      "passwordRequired": "Parol majburiy",
+      "confirmPasswordRequired": "Iltimos, parolni tasdiqlang",
+      "passwordsNotMatch": "Parollar mos kelmadi",
       "passwordMinLength": "Parol kamida 8 ta belgidan iborat bo'lishi kerak",
       "passwordPattern": "Parol kamida bitta katta harf, bitta kichik harf va bitta raqamdan iborat bo'lishi kerak",
       "firstNameRequired": "Ism kiritish shart",
@@ -144,7 +153,10 @@
     "profile": "Profil"
   },
   "theme": {
-    "changeTheme": "Mavzuni o'zgartirish"
+    "changeTheme": "Mavzuni o'zgartirish",
+    "light": "Yorug'",
+    "dark": "Qorong'u",
+    "system": "Tizim"
   },
   "quiz": {
     "form": {
@@ -360,6 +372,26 @@
         "essay": "Insho",
         "matching": "Moslashtirish",
         "ranking": "Tartiblash"
+      }
+    },
+    "home": {
+      "upcoming": "Yaqinlashayotgan testlar",
+      "inProgress": "Davom etayotgan testlar",
+      "noInProgress": "Davom etayotgan testlar yo‘q",
+      "noUpcoming": "Yaqinlashayotgan testlar yo‘q",
+      "joinTitle": "Testga qo‘shilish",
+      "joinPlaceholder": "Kirish kodini kiriting",
+      "joinButton": "Qo‘shilish"
+    },
+    "history": {
+      "title": "Urinishlar tarixi",
+      "loadError": "Tarixni yuklab bo‘lmadi",
+      "empty": "Hozircha urinishlar yo‘q",
+      "status": {
+        "in_progress": "Davom etmoqda",
+        "completed": "Yakunlangan",
+        "passed": "O'tgan",
+        "failed": "Muvaffaqiyatsiz"
       }
     }
   }

@@ -131,6 +131,14 @@
       "sessionCreation": "Profile completed but failed to create session. Please sign in manually."
     },
     "validation": {
+      "phoneRequired": "Phone number is required",
+      "phoneInvalid": "Invalid phone number format",
+      "otpRequired": "Verification code is required",
+      "otpLength": "Verification code must be 6 digits",
+      "otpPattern": "Verification code must contain only digits",
+      "passwordRequired": "Password is required",
+      "confirmPasswordRequired": "Please confirm your password",
+      "passwordsNotMatch": "Passwords do not match",
       "passwordMinLength": "Password must be at least 8 characters",
       "passwordPattern": "Password must contain at least one uppercase letter, one lowercase letter, and one number",
       "firstNameRequired": "First name is required",
@@ -362,6 +370,26 @@
         "essay": "Essay",
         "matching": "Matching",
         "ranking": "Ranking"
+      }
+    },
+    "home": {
+      "upcoming": "Upcoming quizzes",
+      "inProgress": "In-progress quizzes",
+      "noInProgress": "No in-progress quizzes",
+      "noUpcoming": "No upcoming quizzes",
+      "joinTitle": "Join a quiz",
+      "joinPlaceholder": "Enter join code",
+      "joinButton": "Join"
+    },
+    "history": {
+      "title": "Attempt history",
+      "loadError": "Failed to load history",
+      "empty": "No attempts yet",
+      "status": {
+        "in_progress": "In progress",
+        "completed": "Completed",
+        "passed": "Passed",
+        "failed": "Failed"
       }
     }
   }

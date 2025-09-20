@@ -24,7 +24,7 @@ interface HeaderProps {
   showUserMenu?: boolean;
 }
 
-export function Header({ title: _title, showUserMenu = true }: HeaderProps) {
+export function Header({ title: _title, showUserMenu = true }: Readonly<HeaderProps>) {
   const t = useTranslations();
   const { user, logout, isAuthenticated } = useNextAuth();
   const router = useRouter();

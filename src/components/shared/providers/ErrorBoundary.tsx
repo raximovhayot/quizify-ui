@@ -73,7 +73,7 @@ export interface ErrorContext {
   metadata?: Record<string, unknown>;
   /** Error severity level */
   severity?: ErrorSeverity;
-  /** Whether error should be reported to external service */
+  /** Whether error should be reported to external services */
   reportable?: boolean;
 }
 
@@ -129,7 +129,7 @@ export interface ErrorFallbackProps {
 // =============================================================================
 
 /**
- * Error reporting service for logging and external reporting
+ * Error reporting services for logging and external reporting
  */
 class ErrorReportingService {
   private static instance: ErrorReportingService;
@@ -181,7 +181,7 @@ class ErrorReportingService {
   }
 
   /**
-   * Report error to external service (placeholder for actual implementation)
+   * Report error to external services (placeholder for actual implementation)
    */
   async reportError(
     error: Error,
@@ -191,7 +191,7 @@ class ErrorReportingService {
     if (!context?.reportable) return;
 
     try {
-      // In a real implementation, this would send to an error reporting service
+      // In a real implementation, this would send to an error reporting services
       // like Sentry, LogRocket, or a custom endpoint
       const errorReport = {
         message: error.message,
@@ -202,7 +202,7 @@ class ErrorReportingService {
       };
 
       if (this.isDevelopment) {
-        console.log('Would report error to external service:', errorReport);
+        console.log('Would report error to external services:', errorReport);
       } else {
         // Example: await fetch('/api/errors', { method: 'POST', body: JSON.stringify(errorReport) });
         console.warn('Error reporting not configured for production');
