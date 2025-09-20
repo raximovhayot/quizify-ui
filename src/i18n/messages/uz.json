@@ -158,6 +158,12 @@
     "dark": "Qorong'u",
     "system": "Tizim"
   },
+  "language": {
+    "label": "Standart til",
+    "en": "Ingliz tili",
+    "ru": "Rus tili",
+    "uz": "O'zbek tili"
+  },
   "quiz": {
     "form": {
       "editTitle": "Testni tahrirlash",
@@ -186,6 +192,18 @@
       "fileSize": "Fayl hajmi {maxSize}MB dan kichik bo'lishi kerak",
       "fileType": "Fayl turi qo'llab-quvvatlanmaydi",
       "rejected": "Ba'zi fayllar rad etildi"
+    }
+  },
+  "profile": {
+    "details": { "title": "Ma'lumotlarni tahrirlash" },
+    "update": {
+      "success": "Profil muvaffaqiyatli yangilandi",
+      "error": "Profilni yangilab bo'lmadi"
+    },
+    "password": {
+      "title": "Parolni yangilash",
+      "success": "Parol muvaffaqiyatli yangilandi",
+      "error": "Parolni yangilab bo'lmadi"
     }
   },
   "instructor": {
@@ -337,6 +355,10 @@
     }
   },
   "student": {
+    "profile": {
+      "details": { "title": "Ma'lumotlarni tahrirlash" },
+      "password": { "title": "Parolni yangilash" }
+    },
     "role": "Talaba",
     "navigation": {
       "title": "Talaba paneli",

@@ -1,6 +1,7 @@
 import {
   AccountCompleteRequest,
   AccountDTO,
+  UpdatePasswordRequest,
 } from '@/components/features/profile/types/account';
 import { apiClient } from '@/lib/api';
 import { IApiResponse, extractApiData } from '@/types/api';
@@ -24,7 +25,7 @@ export class AccountService {
     signal?: AbortSignal
   ): Promise<AccountDTO> {
     const response: IApiResponse<AccountDTO> = await apiClient.get(
-      '/account/profile',
+      '/account/me',
       { token: accessToken, signal }
     );
     return extractApiData(response);
@@ -38,33 +39,9 @@ export class AccountService {
     accessToken: string
   ): Promise<AccountDTO> {
     const response: IApiResponse<AccountDTO> = await apiClient.put(
-      '/account/profile',
+      '/account',
       data,
       { token: accessToken }
-    );
-    return extractApiData(response);
-  }
-
-  /**
-   * Upload or change user's avatar image
-   * Returns updated AccountDTO on success
-   */
-  static async uploadAvatar(
-    file: File,
-    accessToken: string,
-    onProgress?: (info: {
-      loaded: number;
-      total: number | null;
-      percent: number | null;
-    }) => void
-  ): Promise<AccountDTO> {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    const response = await apiClient.uploadWithProgress<AccountDTO>(
-      '/account/avatar',
-      formData,
-      { token: accessToken, onProgress }
     );
     return extractApiData(response);
   }
@@ -87,6 +64,21 @@ export class AccountService {
   ): Promise<AccountDTO> {
     const response: IApiResponse<AccountDTO> = await apiClient.put(
       '/account/complete',
+      data,
+      { token: accessToken }
+    );
+    return extractApiData(response);
+  }
+
+  /**
+   * Change current user's password
+   */
+  static async changePassword(
+    data: UpdatePasswordRequest,
+    accessToken: string
+  ): Promise<string> {
+    const response: IApiResponse<string> = await apiClient.put(
+      '/account/password',
       data,
       { token: accessToken }
     );

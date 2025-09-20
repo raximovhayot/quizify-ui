@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { z } from 'zod';
 
 import { useState } from 'react';
 
@@ -14,65 +13,18 @@ import {
   clearFormErrors,
   handleAuthError,
 } from '@/components/features/auth/lib/auth-errors';
+import {
+  profileCompleteDetailsSchema,
+  profileCompleteFormDefaults,
+} from '@/components/features/profile/schemas/profile';
+import type { ProfileCompleteFormData } from '@/components/features/profile/schemas/profile';
 import { AccountService } from '@/components/features/profile/services/accountService';
 import {
   AccountCompleteRequest,
   DashboardType,
 } from '@/components/features/profile/types/account';
 
-// Types for helper functions
-type TranslationFunction = (
-  key: string,
-  options?: { default?: string }
-) => string;
-
-// Profile completion form schema
-const createProfileCompleteSchema = (t: TranslationFunction) =>
-  z.object({
-    firstName: z.string().min(
-      1,
-      t('auth.validation.firstNameRequired', {
-        default: 'First name is required',
-      })
-    ),
-    lastName: z.string().min(
-      1,
-      t('auth.validation.lastNameRequired', {
-        default: 'Last name is required',
-      })
-    ),
-    password: z
-      .string()
-      .min(
-        8,
-        t('auth.validation.passwordMinLength', {
-          default: 'Password must be at least 8 characters',
-        })
-      )
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        t('auth.validation.passwordPattern', {
-          default:
-            'Password must contain at least one uppercase letter, one lowercase letter, and one number',
-        })
-      ),
-    dashboardType: z.enum(DashboardType, {
-      message: t('auth.validation.dashboardTypeRequired', {
-        default: 'Please select your role',
-      }),
-    }),
-  });
-
-export type ProfileCompleteFormData = z.infer<
-  ReturnType<typeof createProfileCompleteSchema>
->;
-
-const profileCompleteDefaults: ProfileCompleteFormData = {
-  firstName: '',
-  lastName: '',
-  password: '',
-  dashboardType: DashboardType.STUDENT,
-};
+export type { ProfileCompleteFormData } from '@/components/features/profile/schemas/profile';
 
 /**
  * Custom hook for profile completion form logic
@@ -85,12 +37,12 @@ export function useProfileComplete() {
   const t = useTranslations();
 
   // Create validation schema with localized messages
-  const profileCompleteSchema = createProfileCompleteSchema(t);
+  const profileCompleteSchema = profileCompleteDetailsSchema(t);
 
   // Initialize form with validation schema
   const form = useForm<ProfileCompleteFormData>({
     resolver: zodResolver(profileCompleteSchema),
-    defaultValues: profileCompleteDefaults,
+    defaultValues: profileCompleteFormDefaults,
   });
 
   // Form submission handler

@@ -157,6 +157,12 @@
     "dark": "Dark",
     "system": "System"
   },
+  "language": {
+    "label": "Default language",
+    "en": "English",
+    "ru": "Russian",
+    "uz": "Uzbek"
+  },
   "quiz": {
     "form": {
       "editTitle": "Edit Quiz",
@@ -185,6 +191,18 @@
       "fileSize": "File size must be less than {maxSize}MB",
       "fileType": "File type not supported",
       "rejected": "Some files were rejected"
+    }
+  },
+  "profile": {
+    "details": { "title": "Edit details" },
+    "update": {
+      "success": "Profile updated successfully",
+      "error": "Failed to update profile"
+    },
+    "password": {
+      "title": "Update password",
+      "success": "Password updated successfully",
+      "error": "Failed to update password"
     }
   },
   "instructor": {
@@ -335,6 +353,10 @@
     }
   },
   "student": {
+    "profile": {
+      "details": { "title": "Edit details" },
+      "password": { "title": "Update password" }
+    },
     "role": "Student",
     "navigation": {
       "title": "Student Panel",

@@ -7,7 +7,6 @@ import {
   AppNavigation,
   TNavigationItem,
 } from '@/components/shared/navigation/AppNavigation';
-import { HeaderActions } from '@/components/shared/navigation/HeaderActions';
 import { NotificationsDropdown } from '@/components/shared/navigation/NotificationsDropdown';
 
 interface AppHeaderProps {
@@ -49,11 +48,6 @@ export function AppHeader({
           {/* Notifications (hidden on mobile) */}
           <div className="hidden lg:block">
             <NotificationsDropdown />
-          </div>
-
-          {/* Theme and Language Switchers (hidden on mobile) */}
-          <div className="hidden lg:flex">
-            <HeaderActions />
           </div>
 
           {/* User Menu */}

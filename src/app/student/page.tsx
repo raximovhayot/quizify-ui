@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { StudentHomeClient } from './student-home-client';
+import { StudentHomeClient } from '@/components/features/student/home/StudentHomeClient';
 
 export default function StudentHomePage() {
   return (

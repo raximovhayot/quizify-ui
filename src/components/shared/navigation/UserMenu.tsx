@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 
 import { NotificationsDropdown } from '@/components/shared/navigation/NotificationsDropdown';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -40,6 +41,8 @@ export function UserMenu({
 }: Readonly<UserMenuProps>) {
   const t = useTranslations();
   const ns = i18nNamespace;
+  const profileHref =
+    ns === 'student' ? '/student/profile' : '/instructor/profile';
 
   return (
     <DropdownMenu>
@@ -100,8 +103,12 @@ export function UserMenu({
 
         <DropdownMenuGroup>
           {/* Menu items */}
-          <DropdownMenuItem className="cursor-pointer">
-            <span>{t(`${ns}.userMenu.profile`, { fallback: 'Profile' })}</span>
+          <DropdownMenuItem className="cursor-pointer" asChild>
+            <Link href={profileHref}>
+              <span>
+                {t(`${ns}.userMenu.profile`, { fallback: 'Profile' })}
+              </span>
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem className="cursor-pointer">
             <span>
