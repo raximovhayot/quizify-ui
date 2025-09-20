@@ -94,7 +94,7 @@ export function TopLoader() {
       style={{ opacity, transition: 'opacity 150ms ease-out' }}
     >
       <div
-        className="h-1 bg-primary/80"
+        className="h-0.5 bg-primary/80"
         style={{ width, transition: 'width 200ms ease-out' }}
       >
         {/* Shimmer */}
