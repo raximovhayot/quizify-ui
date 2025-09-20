@@ -28,14 +28,15 @@ export function QuizListContainer({ className }: QuizListContainerProps) {
   const t = useTranslations();
   const router = useRouter();
   const pathname = usePathname();
+  const safePath = pathname ?? '/';
   const searchParams = useSearchParams();
 
   // Parse URL parameters into filter object
   const filter: QuizFilter = useMemo(() => {
-    const pageParam = searchParams.get('page');
-    const sizeParam = searchParams.get('size');
-    const s = searchParams.get('search') || undefined;
-    const statusParam = searchParams.get('status') as QuizStatus | null;
+    const pageParam = searchParams?.get('page');
+    const sizeParam = searchParams?.get('size');
+    const s = searchParams?.get('search') || undefined;
+    const statusParam = searchParams?.get('status') as QuizStatus | null;
 
     const page = pageParam ? Math.max(0, parseInt(pageParam, 10) || 0) : 0;
     const size = sizeParam
@@ -57,20 +58,20 @@ export function QuizListContainer({ className }: QuizListContainerProps) {
   const updateUrl = useCallback(
     (params: URLSearchParams, method: 'push' | 'replace' = 'push') => {
       const query = params.toString();
-      const url = query ? `${pathname}?${query}` : pathname;
+      const url = query ? `${safePath}?${query}` : safePath;
       if (method === 'replace') {
         router.replace(url);
       } else {
         router.push(url);
       }
     },
-    [pathname, router]
+    [safePath, router]
   );
 
   // Filter handlers
   const handleSearch = useCallback(
     (search: string) => {
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(searchParams?.toString() ?? '');
       if (search && search.trim()) {
         params.set('search', search.trim());
       } else {
@@ -84,7 +85,7 @@ export function QuizListContainer({ className }: QuizListContainerProps) {
 
   const handleStatusFilter = useCallback(
     (status: QuizStatus | undefined) => {
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(searchParams?.toString() ?? '');
       if (status) {
         params.set('status', status);
       } else {
@@ -99,7 +100,7 @@ export function QuizListContainer({ className }: QuizListContainerProps) {
   // Pagination handlers
   const handlePageChange = useCallback(
     (page: number) => {
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(searchParams?.toString() ?? '');
       params.set('page', Math.max(0, page).toString());
       updateUrl(params, 'push');
     },
@@ -108,7 +109,7 @@ export function QuizListContainer({ className }: QuizListContainerProps) {
 
   const handlePageSizeChange = useCallback(
     (size: number) => {
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(searchParams?.toString() ?? '');
       params.set('size', Math.max(1, Math.min(100, size)).toString());
       params.set('page', '0');
       updateUrl(params, 'push');
@@ -126,11 +127,7 @@ export function QuizListContainer({ className }: QuizListContainerProps) {
   } = useQuizzes(filter);
 
   // Enhanced error recovery
-  const {
-    execute: retryFetch,
-    isRetrying,
-    retryCount,
-  } = useErrorRecovery(
+  const { execute: retryFetch } = useErrorRecovery(
     async () => {
       await refetch();
     },
@@ -159,7 +156,7 @@ export function QuizListContainer({ className }: QuizListContainerProps) {
     }
 
     if (filter.page !== desiredPage) {
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(searchParams?.toString() ?? '');
       params.set('page', desiredPage.toString());
       updateUrl(params, 'replace');
     }

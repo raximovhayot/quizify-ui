@@ -4,6 +4,8 @@ import { toast } from 'sonner';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 
+import { createMutation } from '@/lib/mutation-utils';
+
 import {
   TQuizListResponse,
   quizDataDTOSchema,
@@ -98,42 +100,34 @@ export function useCreateQuiz() {
   const { data: session } = useSession();
   const t = useTranslations();
 
-  return useMutation({
-    mutationFn: async (
-      data: InstructorQuizCreateRequest
-    ): Promise<QuizDataDTO> => {
+  return createMutation<QuizDataDTO, InstructorQuizCreateRequest>({
+    mutationFn: async (data) => {
       if (!session?.accessToken) {
-        throw new Error('No access token available');
+        return {
+          data: null as unknown as QuizDataDTO,
+          errors: [
+            {
+              code: 'AUTH_NO_TOKEN',
+              message: t('auth.error.noToken', {
+                default: 'No access token available',
+              }),
+            },
+          ],
+        };
       }
-
-      const response = await QuizService.createQuiz(data, session.accessToken);
-
-      // Validate response with Zod schema
-      const validatedResponse = quizDataDTOSchema.parse(response);
-      return validatedResponse;
+      const resp = await QuizService.createQuiz(data, session.accessToken);
+      return resp;
     },
+    successMessage: t('instructor.quiz.create.success', {
+      fallback: 'Quiz created successfully',
+    }),
+    invalidateQueries: [quizKeys.lists() as unknown as string[]],
     onSuccess: (data) => {
-      // Invalidate and refetch quiz lists
-      queryClient.invalidateQueries({ queryKey: quizKeys.lists() });
-
-      // Add the new quiz to cache
-      queryClient.setQueryData(quizKeys.detail(data.id), data);
-
-      toast.success(
-        t('instructor.quiz.create.success', {
-          fallback: 'Quiz created successfully',
-        })
-      );
+      // Validate with Zod and prime detail cache
+      const validated = quizDataDTOSchema.parse(data);
+      queryClient.setQueryData(quizKeys.detail(validated.id), validated);
     },
-    onError: (error) => {
-      console.error('Failed to create quiz:', error);
-      toast.error(
-        t('instructor.quiz.create.error', {
-          fallback: 'Failed to create quiz',
-        })
-      );
-    },
-  });
+  })();
 }
 
 // Hook for updating quiz
@@ -142,46 +136,38 @@ export function useUpdateQuiz() {
   const { data: session } = useSession();
   const t = useTranslations();
 
-  return useMutation({
-    mutationFn: async (
-      data: InstructorQuizUpdateRequest
-    ): Promise<QuizDataDTO> => {
+  return createMutation<QuizDataDTO, InstructorQuizUpdateRequest>({
+    mutationFn: async (data) => {
       if (!session?.accessToken || !data.id) {
-        throw new Error('No access token or quiz ID available');
+        return {
+          data: null as unknown as QuizDataDTO,
+          errors: [
+            {
+              code: 'AUTH_NO_TOKEN_OR_ID',
+              message: t('auth.error.noToken', {
+                default: 'No access token available',
+              }),
+            },
+          ],
+        };
       }
-
-      const response = await QuizService.updateQuiz(
+      const resp = await QuizService.updateQuiz(
         data.id,
         data,
         session.accessToken
       );
-
-      // Validate response with Zod schema
-      const validatedResponse = quizDataDTOSchema.parse(response);
-      return validatedResponse;
+      return resp;
     },
+    successMessage: t('instructor.quiz.update.success', {
+      fallback: 'Quiz updated successfully',
+    }),
+    invalidateQueries: [quizKeys.lists() as unknown as string[]],
     onSuccess: (data) => {
-      // Invalidate and refetch quiz lists
-      queryClient.invalidateQueries({ queryKey: quizKeys.lists() });
-
-      // Update the quiz in cache
-      queryClient.setQueryData(quizKeys.detail(data.id), data);
-
-      toast.success(
-        t('instructor.quiz.update.success', {
-          fallback: 'Quiz updated successfully',
-        })
-      );
+      // Validate and update detail cache
+      const validated = quizDataDTOSchema.parse(data);
+      queryClient.setQueryData(quizKeys.detail(validated.id), validated);
     },
-    onError: (error) => {
-      console.error('Failed to update quiz:', error);
-      toast.error(
-        t('instructor.quiz.update.error', {
-          fallback: 'Failed to update quiz',
-        })
-      );
-    },
-  });
+  })();
 }
 
 // Hook for updating quiz status

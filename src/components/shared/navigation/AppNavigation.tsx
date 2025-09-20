@@ -50,12 +50,13 @@ export function AppNavigation({
 }: Readonly<AppNavigationProps>) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const safePath = pathname ?? '/';
 
   const isActiveLink = (href: string) => {
     if (href === rootHref) {
-      return pathname === href;
+      return safePath === href;
     }
-    return pathname.startsWith(href);
+    return safePath.startsWith(href);
   };
 
   // Determine active section label for mobile title

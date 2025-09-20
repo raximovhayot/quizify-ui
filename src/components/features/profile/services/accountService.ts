@@ -20,13 +20,10 @@ export class AccountService {
   /**
    * Fetch the current user's profile
    */
-  static async getProfile(
-    accessToken: string,
-    signal?: AbortSignal
-  ): Promise<AccountDTO> {
+  static async getProfile(signal?: AbortSignal): Promise<AccountDTO> {
     const response: IApiResponse<AccountDTO> = await apiClient.get(
       '/account/me',
-      { token: accessToken, signal }
+      { signal }
     );
     return extractApiData(response);
   }
@@ -35,15 +32,13 @@ export class AccountService {
    * Update current user's profile details
    */
   static async updateProfile(
-    data: Partial<AccountDTO>,
-    accessToken: string
-  ): Promise<AccountDTO> {
+    data: Partial<AccountDTO>
+  ): Promise<IApiResponse<AccountDTO>> {
     const response: IApiResponse<AccountDTO> = await apiClient.put(
       '/account',
-      data,
-      { token: accessToken }
+      data
     );
-    return extractApiData(response);
+    return response;
   }
 
   /**
@@ -59,29 +54,25 @@ export class AccountService {
    *
    */
   static async completeAccount(
-    data: AccountCompleteRequest,
-    accessToken: string
-  ): Promise<AccountDTO> {
+    data: AccountCompleteRequest
+  ): Promise<IApiResponse<AccountDTO>> {
     const response: IApiResponse<AccountDTO> = await apiClient.put(
       '/account/complete',
-      data,
-      { token: accessToken }
+      data
     );
-    return extractApiData(response);
+    return response;
   }
 
   /**
    * Change current user's password
    */
   static async changePassword(
-    data: UpdatePasswordRequest,
-    accessToken: string
-  ): Promise<string> {
+    data: UpdatePasswordRequest
+  ): Promise<IApiResponse<string>> {
     const response: IApiResponse<string> = await apiClient.put(
       '/account/password',
-      data,
-      { token: accessToken }
+      data
     );
-    return extractApiData(response);
+    return response;
   }
 }

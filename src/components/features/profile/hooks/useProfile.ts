@@ -17,7 +17,7 @@ export function useProfile() {
     queryKey: profileKeys.me(),
     queryFn: async ({ signal }) => {
       if (!session?.accessToken) throw new Error('No access token available');
-      return AccountService.getProfile(session.accessToken, signal);
+      return AccountService.getProfile(signal);
     },
     enabled: !!session?.accessToken,
     staleTime: 2 * 60_000,

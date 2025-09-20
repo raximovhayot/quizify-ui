@@ -1,9 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 
+import { createMutation } from '@/lib/mutation-utils';
 import { IPageableList } from '@/types/common';
 
 import { QuestionService } from '../services/questionService';
@@ -38,33 +38,35 @@ export function useCreateQuestion() {
   const t = useTranslations();
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async (
-      data: InstructorQuestionSaveRequest
-    ): Promise<QuestionDataDto> => {
-      if (!session?.accessToken) throw new Error('No access token available');
+  return createMutation<QuestionDataDto, InstructorQuestionSaveRequest>({
+    mutationFn: async (data) => {
+      if (!session?.accessToken) {
+        return {
+          data: null as unknown as QuestionDataDto,
+          errors: [
+            {
+              code: 'AUTH_NO_TOKEN',
+              message: t('auth.error.noToken', {
+                default: 'No access token available',
+              }),
+            },
+          ],
+        };
+      }
       const res = await QuestionService.createQuestion(
         data,
         session.accessToken
       );
       return res;
     },
-    onSuccess: (_data) => {
-      // Invalidate relevant question lists
+    successMessage: t('instructor.quiz.question.create.success', {
+      fallback: 'Question created successfully',
+    }),
+    invalidateQueries: [questionKeys.lists() as unknown as string[]],
+    onSuccess: () => {
+      // Additional cache seeding can be added here if needed
+      // For now, invalidation handles refetch
       queryClient.invalidateQueries({ queryKey: questionKeys.lists() });
-      toast.success(
-        t('instructor.quiz.question.create.success', {
-          fallback: 'Question created successfully',
-        })
-      );
     },
-    onError: (error) => {
-      console.error('Failed to create question:', error);
-      toast.error(
-        t('instructor.quiz.question.create.error', {
-          fallback: 'Failed to create question',
-        })
-      );
-    },
-  });
+  })();
 }

@@ -32,12 +32,13 @@ function GuardAuthenticatedContent({
     useNextAuth();
   const router = useRouter();
   const pathname = usePathname();
+  const safePath = pathname ?? '/';
   const t = useTranslations('common');
 
   useEffect(() => {
     // Redirect to sign-in if not authenticated
     if (!isLoading && !isAuthenticated) {
-      router.replace(`${loginPath}?redirect=${encodeURIComponent(pathname)}`);
+      router.replace(`${loginPath}?redirect=${encodeURIComponent(safePath)}`);
       return;
     }
 
@@ -46,7 +47,7 @@ function GuardAuthenticatedContent({
       isAuthenticated &&
       user &&
       user.state === UserState.NEW &&
-      !pathname.startsWith('/profile/complete')
+      !safePath.startsWith('/profile/complete')
     ) {
       router.replace('/profile/complete');
       return;
@@ -99,7 +100,7 @@ function GuardAuthenticatedContent({
     hasAnyRole,
     hasRole,
     router,
-    pathname,
+    safePath,
     loginPath,
     requiredRoles,
     fallbackRoles,
@@ -120,7 +121,7 @@ function GuardAuthenticatedContent({
   if (
     user &&
     user.state === UserState.NEW &&
-    !pathname.startsWith('/profile/complete')
+    !safePath.startsWith('/profile/complete')
   ) {
     return <PageLoading text={t('redirecting')} />;
   }

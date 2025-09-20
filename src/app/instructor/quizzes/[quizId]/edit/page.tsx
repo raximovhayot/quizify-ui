@@ -40,7 +40,7 @@ export default function EditQuizPage() {
   const t = useTranslations();
   const router = useRouter();
   const params = useParams<{ quizId: string }>();
-  const quizId = Number(params.quizId);
+  const quizId = Number(params?.quizId ?? NaN);
 
   const { data: quiz, isLoading, isFetching, error, refetch } = useQuiz(quizId);
   const updateQuizMutation = useUpdateQuiz();

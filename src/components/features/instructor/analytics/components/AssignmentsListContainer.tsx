@@ -21,13 +21,14 @@ export function AssignmentsListContainer({
   const t = useTranslations();
   const router = useRouter();
   const pathname = usePathname();
+  const safePath = pathname ?? '/';
   const searchParams = useSearchParams();
 
   const filter = useMemo(() => {
-    const pageParam = searchParams.get('page');
-    const sizeParam = searchParams.get('size');
-    const search = searchParams.get('search') || undefined;
-    const statusParam = searchParams.get('status') || undefined;
+    const pageParam = searchParams?.get('page');
+    const sizeParam = searchParams?.get('size');
+    const search = searchParams?.get('search') || undefined;
+    const statusParam = searchParams?.get('status') || undefined;
 
     const page = pageParam ? Math.max(0, parseInt(pageParam, 10) || 0) : 0;
     const size = sizeParam
@@ -45,16 +46,16 @@ export function AssignmentsListContainer({
   const updateUrl = useCallback(
     (params: URLSearchParams, method: 'push' | 'replace' = 'push') => {
       const query = params.toString();
-      const url = query ? `${pathname}?${query}` : pathname;
+      const url = query ? `${safePath}?${query}` : safePath;
       if (method === 'replace') router.replace(url);
       else router.push(url);
     },
-    [pathname, router]
+    [safePath, router]
   );
 
   const onPageChange = useCallback(
     (page: number) => {
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(searchParams?.toString() ?? '');
       params.set('page', Math.max(0, page).toString());
       updateUrl(params, 'push');
     },
@@ -63,7 +64,7 @@ export function AssignmentsListContainer({
 
   const onSearch = useCallback(
     (search: string) => {
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(searchParams?.toString() ?? '');
       const value = (search || '').trim();
       if (value) params.set('search', value);
       else params.delete('search');
@@ -75,7 +76,7 @@ export function AssignmentsListContainer({
 
   const onStatusFilter = useCallback(
     (status: AssignmentStatus | string | undefined) => {
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(searchParams?.toString() ?? '');
       if (status) params.set('status', String(status));
       else params.delete('status');
       params.set('page', '0');
@@ -86,7 +87,7 @@ export function AssignmentsListContainer({
 
   const onPageSizeChange = useCallback(
     (size: number) => {
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(searchParams?.toString() ?? '');
       params.set('size', Math.min(100, Math.max(1, size)).toString());
       params.set('page', '0');
       updateUrl(params, 'push');

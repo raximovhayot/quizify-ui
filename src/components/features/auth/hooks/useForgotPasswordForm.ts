@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
-
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useTranslations } from 'next-intl';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+
+import { useEffect, useState } from 'react';
+
+import { useTranslations } from 'next-intl';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import {
   useForgotPasswordPrepareMutation,
@@ -12,6 +13,7 @@ import {
   useForgotPasswordVerifyMutation,
 } from '@/components/features/auth/hooks/useAuthMutations';
 import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
+import { ROUTES_AUTH } from '@/components/features/auth/routes';
 import {
   ForgotPasswordNewPasswordFormData,
   ForgotPasswordPhoneFormData,
@@ -24,7 +26,6 @@ import {
   forgotPasswordVerificationFormDefaults,
 } from '@/components/features/auth/schemas/auth';
 import { BackendError } from '@/types/api';
-import { ROUTES_AUTH } from '@/components/features/auth/routes';
 
 /**
  * Custom hook for managing forgot password form state and logic
@@ -43,9 +44,15 @@ export function useForgotPasswordForm() {
   }, [isAuthenticated, router]);
 
   // State management for forgot password flow
-  const [phoneNumber, setPhoneNumber] = useState(searchParams.get('phone') || '');
-  const [verificationToken, setVerificationToken] = useState(searchParams.get('token') || '');
-  const [resendCooldown, setResendCooldown] = useState(Number(searchParams.get('resendTime')) || 0);
+  const [phoneNumber, setPhoneNumber] = useState(
+    searchParams?.get('phone') ?? ''
+  );
+  const [verificationToken, setVerificationToken] = useState(
+    searchParams?.get('token') ?? ''
+  );
+  const [resendCooldown, setResendCooldown] = useState(
+    Number(searchParams?.get('resendTime') ?? 0)
+  );
 
   // Countdown timer for resend button
   useEffect(() => {
@@ -100,10 +107,10 @@ export function useForgotPasswordForm() {
         onSuccess: (prepareResponse) => {
           // Update phone number state
           setPhoneNumber(data.phone);
-          
+
           // Set the initial cooldown timer
           setResendCooldown(prepareResponse.waitingTime);
-          
+
           // Reset verification form to ensure clean state
           verificationForm.reset(forgotPasswordVerificationFormDefaults);
 
@@ -112,12 +119,14 @@ export function useForgotPasswordForm() {
               default: 'Verification code sent to your phone',
             })
           );
-          
+
           // Navigate to verification page with phone number and waiting time as query params
-          router.push(ROUTES_AUTH.forgotPasswordVerify({ 
-            phone: prepareResponse.phoneNumber, 
-            waitingTime: prepareResponse.waitingTime 
-          }));
+          router.push(
+            ROUTES_AUTH.forgotPasswordVerify({
+              phone: prepareResponse.phoneNumber,
+              waitingTime: prepareResponse.waitingTime,
+            })
+          );
         },
       }
     );
@@ -141,9 +150,14 @@ export function useForgotPasswordForm() {
               default: 'Code verified successfully',
             })
           );
-          
+
           // Navigate to reset password page with phone and token as query params
-          router.push(ROUTES_AUTH.resetPassword({ phone: phoneNumber, token: response.token }));
+          router.push(
+            ROUTES_AUTH.resetPassword({
+              phone: phoneNumber,
+              token: response.token,
+            })
+          );
         },
         onError: (error: BackendError) => {
           // Handle specific error cases - if code expired, go back to phone step

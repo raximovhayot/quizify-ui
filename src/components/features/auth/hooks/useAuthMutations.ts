@@ -4,6 +4,7 @@
  */
 import { signIn } from 'next-auth/react';
 
+import { AuthService } from '@/components/features/auth/services/authService';
 import {
   ForgotPasswordPrepareRequest,
   ForgotPasswordUpdateRequest,
@@ -15,7 +16,6 @@ import {
   SignUpPrepareRequest,
   SignUpVerifyRequest,
 } from '@/components/features/auth/types/auth';
-import { apiClient } from '@/lib/api';
 import { showErrorToast, showSuccessToast } from '@/lib/api-utils';
 import { createAuthMutation, createMutation } from '@/lib/mutation-utils';
 
@@ -24,7 +24,7 @@ import { createAuthMutation, createMutation } from '@/lib/mutation-utils';
  */
 export const useLoginMutation = createAuthMutation<JWTToken, SignInRequest>({
   mutationFn: async (variables: SignInRequest) => {
-    return await apiClient.post<JWTToken>('/auth/sign-in', variables);
+    return await AuthService.signIn(variables.phone, variables.password);
   },
   authAction: 'login',
   onSuccess: async (data, variables) => {
@@ -52,10 +52,7 @@ export const useSignUpPrepareMutation = createMutation<
   SignUpPrepareRequest
 >({
   mutationFn: async (variables: SignUpPrepareRequest) => {
-    return await apiClient.post<SignInPrepareResponse>(
-      '/auth/sign-up/prepare',
-      variables
-    );
+    return await AuthService.signUpPrepare(variables.phone);
   },
   successMessage: (data) =>
     `OTP sent to ${data.phoneNumber}. Please check your messages.`,
@@ -69,7 +66,7 @@ export const useSignUpVerifyMutation = createMutation<
   SignUpVerifyRequest
 >({
   mutationFn: async (variables: SignUpVerifyRequest) => {
-    return await apiClient.post<JWTToken>('/auth/sign-up/verify', variables);
+    return await AuthService.signUpVerify(variables);
   },
   successMessage: 'Phone verified successfully!',
 });
@@ -82,10 +79,7 @@ export const useForgotPasswordPrepareMutation = createMutation<
   ForgotPasswordPrepareRequest
 >({
   mutationFn: async (variables: ForgotPasswordPrepareRequest) => {
-    return await apiClient.post<SignInPrepareResponse>(
-      '/auth/forgot-password/prepare',
-      variables
-    );
+    return await AuthService.forgotPasswordPrepare(variables.phone);
   },
 });
 
@@ -97,9 +91,9 @@ export const useForgotPasswordVerifyMutation = createMutation<
   ForgotPasswordVerifyRequest
 >({
   mutationFn: async (variables: ForgotPasswordVerifyRequest) => {
-    return await apiClient.post<ForgotPasswordVerifyResponse>(
-      '/auth/forgot-password/verify',
-      variables
+    return await AuthService.forgotPasswordVerify(
+      variables.phone,
+      variables.otp
     );
   },
   successMessage:
@@ -114,9 +108,9 @@ export const useForgotPasswordUpdateMutation = createMutation<
   ForgotPasswordUpdateRequest
 >({
   mutationFn: async (variables: ForgotPasswordUpdateRequest) => {
-    return await apiClient.post<string>(
-      '/auth/forgot-password/update',
-      variables
+    return await AuthService.forgotPasswordUpdate(
+      variables.token,
+      variables.newPassword
     );
   },
 });

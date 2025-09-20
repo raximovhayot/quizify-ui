@@ -8,13 +8,11 @@ import { IPageableList } from '@/types/common';
  */
 export class StudentAttemptService {
   static async getAttempts(
-    accessToken?: string,
     signal?: AbortSignal,
     params?: { status?: string; page?: number; size?: number }
   ): Promise<IPageableList<StudentAttemptDTO>> {
     const response: IApiResponse<IPageableList<StudentAttemptDTO>> =
       await apiClient.get(`/student/assignments/attempts`, {
-        token: accessToken!,
         signal,
         query: {
           status: params?.status,

@@ -1,5 +1,5 @@
-import { useTranslations } from 'next-intl';
 import { StudentAttemptDTO } from '@/components/features/student/quiz/types/attempt';
+
 import { AttemptListItem } from './AttemptListItem';
 
 interface AttemptListProps {
@@ -7,8 +7,7 @@ interface AttemptListProps {
   emptyLabel: string;
 }
 
-export function AttemptList({ items, emptyLabel }: AttemptListProps) {
-  const t = useTranslations();
+export function AttemptList({ items, emptyLabel }: Readonly<AttemptListProps>) {
   if (!items || items.length === 0) {
     return <div className="text-sm text-muted-foreground">{emptyLabel}</div>;
   }

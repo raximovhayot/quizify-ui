@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation';
 export default function QuizDetailsPage() {
   const t = useTranslations();
   const params = useParams<{ quizId: string }>();
-  const quizId = Number(params.quizId);
+  const quizId = Number(params?.quizId ?? NaN);
 
   return (
     <div className="container mx-auto p-4">

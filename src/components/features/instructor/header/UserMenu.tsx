@@ -36,7 +36,6 @@ interface UserMenuProps {
   showNotificationsQuickActions?: boolean;
 }
 
-// @ts-ignore
 export function UserMenu({
   user,
   onLogout,

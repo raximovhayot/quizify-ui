@@ -523,8 +523,10 @@ class ApiClient {
         xhr.send(body);
       } else if (body instanceof Blob) {
         xhr.send(body);
-      } else if (body instanceof ArrayBuffer || body instanceof Uint8Array) {
-        xhr.send(body as any);
+      } else if (body instanceof ArrayBuffer) {
+        xhr.send(body);
+      } else if (body instanceof Uint8Array) {
+        xhr.send(body);
       } else {
         // Fallback: stringify
         xhr.setRequestHeader('Content-Type', 'application/json');

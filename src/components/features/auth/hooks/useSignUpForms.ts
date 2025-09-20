@@ -59,10 +59,10 @@ export function useSignUpForms(): UseSignUpFormsReturn {
 
   // State management for sign-up flow - using URL params like forgot password
   const [phoneNumber, setPhoneNumber] = useState(
-    searchParams.get('phone') || ''
+    searchParams?.get('phone') ?? ''
   );
   const [resendCooldown, setResendCooldown] = useState(
-    Number(searchParams.get('resendTime')) || 0
+    Number(searchParams?.get('resendTime') ?? 0)
   );
 
   // Derive isSubmitting from mutations
@@ -88,7 +88,7 @@ export function useSignUpForms(): UseSignUpFormsReturn {
   // Handle authentication redirect for authenticated users
   useEffect(() => {
     if (isAuthenticated && user) {
-      const redirectTo = searchParams.get('redirect') || '/';
+      const redirectTo = searchParams?.get('redirect') ?? '/';
       router.push(redirectTo);
     }
   }, [isAuthenticated, user, router, searchParams]);

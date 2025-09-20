@@ -29,6 +29,10 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
+// Force dynamic rendering so next-intl's server APIs (getLocale/getMessages)
+// have a valid request context during 404 and other prerendered pages.
+export const dynamic = 'force-dynamic';
+
 export default async function RootLayout({
   children,
 }: Readonly<{

@@ -38,6 +38,7 @@ export function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const t = useTranslations();
   const pathname = usePathname();
+  const safePath = pathname ?? '/';
 
   const navigationItems: NavigationItem[] = [
     {
@@ -59,9 +60,9 @@ export function Navigation() {
 
   const isActiveLink = (href: string) => {
     if (href === '/instructor') {
-      return pathname === href;
+      return safePath === href;
     }
-    return pathname.startsWith(href);
+    return safePath.startsWith(href);
   };
 
   // Determine active section label for mobile title

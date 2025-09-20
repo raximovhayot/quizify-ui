@@ -1,9 +1,10 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+
 import { useEffect } from 'react';
 
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useForm } from 'react-hook-form';
 
 import { useLoginMutation } from '@/components/features/auth/hooks/useAuthMutations';
 import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
@@ -38,7 +39,7 @@ export function useNextAuthSignIn() {
   // NEW users will be redirected by middleware to profile completion
   useEffect(() => {
     if (isAuthenticated && user && user.state !== UserState.NEW) {
-      const redirectTo = searchParams.get('redirect') || '/';
+      const redirectTo = searchParams?.get('redirect') ?? '/';
       router.push(redirectTo);
     }
   }, [isAuthenticated, user, router, searchParams]);

@@ -23,6 +23,8 @@ import {
   AccountCompleteRequest,
   DashboardType,
 } from '@/components/features/profile/types/account';
+import { apiClient } from '@/lib/api';
+import { handleApiResponse } from '@/lib/api-utils';
 
 export type { ProfileCompleteFormData } from '@/components/features/profile/schemas/profile';
 
@@ -53,13 +55,12 @@ export function useProfileComplete() {
     clearFormErrors(form);
 
     try {
-      let accessToken: string;
       let userPhone: string;
+      let tempToken: string | null = null;
 
       // Check if we have a NextAuth session (existing user) or signup token (new user)
       if (session?.accessToken) {
         // Existing user with NextAuth session
-        accessToken = session.accessToken;
         userPhone = session.user.phone;
       } else {
         // New user from signup flow - get token from sessionStorage
@@ -76,8 +77,8 @@ export function useProfileComplete() {
         }
 
         const signupToken = JSON.parse(signupTokenData);
-        accessToken = signupToken.accessToken;
-        userPhone = signupToken.user.phone;
+        tempToken = signupToken.accessToken as string;
+        userPhone = signupToken.user.phone as string;
       }
 
       // Prepare account completion request
@@ -88,8 +89,22 @@ export function useProfileComplete() {
         dashboardType: data.dashboardType,
       };
 
-      // Complete account using AccountService
-      await AccountService.completeAccount(accountCompleteRequest, accessToken);
+      // Temporarily set auth token if needed (signup flow without session)
+      const previousToken = apiClient.getAuthToken();
+      if (tempToken) {
+        apiClient.setAuthToken(tempToken);
+      }
+
+      // Complete account using AccountService (throws on error via handleApiResponse)
+      const completeResp = await AccountService.completeAccount(
+        accountCompleteRequest
+      );
+      handleApiResponse(completeResp);
+
+      // Restore previous token
+      if (tempToken) {
+        apiClient.setAuthToken(previousToken ?? null);
+      }
 
       // Clear the signup token from sessionStorage
       sessionStorage.removeItem('signupToken');

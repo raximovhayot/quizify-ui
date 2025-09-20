@@ -9,7 +9,7 @@ export default function QuizEditModalPage() {
   const router = useRouter();
   const t = useTranslations();
   const params = useParams<{ quizId: string }>();
-  const quizId = Number(params.quizId);
+  const quizId = Number(params?.quizId ?? NaN);
 
   return (
     <Dialog

@@ -1,5 +1,5 @@
 import { CheckCircle2, GraduationCap, Users } from 'lucide-react';
-import { UseFormReturn } from 'react-hook-form';
+import { Path, UseFormReturn } from 'react-hook-form';
 
 import type { ReactNode } from 'react';
 
@@ -92,7 +92,7 @@ export function DefaultDashboardSelection<
     <div className="space-y-4">
       <FormField
         control={form.control}
-        name={'dashboardType' as any}
+        name={'dashboardType' as Path<TFormValues>}
         render={({ field }) => (
           <FormItem>
             <FormLabel>

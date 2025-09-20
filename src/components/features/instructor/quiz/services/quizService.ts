@@ -79,13 +79,13 @@ export class QuizService {
   static async createQuiz(
     data: InstructorQuizCreateRequest,
     accessToken: string
-  ): Promise<QuizDataDTO> {
+  ): Promise<IApiResponse<QuizDataDTO>> {
     const response: IApiResponse<QuizDataDTO> = await apiClient.post(
       '/instructor/quizzes',
       data,
       { token: accessToken }
     );
-    return extractApiData(response);
+    return response;
   }
 
   /**
@@ -101,13 +101,13 @@ export class QuizService {
     quizId: number,
     data: InstructorQuizUpdateRequest,
     accessToken: string
-  ): Promise<QuizDataDTO> {
+  ): Promise<IApiResponse<QuizDataDTO>> {
     const response: IApiResponse<QuizDataDTO> = await apiClient.put(
       `/instructor/quizzes/:id`,
       data,
       { token: accessToken, params: { id: quizId } }
     );
-    return extractApiData(response);
+    return response;
   }
 
   /**

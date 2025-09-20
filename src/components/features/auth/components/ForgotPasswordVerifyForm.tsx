@@ -34,7 +34,7 @@ import { ROUTES_AUTH } from '../routes';
 export function ForgotPasswordVerifyForm() {
   const t = useTranslations();
   const searchParams = useSearchParams();
-  const phoneFromUrl = searchParams.get('phone') || '';
+  const phoneFromUrl = searchParams?.get('phone') ?? '';
 
   const {
     isSubmitting,

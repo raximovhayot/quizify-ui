@@ -12,13 +12,13 @@ export class QuestionService {
   static async createQuestion(
     data: InstructorQuestionSaveRequest,
     accessToken: string
-  ): Promise<QuestionDataDto> {
+  ): Promise<IApiResponse<QuestionDataDto>> {
     const response: IApiResponse<QuestionDataDto> = await apiClient.post(
       '/instructor/questions',
       data,
       { token: accessToken }
     );
-    return extractApiData(response);
+    return response;
   }
 
   static async getQuestions(
