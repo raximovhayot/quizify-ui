@@ -14,6 +14,7 @@ import { ThemeProvider } from 'next-themes';
 
 import { SessionProvider } from '@/components/shared/providers/SessionProvider';
 import { TokenSyncProvider } from '@/components/shared/providers/TokenSyncProvider';
+import { TopLoader } from '@/components/shared/ui/TopLoader';
 import { Toaster } from '@/components/ui/sonner';
 import { env } from '@/env.mjs';
 import { BackendError } from '@/types/api';
@@ -124,6 +125,7 @@ export function Providers({ children, messages, locale }: ProvidersProps) {
         >
           <NextIntlClientProvider messages={messages} locale={locale}>
             <ErrorBoundary>
+              <TopLoader />
               {children}
               <Toaster />
             </ErrorBoundary>

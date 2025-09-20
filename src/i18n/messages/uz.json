@@ -164,6 +164,14 @@
     "ru": "Rus tili",
     "uz": "O'zbek tili"
   },
+  "notifications": {
+    "title": "Bildirishnomalar",
+    "viewAll": "Barcha bildirishnomalarni ko‘rish",
+    "empty": {
+      "title": "Bildirishnomalar yo‘q",
+      "description": ""
+    }
+  },
   "quiz": {
     "form": {
       "editTitle": "Testni tahrirlash",
@@ -402,8 +410,16 @@
       "noInProgress": "Davom etayotgan testlar yo‘q",
       "noUpcoming": "Yaqinlashayotgan testlar yo‘q",
       "joinTitle": "Testga qo‘shilish",
+      "joinLabel": "Kirish kodi",
+      "joinDescription": "O‘qituvchingiz bergan kodni kiriting.",
       "joinPlaceholder": "Kirish kodini kiriting",
-      "joinButton": "Qo‘shilish"
+      "joinButton": "Qo‘shilish",
+      "joinRequired": "Iltimos, kirish kodini kiriting.",
+      "joinInvalid": "To‘g‘ri kodni kiriting (harflar, raqamlar va chiziqchalar).",
+      "joinMinLength": "Kod kamida 4 ta belgidan iborat bo‘lishi kerak."
+    },
+    "join": {
+      "error": "Testga qo‘shilish muvaffaqiyatsiz. Kodni tekshirib, qayta urinib ko‘ring."
     },
     "history": {
       "title": "Urinishlar tarixi",
@@ -416,5 +432,11 @@
         "failed": "Muvaffaqiyatsiz"
       }
     }
+  },
+  "notFound": {
+    "title": "Sahifa topilmadi",
+    "description": "Siz izlayotgan sahifa mavjud emas yoki ko'chirilgan.",
+    "goHome": "Bosh sahifaga o'tish",
+    "goToDashboard": "Panelga o'tish"
   }
 }

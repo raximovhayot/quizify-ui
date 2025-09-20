@@ -5,10 +5,10 @@ import { Header } from '@/components/shared/navigation/Header';
 export function AppPublicOnlyLayout({
   children,
   title,
-}: {
+}: Readonly<{
   children: ReactNode;
   title?: string;
-}) {
+}>) {
   return (
     <div className="min-h-screen bg-background">
       <Header title={title} showUserMenu={false} />

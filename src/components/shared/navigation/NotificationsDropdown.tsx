@@ -4,6 +4,7 @@ import { Bell } from 'lucide-react';
 
 import { useTranslations } from 'next-intl';
 
+import { EmptyNotifications } from '@/components/shared/navigation/EmptyNotifications';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -63,29 +64,35 @@ export function NotificationsDropdown({
         </div>
         <DropdownMenuSeparator />
         <div className="max-h-64 overflow-y-auto">
-          {notifications.map((notification) => (
-            <DropdownMenuItem
-              key={notification.id}
-              className="flex-col items-start p-3"
-            >
-              <div className="flex w-full items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium">{notification.title}</p>
-                    {notification.unread && (
-                      <div className="h-2 w-2 rounded-full bg-blue-500" />
-                    )}
+          {notifications.length === 0 ? (
+            <EmptyNotifications />
+          ) : (
+            notifications.map((notification) => (
+              <DropdownMenuItem
+                key={notification.id}
+                className="flex-col items-start p-3"
+              >
+                <div className="flex w-full items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-medium">
+                        {notification.title}
+                      </p>
+                      {notification.unread && (
+                        <div className="h-2 w-2 rounded-full bg-blue-500" />
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {notification.message}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {notification.time}
+                    </p>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {notification.message}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {notification.time}
-                  </p>
                 </div>
-              </div>
-            </DropdownMenuItem>
-          ))}
+              </DropdownMenuItem>
+            ))
+          )}
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="justify-center">

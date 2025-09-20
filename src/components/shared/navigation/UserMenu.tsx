@@ -110,11 +110,6 @@ export function UserMenu({
               </span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer">
-            <span>
-              {t(`${ns}.userMenu.settings`, { fallback: 'Settings' })}
-            </span>
-          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>

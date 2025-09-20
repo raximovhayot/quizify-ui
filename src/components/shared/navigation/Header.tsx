@@ -24,11 +24,14 @@ interface HeaderProps {
   showUserMenu?: boolean;
 }
 
-export function Header({ title: _title, showUserMenu = true }: Readonly<HeaderProps>) {
+export function Header({
+  title: _title,
+  showUserMenu = true,
+}: Readonly<HeaderProps>) {
   const t = useTranslations();
   const { user, logout, isAuthenticated } = useNextAuth();
   const router = useRouter();
-  const { isMobile, isTablet } = useResponsive();
+  const { isMobile } = useResponsive();
 
   const handleLogout = async () => {
     try {
@@ -52,10 +55,10 @@ export function Header({ title: _title, showUserMenu = true }: Readonly<HeaderPr
           className={`flex items-center ${isMobile ? 'space-x-1' : 'space-x-2'}`}
         >
           {/* Theme Selector */}
-          <ThemeSwitcher variant="compact" />
+          <ThemeSwitcher variant={isMobile ? 'icon-only' : 'compact'} />
 
-          {/* Language Selector - Hide on mobile for space */}
-          {!isMobile && <LanguageSwitcher variant="compact" />}
+          {/* Language Selector */}
+          <LanguageSwitcher variant={isMobile ? 'icon-only' : 'compact'} />
 
           {/* User Menu */}
           {showUserMenu && isAuthenticated && user && (

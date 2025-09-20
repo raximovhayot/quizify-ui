@@ -1,9 +1,10 @@
-import { GraduationCap, Users } from 'lucide-react';
+import { CheckCircle2, GraduationCap, Users } from 'lucide-react';
 import { UseFormReturn } from 'react-hook-form';
+
+import type { ReactNode } from 'react';
 
 import { useTranslations } from 'next-intl';
 
-import { ProfileCompleteFormData } from '@/components/features/profile/hooks/useProfileComplete';
 import { DashboardType } from '@/components/features/profile/types/account';
 import {
   Card,
@@ -21,28 +22,77 @@ import {
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
-interface RoleSelectionSectionProps {
-  form: UseFormReturn<ProfileCompleteFormData>;
+interface DefaultDashboardSelectionProps<
+  TFormValues extends { dashboardType: DashboardType },
+> {
+  form: UseFormReturn<TFormValues>;
   isSubmitting: boolean;
 }
 
-export function DefaultDashboardSelection({
+// Generic inline option used by both Student and Instructor
+interface OptionItemProps {
+  id: string;
+  value: DashboardType;
+  icon: ReactNode;
+  title: string;
+  description: string;
+  disabled?: boolean;
+}
+
+function OptionItem({
+  id,
+  value,
+  icon,
+  title,
+  description,
+  disabled,
+}: Readonly<OptionItemProps>) {
+  return (
+    <div>
+      <RadioGroupItem
+        value={String(value)}
+        id={id}
+        className="peer sr-only"
+        disabled={disabled}
+      />
+      <Label
+        htmlFor={id}
+        className="group relative w-full flex cursor-pointer rounded-xl border border-border p-[2px] transition-all hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 peer-data-[state=checked]:border-transparent peer-data-[state=checked]:bg-gradient-to-tr peer-data-[state=checked]:from-primary/60 peer-data-[state=checked]:to-primary/30 peer-data-[state=checked]:shadow-xl peer-data-[state=checked]:scale-[1.01]"
+      >
+        <div className="absolute right-2 top-2 opacity-0 transition-opacity peer-data-[state=checked]:opacity-100 text-primary">
+          <CheckCircle2 className="w-5 h-5" aria-hidden="true" />
+        </div>
+        <Card className="w-full rounded-[10px] bg-background border-0 shadow-none">
+          <CardHeader className="flex flex-row items-center space-y-0 pb-2">
+            <div className="mr-3 flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-muted-foreground transition-colors peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground">
+              {icon}
+            </div>
+            <div>
+              <CardTitle className="text-base">{title}</CardTitle>
+              <CardDescription className="text-sm">
+                {description}
+              </CardDescription>
+            </div>
+          </CardHeader>
+        </Card>
+      </Label>
+    </div>
+  );
+}
+
+export function DefaultDashboardSelection<
+  TFormValues extends { dashboardType: DashboardType },
+>({
   form,
   isSubmitting,
-}: Readonly<RoleSelectionSectionProps>) {
+}: Readonly<DefaultDashboardSelectionProps<TFormValues>>) {
   const t = useTranslations();
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium">
-        {t('auth.profileComplete.role', {
-          default: 'Select your default dashboard',
-        })}
-      </h3>
-
       <FormField
         control={form.control}
-        name="dashboardType"
+        name={'dashboardType' as any}
         render={({ field }) => (
           <FormItem>
             <FormLabel>
@@ -53,65 +103,37 @@ export function DefaultDashboardSelection({
             <FormControl>
               <RadioGroup
                 onValueChange={(value) =>
-                  field.onChange(value as unknown as DashboardType)
+                  field.onChange(Number(value) as DashboardType)
                 }
-                value={field.value as unknown as string}
-                className="grid grid-cols-1 gap-4"
+                value={String(field.value ?? '')}
+                className="grid grid-cols-1 md:grid-cols-2 gap-4"
                 disabled={isSubmitting}
               >
-                <div>
-                  <RadioGroupItem
-                    value={DashboardType.STUDENT as unknown as string}
-                    id="student"
-                    className="peer sr-only"
-                  />
-                  <Label htmlFor="student" className="flex cursor-pointer">
-                    <Card className="w-full transition-colors hover:bg-accent peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5">
-                      <CardHeader className="flex flex-row items-center space-y-0 pb-2">
-                        <GraduationCap className="w-6 h-6 mr-3 text-primary" />
-                        <div>
-                          <CardTitle className="text-base">
-                            {t('auth.dashboardType.student', {
-                              default: 'Student',
-                            })}
-                          </CardTitle>
-                          <CardDescription className="text-sm">
-                            {t('auth.profileComplete.studentDescription', {
-                              default: 'Take quiz and track your progress',
-                            })}
-                          </CardDescription>
-                        </div>
-                      </CardHeader>
-                    </Card>
-                  </Label>
-                </div>
+                <OptionItem
+                  id="student"
+                  value={DashboardType.STUDENT}
+                  icon={<GraduationCap className="w-5 h-5" />}
+                  title={t('auth.dashboardType.student', {
+                    default: 'Student',
+                  })}
+                  description={t('auth.profileComplete.studentDescription', {
+                    default: 'Take quiz and track your progress',
+                  })}
+                  disabled={isSubmitting}
+                />
 
-                <div>
-                  <RadioGroupItem
-                    value={DashboardType.INSTRUCTOR as unknown as string}
-                    id="instructor"
-                    className="peer sr-only"
-                  />
-                  <Label htmlFor="instructor" className="flex cursor-pointer">
-                    <Card className="w-full transition-colors hover:bg-accent peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5">
-                      <CardHeader className="flex flex-row items-center space-y-0 pb-2">
-                        <Users className="w-6 h-6 mr-3 text-primary" />
-                        <div>
-                          <CardTitle className="text-base">
-                            {t('auth.dashboardType.instructor', {
-                              default: 'Instructor',
-                            })}
-                          </CardTitle>
-                          <CardDescription className="text-sm">
-                            {t('auth.profileComplete.instructorDescription', {
-                              default: 'Create quiz and manage assignments',
-                            })}
-                          </CardDescription>
-                        </div>
-                      </CardHeader>
-                    </Card>
-                  </Label>
-                </div>
+                <OptionItem
+                  id="instructor"
+                  value={DashboardType.INSTRUCTOR}
+                  icon={<Users className="w-5 h-5" />}
+                  title={t('auth.dashboardType.instructor', {
+                    default: 'Instructor',
+                  })}
+                  description={t('auth.profileComplete.instructorDescription', {
+                    default: 'Create quiz and manage assignments',
+                  })}
+                  disabled={isSubmitting}
+                />
               </RadioGroup>
             </FormControl>
             <FormMessage />

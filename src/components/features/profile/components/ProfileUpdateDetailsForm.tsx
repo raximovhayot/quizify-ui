@@ -8,6 +8,7 @@ import React from 'react';
 
 import { useTranslations } from 'next-intl';
 
+import { DefaultDashboardSelection } from '@/components/features/profile/components/DefaultDashboardSelection';
 import { useProfile } from '@/components/features/profile/hooks/useProfile';
 import { useUpdateProfile } from '@/components/features/profile/hooks/useUpdateProfile';
 import { profileDetailsUpdateSchema } from '@/components/features/profile/schemas/profile';
@@ -147,41 +148,9 @@ export function ProfileUpdateDetailsForm() {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="dashboardType"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    {t('auth.dashboardType.label', {
-                      fallback: 'Default Dashboard Selection',
-                    })}
-                  </FormLabel>
-                  <FormControl>
-                    <Select
-                      value={String(field.value)}
-                      onValueChange={(val) => field.onChange(Number(val))}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value={String(DashboardType.STUDENT)}>
-                          {t('auth.dashboardType.student', {
-                            fallback: 'Student',
-                          })}
-                        </SelectItem>
-                        <SelectItem value={String(DashboardType.INSTRUCTOR)}>
-                          {t('auth.dashboardType.instructor', {
-                            fallback: 'Instructor',
-                          })}
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+            <DefaultDashboardSelection
+              form={form}
+              isSubmitting={updateProfile.isPending || isLoading}
             />
 
             <SubmitButton

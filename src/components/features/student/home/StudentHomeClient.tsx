@@ -1,9 +1,10 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
-
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
@@ -14,14 +15,52 @@ import { StudentQuizService } from '@/components/features/student/quiz/services/
 import { ROUTES_APP } from '@/components/features/student/routes';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 
 export function StudentHomeClient() {
   const t = useTranslations();
   const router = useRouter();
   const { data: session } = useSession();
-  const [code, setCode] = useState('');
-  const [joining, setJoining] = useState(false);
+
+  const joinSchema = z.object({
+    code: z
+      .string()
+      .trim()
+      .min(
+        1,
+        t('student.home.joinRequired', {
+          fallback: 'Please enter a join code.',
+        })
+      )
+      .min(
+        4,
+        t('student.home.joinMinLength', {
+          fallback: 'Code should be at least 4 characters.',
+        })
+      )
+      .max(64)
+      .regex(
+        /^[A-Za-z0-9-]+$/,
+        t('student.home.joinInvalid', {
+          fallback: 'Enter a valid code (letters, numbers, dashes).',
+        })
+      ),
+  });
+
+  const form = useForm<z.infer<typeof joinSchema>>({
+    resolver: zodResolver(joinSchema),
+    defaultValues: { code: '' },
+    mode: 'onSubmit',
+  });
 
   const upcomingQuery = useQuery({
     queryKey: ['student', 'quizzes', 'upcoming'],
@@ -63,12 +102,12 @@ export function StudentHomeClient() {
     staleTime: 30_000,
   });
 
-  async function handleJoin() {
-    if (!code.trim()) return;
+  async function onSubmit(values: z.infer<typeof joinSchema>) {
+    const code = values.code.trim();
+    if (!code) return;
     try {
-      setJoining(true);
       const resp = await StudentQuizService.joinWithCode(
-        code.trim(),
+        code,
         session?.accessToken
       );
       let quizId: number | undefined;
@@ -81,13 +120,12 @@ export function StudentHomeClient() {
       router.push(`${ROUTES_APP.baseUrl()}/quizzes/${quizId}`);
     } catch (e) {
       console.error('Join failed', e);
-      alert(
-        t('student.join.error', {
+      form.setError('code', {
+        type: 'server',
+        message: t('student.join.error', {
           fallback: 'Failed to join quiz. Check the code and try again.',
-        })
-      );
-    } finally {
-      setJoining(false);
+        }),
+      });
     }
   }
 
@@ -104,28 +142,48 @@ export function StudentHomeClient() {
           </div>
         </CardHeader>
         <CardContent data-slot="card-content">
-          <div className="flex items-center gap-1 max-w-sm">
-            <Input
-              className="h-8 text-sm"
-              placeholder={t('student.home.joinPlaceholder', {
-                fallback: 'Enter join code',
-              })}
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') handleJoin();
-              }}
-            />
-            <Button
-              size="sm"
-              onClick={handleJoin}
-              disabled={joining || !code.trim()}
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="max-w-sm flex items-end gap-2"
             >
-              {joining
-                ? t('common.pleaseWait', { fallback: 'Please wait...' })
-                : t('student.home.joinButton', { fallback: 'Join' })}
-            </Button>
-          </div>
+              <FormField
+                control={form.control}
+                name="code"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>
+                      {t('student.home.joinLabel', { fallback: 'Join code' })}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        className="h-9 text-sm"
+                        placeholder={t('student.home.joinPlaceholder', {
+                          fallback: 'Enter join code',
+                        })}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      {t('student.home.joinDescription', {
+                        fallback: 'Enter the code provided by your instructor.',
+                      })}
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="submit"
+                size="sm"
+                disabled={form.formState.isSubmitting}
+              >
+                {form.formState.isSubmitting
+                  ? t('common.pleaseWait', { fallback: 'Please wait...' })
+                  : t('student.home.joinButton', { fallback: 'Join' })}
+              </Button>
+            </form>
+          </Form>
         </CardContent>
       </Card>
 

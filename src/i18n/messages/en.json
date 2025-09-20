@@ -163,6 +163,14 @@
     "ru": "Russian",
     "uz": "Uzbek"
   },
+  "notifications": {
+    "title": "Notifications",
+    "viewAll": "View all notifications",
+    "empty": {
+      "title": "No notifications",
+      "description": ""
+    }
+  },
   "quiz": {
     "form": {
       "editTitle": "Edit Quiz",
@@ -400,8 +408,16 @@
       "noInProgress": "No in-progress quizzes",
       "noUpcoming": "No upcoming quizzes",
       "joinTitle": "Join a quiz",
+      "joinLabel": "Join code",
+      "joinDescription": "Enter the code provided by your instructor.",
       "joinPlaceholder": "Enter join code",
-      "joinButton": "Join"
+      "joinButton": "Join",
+      "joinRequired": "Please enter a join code.",
+      "joinInvalid": "Enter a valid code (letters, numbers, and dashes).",
+      "joinMinLength": "Code should be at least 4 characters."
+    },
+    "join": {
+      "error": "Failed to join quiz. Check the code and try again."
     },
     "history": {
       "title": "Attempt history",
@@ -414,5 +430,11 @@
         "failed": "Failed"
       }
     }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you’re looking for doesn’t exist or has been moved.",
+    "goHome": "Go to Home",
+    "goToDashboard": "Go to Dashboard"
   }
 }
