@@ -49,9 +49,20 @@ class ApiClient {
   private readonly requestInterceptors: RequestInterceptor[] = [];
   private readonly responseInterceptors: ResponseInterceptor[] = [];
   private readonly defaultTimeout = 30000;
+  private authToken?: string;
 
   constructor(baseUrl: string = env.NEXT_PUBLIC_API_BASE_URL) {
     this.baseUrl = baseUrl;
+  }
+
+  /** Set or clear the current auth token used for requests */
+  setAuthToken(token: string | null | undefined) {
+    this.authToken = token || undefined;
+  }
+
+  /** Get the current auth token (if set) */
+  getAuthToken(): string | undefined {
+    return this.authToken;
   }
 
   // =============================================================================
@@ -305,6 +316,224 @@ class ApiClient {
   }
 
   // =============================================================================
+  // PROGRESS-AWARE METHODS
+  // =============================================================================
+
+  async downloadWithProgress(
+    endpoint: string,
+    options?: {
+      token?: string;
+      params?: Record<string, string | number>;
+      query?: Record<string, unknown>;
+      headers?: Record<string, string>;
+      timeout?: number;
+      signal?: AbortSignal;
+      credentials?: RequestCredentials;
+      onProgress?: (info: {
+        receivedBytes: number;
+        totalBytes: number | null;
+        percent: number | null;
+      }) => void;
+    }
+  ): Promise<IApiResponse<Blob>> {
+    const {
+      token,
+      params,
+      query,
+      headers = {},
+      timeout = this.defaultTimeout,
+      signal,
+      credentials,
+      onProgress,
+    } = options || {};
+
+    const url = this.buildCompleteUrl(endpoint, { params, query });
+    const requestHeaders = this.buildHeaders(headers, undefined, token);
+
+    const timeoutCtrl = this.createTimeoutController(timeout);
+    const cleanup = this.setupSignalHandling(signal, timeoutCtrl);
+
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: requestHeaders,
+        credentials,
+        signal: timeoutCtrl.controller.signal,
+      });
+
+      if (!response.ok) {
+        return this.handleHttpError<Blob>(response);
+      }
+
+      const totalBytesHeader = response.headers.get('content-length');
+      const totalBytes = totalBytesHeader
+        ? parseInt(totalBytesHeader, 10)
+        : null;
+
+      if (!response.body) {
+        const blob = await response.blob();
+        return { data: blob, errors: [] };
+      }
+
+      const reader = response.body.getReader();
+      const chunks: Uint8Array[] = [];
+      let receivedBytes = 0;
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        if (value) {
+          chunks.push(value);
+          receivedBytes += value.length;
+          if (onProgress) {
+            onProgress({
+              receivedBytes,
+              totalBytes,
+              percent: totalBytes
+                ? Math.round((receivedBytes / totalBytes) * 100)
+                : null,
+            });
+          }
+        }
+      }
+
+      const blob = new Blob(chunks as unknown as BlobPart[]);
+      return { data: blob, errors: [] };
+    } catch (error) {
+      return this.handleRequestError<Blob>(error, timeoutCtrl);
+    } finally {
+      this.cleanupRequest(timeoutCtrl.timerId, cleanup);
+    }
+  }
+
+  async uploadWithProgress<T = unknown>(
+    endpoint: string,
+    body: FormData | Blob | File | ArrayBuffer | Uint8Array | string,
+    options?: {
+      method?: 'POST' | 'PUT' | 'PATCH';
+      token?: string;
+      params?: Record<string, string | number>;
+      query?: Record<string, unknown>;
+      headers?: Record<string, string>;
+      timeout?: number;
+      signal?: AbortSignal;
+      onProgress?: (info: {
+        loaded: number;
+        total: number | null;
+        percent: number | null;
+      }) => void;
+    }
+  ): Promise<IApiResponse<T>> {
+    const {
+      method = 'POST',
+      token,
+      params,
+      query,
+      headers = {},
+      timeout = this.defaultTimeout,
+      signal,
+      onProgress,
+    } = options || {};
+
+    const url = this.buildCompleteUrl(endpoint, { params, query });
+
+    // Build headers (will include Authorization)
+    // Avoid setting Content-Type for FormData
+    const builtHeaders = this.buildHeaders(
+      headers,
+      body instanceof FormData ? body : undefined,
+      token
+    );
+
+    return new Promise<IApiResponse<T>>((resolve) => {
+      const xhr = new XMLHttpRequest();
+      const timer = setTimeout(() => {
+        xhr.abort();
+      }, timeout);
+
+      if (signal) {
+        if (signal.aborted) {
+          clearTimeout(timer);
+          resolve({
+            data: null as T,
+            errors: [{ code: 'CANCELED', message: 'Request canceled' }],
+          });
+          return;
+        }
+        const onAbort = () => xhr.abort();
+        signal.addEventListener('abort', onAbort, { once: true });
+      }
+
+      xhr.open(method, url, true);
+
+      Object.entries(builtHeaders).forEach(([key, value]) => {
+        try {
+          xhr.setRequestHeader(key, value);
+        } catch {}
+      });
+
+      xhr.upload.onprogress = (evt) => {
+        if (!onProgress) return;
+        const total = evt.lengthComputable ? evt.total : null;
+        const percent = total ? Math.round((evt.loaded / total) * 100) : null;
+        onProgress({ loaded: evt.loaded, total, percent });
+      };
+
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          clearTimeout(timer);
+          const contentType = xhr.getResponseHeader('content-type') || '';
+          const status = xhr.status;
+
+          if (status >= 200 && status < 300) {
+            if (contentType.includes('application/json')) {
+              try {
+                const json = JSON.parse(xhr.responseText) as IApiResponse<T>;
+                resolve(json);
+                return;
+              } catch {}
+            }
+            resolve({ data: null as T, errors: [] });
+          } else {
+            const message =
+              xhr.responseText || xhr.statusText || 'Upload failed';
+            resolve({
+              data: null as T,
+              errors: [{ code: `HTTP_${status}`, message }],
+            });
+          }
+        }
+      };
+
+      xhr.onerror = () => {
+        clearTimeout(timer);
+        resolve({
+          data: null as T,
+          errors: [
+            { code: 'NETWORK_ERROR', message: 'Network request failed' },
+          ],
+        });
+      };
+
+      // Send body
+      if (body instanceof FormData) {
+        xhr.send(body);
+      } else if (typeof body === 'string') {
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(body);
+      } else if (body instanceof Blob) {
+        xhr.send(body);
+      } else if (body instanceof ArrayBuffer || body instanceof Uint8Array) {
+        xhr.send(body as any);
+      } else {
+        // Fallback: stringify
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify(body));
+      }
+    });
+  }
+
+  // =============================================================================
   // PRIVATE HELPER METHODS
   // =============================================================================
 
@@ -349,8 +578,12 @@ class ApiClient {
       requestHeaders['Content-Type'] = 'application/json';
     }
 
+    // Prefer explicit token passed to the request
     if (token) {
       requestHeaders.Authorization = `Bearer ${token}`;
+    } else if (!requestHeaders.Authorization && this.authToken) {
+      // Fallback to stored auth token (set via setAuthToken)
+      requestHeaders.Authorization = `Bearer ${this.authToken}`;
     }
 
     return requestHeaders;

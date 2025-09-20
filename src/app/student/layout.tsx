@@ -8,9 +8,9 @@ import { StudentHeader } from '@/components/features/student/header/StudentHeade
 
 export default function StudentLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <GuardAuthenticated
       requiredRoles={[UserRole.STUDENT]}

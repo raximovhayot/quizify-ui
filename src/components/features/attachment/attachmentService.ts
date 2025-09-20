@@ -71,8 +71,8 @@ export class AttachmentService {
     accessToken: string
   ): Promise<void> {
     const response: IApiResponse<void> = await apiClient.delete(
-      `/instructor/attachments/${attachmentId}`,
-      accessToken
+      `/instructor/attachments/:id`,
+      { token: accessToken, params: { id: attachmentId } }
     );
     extractApiData(response);
   }

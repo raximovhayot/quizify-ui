@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-
 import { Check, Monitor, Moon, Sun } from 'lucide-react';
+
+import React, { useState } from 'react';
+
 import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
 
@@ -11,6 +12,10 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
@@ -40,14 +45,14 @@ const themes: Theme[] = [
 ];
 
 interface ThemeSwitcherProps {
-  variant?: 'default' | 'compact' | 'icon-only';
+  variant?: 'default' | 'compact' | 'icon-only' | 'sub-menu';
   className?: string;
 }
 
 export function ThemeSwitcher({
   variant = 'default',
   className,
-}: ThemeSwitcherProps) {
+}: Readonly<ThemeSwitcherProps>) {
   const t = useTranslations();
   const { theme, setTheme } = useTheme();
   const [isChanging, setIsChanging] = useState(false);
@@ -69,9 +74,46 @@ export function ThemeSwitcher({
     }
   };
 
+  if (variant === 'sub-menu') {
+    const IconComponent = currentTheme?.icon || Monitor;
+    return (
+      <DropdownMenuSub>
+        <DropdownMenuSubTrigger className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <IconComponent className="h-4 w-4" />
+            <span>{t(currentTheme?.translationKey || 'theme.system')}</span>
+          </div>
+        </DropdownMenuSubTrigger>
+        <DropdownMenuPortal>
+          <DropdownMenuSubContent className="w-48">
+            {themes.map((themeOption) => {
+              const OptionIcon = themeOption.icon;
+              return (
+                <DropdownMenuItem
+                  key={themeOption.value}
+                  onClick={() => handleThemeChange(themeOption.value)}
+                  className="flex items-center justify-between cursor-pointer"
+                  disabled={isChanging}
+                >
+                  <div className="flex items-center space-x-2">
+                    <OptionIcon className="h-4 w-4" />
+                    <span>{t(themeOption.translationKey)}</span>
+                  </div>
+                  {themeOption.value === theme && (
+                    <Check className="h-4 w-4 text-primary" />
+                  )}
+                </DropdownMenuItem>
+              );
+            })}
+          </DropdownMenuSubContent>
+        </DropdownMenuPortal>
+      </DropdownMenuSub>
+    );
+  }
+
   if (variant === 'icon-only') {
     const IconComponent = currentTheme?.icon || Monitor;
-    
+
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -112,7 +154,7 @@ export function ThemeSwitcher({
 
   if (variant === 'compact') {
     const IconComponent = currentTheme?.icon || Monitor;
-    
+
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -156,7 +198,7 @@ export function ThemeSwitcher({
 
   // Default variant
   const IconComponent = currentTheme?.icon || Monitor;
-  
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

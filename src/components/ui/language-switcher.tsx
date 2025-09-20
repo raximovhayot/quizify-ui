@@ -11,6 +11,10 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
@@ -44,14 +48,14 @@ const languages: Language[] = [
 ];
 
 interface LanguageSwitcherProps {
-  variant?: 'default' | 'compact' | 'icon-only';
+  variant?: 'default' | 'compact' | 'icon-only' | 'sub-menu';
   className?: string;
 }
 
 export function LanguageSwitcher({
   variant = 'default',
   className,
-}: LanguageSwitcherProps) {
+}: Readonly<LanguageSwitcherProps>) {
   const currentLocale = useLocale();
   const [isChanging, setIsChanging] = useState(false);
 
@@ -78,6 +82,39 @@ export function LanguageSwitcher({
       setIsChanging(false);
     }
   };
+
+  if (variant === 'sub-menu') {
+    return (
+      <DropdownMenuSub>
+        <DropdownMenuSubTrigger className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-sm">{currentLanguage.flag}</span>
+            <span>{currentLanguage.nativeName}</span>
+          </div>
+        </DropdownMenuSubTrigger>
+        <DropdownMenuPortal>
+          <DropdownMenuSubContent className="w-48">
+            {languages.map((language) => (
+              <DropdownMenuItem
+                key={language.code}
+                onClick={() => handleLanguageChange(language.code)}
+                className="flex items-center justify-between cursor-pointer"
+                disabled={isChanging}
+              >
+                <div className="flex items-center space-x-2">
+                  <span className="text-lg">{language.flag}</span>
+                  <span>{language.nativeName}</span>
+                </div>
+                {language.code === currentLocale && (
+                  <Check className="h-4 w-4 text-primary" />
+                )}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuSubContent>
+        </DropdownMenuPortal>
+      </DropdownMenuSub>
+    );
+  }
 
   if (variant === 'icon-only') {
     return (

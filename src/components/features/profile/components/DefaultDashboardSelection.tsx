@@ -29,13 +29,15 @@ interface RoleSelectionSectionProps {
 export function DefaultDashboardSelection({
   form,
   isSubmitting,
-}: RoleSelectionSectionProps) {
+}: Readonly<RoleSelectionSectionProps>) {
   const t = useTranslations();
 
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-medium">
-        {t('auth.profileComplete.role', { default: 'Your Role' })}
+        {t('auth.profileComplete.role', {
+          default: 'Select your default dashboard',
+        })}
       </h3>
 
       <FormField

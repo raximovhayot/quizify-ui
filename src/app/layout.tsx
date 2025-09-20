@@ -19,16 +19,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Quizify',
   description: 'Learning Management System with role-based access control',
-  manifest: '/manifest.json',
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'default',
-    title: 'Quizify',
-  },
-  icons: {
-    icon: '/icon-192x192.png',
-    apple: '/icon-192x192.png',
-  },
 };
 
 export const viewport: Viewport = {

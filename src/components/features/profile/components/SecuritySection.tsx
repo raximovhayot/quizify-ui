@@ -1,5 +1,6 @@
-import { useTranslations } from 'next-intl';
 import { UseFormReturn } from 'react-hook-form';
+
+import { useTranslations } from 'next-intl';
 
 import { ProfileCompleteFormData } from '@/components/features/profile/hooks/useProfileComplete';
 import {
@@ -16,7 +17,10 @@ interface SecuritySectionProps {
   isSubmitting: boolean;
 }
 
-export function SecuritySection({ form, isSubmitting }: SecuritySectionProps) {
+export function SecuritySection({
+  form,
+  isSubmitting,
+}: Readonly<SecuritySectionProps>) {
   const t = useTranslations();
 
   return (

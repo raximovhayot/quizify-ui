@@ -1,5 +1,3 @@
-'use client';
-
 import { useTranslations } from 'next-intl';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -33,7 +31,10 @@ interface StudentUserMenuProps {
   onLogout: () => void;
 }
 
-export function StudentUserMenu({ user, onLogout }: StudentUserMenuProps) {
+export function StudentUserMenu({
+  user,
+  onLogout,
+}: Readonly<StudentUserMenuProps>) {
   const t = useTranslations();
 
   return (

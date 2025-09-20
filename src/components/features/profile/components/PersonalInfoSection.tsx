@@ -1,5 +1,6 @@
-import { useTranslations } from 'next-intl';
 import { UseFormReturn } from 'react-hook-form';
+
+import { useTranslations } from 'next-intl';
 
 import { ProfileCompleteFormData } from '@/components/features/profile/hooks/useProfileComplete';
 import {
@@ -19,17 +20,11 @@ interface PersonalInfoSectionProps {
 export function PersonalInfoSection({
   form,
   isSubmitting,
-}: PersonalInfoSectionProps) {
+}: Readonly<PersonalInfoSectionProps>) {
   const t = useTranslations();
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium">
-        {t('auth.profileComplete.personalInfo', {
-          default: 'Personal Information',
-        })}
-      </h3>
-
       <FormField
         control={form.control}
         name="firstName"

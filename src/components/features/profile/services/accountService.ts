@@ -31,6 +31,45 @@ export class AccountService {
   }
 
   /**
+   * Update current user's profile details
+   */
+  static async updateProfile(
+    data: Partial<AccountDTO>,
+    accessToken: string
+  ): Promise<AccountDTO> {
+    const response: IApiResponse<AccountDTO> = await apiClient.put(
+      '/account/profile',
+      data,
+      { token: accessToken }
+    );
+    return extractApiData(response);
+  }
+
+  /**
+   * Upload or change user's avatar image
+   * Returns updated AccountDTO on success
+   */
+  static async uploadAvatar(
+    file: File,
+    accessToken: string,
+    onProgress?: (info: {
+      loaded: number;
+      total: number | null;
+      percent: number | null;
+    }) => void
+  ): Promise<AccountDTO> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await apiClient.uploadWithProgress<AccountDTO>(
+      '/account/avatar',
+      formData,
+      { token: accessToken, onProgress }
+    );
+    return extractApiData(response);
+  }
+
+  /**
    * Complete user account setup with profile information
    *
    * This method is used to finalize account creation by providing

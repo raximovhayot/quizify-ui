@@ -7,8 +7,7 @@ import { useTranslations } from 'next-intl';
 import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
 import { AppHeader } from '@/components/shared/navigation/AppHeader';
 import { TNavigationItem } from '@/components/shared/navigation/AppNavigation';
-
-import { StudentUserMenu } from './StudentUserMenu';
+import { UserMenu } from '@/components/shared/navigation/UserMenu';
 
 interface StudentHeaderProps {
   title?: string;
@@ -45,7 +44,11 @@ export function StudentHeader({ title: _title }: Readonly<StudentHeaderProps>) {
       navItems={navItems}
       mobileTitle={mobileTitle}
       toggleMenuLabel={toggleMenuLabel}
-      userMenu={user ? <StudentUserMenu user={user} onLogout={logout} /> : null}
+      userMenu={
+        user ? (
+          <UserMenu user={user} onLogout={logout} i18nNamespace="student" />
+        ) : null
+      }
     />
   );
 }

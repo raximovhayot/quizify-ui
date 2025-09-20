@@ -21,9 +21,10 @@ import {
 } from '@/components/features/profile/types/account';
 
 // Types for helper functions
-interface TranslationFunction {
-  (key: string, options?: { default?: string }): string;
-}
+type TranslationFunction = (
+  key: string,
+  options?: { default?: string }
+) => string;
 
 // Profile completion form schema
 const createProfileCompleteSchema = (t: TranslationFunction) =>

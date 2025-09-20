@@ -7,42 +7,18 @@ import {
 } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 
 import { AbstractIntlMessages, NextIntlClientProvider } from 'next-intl';
 import { ThemeProvider } from 'next-themes';
 
-import { usePWA } from '@/components/shared/hooks/usePWA';
 import { SessionProvider } from '@/components/shared/providers/SessionProvider';
+import { TokenSyncProvider } from '@/components/shared/providers/TokenSyncProvider';
 import { Toaster } from '@/components/ui/sonner';
 import { env } from '@/env.mjs';
 import { BackendError } from '@/types/api';
 
 import { ErrorBoundary } from './ErrorBoundary';
-
-// PWA Manager component
-function PWAManager() {
-  const { isInstallable, isOnline, installPWA } = usePWA();
-
-  // Register services worker
-  useEffect(() => {
-    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/sw.js')
-        .then((registration) => {
-          console.log('SW registered: ', registration);
-        })
-        .catch((registrationError) => {
-          console.log('SW registration failed: ', registrationError);
-        });
-    }
-  }, []);
-
-  // Optional: You could show an install prompt here
-  // For now, just making PWA functionality available
-
-  return null; // This component just manages PWA state
-}
 
 interface ProvidersProps {
   children: ReactNode;
@@ -138,6 +114,7 @@ export function Providers({ children, messages, locale }: ProvidersProps) {
 
   return (
     <SessionProvider>
+      <TokenSyncProvider />
       <QueryClientProvider client={queryClient}>
         <ThemeProvider
           attribute="class"
@@ -147,7 +124,6 @@ export function Providers({ children, messages, locale }: ProvidersProps) {
         >
           <NextIntlClientProvider messages={messages} locale={locale}>
             <ErrorBoundary>
-              <PWAManager />
               {children}
               <Toaster />
             </ErrorBoundary>

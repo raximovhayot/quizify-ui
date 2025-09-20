@@ -1,7 +1,6 @@
-'use client';
+import { UseFormReturn } from 'react-hook-form';
 
 import { useTranslations } from 'next-intl';
-import { UseFormReturn } from 'react-hook-form';
 
 import { ProfileCompleteFormData } from '@/components/features/profile/hooks/useProfileComplete';
 import { Button } from '@/components/ui/button';
@@ -28,7 +27,7 @@ export function ProfileCompleteForm({
   form,
   isSubmitting,
   onSubmit,
-}: ProfileCompleteFormProps) {
+}: Readonly<ProfileCompleteFormProps>) {
   const t = useTranslations();
 
   return (
