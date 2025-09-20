@@ -1,19 +1,13 @@
-/**
- * Base API configuration
- */
 import { env } from '@/env.mjs';
 import { IApiError, IApiResponse } from '@/types/api';
 
-const API_BASE_URL = env.NEXT_PUBLIC_API_BASE_URL;
+// =============================================================================
+// TYPES & INTERFACES
+// =============================================================================
 
-/**
- * HTTP methods supported by the API client
- */
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+type ParseMode = 'json' | 'blob' | 'text' | 'auto';
 
-/**
- * API request options
- */
 interface ApiRequestOptions {
   method?: HttpMethod;
   headers?: Record<string, string>;
@@ -22,102 +16,299 @@ interface ApiRequestOptions {
   timeout?: number;
   signal?: AbortSignal;
   credentials?: RequestCredentials;
-  parseAs?: 'json' | 'blob' | 'text' | 'auto';
+  parseAs?: ParseMode;
+  // URL building options
+  params?: Record<string, string | number>;
+  query?: Record<string, unknown>;
 }
 
-/**
- * Request interceptor function type
- */
-type RequestInterceptor = (config: {
+interface RequestContext {
   url: string;
   options: RequestInit;
-}) =>
-  | Promise<{ url: string; options: RequestInit }>
-  | { url: string; options: RequestInit };
+}
 
-/**
- * Response interceptor function type
- */
+type RequestInterceptor = (
+  context: RequestContext
+) => Promise<RequestContext> | RequestContext;
 type ResponseInterceptor = <T>(
   response: IApiResponse<T>
 ) => Promise<IApiResponse<T>> | IApiResponse<T>;
 
-/**
- * API client class for making requests to the backend
- */
+interface TimeoutController {
+  controller: AbortController;
+  timerId: ReturnType<typeof setTimeout>;
+  wasTimedOut: () => boolean;
+}
+
+// =============================================================================
+// API CLIENT CLASS
+// =============================================================================
+
 class ApiClient {
   private readonly baseUrl: string;
-  private requestInterceptors: RequestInterceptor[] = [];
-  private responseInterceptors: ResponseInterceptor[] = [];
-  private readonly defaultTimeout = 30000; // 30 seconds
+  private readonly requestInterceptors: RequestInterceptor[] = [];
+  private readonly responseInterceptors: ResponseInterceptor[] = [];
+  private readonly defaultTimeout = 30000;
 
-  constructor(baseUrl: string = API_BASE_URL) {
+  constructor(baseUrl: string = env.NEXT_PUBLIC_API_BASE_URL) {
     this.baseUrl = baseUrl;
   }
 
+  // =============================================================================
+  // URL BUILDING METHODS (Integrated)
+  // =============================================================================
+
   /**
-   * Add a request interceptor
+   * Replace ":param" segments in a path with provided values
    */
+  private fillPathParams(
+    path: string,
+    params?: Record<string, string | number>
+  ): string {
+    if (!params) return path;
+
+    return path.replace(/:([a-zA-Z0-9_]+)/g, (_, key: string) => {
+      const value = params[key];
+      if (value === undefined || value === null) {
+        throw new Error(`Missing path parameter: ${key}`);
+      }
+      return encodeURIComponent(String(value));
+    });
+  }
+
+  /**
+   * Build a query string from a flat object
+   */
+  private buildQueryString(query?: Record<string, unknown>): string {
+    if (!query) return '';
+
+    const params = new URLSearchParams();
+
+    Object.entries(query).forEach(([key, value]) => {
+      if (value === undefined || value === null) return;
+
+      const normalizedValue =
+        value instanceof Date ? value.toISOString() : value;
+
+      if (Array.isArray(normalizedValue)) {
+        normalizedValue.forEach((item) => {
+          if (item !== undefined && item !== null) {
+            const itemValue =
+              item instanceof Date ? item.toISOString() : String(item);
+            params.append(key, itemValue);
+          }
+        });
+      } else if (typeof normalizedValue === 'object') {
+        params.append(key, JSON.stringify(normalizedValue));
+      } else {
+        params.append(key, String(normalizedValue));
+      }
+    });
+
+    const queryString = params.toString();
+    return queryString ? `?${queryString}` : '';
+  }
+
+  /**
+   * Append query string to URL
+   */
+  private appendQuery(url: string, query?: Record<string, unknown>): string {
+    const queryString = this.buildQueryString(query);
+    if (!queryString) return url;
+
+    const separator = url.includes('?') ? '&' : '';
+    return `${url}${separator}${queryString.slice(1)}`;
+  }
+
+  /**
+   * Build complete URL with base URL, path params, and query string
+   */
+  private buildCompleteUrl(
+    endpoint: string,
+    options?: {
+      params?: Record<string, string | number>;
+      query?: Record<string, unknown>;
+    }
+  ): string {
+    // Fill path parameters first
+    const pathWithParams = this.fillPathParams(endpoint, options?.params);
+
+    // Add base URL
+    const fullUrl = `${this.baseUrl}${pathWithParams}`;
+
+    // Add query string
+    return this.appendQuery(fullUrl, options?.query);
+  }
+
+  // =============================================================================
+  // INTERCEPTOR MANAGEMENT
+  // =============================================================================
+
   addRequestInterceptor(interceptor: RequestInterceptor): void {
     this.requestInterceptors.push(interceptor);
   }
 
-  /**
-   * Add a response interceptor
-   */
   addResponseInterceptor(interceptor: ResponseInterceptor): void {
     this.responseInterceptors.push(interceptor);
   }
 
-  /**
-   * Create an AbortController with timeout
-   */
-  private createTimeoutController(timeout: number): {
-    controller: AbortController;
-    timerId: ReturnType<typeof setTimeout>;
-    wasTimedOut: () => boolean;
-  } {
-    let timedOut = false;
-    const controller = new AbortController();
-    const timerId = setTimeout(() => {
-      timedOut = true;
-      controller.abort();
-    }, timeout);
-    return { controller, timerId, wasTimedOut: () => timedOut };
-  }
+  // =============================================================================
+  // CORE REQUEST METHOD
+  // =============================================================================
 
-  /**
-   * Extract error message from HTTP response
-   */
-  private async getErrorMessage(response: Response): Promise<string | null> {
-    try {
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('application/json')) {
-        const errorResponse = await response.json();
-        // Try to extract error message from various possible structures
-        if (errorResponse.errors && errorResponse.errors.length > 0) {
-          return errorResponse.errors[0].message;
-        }
-        if (errorResponse.message) {
-          return errorResponse.message;
-        }
-        if (errorResponse.error) {
-          return errorResponse.error;
-        }
-      }
-      return null;
-    } catch {
-      return null;
-    }
-  }
-
-  /**
-   * Make an API request and return the standardized response
-   */
   async request<T = unknown>(
     endpoint: string,
     options: ApiRequestOptions = {}
   ): Promise<IApiResponse<T>> {
+    const config = this.buildRequestConfig(endpoint, options);
+    const timeoutCtrl = this.createTimeoutController(config.timeout);
+    const cleanup = this.setupSignalHandling(config.signal, timeoutCtrl);
+
+    try {
+      const context = await this.applyRequestInterceptors({
+        url: config.url,
+        options: config.requestOptions,
+      });
+
+      const response = await fetch(context.url, context.options);
+      const result = await this.processResponse<T>(response, config.parseAs);
+
+      return await this.applyResponseInterceptors(result);
+    } catch (error) {
+      return this.handleRequestError(error, timeoutCtrl);
+    } finally {
+      this.cleanupRequest(timeoutCtrl.timerId, cleanup);
+    }
+  }
+
+  // =============================================================================
+  // HTTP METHOD SHORTCUTS (Enhanced with URL building)
+  // =============================================================================
+
+  async get<T>(
+    endpoint: string,
+    options?: {
+      token?: string;
+      signal?: AbortSignal;
+      params?: Record<string, string | number>;
+      query?: Record<string, unknown>;
+      credentials?: RequestCredentials;
+    }
+  ): Promise<IApiResponse<T>> {
+    return this.request<T>(endpoint, {
+      method: 'GET',
+      ...options,
+    });
+  }
+
+  async post<T>(
+    endpoint: string,
+    body?: unknown,
+    options?: {
+      token?: string;
+      params?: Record<string, string | number>;
+      query?: Record<string, unknown>;
+      headers?: Record<string, string>;
+    }
+  ): Promise<IApiResponse<T>> {
+    return this.request<T>(endpoint, {
+      method: 'POST',
+      body,
+      ...options,
+    });
+  }
+
+  async put<T>(
+    endpoint: string,
+    body?: unknown,
+    options?: {
+      token?: string;
+      params?: Record<string, string | number>;
+      query?: Record<string, unknown>;
+      headers?: Record<string, string>;
+    }
+  ): Promise<IApiResponse<T>> {
+    return this.request<T>(endpoint, {
+      method: 'PUT',
+      body,
+      ...options,
+    });
+  }
+
+  async delete<T>(
+    endpoint: string,
+    options?: {
+      token?: string;
+      params?: Record<string, string | number>;
+      query?: Record<string, unknown>;
+    }
+  ): Promise<IApiResponse<T>> {
+    return this.request<T>(endpoint, {
+      method: 'DELETE',
+      ...options,
+    });
+  }
+
+  async patch<T>(
+    endpoint: string,
+    body?: unknown,
+    options?: {
+      token?: string;
+      params?: Record<string, string | number>;
+      query?: Record<string, unknown>;
+      headers?: Record<string, string>;
+    }
+  ): Promise<IApiResponse<T>> {
+    return this.request<T>(endpoint, {
+      method: 'PATCH',
+      body,
+      ...options,
+    });
+  }
+
+  // =============================================================================
+  // SPECIALIZED RESPONSE TYPE METHODS
+  // =============================================================================
+
+  async getBlob(
+    endpoint: string,
+    options?: {
+      token?: string;
+      signal?: AbortSignal;
+      credentials?: RequestCredentials;
+      params?: Record<string, string | number>;
+      query?: Record<string, unknown>;
+    }
+  ): Promise<IApiResponse<Blob>> {
+    return this.request<Blob>(endpoint, {
+      method: 'GET',
+      parseAs: 'blob',
+      ...options,
+    });
+  }
+
+  async getText(
+    endpoint: string,
+    options?: {
+      token?: string;
+      signal?: AbortSignal;
+      credentials?: RequestCredentials;
+      params?: Record<string, string | number>;
+      query?: Record<string, unknown>;
+    }
+  ): Promise<IApiResponse<string>> {
+    return this.request<string>(endpoint, {
+      method: 'GET',
+      parseAs: 'text',
+      ...options,
+    });
+  }
+
+  // =============================================================================
+  // PRIVATE HELPER METHODS
+  // =============================================================================
+
+  private buildRequestConfig(endpoint: string, options: ApiRequestOptions) {
     const {
       method = 'GET',
       headers = {},
@@ -127,241 +318,249 @@ class ApiClient {
       signal,
       credentials,
       parseAs = 'auto',
+      params,
+      query,
     } = options;
 
-    let url = `${this.baseUrl}${endpoint}`;
-
-    const requestHeaders: Record<string, string> = {
-      ...headers,
+    // Build complete URL with path params and query string
+    const url = this.buildCompleteUrl(endpoint, { params, query });
+    const requestHeaders = this.buildHeaders(headers, body, token);
+    const requestOptions: RequestInit = {
+      method,
+      headers: requestHeaders,
+      credentials,
+      ...(this.shouldIncludeBody(body, method) && {
+        body: this.serializeBody(body),
+      }),
     };
+
+    return { url, requestOptions, timeout, signal, parseAs };
+  }
+
+  private buildHeaders(
+    headers: Record<string, string>,
+    body: unknown,
+    token?: string
+  ): Record<string, string> {
+    const requestHeaders: Record<string, string> = { ...headers };
 
     // Set Content-Type only if not FormData (FormData sets its own boundary)
     if (!(body instanceof FormData)) {
       requestHeaders['Content-Type'] = 'application/json';
     }
 
-    // Add authorization header if token is provided
     if (token) {
       requestHeaders.Authorization = `Bearer ${token}`;
     }
 
-    // Create timeout controller
-    const timeoutCtrl = this.createTimeoutController(timeout);
+    return requestHeaders;
+  }
 
-    // If external signal provided, abort timeout controller when it aborts
-    let removeAbortListener: (() => void) | undefined;
-    if (signal) {
-      if (signal.aborted) {
-        timeoutCtrl.controller.abort();
-      } else {
-        const onAbort = () => timeoutCtrl.controller.abort();
-        signal.addEventListener('abort', onAbort, { once: true });
-        removeAbortListener = () =>
-          signal.removeEventListener('abort', onAbort);
-      }
+  private shouldIncludeBody(body: unknown, method: string): boolean {
+    return body !== undefined && method !== 'GET';
+  }
+
+  private serializeBody(body: unknown): string | FormData {
+    return body instanceof FormData ? body : JSON.stringify(body);
+  }
+
+  private createTimeoutController(timeout: number): TimeoutController {
+    let timedOut = false;
+    const controller = new AbortController();
+    const timerId = setTimeout(() => {
+      timedOut = true;
+      controller.abort();
+    }, timeout);
+
+    return {
+      controller,
+      timerId,
+      wasTimedOut: () => timedOut,
+    };
+  }
+
+  private setupSignalHandling(
+    signal: AbortSignal | undefined,
+    timeoutCtrl: TimeoutController
+  ): (() => void) | undefined {
+    if (!signal) return undefined;
+
+    if (signal.aborted) {
+      timeoutCtrl.controller.abort();
+      return undefined;
     }
 
-    let requestOptions: RequestInit = {
-      method,
-      headers: requestHeaders,
-      signal: timeoutCtrl.controller.signal,
-      credentials: credentials,
-    } as RequestInit;
+    const onAbort = () => timeoutCtrl.controller.abort();
+    signal.addEventListener('abort', onAbort, { once: true });
+    return () => signal.removeEventListener('abort', onAbort);
+  }
 
-    // Add body for non-GET requests
-    if (body && method !== 'GET') {
-      if (body instanceof FormData) {
-        requestOptions.body = body;
-      } else {
-        requestOptions.body = JSON.stringify(body);
-      }
-    }
-
-    // Apply request interceptors
+  private async applyRequestInterceptors(
+    context: RequestContext
+  ): Promise<RequestContext> {
+    let result = context;
     for (const interceptor of this.requestInterceptors) {
-      const result = await interceptor({ url, options: requestOptions });
-      url = result.url;
-      requestOptions = result.options;
+      result = await interceptor(result);
+    }
+    if (context.options.signal) {
+      result.options.signal = context.options.signal;
+    }
+    return result;
+  }
+
+  private async processResponse<T>(
+    response: Response,
+    parseAs: ParseMode
+  ): Promise<IApiResponse<T>> {
+    if (!response.ok) {
+      return this.handleHttpError<T>(response);
     }
 
+    const contentType = response.headers.get('content-type') || '';
+    const isNoContent = this.isNoContentResponse(response);
+
+    if (isNoContent) {
+      return { data: null as T, errors: [] };
+    }
+
+    return this.parseResponseBody<T>(response, parseAs, contentType);
+  }
+
+  private async handleHttpError<T>(
+    response: Response
+  ): Promise<IApiResponse<T>> {
+    const errorMessage = await this.extractErrorMessage(response);
+    const error: IApiError = {
+      code: `HTTP_${response.status}`,
+      message:
+        errorMessage || `HTTP ${response.status}: ${response.statusText}`,
+    };
+
+    return { data: null as T, errors: [error] };
+  }
+
+  private isNoContentResponse(response: Response): boolean {
+    const contentLength = response.headers.get('content-length');
+    return (
+      response.status === 204 ||
+      response.status === 205 ||
+      contentLength === '0'
+    );
+  }
+
+  private async parseResponseBody<T>(
+    response: Response,
+    parseAs: ParseMode,
+    contentType: string
+  ): Promise<IApiResponse<T>> {
+    switch (parseAs) {
+      case 'blob':
+        return { data: (await response.blob()) as unknown as T, errors: [] };
+
+      case 'text':
+        return { data: (await response.text()) as unknown as T, errors: [] };
+
+      case 'json':
+        return (await response.json()) as IApiResponse<T>;
+
+      case 'auto':
+        if (contentType.includes('application/json')) {
+          return (await response.json()) as IApiResponse<T>;
+        }
+        return { data: null as T, errors: [] };
+
+      default:
+        return { data: null as T, errors: [] };
+    }
+  }
+
+  private async extractErrorMessage(
+    response: Response
+  ): Promise<string | null> {
     try {
-      const response = await fetch(url, requestOptions);
+      const contentType = response.headers.get('content-type');
+      if (!contentType?.includes('application/json')) return null;
 
-      // Check if response is ok (status 200-299)
-      if (!response.ok) {
-        // Handle HTTP error status codes
-        const errorMessage = await this.getErrorMessage(response);
-        const httpError: IApiError = {
-          code: `HTTP_${response.status}`,
-          message:
-            errorMessage || `HTTP ${response.status}: ${response.statusText}`,
-        };
+      const errorResponse = await response.json();
 
-        return {
-          data: null as T,
-          errors: [httpError],
-        };
+      // Try multiple common error message patterns
+      const errorPaths = ['errors.0.message', 'message', 'error', 'detail'];
+
+      for (const path of errorPaths) {
+        const message = this.getNestedProperty(errorResponse, path);
+        if (message) return String(message);
       }
 
-      // Safe parsing based on parseAs/content-type/status
-      const contentType = response.headers.get('content-type') || '';
-      const contentLength = response.headers.get('content-length');
-
-      const noContent =
-        response.status === 204 ||
-        response.status === 205 ||
-        contentLength === '0';
-
-      let apiResponse: IApiResponse<T>;
-
-      if (noContent) {
-        apiResponse = { data: null as T, errors: [] };
-      } else if (parseAs === 'blob') {
-        const data = (await response.blob()) as unknown as T;
-        apiResponse = { data, errors: [] };
-      } else if (parseAs === 'text') {
-        const data = (await response.text()) as unknown as T;
-        apiResponse = { data, errors: [] };
-      } else if (
-        parseAs === 'json' ||
-        (parseAs === 'auto' && contentType.includes('application/json'))
-      ) {
-        let jsonResp: IApiResponse<T> =
-          (await response.json()) as IApiResponse<T>;
-        // Apply response interceptors
-        for (const interceptor of this.responseInterceptors) {
-          jsonResp = await interceptor(jsonResp);
-        }
-        return jsonResp;
-      } else {
-        // Non-JSON success with auto mode: return an empty standardized payload
-        apiResponse = { data: null as T, errors: [] };
-      }
-
-      // Apply response interceptors to non-JSON/empty responses too
-      for (const interceptor of this.responseInterceptors) {
-        apiResponse = await interceptor(apiResponse);
-      }
-      return apiResponse;
-    } catch (error) {
-      // Handle different types of errors
-      let errorCode = 'NETWORK_ERROR';
-      let errorMessage = 'Network request failed';
-
-      if (error instanceof Error && error.name === 'AbortError') {
-        if (timeoutCtrl.wasTimedOut()) {
-          errorCode = 'TIMEOUT_ERROR';
-          errorMessage = 'Request timeout';
-        } else {
-          errorCode = 'CANCELED';
-          errorMessage = 'Request canceled';
-        }
-      } else if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-
-      const networkError: IApiError = {
-        code: errorCode,
-        message: errorMessage,
-      };
-
-      return {
-        data: null as T,
-        errors: [networkError],
-      };
-    } finally {
-      clearTimeout(timeoutCtrl.timerId);
-      if (removeAbortListener) removeAbortListener();
+      return null;
+    } catch {
+      return null;
     }
   }
 
-  /**
-   * GET request
-   */
-  async get<T>(
-    endpoint: string,
-    token?: string,
-    signal?: AbortSignal
+  private getNestedProperty(
+    obj: Record<string, unknown>,
+    path: string
+  ): unknown {
+    return path.split('.').reduce((current, key) => {
+      if (RegExp(/^\d+$/).exec(key)) {
+        const index = parseInt(key, 10);
+        return Array.isArray(current) ? current[index] : undefined;
+      }
+      return current?.[key];
+    }, obj);
+  }
+
+  private async applyResponseInterceptors<T>(
+    response: IApiResponse<T>
   ): Promise<IApiResponse<T>> {
-    return this.request<T>(endpoint, { method: 'GET', token, signal });
+    let result = response;
+    for (const interceptor of this.responseInterceptors) {
+      result = await interceptor(result);
+    }
+    return result;
   }
 
-  /**
-   * POST request
-   */
-  async post<T>(
-    endpoint: string,
-    body?: unknown,
-    token?: string
-  ): Promise<IApiResponse<T>> {
-    return this.request<T>(endpoint, { method: 'POST', body, token });
+  private handleRequestError<T>(
+    error: unknown,
+    timeoutCtrl: TimeoutController
+  ): IApiResponse<T> {
+    const errorDetails = this.categorizeError(error, timeoutCtrl);
+    const apiError: IApiError = {
+      code: errorDetails.code,
+      message: errorDetails.message,
+    };
+
+    return { data: null as T, errors: [apiError] };
   }
 
-  /**
-   * PUT request
-   */
-  async put<T>(
-    endpoint: string,
-    body?: unknown,
-    token?: string
-  ): Promise<IApiResponse<T>> {
-    return this.request<T>(endpoint, { method: 'PUT', body, token });
+  private categorizeError(
+    error: unknown,
+    timeoutCtrl: TimeoutController
+  ): { code: string; message: string } {
+    if (error instanceof Error && error.name === 'AbortError') {
+      return timeoutCtrl.wasTimedOut()
+        ? { code: 'TIMEOUT_ERROR', message: 'Request timeout' }
+        : { code: 'CANCELED', message: 'Request canceled' };
+    }
+
+    return {
+      code: 'NETWORK_ERROR',
+      message:
+        error instanceof Error ? error.message : 'Network request failed',
+    };
   }
 
-  /**
-   * DELETE request
-   */
-  async delete<T>(endpoint: string, token?: string): Promise<IApiResponse<T>> {
-    return this.request<T>(endpoint, { method: 'DELETE', token });
-  }
-
-  /**
-   * PATCH request
-   */
-  async patch<T>(
-    endpoint: string,
-    body?: unknown,
-    token?: string
-  ): Promise<IApiResponse<T>> {
-    return this.request<T>(endpoint, { method: 'PATCH', body, token });
-  }
-
-  /**
-   * GET as Blob helper (e.g., downloads)
-   */
-  async getBlob(
-    endpoint: string,
-    token?: string,
-    signal?: AbortSignal,
-    credentials?: RequestCredentials
-  ): Promise<IApiResponse<Blob>> {
-    return this.request<Blob>(endpoint, {
-      method: 'GET',
-      token,
-      signal,
-      credentials,
-      parseAs: 'blob',
-    });
-  }
-
-  /**
-   * GET as Text helper
-   */
-  async getText(
-    endpoint: string,
-    token?: string,
-    signal?: AbortSignal,
-    credentials?: RequestCredentials
-  ): Promise<IApiResponse<string>> {
-    return this.request<string>(endpoint, {
-      method: 'GET',
-      token,
-      signal,
-      credentials,
-      parseAs: 'text',
-    });
+  private cleanupRequest(
+    timerId: ReturnType<typeof setTimeout>,
+    removeAbortListener?: () => void
+  ): void {
+    clearTimeout(timerId);
+    removeAbortListener?.();
   }
 }
 
-// Export a singleton instance
+// =============================================================================
+// EXPORT SINGLETON INSTANCE
+// =============================================================================
+
 export const apiClient = new ApiClient();
