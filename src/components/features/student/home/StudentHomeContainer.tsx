@@ -1,53 +1,21 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
 import { CalendarClock, PlayCircle } from 'lucide-react';
 
-import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 
-import { QuizDataDTO } from '@/components/features/instructor/quiz/types/quiz';
 import { JoinQuizCard } from '@/components/features/student/home/components/JoinQuizCard';
 import { QuizListCard } from '@/components/features/student/home/components/QuizListCard';
-import { StudentQuizService } from '@/components/features/student/quiz/services/studentQuizService';
+import {
+  useStudentInProgressQuizzes,
+  useStudentUpcomingQuizzes,
+} from '@/components/features/student/home/hooks/useStudentQuizzes';
 
 export function StudentHomeContainer() {
   const t = useTranslations();
-  const { data: session } = useSession();
 
-  const upcomingQuery = useQuery({
-    queryKey: ['student', 'quizzes', 'upcoming'],
-    queryFn: async ({ signal }): Promise<QuizDataDTO[]> => {
-      if (!session?.accessToken) {
-        return [];
-      }
-      try {
-        return await StudentQuizService.getUpcomingQuizzes(signal);
-      } catch (error) {
-        console.error('Failed to fetch upcoming quizzes:', error);
-        return [];
-      }
-    },
-    enabled: !!session?.accessToken,
-    staleTime: 60_000,
-  });
-
-  const inProgressQuery = useQuery({
-    queryKey: ['student', 'quizzes', 'in-progress'],
-    queryFn: async ({ signal }): Promise<QuizDataDTO[]> => {
-      if (!session?.accessToken) {
-        return [];
-      }
-      try {
-        return await StudentQuizService.getInProgressQuizzes(signal);
-      } catch (error) {
-        console.error('Failed to fetch in-progress quizzes:', error);
-        return [];
-      }
-    },
-    enabled: !!session?.accessToken,
-    staleTime: 30_000,
-  });
+  const upcomingQuery = useStudentUpcomingQuizzes();
+  const inProgressQuery = useStudentInProgressQuizzes();
 
   const hasError = upcomingQuery.isError || inProgressQuery.isError;
 

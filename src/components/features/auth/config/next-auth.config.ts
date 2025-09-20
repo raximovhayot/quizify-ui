@@ -69,26 +69,40 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return null;
         }
 
-        const response = await AuthService.signIn(
-          credentials.phone as string,
-          credentials.password as string
-        );
+        try {
+          const response = await AuthService.signIn(
+            credentials.phone as string,
+            credentials.password as string
+          );
 
-        if (response.errors) {
+          if (Array.isArray(response.errors) && response.errors.length > 0) {
+            return null;
+          }
+
+          const jwtToken = response.data;
+          if (
+            !jwtToken?.accessToken ||
+            !jwtToken?.refreshToken ||
+            !jwtToken?.user
+          ) {
+            return null;
+          }
+
+          return {
+            id: jwtToken.user.id.toString(),
+            phone: jwtToken.user.phone,
+            firstName: jwtToken.user.firstName,
+            lastName: jwtToken.user.lastName,
+            state: jwtToken.user.state,
+            roles: jwtToken.user.roles || [],
+            dashboardType: jwtToken.user.dashboardType?.toString(),
+            accessToken: jwtToken.accessToken,
+            refreshToken: jwtToken.refreshToken,
+          };
+        } catch (e) {
+          console.error('NextAuth authorize error:', e);
+          return null;
         }
-
-        const jwtToken = response.data;
-        return {
-          id: jwtToken.user.id.toString(),
-          phone: jwtToken.user.phone,
-          firstName: jwtToken.user.firstName,
-          lastName: jwtToken.user.lastName,
-          state: jwtToken.user.state,
-          roles: jwtToken.user.roles || [],
-          dashboardType: jwtToken.user.dashboardType?.toString(),
-          accessToken: jwtToken.accessToken,
-          refreshToken: jwtToken.refreshToken,
-        };
       },
     }),
   ],
@@ -167,8 +181,8 @@ async function refreshAccessToken(token: JWT) {
 
     return {
       ...token,
-      accessToken: refreshedTokens.accessToken,
-      refreshToken: refreshedTokens.refreshToken,
+      accessToken: refreshedTokens.data.accessToken,
+      refreshToken: refreshedTokens.data.refreshToken,
       accessTokenExpires: Date.now() + 15 * 60 * 1000, // 15 minutes
     };
   } catch (error) {
