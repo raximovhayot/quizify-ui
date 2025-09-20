@@ -69,12 +69,12 @@ export class AttachmentService {
   static async deleteAttachment(
     attachmentId: number,
     accessToken: string
-  ): Promise<void> {
+  ): Promise<IApiResponse<void>> {
     const response: IApiResponse<void> = await apiClient.delete(
       `/instructor/attachments/:id`,
       { token: accessToken, params: { id: attachmentId } }
     );
-    extractApiData(response);
+    return response;
   }
 
   /**

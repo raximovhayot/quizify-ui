@@ -18,6 +18,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { handleApiResponse } from '@/lib/api-utils';
 
 import { AttachmentService } from '../../../attachment/attachmentService';
 import type { AttachmentDTO } from '../../../attachment/attachmentService';
@@ -143,10 +144,11 @@ export function QuizForm({
     if (!session?.accessToken) return;
 
     try {
-      await AttachmentService.deleteAttachment(
+      const resp = await AttachmentService.deleteAttachment(
         attachmentId,
         session.accessToken
       );
+      handleApiResponse(resp);
       setCurrentAttachment(null);
       form.setValue('attachmentId', undefined);
     } catch (error) {

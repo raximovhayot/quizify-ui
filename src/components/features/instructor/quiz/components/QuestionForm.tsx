@@ -30,6 +30,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { handleApiResponse } from '@/lib/api-utils';
 
 import {
   TInstructorQuestionForm,
@@ -111,7 +112,11 @@ export function QuestionForm({
   }
   async function handleAttachmentDelete(attachmentId: number) {
     if (!session?.accessToken) return;
-    await AttachmentService.deleteAttachment(attachmentId, session.accessToken);
+    const resp = await AttachmentService.deleteAttachment(
+      attachmentId,
+      session.accessToken
+    );
+    handleApiResponse(resp);
     setCurrentAttachment(null);
     form.setValue('attachmentId', undefined);
   }

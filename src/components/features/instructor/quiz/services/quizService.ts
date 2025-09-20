@@ -123,13 +123,13 @@ export class QuizService {
     quizId: number,
     data: InstructorQuizUpdateStatusRequest,
     accessToken: string
-  ): Promise<void> {
+  ): Promise<IApiResponse<void>> {
     const response: IApiResponse<void> = await apiClient.patch(
       `/instructor/quizzes/:id/status`,
       data,
       { token: accessToken, params: { id: quizId } }
     );
-    extractApiData(response);
+    return response;
   }
 
   /**
@@ -140,11 +140,14 @@ export class QuizService {
    * @returns Promise resolving when deletion is complete
    * @throws BackendError if deletion fails or quiz not found
    */
-  static async deleteQuiz(quizId: number, accessToken: string): Promise<void> {
+  static async deleteQuiz(
+    quizId: number,
+    accessToken: string
+  ): Promise<IApiResponse<void>> {
     const response: IApiResponse<void> = await apiClient.delete(
       `/instructor/quizzes/:id`,
       { token: accessToken, params: { id: quizId } }
     );
-    extractApiData(response);
+    return response;
   }
 }

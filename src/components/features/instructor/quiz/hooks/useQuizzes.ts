@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 
+import { handleApiResponse } from '@/lib/api-utils';
 import { createMutation } from '@/lib/mutation-utils';
 
 import {
@@ -184,7 +185,15 @@ export function useUpdateQuizStatus() {
         throw new Error('No access token available');
       }
 
-      await QuizService.updateQuizStatus(data.id, data, session.accessToken);
+      const resp = await QuizService.updateQuizStatus(
+        data.id,
+        data,
+        session.accessToken
+      );
+      // Normalize and throw on error to trigger onError and toast via api-utils
+      // Success path continues to optimistic success handler
+      // This keeps optimistic UI and centralizes error toasts
+      handleApiResponse(resp);
     },
     onMutate: async (variables) => {
       // Cancel outgoing refetches so we don't overwrite our optimistic update
@@ -276,7 +285,8 @@ export function useDeleteQuiz() {
         throw new Error('No access token available');
       }
 
-      await QuizService.deleteQuiz(quizId, session.accessToken);
+      const resp = await QuizService.deleteQuiz(quizId, session.accessToken);
+      handleApiResponse(resp);
     },
     onMutate: async (quizId) => {
       // Cancel outgoing refetches so we don't overwrite our optimistic update
