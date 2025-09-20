@@ -16,7 +16,7 @@ export class QuestionService {
     const response: IApiResponse<QuestionDataDto> = await apiClient.post(
       '/instructor/questions',
       data,
-      accessToken
+      { token: accessToken }
     );
     return extractApiData(response);
   }
@@ -26,19 +26,16 @@ export class QuestionService {
     accessToken: string,
     signal?: AbortSignal
   ): Promise<IPageableList<QuestionDataDto>> {
-    const params = new URLSearchParams();
-    params.set('quizId', String(filter.quizId));
-    if (typeof filter.page !== 'undefined')
-      params.set('page', String(filter.page));
-    if (typeof filter.size !== 'undefined')
-      params.set('size', String(filter.size));
-
     const response: IApiResponse<IPageableList<QuestionDataDto>> =
-      await apiClient.get(
-        `/instructor/questions?${params.toString()}`,
-        accessToken,
-        signal
-      );
+      await apiClient.get(`/instructor/questions`, {
+        token: accessToken,
+        signal,
+        query: {
+          quizId: filter.quizId,
+          page: filter.page,
+          size: filter.size,
+        },
+      });
     return extractApiData(response);
   }
 }

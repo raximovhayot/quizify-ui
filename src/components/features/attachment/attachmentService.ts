@@ -34,7 +34,7 @@ export class AttachmentService {
     const response: IApiResponse<AttachmentDTO> = await apiClient.post(
       '/instructor/attachments',
       formData,
-      accessToken
+      { token: accessToken }
     );
     return extractApiData(response);
   }
@@ -52,8 +52,8 @@ export class AttachmentService {
     accessToken: string
   ): Promise<AttachmentDTO> {
     const response: IApiResponse<AttachmentDTO> = await apiClient.get(
-      `/instructor/attachments/${attachmentId}`,
-      accessToken
+      `/instructor/attachments/:id`,
+      { token: accessToken, params: { id: attachmentId } }
     );
     return extractApiData(response);
   }

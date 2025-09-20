@@ -34,25 +34,17 @@ export class QuizService {
     accessToken: string,
     signal?: AbortSignal
   ): Promise<IPageableList<QuizDataDTO>> {
-    const queryParams = new URLSearchParams();
-
-    if (filter.page !== undefined) {
-      queryParams.append('page', filter.page.toString());
-    }
-    if (filter.size !== undefined) {
-      queryParams.append('size', filter.size.toString());
-    }
-    if (filter.search) {
-      queryParams.append('search', filter.search);
-    }
-    if (filter.status) {
-      queryParams.append('status', filter.status);
-    }
-
-    const endpoint = `/instructor/quizzes${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
-
     const response: IApiResponse<IPageableList<QuizDataDTO>> =
-      await apiClient.get(endpoint, accessToken, signal);
+      await apiClient.get('/instructor/quizzes', {
+        token: accessToken,
+        signal,
+        query: {
+          page: filter.page,
+          size: filter.size,
+          search: filter.search,
+          status: filter.status,
+        },
+      });
     return extractApiData(response);
   }
 
@@ -70,9 +62,8 @@ export class QuizService {
     signal?: AbortSignal
   ): Promise<QuizDataDTO> {
     const response: IApiResponse<QuizDataDTO> = await apiClient.get(
-      `/instructor/quizzes/${quizId}`,
-      accessToken,
-      signal
+      `/instructor/quizzes/:id`,
+      { token: accessToken, signal, params: { id: quizId } }
     );
     return extractApiData(response);
   }
@@ -92,7 +83,7 @@ export class QuizService {
     const response: IApiResponse<QuizDataDTO> = await apiClient.post(
       '/instructor/quizzes',
       data,
-      accessToken
+      { token: accessToken }
     );
     return extractApiData(response);
   }
@@ -112,9 +103,9 @@ export class QuizService {
     accessToken: string
   ): Promise<QuizDataDTO> {
     const response: IApiResponse<QuizDataDTO> = await apiClient.put(
-      `/instructor/quizzes/${quizId}`,
+      `/instructor/quizzes/:id`,
       data,
-      accessToken
+      { token: accessToken, params: { id: quizId } }
     );
     return extractApiData(response);
   }
@@ -134,9 +125,9 @@ export class QuizService {
     accessToken: string
   ): Promise<void> {
     const response: IApiResponse<void> = await apiClient.patch(
-      `/instructor/quizzes/${quizId}/status`,
+      `/instructor/quizzes/:id/status`,
       data,
-      accessToken
+      { token: accessToken, params: { id: quizId } }
     );
     extractApiData(response);
   }
@@ -151,8 +142,8 @@ export class QuizService {
    */
   static async deleteQuiz(quizId: number, accessToken: string): Promise<void> {
     const response: IApiResponse<void> = await apiClient.delete(
-      `/instructor/quizzes/${quizId}`,
-      accessToken
+      `/instructor/quizzes/:id`,
+      { token: accessToken, params: { id: quizId } }
     );
     extractApiData(response);
   }

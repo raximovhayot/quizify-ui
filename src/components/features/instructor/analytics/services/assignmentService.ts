@@ -10,15 +10,17 @@ export class AssignmentService {
     accessToken: string,
     signal?: AbortSignal
   ): Promise<IPageableList<AssignmentDTO>> {
-    const params = new URLSearchParams();
-    if (filter.page !== undefined) params.append('page', String(filter.page));
-    if (filter.size !== undefined) params.append('size', String(filter.size));
-    if (filter.search) params.append('search', filter.search);
-    if (filter.status) params.append('status', String(filter.status));
-
-    const endpoint = `/instructor/assignments${params.toString() ? `?${params.toString()}` : ''}`;
     const response: IApiResponse<IPageableList<AssignmentDTO>> =
-      await apiClient.get(endpoint, accessToken, signal);
+      await apiClient.get('/instructor/assignments', {
+        token: accessToken,
+        signal,
+        query: {
+          page: filter.page,
+          size: filter.size,
+          search: filter.search,
+          status: filter.status,
+        },
+      });
     return extractApiData(response);
   }
 }

@@ -15,16 +15,16 @@ export class StudentAttemptService {
     signal?: AbortSignal,
     params?: { status?: string; page?: number; size?: number }
   ): Promise<IPageableList<StudentAttemptDTO>> {
-    const query = new URLSearchParams();
-    if (params?.status) query.set('status', params.status);
-    if (typeof params?.page !== 'undefined')
-      query.set('page', String(params.page));
-    if (typeof params?.size !== 'undefined')
-      query.set('size', String(params.size));
-
-    const url = `/student/attempts/history${query.toString() ? `?${query.toString()}` : ''}`;
     const response: IApiResponse<IPageableList<StudentAttemptDTO>> =
-      await apiClient.get(url, accessToken, signal);
+      await apiClient.get(`/student/attempts/history`, {
+        token: accessToken!,
+        signal,
+        query: {
+          status: params?.status,
+          page: params?.page,
+          size: params?.size,
+        },
+      });
     return extractApiData(response);
   }
 }

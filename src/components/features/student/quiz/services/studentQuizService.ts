@@ -17,9 +17,8 @@ export class StudentQuizService {
     signal?: AbortSignal
   ): Promise<QuizDataDTO> {
     const response: IApiResponse<QuizDataDTO> = await apiClient.get(
-      `/student/quizzes/${quizId}`,
-      accessToken,
-      signal
+      `/student/quizzes/:id`,
+      { token: accessToken!, signal, params: { id: quizId } }
     );
     return extractApiData(response);
   }
@@ -33,9 +32,8 @@ export class StudentQuizService {
     signal?: AbortSignal
   ): Promise<QuestionDataDto[]> {
     const response: IApiResponse<QuestionDataDto[]> = await apiClient.get(
-      `/student/quizzes/${quizId}/questions`,
-      accessToken,
-      signal
+      `/student/quizzes/:id/questions`,
+      { token: accessToken!, signal, params: { id: quizId } }
     );
     return extractApiData(response);
   }
@@ -49,8 +47,7 @@ export class StudentQuizService {
   ): Promise<QuizDataDTO[]> {
     const response: IApiResponse<QuizDataDTO[]> = await apiClient.get(
       `/student/quizzes/upcoming`,
-      accessToken,
-      signal
+      { token: accessToken!, signal }
     );
     return extractApiData(response);
   }
@@ -64,8 +61,7 @@ export class StudentQuizService {
   ): Promise<QuizDataDTO[]> {
     const response: IApiResponse<QuizDataDTO[]> = await apiClient.get(
       `/student/quizzes/in-progress`,
-      accessToken,
-      signal
+      { token: accessToken!, signal }
     );
     return extractApiData(response);
   }
@@ -78,7 +74,11 @@ export class StudentQuizService {
     accessToken?: string
   ): Promise<{ quizId?: number } | QuizDataDTO> {
     const response: IApiResponse<{ quizId?: number } | QuizDataDTO> =
-      await apiClient.post(`/student/quizzes/join`, { code }, accessToken);
+      await apiClient.post(
+        `/student/quizzes/join`,
+        { code },
+        { token: accessToken }
+      );
     return extractApiData(response);
   }
 }

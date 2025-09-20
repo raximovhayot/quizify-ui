@@ -25,8 +25,7 @@ export class AccountService {
   ): Promise<AccountDTO> {
     const response: IApiResponse<AccountDTO> = await apiClient.get(
       '/account/profile',
-      accessToken,
-      signal
+      { token: accessToken, signal }
     );
     return extractApiData(response);
   }
@@ -50,7 +49,7 @@ export class AccountService {
     const response: IApiResponse<AccountDTO> = await apiClient.put(
       '/account/complete',
       data,
-      accessToken
+      { token: accessToken }
     );
     return extractApiData(response);
   }
