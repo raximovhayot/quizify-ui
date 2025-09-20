@@ -33,15 +33,11 @@ export function useAttemptHistory(filter: AttemptHistoryFilter = {}) {
     queryKey: attemptHistoryKeys.history(status, page, size),
     queryFn: async ({ signal }) => {
       if (!session?.accessToken) throw new Error('No access token available');
-      return StudentAttemptService.getAttemptHistory(
-        session.accessToken,
-        signal,
-        {
-          status,
-          page,
-          size,
-        }
-      );
+      return StudentAttemptService.getAttempts(session.accessToken, signal, {
+        status,
+        page,
+        size,
+      });
     },
     enabled: !!session?.accessToken,
     staleTime: 60_000,

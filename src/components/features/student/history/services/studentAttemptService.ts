@@ -7,16 +7,13 @@ import { IPageableList } from '@/types/common';
  * StudentAttemptService - Handles student attempts related endpoints
  */
 export class StudentAttemptService {
-  /**
-   * Get student's attempt history (paginated)
-   */
-  static async getAttemptHistory(
+  static async getAttempts(
     accessToken?: string,
     signal?: AbortSignal,
     params?: { status?: string; page?: number; size?: number }
   ): Promise<IPageableList<StudentAttemptDTO>> {
     const response: IApiResponse<IPageableList<StudentAttemptDTO>> =
-      await apiClient.get(`/student/attempts/history`, {
+      await apiClient.get(`/student/assignments/attempts`, {
         token: accessToken!,
         signal,
         query: {
