@@ -31,12 +31,10 @@ export class QuizService {
    */
   static async getQuizzes(
     filter: QuizFilter = {},
-    accessToken: string,
     signal?: AbortSignal
   ): Promise<IPageableList<QuizDataDTO>> {
     const response: IApiResponse<IPageableList<QuizDataDTO>> =
       await apiClient.get('/instructor/quizzes', {
-        token: accessToken,
         signal,
         query: {
           page: filter.page,
@@ -58,12 +56,11 @@ export class QuizService {
    */
   static async getQuiz(
     quizId: number,
-    accessToken: string,
     signal?: AbortSignal
   ): Promise<QuizDataDTO> {
     const response: IApiResponse<QuizDataDTO> = await apiClient.get(
       `/instructor/quizzes/:id`,
-      { token: accessToken, signal, params: { id: quizId } }
+      { signal, params: { id: quizId } }
     );
     return extractApiData(response);
   }
@@ -77,13 +74,11 @@ export class QuizService {
    * @throws BackendError if creation fails or validation errors occur
    */
   static async createQuiz(
-    data: InstructorQuizCreateRequest,
-    accessToken: string
+    data: InstructorQuizCreateRequest
   ): Promise<IApiResponse<QuizDataDTO>> {
     const response: IApiResponse<QuizDataDTO> = await apiClient.post(
       '/instructor/quizzes',
-      data,
-      { token: accessToken }
+      data
     );
     return response;
   }
@@ -99,13 +94,12 @@ export class QuizService {
    */
   static async updateQuiz(
     quizId: number,
-    data: InstructorQuizUpdateRequest,
-    accessToken: string
+    data: InstructorQuizUpdateRequest
   ): Promise<IApiResponse<QuizDataDTO>> {
     const response: IApiResponse<QuizDataDTO> = await apiClient.put(
       `/instructor/quizzes/:id`,
       data,
-      { token: accessToken, params: { id: quizId } }
+      { params: { id: quizId } }
     );
     return response;
   }
@@ -121,13 +115,12 @@ export class QuizService {
    */
   static async updateQuizStatus(
     quizId: number,
-    data: InstructorQuizUpdateStatusRequest,
-    accessToken: string
+    data: InstructorQuizUpdateStatusRequest
   ): Promise<IApiResponse<void>> {
     const response: IApiResponse<void> = await apiClient.patch(
       `/instructor/quizzes/:id/status`,
       data,
-      { token: accessToken, params: { id: quizId } }
+      { params: { id: quizId } }
     );
     return response;
   }
@@ -140,13 +133,10 @@ export class QuizService {
    * @returns Promise resolving when deletion is complete
    * @throws BackendError if deletion fails or quiz not found
    */
-  static async deleteQuiz(
-    quizId: number,
-    accessToken: string
-  ): Promise<IApiResponse<void>> {
+  static async deleteQuiz(quizId: number): Promise<IApiResponse<void>> {
     const response: IApiResponse<void> = await apiClient.delete(
       `/instructor/quizzes/:id`,
-      { token: accessToken, params: { id: quizId } }
+      { params: { id: quizId } }
     );
     return response;
   }

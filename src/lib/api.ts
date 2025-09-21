@@ -50,6 +50,8 @@ class ApiClient {
   private readonly responseInterceptors: ResponseInterceptor[] = [];
   private readonly defaultTimeout = 30000;
   private authToken?: string;
+  private tokenRefreshHandler?: () => Promise<string | null | undefined>;
+  private refreshPromise?: Promise<string | null | undefined>;
 
   constructor(baseUrl: string = env.NEXT_PUBLIC_API_BASE_URL) {
     this.baseUrl = baseUrl;
@@ -63,6 +65,26 @@ class ApiClient {
   /** Get the current auth token (if set) */
   getAuthToken(): string | undefined {
     return this.authToken;
+  }
+
+  /** Set a handler to refresh the auth token on 401 responses */
+  setTokenRefreshHandler(
+    handler: () => Promise<string | null | undefined>
+  ): void {
+    this.tokenRefreshHandler = handler;
+  }
+
+  /** Perform a single-flight token refresh */
+  private async tryRefreshToken(): Promise<string | null | undefined> {
+    if (!this.tokenRefreshHandler) return null;
+    if (!this.refreshPromise) {
+      this.refreshPromise = this.tokenRefreshHandler()
+        .catch(() => null)
+        .finally(() => {
+          this.refreshPromise = undefined;
+        });
+    }
+    return this.refreshPromise;
   }
 
   // =============================================================================
@@ -181,9 +203,29 @@ class ApiClient {
         options: config.requestOptions,
       });
 
-      const response = await fetch(context.url, context.options);
-      const result = await this.processResponse<T>(response, config.parseAs);
+      // First attempt
+      let response = await fetch(context.url, context.options);
 
+      // If unauthorized, try to refresh token once and retry
+      if (response.status === 401 && this.tokenRefreshHandler) {
+        const newToken = await this.tryRefreshToken();
+        if (newToken) {
+          // update stored token
+          this.setAuthToken(newToken ?? null);
+          // rebuild request config forcing the fresh token to be used
+          const retryConfig = this.buildRequestConfig(endpoint, {
+            ...options,
+            token: newToken ?? undefined,
+          });
+          const retryContext = await this.applyRequestInterceptors({
+            url: retryConfig.url,
+            options: retryConfig.requestOptions,
+          });
+          response = await fetch(retryContext.url, retryContext.options);
+        }
+      }
+
+      const result = await this.processResponse<T>(response, config.parseAs);
       return await this.applyResponseInterceptors(result);
     } catch (error) {
       return this.handleRequestError(error, timeoutCtrl);

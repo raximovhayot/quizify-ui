@@ -6,15 +6,7 @@ import { StudentAttemptService } from '@/components/features/student/history/ser
 import { StudentAttemptDTO } from '@/components/features/student/quiz/types/attempt';
 import { IPageableList } from '@/types/common';
 
-export const attemptHistoryKeys = {
-  all: ['student', 'attempts'] as const,
-  history: (status?: string, page?: number, size?: number) =>
-    [
-      ...attemptHistoryKeys.all,
-      'history',
-      { status: status || '', page: page ?? 0, size: size ?? 10 },
-    ] as const,
-};
+export { attemptHistoryKeys } from '@/components/features/student/history/keys';
 
 export interface AttemptHistoryFilter {
   status?: 'passed' | 'failed' | 'in_progress' | 'completed' | '';
@@ -23,7 +15,7 @@ export interface AttemptHistoryFilter {
 }
 
 export function useAttemptHistory(filter: AttemptHistoryFilter = {}) {
-  const { data: session } = useSession();
+  const { status: authStatus } = useSession();
   const status =
     filter.status && filter.status.length > 0 ? filter.status : undefined;
   const page = filter.page ?? 0;
@@ -32,14 +24,13 @@ export function useAttemptHistory(filter: AttemptHistoryFilter = {}) {
   return useQuery<IPageableList<StudentAttemptDTO>>({
     queryKey: attemptHistoryKeys.history(status, page, size),
     queryFn: async ({ signal }) => {
-      if (!session?.accessToken) throw new Error('No access token available');
       return StudentAttemptService.getAttempts(signal, {
         status,
         page,
         size,
       });
     },
-    enabled: !!session?.accessToken,
+    enabled: authStatus === 'authenticated',
     staleTime: 60_000,
     gcTime: 5 * 60_000,
   });

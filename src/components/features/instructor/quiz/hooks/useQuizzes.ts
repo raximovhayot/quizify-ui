@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 
+import { quizKeys } from '@/components/features/instructor/quiz/keys';
 import { handleApiResponse } from '@/lib/api-utils';
 import { createMutation } from '@/lib/mutation-utils';
 
@@ -21,37 +22,21 @@ import {
   QuizFilter,
 } from '../types/quiz';
 
-// Query keys
-export const quizKeys = {
-  all: ['quizzes'] as const,
-  lists: () => [...quizKeys.all, 'list'] as const,
-  list: (filter: QuizFilter) => [...quizKeys.lists(), filter] as const,
-  details: () => [...quizKeys.all, 'detail'] as const,
-  detail: (id: number) => [...quizKeys.details(), id] as const,
-};
+// Query keys are centralized in '@/components/features/instructor/quiz/keys'
 
 // Hook for fetching paginated quizzes list
 export function useQuizzes(filter: QuizFilter = {}) {
-  const { data: session } = useSession();
+  const { status } = useSession();
 
   return useQuery({
     queryKey: quizKeys.list(filter),
     queryFn: async ({ signal }): Promise<TQuizListResponse> => {
-      if (!session?.accessToken) {
-        throw new Error('No access token available');
-      }
-
-      const response = await QuizService.getQuizzes(
-        filter,
-        session.accessToken,
-        signal
-      );
-
+      const response = await QuizService.getQuizzes(filter, signal);
       // Validate response with Zod schema
       const validatedResponse = quizListResponseSchema.parse(response);
       return validatedResponse;
     },
-    enabled: !!session?.accessToken,
+    enabled: status === 'authenticated',
     staleTime: 1 * 60 * 1000, // 1 minute (more responsive)
     gcTime: 15 * 60 * 1000, // 15 minutes (keep longer in cache)
     // Dedupe identical requests within 1 second
@@ -63,26 +48,17 @@ export function useQuizzes(filter: QuizFilter = {}) {
 
 // Hook for fetching single quiz
 export function useQuiz(quizId: number) {
-  const { data: session } = useSession();
+  const { status } = useSession();
 
   return useQuery({
     queryKey: quizKeys.detail(quizId),
     queryFn: async ({ signal }): Promise<QuizDataDTO> => {
-      if (!session?.accessToken) {
-        throw new Error('No access token available');
-      }
-
-      const response = await QuizService.getQuiz(
-        quizId,
-        session.accessToken,
-        signal
-      );
-
+      const response = await QuizService.getQuiz(quizId, signal);
       // Validate response with Zod schema
       const validatedResponse = quizDataDTOSchema.parse(response);
       return validatedResponse;
     },
-    enabled: !!session?.accessToken && !!quizId,
+    enabled: status === 'authenticated' && !!quizId,
     staleTime: 2 * 60 * 1000, // 2 minutes
     gcTime: 20 * 60 * 1000, // 20 minutes (quiz details are stable)
     // Use previous data while refetching
@@ -98,31 +74,17 @@ export function useQuiz(quizId: number) {
 // Hook for creating quiz
 export function useCreateQuiz() {
   const queryClient = useQueryClient();
-  const { data: session } = useSession();
   const t = useTranslations();
 
   return createMutation<QuizDataDTO, InstructorQuizCreateRequest>({
     mutationFn: async (data) => {
-      if (!session?.accessToken) {
-        return {
-          data: null as unknown as QuizDataDTO,
-          errors: [
-            {
-              code: 'AUTH_NO_TOKEN',
-              message: t('auth.error.noToken', {
-                default: 'No access token available',
-              }),
-            },
-          ],
-        };
-      }
-      const resp = await QuizService.createQuiz(data, session.accessToken);
+      const resp = await QuizService.createQuiz(data);
       return resp;
     },
     successMessage: t('instructor.quiz.create.success', {
       fallback: 'Quiz created successfully',
     }),
-    invalidateQueries: [quizKeys.lists() as unknown as string[]],
+    invalidateQueries: [quizKeys.lists()],
     onSuccess: (data) => {
       // Validate with Zod and prime detail cache
       const validated = quizDataDTOSchema.parse(data);
@@ -134,35 +96,17 @@ export function useCreateQuiz() {
 // Hook for updating quiz
 export function useUpdateQuiz() {
   const queryClient = useQueryClient();
-  const { data: session } = useSession();
   const t = useTranslations();
 
   return createMutation<QuizDataDTO, InstructorQuizUpdateRequest>({
     mutationFn: async (data) => {
-      if (!session?.accessToken || !data.id) {
-        return {
-          data: null as unknown as QuizDataDTO,
-          errors: [
-            {
-              code: 'AUTH_NO_TOKEN_OR_ID',
-              message: t('auth.error.noToken', {
-                default: 'No access token available',
-              }),
-            },
-          ],
-        };
-      }
-      const resp = await QuizService.updateQuiz(
-        data.id,
-        data,
-        session.accessToken
-      );
+      const resp = await QuizService.updateQuiz(data.id, data);
       return resp;
     },
     successMessage: t('instructor.quiz.update.success', {
       fallback: 'Quiz updated successfully',
     }),
-    invalidateQueries: [quizKeys.lists() as unknown as string[]],
+    invalidateQueries: [quizKeys.lists()],
     onSuccess: (data) => {
       // Validate and update detail cache
       const validated = quizDataDTOSchema.parse(data);
@@ -174,22 +118,13 @@ export function useUpdateQuiz() {
 // Hook for updating quiz status
 export function useUpdateQuizStatus() {
   const queryClient = useQueryClient();
-  const { data: session } = useSession();
   const t = useTranslations();
 
   return useMutation({
     mutationFn: async (
       data: InstructorQuizUpdateStatusRequest
     ): Promise<void> => {
-      if (!session?.accessToken) {
-        throw new Error('No access token available');
-      }
-
-      const resp = await QuizService.updateQuizStatus(
-        data.id,
-        data,
-        session.accessToken
-      );
+      const resp = await QuizService.updateQuizStatus(data.id, data);
       // Normalize and throw on error to trigger onError and toast via api-utils
       // Success path continues to optimistic success handler
       // This keeps optimistic UI and centralizes error toasts
@@ -276,16 +211,11 @@ export function useUpdateQuizStatus() {
 // Hook for deleting quiz
 export function useDeleteQuiz() {
   const queryClient = useQueryClient();
-  const { data: session } = useSession();
   const t = useTranslations();
 
   return useMutation({
     mutationFn: async (quizId: number): Promise<void> => {
-      if (!session?.accessToken) {
-        throw new Error('No access token available');
-      }
-
-      const resp = await QuizService.deleteQuiz(quizId, session.accessToken);
+      const resp = await QuizService.deleteQuiz(quizId);
       handleApiResponse(resp);
     },
     onMutate: async (quizId) => {

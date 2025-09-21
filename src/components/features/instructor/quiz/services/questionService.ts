@@ -10,25 +10,21 @@ import {
 
 export class QuestionService {
   static async createQuestion(
-    data: InstructorQuestionSaveRequest,
-    accessToken: string
+    data: InstructorQuestionSaveRequest
   ): Promise<IApiResponse<QuestionDataDto>> {
     const response: IApiResponse<QuestionDataDto> = await apiClient.post(
       '/instructor/questions',
-      data,
-      { token: accessToken }
+      data
     );
     return response;
   }
 
   static async getQuestions(
     filter: QuestionFilter,
-    accessToken: string,
     signal?: AbortSignal
   ): Promise<IPageableList<QuestionDataDto>> {
     const response: IApiResponse<IPageableList<QuestionDataDto>> =
       await apiClient.get(`/instructor/questions`, {
-        token: accessToken,
         signal,
         query: {
           quizId: filter.quizId,

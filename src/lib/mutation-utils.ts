@@ -4,6 +4,7 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
+import type { QueryKey } from '@tanstack/react-query';
 
 import { useRouter } from 'next/navigation';
 
@@ -21,7 +22,7 @@ interface BaseMutationOptions<TData, TVariables> {
     variables: TVariables
   ) => void | Promise<void>;
   successMessage?: string | ((data: TData, variables: TVariables) => string);
-  invalidateQueries?: string[] | string[][];
+  invalidateQueries?: QueryKey[];
   redirectTo?: string | ((data: TData, variables: TVariables) => string);
   showSuccessToast?: boolean;
 }
@@ -58,9 +59,7 @@ export function createMutation<TData = unknown, TVariables = void>(
         // Invalidate queries if specified
         if (options.invalidateQueries) {
           for (const queryKey of options.invalidateQueries) {
-            await queryClient.invalidateQueries({
-              queryKey: Array.isArray(queryKey) ? queryKey : [queryKey],
-            });
+            await queryClient.invalidateQueries({ queryKey });
           }
         }
 
