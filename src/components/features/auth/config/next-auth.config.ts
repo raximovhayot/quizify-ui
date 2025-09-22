@@ -45,6 +45,7 @@ declare module 'next-auth/jwt' {
     refreshToken: string;
     user: AccountDTO;
     accessTokenExpires: number;
+    error?: string;
   }
 }
 
@@ -115,7 +116,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async jwt({ token, user, account }): Promise<JWT> {
       // Initial sign in
-      if (account && user) {
+      if (user) {
         return {
           accessToken: user.accessToken,
           refreshToken: user.refreshToken,
@@ -175,21 +176,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 /**
  * Refresh the access token using the refresh token
  */
-async function refreshAccessToken(token: JWT) {
+async function refreshAccessToken(token: JWT): Promise<JWT> {
   try {
     const refreshedTokens = await AuthService.refreshToken(token.refreshToken);
-    console.error('Refreshed tokens:', refreshedTokens.data);
+    const newAccess = refreshedTokens?.data?.accessToken;
+    const newRefresh = refreshedTokens?.data?.refreshToken;
+    if (!newAccess || !newRefresh) {
+      throw new Error('Invalid refresh token response');
+    }
     return {
       ...token,
-      accessToken: refreshedTokens.data.accessToken,
-      refreshToken: refreshedTokens.data.refreshToken,
+      accessToken: newAccess,
+      refreshToken: newRefresh,
       accessTokenExpires: Date.now() + 15 * 60 * 1000, // 15 minutes
-    };
+    } as JWT;
   } catch (error) {
     console.error('Error refreshing access token:', error);
     return {
       ...token,
       error: 'RefreshAccessTokenError',
-    };
+    } as JWT;
   }
 }

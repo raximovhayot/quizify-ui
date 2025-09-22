@@ -13,6 +13,7 @@ interface ApiRequestOptions {
   headers?: Record<string, string>;
   body?: unknown;
   token?: string;
+  skipAuth?: boolean; // when true, do not attach Authorization header
   timeout?: number;
   signal?: AbortSignal;
   credentials?: RequestCredentials;
@@ -206,8 +207,12 @@ class ApiClient {
       // First attempt
       let response = await fetch(context.url, context.options);
 
-      // If unauthorized, try to refresh token once and retry
-      if (response.status === 401 && this.tokenRefreshHandler) {
+      // If unauthorized, try to refresh token once and retry (but never during a refresh call itself)
+      if (
+        response.status === 401 &&
+        this.tokenRefreshHandler &&
+        !options.skipAuth
+      ) {
         const newToken = await this.tryRefreshToken();
         if (newToken) {
           // update stored token
@@ -246,6 +251,7 @@ class ApiClient {
       params?: Record<string, string | number>;
       query?: Record<string, unknown>;
       credentials?: RequestCredentials;
+      skipAuth?: boolean;
     }
   ): Promise<IApiResponse<T>> {
     return this.request<T>(endpoint, {
@@ -262,6 +268,7 @@ class ApiClient {
       params?: Record<string, string | number>;
       query?: Record<string, unknown>;
       headers?: Record<string, string>;
+      skipAuth?: boolean;
     }
   ): Promise<IApiResponse<T>> {
     return this.request<T>(endpoint, {
@@ -279,6 +286,7 @@ class ApiClient {
       params?: Record<string, string | number>;
       query?: Record<string, unknown>;
       headers?: Record<string, string>;
+      skipAuth?: boolean;
     }
   ): Promise<IApiResponse<T>> {
     return this.request<T>(endpoint, {
@@ -294,6 +302,7 @@ class ApiClient {
       token?: string;
       params?: Record<string, string | number>;
       query?: Record<string, unknown>;
+      skipAuth?: boolean;
     }
   ): Promise<IApiResponse<T>> {
     return this.request<T>(endpoint, {
@@ -310,6 +319,7 @@ class ApiClient {
       params?: Record<string, string | number>;
       query?: Record<string, unknown>;
       headers?: Record<string, string>;
+      skipAuth?: boolean;
     }
   ): Promise<IApiResponse<T>> {
     return this.request<T>(endpoint, {
@@ -331,6 +341,7 @@ class ApiClient {
       credentials?: RequestCredentials;
       params?: Record<string, string | number>;
       query?: Record<string, unknown>;
+      skipAuth?: boolean;
     }
   ): Promise<IApiResponse<Blob>> {
     return this.request<Blob>(endpoint, {
@@ -348,6 +359,7 @@ class ApiClient {
       credentials?: RequestCredentials;
       params?: Record<string, string | number>;
       query?: Record<string, unknown>;
+      skipAuth?: boolean;
     }
   ): Promise<IApiResponse<string>> {
     return this.request<string>(endpoint, {
@@ -590,6 +602,7 @@ class ApiClient {
       headers = {},
       body,
       token,
+      skipAuth,
       timeout = this.defaultTimeout,
       signal,
       credentials,
@@ -600,7 +613,7 @@ class ApiClient {
 
     // Build complete URL with path params and query string
     const url = this.buildCompleteUrl(endpoint, { params, query });
-    const requestHeaders = this.buildHeaders(headers, body, token);
+    const requestHeaders = this.buildHeaders(headers, body, token, !!skipAuth);
     const requestOptions: RequestInit = {
       method,
       headers: requestHeaders,
@@ -616,7 +629,8 @@ class ApiClient {
   private buildHeaders(
     headers: Record<string, string>,
     body: unknown,
-    token?: string
+    token: string | undefined,
+    skipAuth: boolean
   ): Record<string, string> {
     const requestHeaders: Record<string, string> = { ...headers };
 
@@ -625,12 +639,14 @@ class ApiClient {
       requestHeaders['Content-Type'] = 'application/json';
     }
 
-    // Prefer explicit token passed to the request
-    if (token) {
-      requestHeaders.Authorization = `Bearer ${token}`;
-    } else if (!requestHeaders.Authorization && this.authToken) {
-      // Fallback to stored auth token (set via setAuthToken)
-      requestHeaders.Authorization = `Bearer ${this.authToken}`;
+    if (!skipAuth) {
+      // Prefer explicit token passed to the request
+      if (token) {
+        requestHeaders.Authorization = `Bearer ${token}`;
+      } else if (!requestHeaders.Authorization && this.authToken) {
+        // Fallback to stored auth token (set via setAuthToken)
+        requestHeaders.Authorization = `Bearer ${this.authToken}`;
+      }
     }
 
     return requestHeaders;

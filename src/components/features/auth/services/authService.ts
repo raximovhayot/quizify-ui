@@ -181,7 +181,8 @@ export class AuthService {
     const request: RefreshTokenRequest = { refreshToken };
     const response: IApiResponse<JWTToken> = await apiClient.post(
       '/auth/refresh-token',
-      request
+      request,
+      { skipAuth: true }
     );
     return response;
   }
