@@ -402,7 +402,7 @@ class ApiClient {
     } = options || {};
 
     const url = this.buildCompleteUrl(endpoint, { params, query });
-    const requestHeaders = this.buildHeaders(headers, undefined, token);
+    const requestHeaders = this.buildHeaders(headers, undefined, token, false);
 
     const timeoutCtrl = this.createTimeoutController(timeout);
     const cleanup = this.setupSignalHandling(signal, timeoutCtrl);
@@ -496,7 +496,8 @@ class ApiClient {
     const builtHeaders = this.buildHeaders(
       headers,
       body instanceof FormData ? body : undefined,
-      token
+      token,
+      false
     );
 
     return new Promise<IApiResponse<T>>((resolve) => {

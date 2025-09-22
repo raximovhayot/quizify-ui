@@ -105,7 +105,7 @@ export function createAuthMutation<TData = unknown, TVariables = void>(
 
     return createMutation({
       ...options,
-      invalidateQueries: options.invalidateQueries || ['auth', 'user'],
+      invalidateQueries: options.invalidateQueries || [['auth'], ['user']],
       onSuccess: async (data: TData, variables: TVariables) => {
         // Handle auth-specific logic
         if (options.authAction === 'logout') {

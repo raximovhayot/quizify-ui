@@ -58,4 +58,5 @@ export interface QuestionFilter {
   quizId: number; // quizId
   page?: number;
   size?: number;
+  [key: string]: unknown;
 }

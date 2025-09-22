@@ -30,6 +30,7 @@ export interface QuizFilter {
   size?: number; // default: 10
   search?: string;
   status?: QuizStatus;
+  [key: string]: unknown;
 }
 
 // Quiz Create Request - POST /instructor/quizzes

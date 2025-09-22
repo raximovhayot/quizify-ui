@@ -100,6 +100,9 @@ export function useUpdateQuiz() {
 
   return createMutation<QuizDataDTO, InstructorQuizUpdateRequest>({
     mutationFn: async (data) => {
+      if (!data.id) {
+        throw new Error('Quiz ID is required for update');
+      }
       const resp = await QuizService.updateQuiz(data.id, data);
       return resp;
     },

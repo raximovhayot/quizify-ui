@@ -1,6 +1,8 @@
 import { getRequestConfig } from 'next-intl/server';
 import { cookies } from 'next/headers';
 
+import { auth } from '@/components/features/auth/config/next-auth.config';
+
 // Set global timezone to prevent markup mismatches
 // eslint-disable-next-line no-process-env
 process.env.TZ = 'UTC';
@@ -21,20 +23,53 @@ export default getRequestConfig(async ({ requestLocale }) => {
   ) {
     validLocale = resolvedRequestLocale;
   } else {
-    // Only try to read cookies if we're in a dynamic context
+    // Try to get user's preferred language from session
     try {
-      const cookieStore = await cookies();
-      const preferredLanguage = cookieStore.get('preferredLanguage')?.value;
+      const session = await auth();
+      if (
+        session?.user?.language &&
+        locales.includes(session.user.language as Locale)
+      ) {
+        validLocale = session.user.language;
+      } else {
+        // Only try to read cookies if we're in a dynamic context
+        try {
+          const cookieStore = await cookies();
+          const preferredLanguage = cookieStore.get('preferredLanguage')?.value;
 
-      if (preferredLanguage && locales.includes(preferredLanguage as Locale)) {
-        validLocale = preferredLanguage;
+          if (
+            preferredLanguage &&
+            locales.includes(preferredLanguage as Locale)
+          ) {
+            validLocale = preferredLanguage;
+          }
+        } catch (error) {
+          // This is expected during static generation, just use the default
+          console.warn(
+            'Error processing locale from cookies, using default:',
+            error
+          );
+        }
       }
-    } catch (error) {
-      // This is expected during static generation, just use the default
-      console.warn(
-        'Error processing locale from cookies, using default:',
-        error
-      );
+    } catch {
+      // If session check fails, fall back to cookies
+      try {
+        const cookieStore = await cookies();
+        const preferredLanguage = cookieStore.get('preferredLanguage')?.value;
+
+        if (
+          preferredLanguage &&
+          locales.includes(preferredLanguage as Locale)
+        ) {
+          validLocale = preferredLanguage;
+        }
+      } catch (cookieError) {
+        // This is expected during static generation, just use the default
+        console.warn(
+          'Error processing locale from cookies, using default:',
+          cookieError
+        );
+      }
     }
   }
 

@@ -19,6 +19,7 @@ declare module 'next-auth' {
       state: UserState;
       roles: Array<{ id: number; name: string }>;
       dashboardType?: string;
+      language: string;
     };
     accessToken: string;
     refreshToken: string;
@@ -32,6 +33,7 @@ declare module 'next-auth' {
     state: UserState;
     roles: Array<{ id: number; name: string }>;
     dashboardType?: string;
+    language: string;
     accessToken: string;
     refreshToken: string;
   }
@@ -97,6 +99,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             state: jwtToken.user.state,
             roles: jwtToken.user.roles || [],
             dashboardType: jwtToken.user.dashboardType?.toString(),
+            language: jwtToken.user.language,
             accessToken: jwtToken.accessToken,
             refreshToken: jwtToken.refreshToken,
           };
@@ -114,7 +117,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
 
   callbacks: {
-    async jwt({ token, user, account }): Promise<JWT> {
+    async jwt({ token, user }): Promise<JWT> {
       // Initial sign in
       if (user) {
         return {
@@ -127,7 +130,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             roles: user.roles,
             phone: user.phone,
             state: user.state,
-            language: 'en' as const,
+            language: user.language,
             dashboardType: user.dashboardType?.toString(),
           },
           accessTokenExpires: Date.now() + 15 * 60 * 1000, // 15 minutes
@@ -153,6 +156,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           state: token.user.state,
           roles: token.user.roles,
           dashboardType: token.user.dashboardType?.toString(),
+          language: token.user.language,
         } as unknown as typeof session.user;
         session.accessToken = token.accessToken;
         session.refreshToken = token.refreshToken;
