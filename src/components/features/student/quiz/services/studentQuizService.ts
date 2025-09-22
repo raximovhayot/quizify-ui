@@ -1,3 +1,7 @@
+import { z } from 'zod';
+
+import { questionDataDtoSchema } from '@/components/features/instructor/quiz/schemas/questionSchema';
+import { quizDataDTOSchema } from '@/components/features/instructor/quiz/schemas/quizSchema';
 import { QuestionDataDto } from '@/components/features/instructor/quiz/types/question';
 import { QuizDataDTO } from '@/components/features/instructor/quiz/types/quiz';
 import { apiClient } from '@/lib/api';
@@ -18,7 +22,8 @@ export class StudentQuizService {
       `/student/quizzes/:id`,
       { signal, params: { id: quizId } }
     );
-    return extractApiData(response);
+    const data = extractApiData(response);
+    return quizDataDTOSchema.parse(data);
   }
 
   /**
@@ -32,7 +37,8 @@ export class StudentQuizService {
       `/student/quizzes/:id/questions`,
       { signal, params: { id: quizId } }
     );
-    return extractApiData(response);
+    const data = extractApiData(response);
+    return z.array(questionDataDtoSchema).parse(data);
   }
 
   /**
@@ -45,7 +51,8 @@ export class StudentQuizService {
       `/student/quizzes/upcoming`,
       { signal }
     );
-    return extractApiData(response);
+    const data = extractApiData(response);
+    return z.array(quizDataDTOSchema).parse(data);
   }
 
   /**
@@ -58,7 +65,8 @@ export class StudentQuizService {
       `/student/quizzes/in-progress`,
       { signal }
     );
-    return extractApiData(response);
+    const data = extractApiData(response);
+    return z.array(quizDataDTOSchema).parse(data);
   }
 
   /**

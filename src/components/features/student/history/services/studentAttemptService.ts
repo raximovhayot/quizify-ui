@@ -1,3 +1,4 @@
+import { studentAttemptPageSchema } from '@/components/features/student/history/schemas/attemptSchema';
 import { StudentAttemptDTO } from '@/components/features/student/quiz/types/attempt';
 import { apiClient } from '@/lib/api';
 import { IApiResponse, extractApiData } from '@/types/api';
@@ -20,6 +21,8 @@ export class StudentAttemptService {
           size: params?.size,
         },
       });
-    return extractApiData(response);
+    const data = extractApiData(response);
+    // Runtime validation to guard UI against malformed shapes
+    return studentAttemptPageSchema.parse(data);
   }
 }

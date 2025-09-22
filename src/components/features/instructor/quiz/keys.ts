@@ -3,6 +3,8 @@ export const quizKeys = {
   lists: () => [...quizKeys.all, 'list'] as const,
   list: (filter: Record<string, unknown>) =>
     [...quizKeys.lists(), filter] as const,
+  infinite: (filter: Record<string, unknown>) =>
+    [...quizKeys.all, 'infinite', filter] as const,
   details: () => [...quizKeys.all, 'detail'] as const,
   detail: (id: number) => [...quizKeys.details(), id] as const,
 } as const;

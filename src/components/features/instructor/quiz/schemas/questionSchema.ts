@@ -217,3 +217,23 @@ export function toInstructorQuestionSaveRequest(
       return { ...base, answers: [] };
   }
 }
+
+// DTO schemas for runtime validation at service boundaries
+export const answerDataDtoSchema = z.object({
+  id: z.number().optional(),
+  content: z.string(),
+  correct: z.boolean(),
+  order: z.number().int(),
+  attachmentId: z.number().optional(),
+});
+
+export const questionDataDtoSchema = z.object({
+  id: z.number(),
+  questionType: z.nativeEnum(QuestionType),
+  content: z.string(),
+  explanation: z.string().optional(),
+  order: z.number().int(),
+  points: z.number().int(),
+  trueFalseAnswer: z.boolean().optional(),
+  answers: z.array(answerDataDtoSchema),
+});

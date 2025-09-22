@@ -4,32 +4,28 @@ import { useSession } from 'next-auth/react';
 
 import { IPageableList } from '@/types/common';
 
+import { quizKeys } from '../keys';
 import { QuizService } from '../services/quizService';
 import { QuizDataDTO, QuizFilter } from '../types/quiz';
 
 export function useInfiniteQuizzes(filter: Omit<QuizFilter, 'page'> = {}) {
-  const { data: session } = useSession();
+  const { status } = useSession();
 
   return useInfiniteQuery({
-    queryKey: ['quizzes', 'infinite', filter],
+    queryKey: quizKeys.infinite(filter),
     queryFn: async ({
       pageParam = 0,
       signal,
     }): Promise<IPageableList<QuizDataDTO>> => {
-      if (!session?.accessToken) {
-        throw new Error('No access token available');
-      }
-
       const response = await QuizService.getQuizzes(
         { ...filter, page: pageParam },
-        session.accessToken,
         signal
       );
 
       // Return response directly (validation handled by services layer)
       return response;
     },
-    enabled: !!session?.accessToken,
+    enabled: status === 'authenticated',
     getNextPageParam: (lastPage) => {
       // Return next page number if there are more pages
       if (lastPage.page < lastPage.totalPages - 1) {
