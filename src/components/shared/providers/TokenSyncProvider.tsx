@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 
 import { useSession } from 'next-auth/react';
 
+import { ROUTES_AUTH } from '@/components/features/auth/routes';
 import { AuthService } from '@/components/features/auth/services/authService';
 import { apiClient } from '@/lib/api';
 
@@ -41,6 +42,27 @@ export function TokenSyncProvider() {
       if (!refreshToken) return null;
       try {
         const resp = await AuthService.refreshToken(refreshToken);
+        // If refresh itself failed with 401, redirect to login
+        const isUnauthorized = Array.isArray(resp?.errors)
+          ? resp.errors.some((err) => err.code === 'HTTP_401')
+          : false;
+        if (isUnauthorized && typeof window !== 'undefined') {
+          // Clear any stale token to avoid further retries
+          apiClient.setAuthToken(null);
+          const loginPath = ROUTES_AUTH.login();
+          const isAlreadyAtLogin =
+            window.location.pathname.startsWith(loginPath);
+          if (!isAlreadyAtLogin) {
+            const current = `${window.location.pathname}${window.location.search}`;
+            const loginUrl = `${loginPath}?redirect=${encodeURIComponent(current)}`;
+            // Use replace to prevent going back to a broken state
+            window.location.replace(loginUrl);
+          } else {
+            window.location.replace(loginPath);
+          }
+          return null;
+        }
+
         const newAccess = resp?.data?.accessToken;
         if (newAccess) {
           // Update ApiClient immediately; NextAuth will refresh on its own schedule

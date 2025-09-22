@@ -409,6 +409,8 @@
       "inProgress": "Davom etayotgan testlar",
       "noInProgress": "Davom etayotgan testlar yo‘q",
       "noUpcoming": "Yaqinlashayotgan testlar yo‘q",
+      "loadError": "Yaqinlashayotgan testlarni yuklab bo‘lmadi",
+      "loadErrorInProgress": "Davom etayotgan testlarni yuklab bo‘lmadi",
       "joinTitle": "Testga qo‘shilish",
       "joinLabel": "Kirish kodi",
       "joinDescription": "O‘qituvchingiz bergan kodni kiriting.",
@@ -419,6 +421,7 @@
       "joinMinLength": "Kod kamida 4 ta belgidan iborat bo‘lishi kerak."
     },
     "join": {
+      "success": "Testga muvaffaqiyatli qo‘shildingiz",
       "error": "Testga qo‘shilish muvaffaqiyatsiz. Kodni tekshirib, qayta urinib ko‘ring."
     },
     "history": {

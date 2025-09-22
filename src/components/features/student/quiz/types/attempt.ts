@@ -13,12 +13,12 @@ export interface AttemptListingData {
   incorrect: number;
   notChosen: number;
   total: number;
-  // Optional fields used by history UI
-  quizTitle?: string;
-  quizId?: number;
-  startedAt?: string; // ISO timestamp
-  finishedAt?: string; // ISO timestamp
-  score?: number; // percentage or points
+  // Optional fields used by history UI (nullable to match backend)
+  quizTitle?: string | null;
+  quizId?: number | null;
+  startedAt?: string | null; // ISO timestamp
+  finishedAt?: string | null; // ISO timestamp
+  score?: number | null; // percentage or points
 }
 
 // Backward-compatible alias expected by various components/services

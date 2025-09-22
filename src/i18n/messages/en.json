@@ -407,6 +407,8 @@
       "inProgress": "In-progress quizzes",
       "noInProgress": "No in-progress quizzes",
       "noUpcoming": "No upcoming quizzes",
+      "loadError": "Failed to load upcoming quizzes",
+      "loadErrorInProgress": "Failed to load in-progress quizzes",
       "joinTitle": "Join a quiz",
       "joinLabel": "Join code",
       "joinDescription": "Enter the code provided by your instructor.",
@@ -417,6 +419,7 @@
       "joinMinLength": "Code should be at least 4 characters."
     },
     "join": {
+      "success": "Joined quiz successfully",
       "error": "Failed to join quiz. Check the code and try again."
     },
     "history": {

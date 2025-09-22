@@ -12,11 +12,12 @@ export const studentAttemptDTOSchema = z.object({
   incorrect: z.number().int().nonnegative(),
   notChosen: z.number().int().nonnegative(),
   total: z.number().int().nonnegative(),
-  quizTitle: z.string().optional(),
-  quizId: z.number().int().positive().optional(),
-  startedAt: z.string().optional(),
-  finishedAt: z.string().optional(),
-  score: z.number().optional(),
+  // Backend may send nulls for optional fields; accept null and undefined
+  quizTitle: z.string().nullable().optional(),
+  quizId: z.number().int().positive().nullable().optional(),
+  startedAt: z.string().nullable().optional(),
+  finishedAt: z.string().nullable().optional(),
+  score: z.number().nullable().optional(),
 });
 
 export type TStudentAttemptDTO = z.infer<typeof studentAttemptDTOSchema>;

@@ -178,7 +178,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 async function refreshAccessToken(token: JWT) {
   try {
     const refreshedTokens = await AuthService.refreshToken(token.refreshToken);
-
+    console.error('Refreshed tokens:', refreshedTokens.data);
     return {
       ...token,
       accessToken: refreshedTokens.data.accessToken,

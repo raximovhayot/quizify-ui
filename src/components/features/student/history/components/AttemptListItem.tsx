@@ -1,23 +1,40 @@
 import { useTranslations } from 'next-intl';
+
 import { StudentAttemptDTO } from '@/components/features/student/quiz/types/attempt';
 import { ROUTES_APP } from '@/components/features/student/routes';
 
 export function AttemptListItem({ attempt }: { attempt: StudentAttemptDTO }) {
   const t = useTranslations();
+  const title = attempt.quizTitle || attempt.title;
+  const hasQuizLink = typeof attempt.quizId === 'number' && attempt.quizId > 0;
   return (
     <li className="p-3 hover:bg-accent/40">
       <div className="flex items-center justify-between">
         <div>
-          <div className="font-medium">{attempt.quizTitle}</div>
+          <div className="font-medium">{title}</div>
           <div className="text-xs text-muted-foreground">
-            {formatDate(attempt.finishedAt || attempt.startedAt)}
-            {typeof attempt.score === 'number' && <span> · {attempt.score}</span>}
+            {formatDate(
+              (attempt.finishedAt as string | undefined) ||
+                (attempt.startedAt as string | undefined)
+            )}
+            {typeof attempt.score === 'number' && (
+              <span> · {attempt.score}</span>
+            )}
             {attempt.status && <span> · {attempt.status}</span>}
           </div>
         </div>
-        <a className="text-primary text-sm" href={`${ROUTES_APP.baseUrl()}/quizzes/${attempt.quizId}`}>
-          {t('common.view', { fallback: 'View' })}
-        </a>
+        {hasQuizLink ? (
+          <a
+            className="text-primary text-sm"
+            href={`${ROUTES_APP.baseUrl()}/quizzes/${attempt.quizId}`}
+          >
+            {t('common.view', { fallback: 'View' })}
+          </a>
+        ) : (
+          <span className="text-muted-foreground text-sm">
+            {t('common.view', { fallback: 'View' })}
+          </span>
+        )}
       </div>
     </li>
   );

@@ -61,25 +61,50 @@ export function JoinQuizCard() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="mx-auto w-full max-w-xl grid grid-cols-1 sm:grid-cols-[1fr_auto] items-end gap-3"
+            className="mx-auto w-full max-w-xl"
           >
             <FormField
               control={form.control}
               name="code"
               render={({ field }) => (
-                <FormItem className="flex-1">
+                <FormItem>
                   <FormLabel className="text-base font-medium">
                     {t('student.home.joinLabel', { fallback: 'Join code' })}
                   </FormLabel>
-                  <FormControl>
-                    <Input
-                      className="h-12 text-base"
-                      placeholder={t('student.home.joinPlaceholder', {
-                        fallback: 'Enter join code',
+                  <div className="flex flex-col md:flex-row items-stretch gap-3">
+                    <FormControl>
+                      <Input
+                        className="h-12 text-base flex-1"
+                        placeholder={t('student.home.joinPlaceholder', {
+                          fallback: 'Enter join code',
+                        })}
+                        {...field}
+                      />
+                    </FormControl>
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="h-12 shrink-0"
+                      disabled={form.formState.isSubmitting}
+                      aria-label={t('student.home.joinButton', {
+                        fallback: 'Join',
                       })}
-                      {...field}
-                    />
-                  </FormControl>
+                    >
+                      {form.formState.isSubmitting ? (
+                        <>
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                          {t('common.pleaseWait', {
+                            fallback: 'Please wait...',
+                          })}
+                        </>
+                      ) : (
+                        <>
+                          <LogIn className="mr-2 h-5 w-5" />
+                          {t('student.home.joinButton', { fallback: 'Join' })}
+                        </>
+                      )}
+                    </Button>
+                  </div>
                   <FormDescription>
                     {t('student.home.joinDescription', {
                       fallback: 'Enter the code provided by your instructor.',
@@ -89,25 +114,6 @@ export function JoinQuizCard() {
                 </FormItem>
               )}
             />
-            <Button
-              type="submit"
-              size="lg"
-              className="h-12"
-              disabled={form.formState.isSubmitting}
-              aria-label={t('student.home.joinButton', { fallback: 'Join' })}
-            >
-              {form.formState.isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  {t('common.pleaseWait', { fallback: 'Please wait...' })}
-                </>
-              ) : (
-                <>
-                  <LogIn className="mr-2 h-5 w-5" />
-                  {t('student.home.joinButton', { fallback: 'Join' })}
-                </>
-              )}
-            </Button>
           </form>
         </Form>
       </CardContent>
