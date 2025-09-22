@@ -1,4 +1,5 @@
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 
 import { StudentAttemptDTO } from '@/components/features/student/quiz/types/attempt';
 import { ROUTES_APP } from '@/components/features/student/routes';
@@ -24,12 +25,12 @@ export function AttemptListItem({ attempt }: { attempt: StudentAttemptDTO }) {
           </div>
         </div>
         {hasQuizLink ? (
-          <a
+          <Link
             className="text-primary text-sm"
             href={`${ROUTES_APP.baseUrl()}/quizzes/${attempt.quizId}`}
           >
             {t('common.view', { fallback: 'View' })}
-          </a>
+          </Link>
         ) : (
           <span className="text-muted-foreground text-sm">
             {t('common.view', { fallback: 'View' })}

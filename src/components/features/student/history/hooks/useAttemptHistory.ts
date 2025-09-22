@@ -4,13 +4,16 @@ import { useSession } from 'next-auth/react';
 
 import { attemptHistoryKeys } from '@/components/features/student/history';
 import { StudentAttemptService } from '@/components/features/student/history/services/studentAttemptService';
-import { StudentAttemptDTO } from '@/components/features/student/quiz/types/attempt';
+import {
+  AttemptListingData,
+  AttemptStatus,
+} from '@/components/features/student/quiz/types/attempt';
 import { IPageableList } from '@/types/common';
 
 export { attemptHistoryKeys } from '@/components/features/student/history/keys';
 
 export interface AttemptHistoryFilter {
-  status?: 'passed' | 'failed' | 'in_progress' | 'completed' | '';
+  status?: AttemptStatus | '';
   page?: number; // zero-based
   size?: number;
 }
@@ -18,12 +21,14 @@ export interface AttemptHistoryFilter {
 export function useAttemptHistory(filter: AttemptHistoryFilter = {}) {
   const { status: authStatus } = useSession();
   const status =
-    filter.status && filter.status.length > 0 ? filter.status : undefined;
+    filter.status === '' || filter.status === undefined
+      ? undefined
+      : (filter.status as AttemptStatus);
   const page = filter.page ?? 0;
   const size = filter.size ?? 10;
 
-  return useQuery<IPageableList<StudentAttemptDTO>>({
-    queryKey: attemptHistoryKeys.history(status, page, size),
+  return useQuery<IPageableList<AttemptListingData>>({
+    queryKey: attemptHistoryKeys.history(String(status ?? ''), page, size),
     queryFn: async ({ signal }) => {
       return StudentAttemptService.getAttempts(signal, {
         status,

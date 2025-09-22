@@ -20,6 +20,3 @@ export interface AttemptListingData {
   finishedAt?: string | null; // ISO timestamp
   score?: number | null; // percentage or points
 }
-
-// Backward-compatible alias expected by various components/services
-export type StudentAttemptDTO = AttemptListingData;

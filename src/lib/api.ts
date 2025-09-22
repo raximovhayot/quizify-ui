@@ -150,8 +150,10 @@ class ApiClient {
     const queryString = this.buildQueryString(query);
     if (!queryString) return url;
 
-    const separator = url.includes('?') ? '&' : '';
-    return `${url}${separator}${queryString.slice(1)}`;
+    // If URL already contains a query string, append with '&'; otherwise, append the full query string
+    return url.includes('?')
+      ? `${url}&${queryString.slice(1)}`
+      : `${url}${queryString}`;
   }
 
   /**

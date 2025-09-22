@@ -1,15 +1,28 @@
-"use client";
+'use client';
 
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
+
 import { useTranslations } from 'next-intl';
 
-import { HistoryCard } from './components/HistoryCard';
-import { AttemptList } from './components/AttemptList';
-import { StudentHistorySkeleton } from './components/StudentHistorySkeleton';
-import { useAttemptHistory, AttemptHistoryFilter } from './hooks/useAttemptHistory';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { AttemptStatus } from '@/components/features/student/quiz/types/attempt';
 import { AppPagination } from '@/components/shared/ui/AppPagination';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { getErrorMessage } from '@/lib/api-utils';
+
+import { AttemptList } from './components/AttemptList';
+import { HistoryCard } from './components/HistoryCard';
+import { StudentHistorySkeleton } from './components/StudentHistorySkeleton';
+import {
+  AttemptHistoryFilter,
+  useAttemptHistory,
+} from './hooks/useAttemptHistory';
 
 export function StudentHistoryPage() {
   const t = useTranslations();
@@ -18,17 +31,28 @@ export function StudentHistoryPage() {
   const [page, setPage] = useState(0);
   const [size] = useState(10);
 
-  const filter: AttemptHistoryFilter = useMemo(() => ({ status, page, size }), [status, page, size]);
+  const filter: AttemptHistoryFilter = useMemo(
+    () => ({ status, page, size }),
+    [status, page, size]
+  );
 
   const historyQuery = useAttemptHistory(filter);
 
   const statusOptions = useMemo(
     () => [
-      { value: '', label: t('common.all', { fallback: 'All' }) },
-      { value: 'in_progress', label: t('student.history.status.in_progress', { fallback: 'In progress' }) },
-      { value: 'completed', label: t('student.history.status.completed', { fallback: 'Completed' }) },
-      { value: 'passed', label: t('student.history.status.passed', { fallback: 'Passed' }) },
-      { value: 'failed', label: t('student.history.status.failed', { fallback: 'Failed' }) },
+      { value: 'all', label: t('common.all', { fallback: 'All' }) },
+      {
+        value: String(AttemptStatus.CREATED),
+        label: t('student.history.status.created', { fallback: 'Created' }),
+      },
+      {
+        value: String(AttemptStatus.STARTED),
+        label: t('student.history.status.started', { fallback: 'Started' }),
+      },
+      {
+        value: String(AttemptStatus.FINISHED),
+        label: t('student.history.status.finished', { fallback: 'Finished' }),
+      },
     ],
     [t]
   );
@@ -37,17 +61,23 @@ export function StudentHistoryPage() {
     <HistoryCard
       title={t('student.history.title', { fallback: 'Attempt history' })}
       isLoading={historyQuery.isLoading}
-      error={historyQuery.isError ? t('student.history.loadError', { fallback: 'Failed to load history' }) : undefined}
+      error={
+        historyQuery.isError
+          ? `${t('student.history.loadError', { fallback: 'Failed to load history' })}: ${getErrorMessage(historyQuery.error)}`
+          : undefined
+      }
       actions={
         <div className="flex items-center gap-2">
           <Label htmlFor="status-filter" className="whitespace-nowrap text-sm">
             {t('common.status', { fallback: 'Status' })}:
           </Label>
           <Select
-            value={status || ''}
+            value={status === '' ? 'all' : String(status)}
             onValueChange={(v) => {
               setPage(0);
-              setStatus((v as AttemptHistoryFilter['status']) || '');
+              setStatus(
+                v === 'all' ? '' : (Number(v) as AttemptHistoryFilter['status'])
+              );
             }}
           >
             <SelectTrigger id="status-filter" className="w-[160px]">
@@ -70,7 +100,9 @@ export function StudentHistoryPage() {
         <div className="space-y-3">
           <AttemptList
             items={historyQuery.data?.content || []}
-            emptyLabel={t('student.history.empty', { fallback: 'No attempts yet' })}
+            emptyLabel={t('student.history.empty', {
+              fallback: 'No attempts yet',
+            })}
           />
           <AppPagination
             currentPage={historyQuery.data?.page || 0}
