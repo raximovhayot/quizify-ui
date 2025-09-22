@@ -43,20 +43,24 @@ export function ProfileUpdateDetailsForm() {
   const form = useForm<z.infer<typeof detailsSchema>>({
     resolver: zodResolver(detailsSchema),
     defaultValues: {
-      firstName: profile?.firstName ?? '',
-      lastName: profile?.lastName ?? '',
-      language: profile?.language ?? Language.EN,
-      dashboardType: profile?.dashboardType ?? DashboardType.STUDENT,
+      firstName: '',
+      lastName: '',
+      language: Language.EN,
+      dashboardType: DashboardType.STUDENT,
     },
-    values: profile
-      ? {
-          firstName: profile.firstName ?? '',
-          lastName: profile.lastName ?? '',
-          language: profile.language ?? Language.EN,
-          dashboardType: profile.dashboardType ?? DashboardType.STUDENT,
-        }
-      : undefined,
   });
+
+  // Reset form when profile data becomes available
+  React.useEffect(() => {
+    if (profile) {
+      form.reset({
+        firstName: profile.firstName ?? '',
+        lastName: profile.lastName ?? '',
+        language: profile.language ?? Language.EN,
+        dashboardType: profile.dashboardType ?? DashboardType.STUDENT,
+      });
+    }
+  }, [profile, form]);
 
   const onSubmit = form.handleSubmit(async (values) => {
     await updateProfile.mutateAsync(values);

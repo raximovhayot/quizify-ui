@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { useSession } from 'next-auth/react';
 
+import { attemptHistoryKeys } from '@/components/features/student/history';
 import { StudentAttemptService } from '@/components/features/student/history/services/studentAttemptService';
 import { StudentAttemptDTO } from '@/components/features/student/quiz/types/attempt';
 import { IPageableList } from '@/types/common';

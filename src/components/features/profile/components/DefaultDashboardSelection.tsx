@@ -29,7 +29,6 @@ interface DefaultDashboardSelectionProps<
   isSubmitting: boolean;
 }
 
-// Generic inline option used by both Student and Instructor
 interface OptionItemProps {
   id: string;
   value: DashboardType;
@@ -50,7 +49,7 @@ function OptionItem({
   return (
     <div>
       <RadioGroupItem
-        value={String(value)}
+        value={value.toString()}
         id={id}
         className="peer sr-only"
         disabled={disabled}
