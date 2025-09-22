@@ -124,10 +124,10 @@ export const API_PATHS = {
     LOGOUT: '/auth/logout',
   },
   PROFILE: {
-    GET: '/profile',
-    UPDATE: '/profile',
-    COMPLETE: '/profile/complete',
-    UPLOAD_AVATAR: '/profile/avatar',
+    GET: '/account/me',
+    UPDATE: '/account',
+    COMPLETE: '/account/complete',
+    UPLOAD_AVATAR: '/account/avatar',
   },
   QUIZ: {
     LIST: '/instructor/quizzes',

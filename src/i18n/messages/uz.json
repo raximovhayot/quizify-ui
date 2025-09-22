@@ -212,6 +212,9 @@
       "title": "Parolni yangilash",
       "success": "Parol muvaffaqiyatli yangilandi",
       "error": "Parolni yangilab bo'lmadi"
+    },
+    "validation": {
+      "languageRequired": "Tilni tanlash shart"
     }
   },
   "instructor": {

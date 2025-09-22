@@ -211,6 +211,9 @@
       "title": "Update password",
       "success": "Password updated successfully",
       "error": "Failed to update password"
+    },
+    "validation": {
+      "languageRequired": "Language is required"
     }
   },
   "instructor": {
