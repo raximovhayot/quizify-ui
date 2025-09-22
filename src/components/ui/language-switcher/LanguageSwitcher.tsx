@@ -2,11 +2,7 @@
 
 import { useState } from 'react';
 
-import { useSession } from 'next-auth/react';
 import { useLocale } from 'next-intl';
-
-import { usePatchProfile } from '@/components/features/profile/hooks/usePatchProfile';
-import { Language } from '@/types/common';
 
 import {
   type Language as LanguageData,
@@ -30,9 +26,7 @@ export function LanguageSwitcher({
   className,
 }: Readonly<LanguageSwitcherProps>) {
   const currentLocale = useLocale();
-  const { data: session } = useSession();
   const [isChanging, setIsChanging] = useState(false);
-  const patchProfile = usePatchProfile();
 
   const currentLanguage: LanguageData =
     languages.find((lang) => lang.code === currentLocale) || languages[0]!;
@@ -47,15 +41,8 @@ export function LanguageSwitcher({
       localStorage.setItem('preferredLanguage', newLocale);
       document.cookie = `preferredLanguage=${newLocale}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
 
-      // Use the patch hook to update the backend with optimistic updates
-      if (session?.user) {
-        await patchProfile.mutateAsync({
-          language: newLocale as Language,
-        });
-      } else {
-        // If user is not authenticated, just reload the page to apply the new language
-        window.location.reload();
-      }
+      // Reload the page to apply the new language
+      window.location.reload();
     } catch (error) {
       console.error('Error changing language:', error);
       setIsChanging(false);

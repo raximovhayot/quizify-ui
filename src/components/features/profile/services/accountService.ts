@@ -42,19 +42,6 @@ export class AccountService {
   }
 
   /**
-   * Patch current user's profile details (partial update)
-   */
-  static async patchProfile(
-    data: Partial<AccountDTO>
-  ): Promise<IApiResponse<AccountDTO>> {
-    const response: IApiResponse<AccountDTO> = await apiClient.patch(
-      '/account',
-      data
-    );
-    return response;
-  }
-
-  /**
    * Complete user account setup with profile information
    *
    * This method is used to finalize account creation by providing
