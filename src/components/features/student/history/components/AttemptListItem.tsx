@@ -1,10 +1,12 @@
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
-import { StudentAttemptDTO } from '@/components/features/student/quiz/types/attempt';
+import { AttemptListingData } from '@/components/features/student/quiz/types/attempt';
 import { ROUTES_APP } from '@/components/features/student/routes';
 
-export function AttemptListItem({ attempt }: { attempt: StudentAttemptDTO }) {
+export function AttemptListItem({
+  attempt,
+}: Readonly<{ attempt: AttemptListingData }>) {
   const t = useTranslations();
   const title = attempt.quizTitle || attempt.title;
   const hasQuizLink = typeof attempt.quizId === 'number' && attempt.quizId > 0;

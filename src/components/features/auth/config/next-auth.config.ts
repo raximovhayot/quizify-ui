@@ -51,6 +51,28 @@ declare module 'next-auth/jwt' {
   }
 }
 
+function base64UrlDecode(input: string): string {
+  const mod = input.length % 4;
+  const pad = mod === 2 ? '==' : mod === 3 ? '=' : mod === 1 ? '===' : '';
+  const base64 = input.replace(/-/g, '+').replace(/_/g, '/') + pad;
+  return Buffer.from(base64, 'base64').toString('utf8');
+}
+
+function getJwtExpirationMs(jwt: string | null | undefined): number | null {
+  if (!jwt) return null;
+  try {
+    const parts = jwt.split('.');
+    if (parts.length < 2) return null;
+    const payloadStr = base64UrlDecode(parts[1]!);
+    const payload = JSON.parse(payloadStr) as { exp?: number };
+    if (!payload.exp) return null;
+    const skewMs = 30 * 1000; // 30s clock skew safety
+    return payload.exp * 1000 - skewMs;
+  } catch {
+    return null;
+  }
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
@@ -120,6 +142,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, user }): Promise<JWT> {
       // Initial sign in
       if (user) {
+        const computedExp =
+          getJwtExpirationMs(user.accessToken) ?? Date.now() + 15 * 60 * 1000; // fallback 15 minutes
         return {
           accessToken: user.accessToken,
           refreshToken: user.refreshToken,
@@ -133,7 +157,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             language: user.language,
             dashboardType: user.dashboardType?.toString(),
           },
-          accessTokenExpires: Date.now() + 15 * 60 * 1000, // 15 minutes
+          accessTokenExpires: computedExp,
         } as JWT;
       }
 
@@ -188,11 +212,13 @@ async function refreshAccessToken(token: JWT): Promise<JWT> {
     if (!newAccess || !newRefresh) {
       throw new Error('Invalid refresh token response');
     }
+    const computedExp =
+      getJwtExpirationMs(newAccess) ?? Date.now() + 15 * 60 * 1000; // fallback 15 minutes
     return {
       ...token,
       accessToken: newAccess,
       refreshToken: newRefresh,
-      accessTokenExpires: Date.now() + 15 * 60 * 1000, // 15 minutes
+      accessTokenExpires: computedExp,
     } as JWT;
   } catch (error) {
     console.error('Error refreshing access token:', error);

@@ -1,9 +1,9 @@
-import { StudentAttemptDTO } from '@/components/features/student/quiz/types/attempt';
+import { AttemptListingData } from '@/components/features/student/quiz/types/attempt';
 
 import { AttemptListItem } from './AttemptListItem';
 
 interface AttemptListProps {
-  items: StudentAttemptDTO[];
+  items: AttemptListingData[];
   emptyLabel: string;
 }
 

@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 
 import { ROUTES_AUTH } from '@/components/features/auth/routes';
 import { AuthService } from '@/components/features/auth/services/authService';
@@ -47,18 +47,19 @@ export function TokenSyncProvider() {
           ? resp.errors.some((err) => err.code === 'HTTP_401')
           : false;
         if (isUnauthorized && typeof window !== 'undefined') {
-          // Clear any stale token to avoid further retries
+          // Clear any stale token to avoid further retries and invalidate NextAuth session
           apiClient.setAuthToken(null);
-          const loginPath = ROUTES_AUTH.login();
-          const isAlreadyAtLogin =
-            window.location.pathname.startsWith(loginPath);
-          if (!isAlreadyAtLogin) {
-            const current = `${window.location.pathname}${window.location.search}`;
-            const loginUrl = `${loginPath}?redirect=${encodeURIComponent(current)}`;
-            // Use replace to prevent going back to a broken state
-            window.location.replace(loginUrl);
-          } else {
-            window.location.replace(loginPath);
+          try {
+            // Ensure we fully sign the user out so middleware doesn't bounce them back
+            await signOut({ redirect: true, callbackUrl: ROUTES_AUTH.login() });
+          } catch (e) {
+            // Fallback: hard redirect to sign-in if signOut throws
+            const loginPath = ROUTES_AUTH.login();
+            const isAlreadyAtLogin =
+              window.location.pathname.startsWith(loginPath);
+            if (!isAlreadyAtLogin) {
+              window.location.replace(loginPath);
+            }
           }
           return null;
         }
