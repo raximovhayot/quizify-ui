@@ -42,15 +42,15 @@ export function StudentHistoryPage() {
     () => [
       { value: 'all', label: t('common.all', { fallback: 'All' }) },
       {
-        value: String(AttemptStatus.CREATED),
+        value: AttemptStatus.CREATED,
         label: t('student.history.status.created', { fallback: 'Created' }),
       },
       {
-        value: String(AttemptStatus.STARTED),
+        value: AttemptStatus.STARTED,
         label: t('student.history.status.started', { fallback: 'Started' }),
       },
       {
-        value: String(AttemptStatus.FINISHED),
+        value: AttemptStatus.FINISHED,
         label: t('student.history.status.finished', { fallback: 'Finished' }),
       },
     ],
@@ -72,12 +72,10 @@ export function StudentHistoryPage() {
             {t('common.status', { fallback: 'Status' })}:
           </Label>
           <Select
-            value={status === '' ? 'all' : String(status)}
+            value={status === '' ? 'all' : status}
             onValueChange={(v) => {
               setPage(0);
-              setStatus(
-                v === 'all' ? '' : (Number(v) as AttemptHistoryFilter['status'])
-              );
+              setStatus(v === 'all' ? '' : (v as AttemptStatus));
             }}
           >
             <SelectTrigger id="status-filter" className="w-[160px]">
