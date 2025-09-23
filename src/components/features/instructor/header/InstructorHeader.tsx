@@ -57,7 +57,7 @@ export function InstructorHeader({
             user={user}
             onLogout={logout}
             i18nNamespace="instructor"
-            showNotificationsQuickActions
+            showNotificationsQuickActions={false}
           />
         ) : null
       }
