@@ -33,8 +33,7 @@ export function useCreateQuestion() {
 
   return createMutation<QuestionDataDto, InstructorQuestionSaveRequest>({
     mutationFn: async (data) => {
-      const res = await QuestionService.createQuestion(data);
-      return res;
+      return await QuestionService.createQuestion(data);
     },
     successMessage: t('instructor.quiz.question.create.success', {
       fallback: 'Question created successfully',

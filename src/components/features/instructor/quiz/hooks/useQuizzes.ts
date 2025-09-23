@@ -22,8 +22,6 @@ import {
   QuizFilter,
 } from '../types/quiz';
 
-// Query keys are centralized in '@/components/features/instructor/quiz/keys'
-
 // Hook for fetching paginated quizzes list
 export function useQuizzes(filter: QuizFilter = {}) {
   const { status } = useSession();
@@ -32,12 +30,10 @@ export function useQuizzes(filter: QuizFilter = {}) {
     queryKey: quizKeys.list(filter),
     queryFn: async ({ signal }): Promise<TQuizListResponse> => {
       const response = await QuizService.getQuizzes(filter, signal);
-      // Validate response with Zod schema
-      const validatedResponse = quizListResponseSchema.parse(response);
-      return validatedResponse;
+      return quizListResponseSchema.parse(response);
     },
     enabled: status === 'authenticated',
-    staleTime: 1 * 60 * 1000, // 1 minute (more responsive)
+    staleTime: 60 * 1000, // 1 minute (more responsive)
     gcTime: 15 * 60 * 1000, // 15 minutes (keep longer in cache)
     // Dedupe identical requests within 1 second
     structuralSharing: true,
@@ -55,8 +51,7 @@ export function useQuiz(quizId: number) {
     queryFn: async ({ signal }): Promise<QuizDataDTO> => {
       const response = await QuizService.getQuiz(quizId, signal);
       // Validate response with Zod schema
-      const validatedResponse = quizDataDTOSchema.parse(response);
-      return validatedResponse;
+      return quizDataDTOSchema.parse(response);
     },
     enabled: status === 'authenticated' && !!quizId,
     staleTime: 2 * 60 * 1000, // 2 minutes
@@ -78,8 +73,7 @@ export function useCreateQuiz() {
 
   return createMutation<QuizDataDTO, InstructorQuizCreateRequest>({
     mutationFn: async (data) => {
-      const resp = await QuizService.createQuiz(data);
-      return resp;
+      return await QuizService.createQuiz(data);
     },
     successMessage: t('instructor.quiz.create.success', {
       fallback: 'Quiz created successfully',
@@ -103,8 +97,7 @@ export function useUpdateQuiz() {
       if (!data.id) {
         throw new Error('Quiz ID is required for update');
       }
-      const resp = await QuizService.updateQuiz(data.id, data);
-      return resp;
+      return await QuizService.updateQuiz(data.id, data);
     },
     successMessage: t('instructor.quiz.update.success', {
       fallback: 'Quiz updated successfully',
