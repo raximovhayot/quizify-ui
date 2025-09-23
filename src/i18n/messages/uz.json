@@ -19,6 +19,8 @@
     "view": "Ko'rish",
     "true": "To'g'ri",
     "false": "Yolg'on",
+    "all": "Barchasi",
+    "status": "Holat",
     "pagination": {
       "first": "Birinchi sahifaga o'tish",
       "previous": "Oldingi sahifaga o'tish",
@@ -434,6 +436,9 @@
       "status": {
         "in_progress": "Davom etmoqda",
         "completed": "Yakunlangan",
+        "created": "Yaratilgan",
+        "started": "Boshlangan",
+        "finished": "Yakunlangan",
         "passed": "O'tgan",
         "failed": "Muvaffaqiyatsiz"
       }

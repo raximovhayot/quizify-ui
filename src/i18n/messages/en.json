@@ -19,6 +19,8 @@
     "view": "View",
     "true": "True",
     "false": "False",
+    "all": "All",
+    "status": "Status",
     "pagination": {
       "first": "Go to first page",
       "previous": "Go to previous page",
@@ -432,6 +434,9 @@
       "status": {
         "in_progress": "In progress",
         "completed": "Completed",
+        "created": "Created",
+        "started": "Started",
+        "finished": "Finished",
         "passed": "Passed",
         "failed": "Failed"
       }
