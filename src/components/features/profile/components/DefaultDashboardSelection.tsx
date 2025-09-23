@@ -102,7 +102,7 @@ export function DefaultDashboardSelection<
             <FormControl>
               <RadioGroup
                 onValueChange={(value) =>
-                  field.onChange(Number(value) as DashboardType)
+                  field.onChange(value as DashboardType)
                 }
                 value={String(field.value ?? '')}
                 className="grid grid-cols-1 md:grid-cols-2 gap-4"

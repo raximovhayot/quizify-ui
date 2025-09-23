@@ -23,7 +23,7 @@ export function useAttemptHistory(filter: AttemptHistoryFilter = {}) {
   const status =
     filter.status === '' || filter.status === undefined
       ? undefined
-      : (filter.status as AttemptStatus);
+      : filter.status;
   const page = filter.page ?? 0;
   const size = filter.size ?? 10;
 

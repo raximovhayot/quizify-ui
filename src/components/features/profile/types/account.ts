@@ -21,8 +21,8 @@ export enum UserRole {
 
 // Dashboard type enum to match backend
 export enum DashboardType {
-  INSTRUCTOR,
-  STUDENT,
+  INSTRUCTOR = 'INSTRUCTOR',
+  STUDENT = 'STUDENT',
 }
 
 // Role DTO based on backend-filesystem MCP server

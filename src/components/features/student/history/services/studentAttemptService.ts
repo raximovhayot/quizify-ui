@@ -1,4 +1,4 @@
-import { studentAttemptPageSchema } from '@/components/features/student/history/schemas/attemptSchema';
+import { pageableAttemptListSchema } from '@/components/features/student/history/schemas/attemptSchema';
 import {
   AttemptListingData,
   AttemptStatus,
@@ -30,6 +30,6 @@ export class StudentAttemptService {
       );
 
     const data = extractApiData(response);
-    return studentAttemptPageSchema.parse(data);
+    return pageableAttemptListSchema.parseAsync(data);
   }
 }

@@ -15,7 +15,7 @@ export const quizDataDTOSchema = z.object({
   id: z.number(),
   title: z.string(),
   description: z.string().nullable().optional(),
-  status: z.nativeEnum(QuizStatus),
+  status: z.enum(QuizStatus),
   createdDate: z.string(),
   lastModifiedDate: z.string().optional(),
   numberOfQuestions: z.number(),
@@ -28,7 +28,7 @@ export const quizFilterSchema = z.object({
   page: z.number().min(0).optional().default(0),
   size: z.number().min(1).max(100).optional().default(10),
   search: z.string().optional(),
-  status: z.nativeEnum(QuizStatus).optional(),
+  status: z.enum(QuizStatus).optional(),
 });
 
 // Quiz Create Request Schema
@@ -63,7 +63,7 @@ export const instructorQuizUpdateRequestSchema = z.object({
 // Quiz Status Update Request Schema
 export const instructorQuizUpdateStatusRequestSchema = z.object({
   id: z.number(),
-  status: z.nativeEnum(QuizStatus),
+  status: z.enum(QuizStatus),
 });
 
 // Quiz Form Schema (for React Hook Form)
