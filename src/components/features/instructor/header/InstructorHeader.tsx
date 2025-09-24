@@ -22,12 +22,12 @@ export function InstructorHeader({
 
   const navItems: TNavigationItem[] = [
     {
-      href: `${ROUTES_APP.baseUrl()}/quizzes`,
+      href: ROUTES_APP.quizzes.list(),
       icon: BookOpen,
       label: t('instructor.navigation.quizzes', { fallback: 'Quizzes' }),
     },
     {
-      href: `${ROUTES_APP.baseUrl()}/analytics`,
+      href: ROUTES_APP.analytics.root(),
       icon: BarChart3,
       label: t('instructor.navigation.analytics', { fallback: 'Analytics' }),
     },

@@ -49,7 +49,7 @@ export const QuizGrid = memo(function QuizGrid({
             label: t('instructor.quiz.create.button', {
               fallback: 'Create Quiz',
             }),
-            onClick: () => router.push(`${ROUTES_APP.baseUrl()}/quizzes/new`),
+            onClick: () => router.push(ROUTES_APP.quizzes.new()),
             variant: 'default',
           },
         ]}

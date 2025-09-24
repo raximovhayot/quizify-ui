@@ -26,7 +26,7 @@ export default function CreateQuizModalPage() {
       open={open}
       onOpenChange={(nextOpen) => {
         setOpen(nextOpen);
-        if (!nextOpen) router.push(`${ROUTES_APP.baseUrl()}/quizzes`);
+        if (!nextOpen) router.push(ROUTES_APP.quizzes.list());
       }}
     >
       <DialogContent>

@@ -16,7 +16,7 @@ export default function QuizEditModalPage() {
     <Dialog
       open
       onOpenChange={(open) => {
-        if (!open) router.push(`${ROUTES_APP.baseUrl()}/quizzes`);
+        if (!open) router.push(ROUTES_APP.quizzes.list());
       }}
     >
       <DialogContent>

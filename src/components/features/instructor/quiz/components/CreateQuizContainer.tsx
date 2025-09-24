@@ -4,6 +4,8 @@ import { useCallback } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { ROUTES_APP } from '@/components/features/instructor/routes';
+
 import { useCreateQuiz } from '../hooks/useQuizzes';
 import { InstructorQuizCreateRequest } from '../types/quiz';
 import { QuizForm } from './QuizForm';
@@ -22,13 +24,13 @@ export function CreateQuizContainer({
     async (data: InstructorQuizCreateRequest) => {
       const created = await createQuizMutation.mutateAsync(data);
       // Navigate to the newly created quiz details page
-      router.push(`/instructor/quizzes/${created.id}`);
+      router.push(ROUTES_APP.quizzes.detail(created.id));
     },
     [createQuizMutation, router]
   );
 
   const handleCancel = useCallback(() => {
-    router.push('/instructor/quizzes');
+    router.push(ROUTES_APP.quizzes.list());
   }, [router]);
 
   return (

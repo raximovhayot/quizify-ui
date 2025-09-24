@@ -162,17 +162,13 @@ export function QuizCard({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem
-                onClick={() =>
-                  router.push(`${ROUTES_APP.baseUrl()}/quizzes/${quiz.id}`)
-                }
+                onClick={() => router.push(ROUTES_APP.quizzes.detail(quiz.id))}
               >
                 <Eye className="mr-2 h-4 w-4" />
                 {t('instructor.quiz.action.view', { fallback: 'View' })}
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() =>
-                  router.push(`${ROUTES_APP.baseUrl()}/quizzes/${quiz.id}/edit`)
-                }
+                onClick={() => router.push(ROUTES_APP.quizzes.edit(quiz.id))}
               >
                 <Edit className="mr-2 h-4 w-4" />
                 {t('instructor.quiz.action.edit', { fallback: 'Edit' })}

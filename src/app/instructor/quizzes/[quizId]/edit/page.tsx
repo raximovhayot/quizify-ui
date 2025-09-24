@@ -14,6 +14,7 @@ import {
 } from '@/components/features/instructor/quiz/hooks/useQuizzes';
 import { toInstructorQuestionSaveRequest } from '@/components/features/instructor/quiz/schemas/questionSchema';
 import { InstructorQuizUpdateRequest } from '@/components/features/instructor/quiz/types/quiz';
+import { ROUTES_APP } from '@/components/features/instructor/routes';
 import { ErrorDisplay } from '@/components/shared/ui/ErrorDisplay';
 import { Button } from '@/components/ui/button';
 import {
@@ -163,7 +164,7 @@ export default function EditQuizPage() {
         <div className="flex gap-2">
           <Button
             variant="outline"
-            onClick={() => router.push(`/instructor/quizzes/${quiz.id}`)}
+            onClick={() => router.push(ROUTES_APP.quizzes.detail(quiz.id))}
           >
             {t('common.view', { fallback: 'View' })}
           </Button>

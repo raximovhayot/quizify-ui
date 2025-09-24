@@ -84,11 +84,7 @@ export function InstructorQuizzesPage() {
                   />
                 </div>
               </form>
-              <Button
-                onClick={() =>
-                  router.push(`${ROUTES_APP.baseUrl()}/quizzes/new`)
-                }
-              >
+              <Button onClick={() => router.push(ROUTES_APP.quizzes.new())}>
                 {t('instructor.quiz.create.button', {
                   fallback: 'Create Quiz',
                 })}

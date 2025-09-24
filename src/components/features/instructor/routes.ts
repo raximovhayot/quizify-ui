@@ -6,4 +6,24 @@ export const ROUTES_APP = {
   baseUrl: () =>
     // @ts-expect-error see comment above
     ROUTES_APP.root() === '/' ? ('' as const) : ROUTES_APP.root(),
+
+  // Aliases / sections
+  home: () => ROUTES_APP.root(),
+
+  quizzes: {
+    list: () => `${ROUTES_APP.baseUrl()}/quizzes` as const,
+    new: () => `${ROUTES_APP.baseUrl()}/quizzes/new` as const,
+    detail: (quizId: number | string) =>
+      `${ROUTES_APP.baseUrl()}/quizzes/${quizId}` as const,
+    edit: (quizId: number | string) =>
+      `${ROUTES_APP.baseUrl()}/quizzes/${quizId}/edit` as const,
+  },
+
+  analytics: {
+    root: () => `${ROUTES_APP.baseUrl()}/analytics` as const,
+  },
+
+  profile: {
+    root: () => `${ROUTES_APP.baseUrl()}/profile` as const,
+  },
 } as const;
