@@ -1,6 +1,6 @@
 'use client';
 
-import { BarChart3, BookOpen, Home } from 'lucide-react';
+import { BarChart3, BookOpen } from 'lucide-react';
 
 import { useTranslations } from 'next-intl';
 
@@ -20,11 +20,6 @@ export function InstructorHeader({
   const t = useTranslations();
 
   const navItems: TNavigationItem[] = [
-    {
-      href: '/instructor',
-      icon: Home,
-      label: t('instructor.navigation.dashboard', { fallback: 'Dashboard' }),
-    },
     {
       href: '/instructor/quizzes',
       icon: BookOpen,

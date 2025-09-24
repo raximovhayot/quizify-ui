@@ -45,7 +45,9 @@ export const QuizGrid = memo(function QuizGrid({
         })}
         actions={[
           {
-            label: t('instructor.quiz.create', { fallback: 'Create Quiz' }),
+            label: t('instructor.quiz.create.button', {
+              fallback: 'Create Quiz',
+            }),
             onClick: () => router.push('/instructor/quizzes/new'),
             variant: 'default',
           },

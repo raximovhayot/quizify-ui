@@ -17,6 +17,7 @@
     "retry": "Try Again",
     "actions": "Actions",
     "view": "View",
+    "search": "Search",
     "true": "True",
     "false": "False",
     "all": "All",
@@ -28,7 +29,9 @@
       "last": "Go to last page",
       "current": "Page {page}, current page",
       "goto": "Go to page {page}",
-      "info": "Page {current} of {total}"
+      "info": "Page {current} of {total}",
+      "showing": "Showing {total} results",
+      "perPage": "Per page"
     }
   },
   "auth": {
@@ -328,7 +331,9 @@
         },
         "no": {
           "data": "No quiz data available"
-        }
+        },
+        "empty": "No quizzes found",
+        "empty.description": "Create your first quiz to get started"
       }
     },
     "userMenu": {
