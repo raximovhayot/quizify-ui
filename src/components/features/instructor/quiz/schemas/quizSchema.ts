@@ -1,32 +1,49 @@
 import { z } from 'zod';
 
+import { pageableSchema } from '@/components/shared/schemas/pageable.schema';
+
 import { QuizStatus } from '../types/quiz';
+
+// Normalize backend enum values (accept 'DRAFT'/'PUBLISHED' or lowercase) to our lowercase enum
+const statusSchema = z.preprocess(
+  (val) => (typeof val === 'string' ? val.toLowerCase() : val),
+  z.enum(QuizStatus)
+);
 
 // Quiz Settings Schema
 export const quizSettingsSchema = z.object({
-  time: z.number().min(0, 'Time limit cannot be negative'),
-  attempt: z.number().min(0, 'Attempt limit cannot be negative'),
-  shuffleQuestions: z.boolean(),
-  shuffleAnswers: z.boolean(),
+  // Some backends may send numbers as strings or null; coerce and allow optional
+  time: z.coerce.number().min(0, 'Time limit cannot be negative').optional(),
+  attempt: z.coerce
+    .number()
+    .min(0, 'Attempt limit cannot be negative')
+    .optional(),
+  // Flags may be missing; default to false
+  shuffleQuestions: z.boolean().optional().default(false),
+  shuffleAnswers: z.boolean().optional().default(false),
 });
 
 // Quiz Data DTO Schema
 export const quizDataDTOSchema = z.object({
-  id: z.number(),
+  id: z.coerce.number(),
   title: z.string(),
   description: z.string().nullable().optional(),
-  status: z.nativeEnum(QuizStatus),
+  status: statusSchema,
   createdDate: z.string(),
   lastModifiedDate: z.string().optional(),
-  numberOfQuestions: z.number(),
+  numberOfQuestions: z.coerce.number(),
   settings: quizSettingsSchema,
-  attachmentId: z.number().optional(),
+  // Backend may return null for no attachment; normalize null -> undefined to keep type narrow
+  attachmentId: z.preprocess(
+    (val) => (val === null ? undefined : val),
+    z.coerce.number().optional()
+  ),
 });
 
 // Quiz Filter Schema
 export const quizFilterSchema = z.object({
-  page: z.number().min(0).optional().default(0),
-  size: z.number().min(1).max(100).optional().default(10),
+  page: z.coerce.number().min(0).optional().default(0),
+  size: z.coerce.number().min(1).max(100).optional().default(10),
   search: z.string().optional(),
   status: z.nativeEnum(QuizStatus).optional(),
 });
@@ -42,12 +59,12 @@ export const instructorQuizCreateRequestSchema = z.object({
     .max(1024, 'Description must be less than 1024 characters')
     .optional(),
   settings: quizSettingsSchema,
-  attachmentId: z.number().optional(),
+  attachmentId: z.coerce.number().optional(),
 });
 
 // Quiz Update Request Schema
 export const instructorQuizUpdateRequestSchema = z.object({
-  id: z.number().optional(),
+  id: z.coerce.number().optional(),
   title: z
     .string()
     .min(3, 'Title must be at least 3 characters')
@@ -57,12 +74,12 @@ export const instructorQuizUpdateRequestSchema = z.object({
     .max(1024, 'Description must be less than 1024 characters')
     .optional(),
   settings: quizSettingsSchema,
-  attachmentId: z.number().optional(),
+  attachmentId: z.coerce.number().optional(),
 });
 
 // Quiz Status Update Request Schema
 export const instructorQuizUpdateStatusRequestSchema = z.object({
-  id: z.number(),
+  id: z.coerce.number(),
   status: z.nativeEnum(QuizStatus),
 });
 
@@ -77,22 +94,37 @@ export const quizFormSchema = z.object({
     .max(1024, 'Description must be less than 1024 characters')
     .optional(),
   settings: z.object({
-    time: z.number().min(0, 'Time limit cannot be negative').optional(),
-    attempt: z.number().min(0, 'Attempt limit cannot be negative').optional(),
+    time: z.coerce.number().min(0, 'Time limit cannot be negative').optional(),
+    attempt: z.coerce
+      .number()
+      .min(0, 'Attempt limit cannot be negative')
+      .optional(),
     shuffleQuestions: z.boolean().optional(),
     shuffleAnswers: z.boolean().optional(),
   }),
-  attachmentId: z.number().optional(),
+  attachmentId: z.coerce.number().optional(),
 });
 
 // API Response Schemas
-export const quizListResponseSchema = z.object({
-  content: z.array(quizDataDTOSchema).optional().default([]),
-  totalElements: z.number(),
-  totalPages: z.number(),
-  size: z.number(),
-  page: z.number(),
-});
+export const quizListResponseSchema = pageableSchema(quizDataDTOSchema).catch(
+  // Be resilient: if paging totals come as strings or are missing, coerce and default
+  (val) => {
+    // Try manual coercion if schema failed due to minor type mismatches
+    if (val && typeof val === 'object') {
+      const obj = val as Record<string, unknown>;
+      return {
+        content: Array.isArray(obj.content) ? obj.content : [],
+        totalElements: Number(obj.totalElements ?? 0),
+        totalPages: Number(obj.totalPages ?? 0),
+        size: Number(
+          obj.size ?? (Array.isArray(obj.content) ? obj.content.length : 0)
+        ),
+        page: Number(obj.page ?? 0),
+      };
+    }
+    return { content: [], totalElements: 0, totalPages: 0, size: 0, page: 0 };
+  }
+);
 
 // Type exports for use in components
 export type TQuizSettings = z.infer<typeof quizSettingsSchema>;

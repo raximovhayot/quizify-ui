@@ -12,6 +12,8 @@ import {
   Users,
 } from 'lucide-react';
 
+import React from 'react';
+
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
@@ -47,7 +49,7 @@ export function QuizCard({
   isUpdatingStatus = false,
   children,
   className,
-}: QuizCardProps) {
+}: Readonly<QuizCardProps>) {
   const t = useTranslations();
   const router = useRouter();
 
@@ -209,15 +211,13 @@ export function QuizCard({
       </CardHeader>
       <CardContent className="pt-0">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
-          {typeof quiz.numberOfQuestions === 'number' && (
-            <div className="flex items-center gap-2">
-              <FileText className="h-4 w-4 text-muted-foreground" />
-              <span className="text-muted-foreground">
-                {t('instructor.quiz.questions', { fallback: 'Questions' })}:
-              </span>
-              <span className="font-medium">{quiz.numberOfQuestions}</span>
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            <FileText className="h-4 w-4 text-muted-foreground" />
+            <span className="text-muted-foreground">
+              {t('instructor.quiz.questions', { fallback: 'Questions' })}:
+            </span>
+            <span className="font-medium">{quiz.numberOfQuestions}</span>
+          </div>
 
           {typeof quiz.settings?.time === 'number' && (
             <div className="flex items-center gap-2">
@@ -226,7 +226,7 @@ export function QuizCard({
                 {t('instructor.quiz.time', { fallback: 'Time' })}:
               </span>
               <span className="font-medium">
-                {formatTime(quiz.settings?.time as number)}
+                {formatTime(quiz.settings?.time)}
               </span>
             </div>
           )}
@@ -238,7 +238,7 @@ export function QuizCard({
                 {t('instructor.quiz.attempts', { fallback: 'Attempts' })}:
               </span>
               <span className="font-medium">
-                {formatAttempts(quiz.settings?.attempt as number)}
+                {formatAttempts(quiz.settings?.attempt)}
               </span>
             </div>
           )}
