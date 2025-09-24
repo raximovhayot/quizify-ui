@@ -265,7 +265,11 @@
         "all": "All Status"
       },
       "view": "View",
-      "edit": "Edit",
+      "edit": {
+        "dialogTitle": "Edit Quiz",
+        "title": "Edit Quiz",
+        "stub": "This is a stub page for editing quiz #{id}. The full editor UI will be implemented next."
+      },
       "delete": {
         "success": "Quiz deleted successfully",
         "error": "Failed to delete quiz",
@@ -309,6 +313,7 @@
         "answers": "Shuffle Answers"
       },
       "create": {
+        "dialogTitle": "Create Quiz",
         "button": "Create Quiz",
         "first": "Create Your First Quiz",
         "success": "Quiz created successfully",
@@ -325,6 +330,7 @@
         "summary": "Showing {start} to {end} of {total} quizzes"
       },
       "list": {
+        "title": "Your quizzes",
         "error": {
           "title": "Failed to load quizzes",
           "description": "There was an error loading your quizzes. Please try again."
@@ -332,8 +338,10 @@
         "no": {
           "data": "No quiz data available"
         },
-        "empty": "No quizzes found",
-        "empty.description": "Create your first quiz to get started"
+        "empty": {
+          "title": "No quizzes found",
+          "description": "Create your first quiz to get started"
+        }
       }
     },
     "userMenu": {

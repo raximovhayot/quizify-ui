@@ -37,7 +37,7 @@ export const QuizGrid = memo(function QuizGrid({
     return (
       <ContentPlaceholder
         icon={FileText}
-        title={t('instructor.quiz.list.empty', {
+        title={t('instructor.quiz.list.empty.title', {
           fallback: 'No quizzes found',
         })}
         description={t('instructor.quiz.list.empty.description', {

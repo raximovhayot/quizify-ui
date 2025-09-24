@@ -263,7 +263,11 @@
         "all": "Barcha holatlar"
       },
       "view": "Ko'rish",
-      "edit": "Tahrirlash",
+      "edit": {
+        "dialogTitle": "Testni tahrirlash",
+        "title": "Testni tahrirlash",
+        "stub": "Bu #{id}-testni tahrirlash uchun vaqtinchalik sahifa. To'liq tahrirlash interfeysi keyinroq qo'shiladi."
+      },
       "delete": {
         "success": "Test muvaffaqiyatli o'chirildi",
         "error": "Testni o'chirib bo'lmadi",
@@ -324,12 +328,17 @@
         "summary": "{start} dan {end} gacha, jami {total} test"
       },
       "list": {
+        "title": "Sizning testlaringiz",
         "error": {
           "title": "Testlarni yuklab bo'lmadi",
           "description": "Testlaringizni yuklashda xatolik yuz berdi. Iltimos, qayta urinib ko'ring."
         },
         "no": {
           "data": "Test ma'lumotlari mavjud emas"
+        },
+        "empty": {
+          "title": "Testlar topilmadi",
+          "description": "Boshlash uchun birinchi testingizni yarating"
         }
       }
     },
