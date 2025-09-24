@@ -7,6 +7,7 @@ import { memo } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
+import { ROUTES_APP } from '@/components/features/instructor/routes';
 import { ContentPlaceholder } from '@/components/shared/ui/ContentPlaceholder';
 
 import { QuizDataDTO, QuizStatus } from '../types/quiz';
@@ -48,7 +49,7 @@ export const QuizGrid = memo(function QuizGrid({
             label: t('instructor.quiz.create.button', {
               fallback: 'Create Quiz',
             }),
-            onClick: () => router.push('/instructor/quizzes/new'),
+            onClick: () => router.push(`${ROUTES_APP.baseUrl()}/quizzes/new`),
             variant: 'default',
           },
         ]}

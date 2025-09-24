@@ -15,6 +15,7 @@ import {
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
+import { ROUTES_APP } from '@/components/features/instructor/routes';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -161,14 +162,16 @@ export function QuizCard({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem
-                onClick={() => router.push(`/instructor/quizzes/${quiz.id}`)}
+                onClick={() =>
+                  router.push(`${ROUTES_APP.baseUrl()}/quizzes/${quiz.id}`)
+                }
               >
                 <Eye className="mr-2 h-4 w-4" />
                 {t('instructor.quiz.action.view', { fallback: 'View' })}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() =>
-                  router.push(`/instructor/quizzes/${quiz.id}/edit`)
+                  router.push(`${ROUTES_APP.baseUrl()}/quizzes/${quiz.id}/edit`)
                 }
               >
                 <Edit className="mr-2 h-4 w-4" />

@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
 
+import { ROUTES_APP } from '@/components/features/instructor/routes';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 
 export default function QuizEditModalPage() {
@@ -15,7 +16,7 @@ export default function QuizEditModalPage() {
     <Dialog
       open
       onOpenChange={(open) => {
-        if (!open) router.push('/instructor/quizzes');
+        if (!open) router.push(`${ROUTES_APP.baseUrl()}/quizzes`);
       }}
     >
       <DialogContent>

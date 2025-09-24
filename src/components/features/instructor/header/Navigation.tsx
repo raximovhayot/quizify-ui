@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { ROUTES_APP } from '@/components/features/instructor/routes';
 import { Logo } from '@/components/shared/brand/Logo';
 import { Button } from '@/components/ui/button';
 import {
@@ -42,24 +43,24 @@ export function Navigation() {
 
   const navigationItems: NavigationItem[] = [
     {
-      href: '/instructor',
+      href: ROUTES_APP.root(),
       icon: Home,
       label: t('instructor.navigation.dashboard', { fallback: 'Dashboard' }),
     },
     {
-      href: '/instructor/quizzes',
+      href: `${ROUTES_APP.baseUrl()}/quizzes`,
       icon: BookOpen,
       label: t('instructor.navigation.quizzes', { fallback: 'Quizzes' }),
     },
     {
-      href: '/instructor/analytics',
+      href: `${ROUTES_APP.baseUrl()}/analytics`,
       icon: BarChart3,
       label: t('instructor.navigation.analytics', { fallback: 'Analytics' }),
     },
   ];
 
   const isActiveLink = (href: string) => {
-    if (href === '/instructor') {
+    if (href === ROUTES_APP.root()) {
       return safePath === href;
     }
     return safePath.startsWith(href);
@@ -85,7 +86,7 @@ export function Navigation() {
   return (
     <div className="flex items-center gap-4 flex-1">
       {/* Brand/Logo (hidden on mobile; visible on lg+) */}
-      <Logo href="/instructor" size="md" className="hidden lg:flex" />
+      <Logo href={ROUTES_APP.root()} size="md" className="hidden lg:flex" />
 
       {/* Desktop Navigation */}
       <NavigationMenu className="hidden lg:flex">

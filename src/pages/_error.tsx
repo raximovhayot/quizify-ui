@@ -4,7 +4,7 @@ interface ErrorPageProps {
   statusCode?: number;
 }
 
-function ErrorPage({ statusCode }: ErrorPageProps) {
+function ErrorPage({ statusCode }: Readonly<ErrorPageProps>) {
   return (
     <main
       style={{

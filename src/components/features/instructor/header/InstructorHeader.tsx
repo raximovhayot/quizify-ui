@@ -5,6 +5,7 @@ import { BarChart3, BookOpen } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
+import { ROUTES_APP } from '@/components/features/instructor/routes';
 import { AppHeader } from '@/components/shared/navigation/AppHeader';
 import { TNavigationItem } from '@/components/shared/navigation/AppNavigation';
 import { UserMenu } from '@/components/shared/navigation/UserMenu';
@@ -21,12 +22,12 @@ export function InstructorHeader({
 
   const navItems: TNavigationItem[] = [
     {
-      href: '/instructor/quizzes',
+      href: `${ROUTES_APP.baseUrl()}/quizzes`,
       icon: BookOpen,
       label: t('instructor.navigation.quizzes', { fallback: 'Quizzes' }),
     },
     {
-      href: '/instructor/analytics',
+      href: `${ROUTES_APP.baseUrl()}/analytics`,
       icon: BarChart3,
       label: t('instructor.navigation.analytics', { fallback: 'Analytics' }),
     },
@@ -41,8 +42,8 @@ export function InstructorHeader({
 
   return (
     <AppHeader
-      logoHref="/instructor"
-      rootHref="/instructor"
+      logoHref={ROUTES_APP.root()}
+      rootHref={ROUTES_APP.root()}
       navItems={navItems}
       mobileTitle={mobileTitle}
       toggleMenuLabel={toggleMenuLabel}

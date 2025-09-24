@@ -1,5 +1,7 @@
 import { redirect } from 'next/navigation';
 
+import { ROUTES_APP } from '@/components/features/instructor/routes';
+
 export default function InstructorPage() {
-  redirect('/instructor/quizzes');
+  redirect(`${ROUTES_APP.baseUrl()}/quizzes`);
 }

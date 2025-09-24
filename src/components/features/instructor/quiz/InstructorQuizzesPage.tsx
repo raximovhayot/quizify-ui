@@ -7,6 +7,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
+import { ROUTES_APP } from '@/components/features/instructor/routes';
 import { AppPagination } from '@/components/shared/ui/AppPagination';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -83,7 +84,11 @@ export function InstructorQuizzesPage() {
                   />
                 </div>
               </form>
-              <Button onClick={() => router.push('/instructor/quizzes/new')}>
+              <Button
+                onClick={() =>
+                  router.push(`${ROUTES_APP.baseUrl()}/quizzes/new`)
+                }
+              >
                 {t('instructor.quiz.create.button', {
                   fallback: 'Create Quiz',
                 })}

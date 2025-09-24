@@ -31,9 +31,6 @@ export function CreateQuizContainer({
     router.push('/instructor/quizzes');
   }, [router]);
 
-  // If there was an error rendered outside toast, show a recoverable error UI
-  // Generally, useCreateQuiz shows a toast on error; we keep UI simple here.
-
   return (
     <QuizForm
       onSubmit={handleSubmit}
