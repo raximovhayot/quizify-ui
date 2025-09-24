@@ -52,7 +52,7 @@ export const QuizGrid = memo(function QuizGrid({
             variant: 'default',
           },
         ]}
-        className={className}
+        className={`border-none shadow-none ${className || ''}`}
       />
     );
   }
