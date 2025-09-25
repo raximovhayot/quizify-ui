@@ -123,71 +123,61 @@ export function QuizViewPage({ quizId }: QuizViewPageProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Modern Header with Gradient Background */}
-      <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
-        <div className="container mx-auto py-4">
-          <div className="flex items-center justify-between">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => router.push(ROUTES_APP.quizzes.list())}
-              className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              {t('instructor.quiz.view.backToList', {
-                fallback: 'Back to Quizzes',
-              })}
-            </Button>
-
-            <div className="flex items-center gap-3">
-              <Button
-                onClick={() => router.push(ROUTES_APP.quizzes.edit(quiz.id))}
-                className="flex items-center gap-2"
-              >
-                <Edit className="h-4 w-4" />
-                {t('instructor.quiz.action.edit', { fallback: 'Edit Quiz' })}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="container mx-auto px-6 py-8 space-y-8">
+      <div className="container mx-auto space-y-8">
         {/* Hero Section with Quiz Overview */}
         <div className="space-y-6">
           {/* Quiz Info with Configuration Items */}
           <div className="space-y-6">
-            <div className="flex items-start justify-between mb-6">
-              <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <Badge
-                    variant={getStatusColor(quiz.status)}
-                    className="flex items-center gap-1"
-                  >
-                    <StatusIcon className="h-3 w-3" />
-                    {quiz.status === QuizStatus.PUBLISHED
-                      ? 'Published'
-                      : 'Draft'}
-                  </Badge>
-                  <span className="text-sm text-muted-foreground">
-                    ID: {quiz.id}
-                  </span>
-                </div>
+            <div className="space-y-4 mb-6">
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => router.push(ROUTES_APP.quizzes.list())}
+                  className="p-1 h-auto"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+                <Badge
+                  variant={getStatusColor(quiz.status)}
+                  className="flex items-center gap-1"
+                >
+                  <StatusIcon className="h-3 w-3" />
+                  {quiz.status === QuizStatus.PUBLISHED ? 'Published' : 'Draft'}
+                </Badge>
+                <span className="text-sm text-muted-foreground">
+                  ID: {quiz.id}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold">
                   {quiz.title ||
                     t('instructor.quiz.untitled', {
                       fallback: 'Untitled Quiz',
                     })}
                 </h1>
-              </div>
-              {quiz.status === QuizStatus.PUBLISHED && (
-                <div className="flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-yellow-500" />
-                  <span className="text-sm font-medium text-muted-foreground">
-                    Live
-                  </span>
+                <div className="flex items-center gap-3">
+                  <Button
+                    onClick={() =>
+                      router.push(ROUTES_APP.quizzes.edit(quiz.id))
+                    }
+                    className="flex items-center gap-2"
+                  >
+                    <Edit className="h-4 w-4" />
+                    {t('instructor.quiz.action.edit', {
+                      fallback: 'Edit Quiz',
+                    })}
+                  </Button>
+                  {quiz.status === QuizStatus.PUBLISHED && (
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="h-5 w-5 text-yellow-500" />
+                      <span className="text-sm font-medium text-muted-foreground">
+                        Live
+                      </span>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
 
             {quiz.description && (
@@ -337,34 +327,26 @@ export function QuizViewPage({ quizId }: QuizViewPageProps) {
 function QuizViewSkeleton() {
   return (
     <div className="min-h-screen bg-background">
-      {/* Modern Header Skeleton */}
-      <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <Skeleton className="h-9 w-32" />
-            <div className="flex items-center gap-3">
-              <Skeleton className="h-9 w-28" />
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="container mx-auto px-6 py-8 space-y-8">
         {/* Hero Section Skeleton */}
         <div className="space-y-6">
           {/* Quiz Info with Configuration Items Skeleton */}
           <div className="space-y-6">
-            <div className="flex items-start justify-between mb-6">
-              <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <Skeleton className="h-6 w-20" />
-                  <Skeleton className="h-4 w-16" />
-                </div>
-                <Skeleton className="h-8 w-80" />
+            <div className="space-y-4 mb-6">
+              <div className="flex items-center gap-3">
+                <Skeleton className="h-8 w-8" />
+                <Skeleton className="h-6 w-20" />
+                <Skeleton className="h-4 w-16" />
               </div>
-              <div className="flex items-center gap-2">
-                <Skeleton className="h-5 w-5" />
-                <Skeleton className="h-4 w-24" />
+              <div className="flex items-center justify-between">
+                <Skeleton className="h-8 w-80" />
+                <div className="flex items-center gap-3">
+                  <Skeleton className="h-9 w-28" />
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-5 w-5" />
+                    <Skeleton className="h-4 w-24" />
+                  </div>
+                </div>
               </div>
             </div>
 
