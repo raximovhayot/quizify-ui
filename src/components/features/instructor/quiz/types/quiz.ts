@@ -21,7 +21,6 @@ export interface QuizDataDTO {
   lastModifiedDate?: string; // LocalDateTime in backend
   numberOfQuestions: number; // Integer in backend
   settings: QuizSettings;
-  attachmentId?: number; // Long in backend
 }
 
 // Quiz Filter for GET /instructor/quizzes (matches backend QuizFilter)
@@ -38,7 +37,6 @@ export interface InstructorQuizCreateRequest {
   title: string; // @NotBlank, @Size(min = 3, max = 512)
   description?: string; // @Size(max = 1024)
   settings: QuizSettings; // @Valid
-  attachmentId?: number; // Long in backend
 }
 
 // Quiz Update Request - PUT /instructor/quizzes/{quizId}
@@ -47,7 +45,6 @@ export interface InstructorQuizUpdateRequest {
   title: string; // @NotBlank, @Size(min = 3, max = 512)
   description?: string; // @Size(max = 1024)
   settings: QuizSettings; // @Valid, @NotNull
-  attachmentId?: number; // Long in backend
 }
 
 // Quiz Status Update Request - PATCH /instructor/quizzes/{quizId}/status

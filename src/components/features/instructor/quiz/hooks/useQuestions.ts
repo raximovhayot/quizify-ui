@@ -46,3 +46,42 @@ export function useCreateQuestion() {
     },
   })();
 }
+
+export function useUpdateQuestion() {
+  const t = useTranslations();
+  const queryClient = useQueryClient();
+
+  return createMutation<
+    QuestionDataDto,
+    { questionId: number; data: InstructorQuestionSaveRequest }
+  >({
+    mutationFn: async ({ questionId, data }) => {
+      return await QuestionService.updateQuestion(questionId, data);
+    },
+    successMessage: t('instructor.quiz.question.update.success', {
+      fallback: 'Question updated successfully',
+    }),
+    invalidateQueries: [questionKeys.lists()],
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: questionKeys.lists() });
+    },
+  })();
+}
+
+export function useDeleteQuestion() {
+  const t = useTranslations();
+  const queryClient = useQueryClient();
+
+  return createMutation<void, number>({
+    mutationFn: async (questionId) => {
+      return await QuestionService.deleteQuestion(questionId);
+    },
+    successMessage: t('instructor.quiz.question.delete.success', {
+      fallback: 'Question deleted successfully',
+    }),
+    invalidateQueries: [questionKeys.lists()],
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: questionKeys.lists() });
+    },
+  })();
+}

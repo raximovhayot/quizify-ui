@@ -36,7 +36,7 @@ import {
   TInstructorQuestionForm,
   instructorQuestionFormSchema, // toInstructorQuestionSaveRequest, // Unused - available for future use
 } from '../schemas/questionSchema';
-import { QuestionType } from '../types/question';
+import { QuestionDataDto, QuestionType } from '../types/question';
 import { AnswerListEditor } from './answers/AnswerListEditor';
 
 export interface QuestionFormProps {
@@ -44,6 +44,7 @@ export interface QuestionFormProps {
   onSubmit: (data: TInstructorQuestionForm) => Promise<void>;
   onCancel?: () => void;
   isSubmitting?: boolean;
+  initialData?: QuestionDataDto;
 }
 
 export function QuestionForm({
@@ -51,21 +52,37 @@ export function QuestionForm({
   onSubmit,
   onCancel,
   isSubmitting,
+  initialData,
 }: Readonly<QuestionFormProps>) {
   const t = useTranslations();
   const { data: session } = useSession();
 
   const form = useForm<TInstructorQuestionForm>({
     resolver: zodResolver(instructorQuestionFormSchema),
-    defaultValues: {
-      quizId,
-      questionType: QuestionType.MULTIPLE_CHOICE,
-      content: '',
-      explanation: '',
-      order: 0,
-      points: 1,
-      answers: [{ content: '', correct: true, order: 0 }],
-    } as unknown as TInstructorQuestionForm,
+    defaultValues: initialData
+      ? ({
+          quizId,
+          questionType: initialData.questionType,
+          content: initialData.content,
+          explanation: initialData.explanation || '',
+          order: initialData.order,
+          points: initialData.points,
+          trueFalseAnswer: initialData.trueFalseAnswer,
+          answers: initialData.answers.map((answer) => ({
+            content: answer.content,
+            correct: answer.correct,
+            order: answer.order,
+          })),
+        } as unknown as TInstructorQuestionForm)
+      : ({
+          quizId,
+          questionType: QuestionType.MULTIPLE_CHOICE,
+          content: '',
+          explanation: '',
+          order: 0,
+          points: 1,
+          answers: [{ content: '', correct: true, order: 0 }],
+        } as unknown as TInstructorQuestionForm),
   });
 
   const type = form.watch('questionType');

@@ -4,14 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import type { Resolver } from 'react-hook-form';
 
-import { useEffect, useState } from 'react';
-
-import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 
-import { AttachmentDisplay } from '@/components/shared/ui/AttachmentDisplay';
-import { FileUpload } from '@/components/shared/ui/FileUpload';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -19,10 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import { handleApiResponse } from '@/lib/api-utils';
 
-import { AttachmentService } from '../../../attachment/attachmentService';
-import type { AttachmentDTO } from '../../../attachment/attachmentService';
 import { TQuizFormData, quizFormSchema } from '../schemas/quizSchema';
 import {
   InstructorQuizCreateRequest,
@@ -48,14 +39,6 @@ export function QuizForm({
   className,
 }: Readonly<QuizFormProps>) {
   const t = useTranslations();
-  const { data: session } = useSession();
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [currentAttachment, setCurrentAttachment] =
-    useState<AttachmentDTO | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-  const [isLoadingAttachment, setIsLoadingAttachment] = useState(false);
 
   const form = useForm<TQuizFormData>({
     resolver: zodResolver(quizFormSchema) as Resolver<TQuizFormData>,
@@ -68,98 +51,8 @@ export function QuizForm({
         shuffleQuestions: quiz?.settings?.shuffleQuestions ?? false,
         shuffleAnswers: quiz?.settings?.shuffleAnswers ?? false,
       },
-      attachmentId: quiz?.attachmentId ?? undefined,
     },
   });
-
-  // Load existing attachment if quiz has one
-  useEffect(() => {
-    const loadAttachment = async () => {
-      if (quiz?.attachmentId && session?.accessToken) {
-        setIsLoadingAttachment(true);
-        try {
-          const attachment = await AttachmentService.getAttachment(
-            quiz.attachmentId,
-            session.accessToken
-          );
-          setCurrentAttachment(attachment);
-        } catch (error) {
-          console.error('Failed to load attachment:', error);
-        } finally {
-          setIsLoadingAttachment(false);
-        }
-      }
-    };
-
-    loadAttachment();
-  }, [quiz?.attachmentId, session?.accessToken]);
-
-  const handleFileSelect = async (file: File) => {
-    if (!session?.accessToken) return;
-
-    setSelectedFile(file);
-    setUploadError(null);
-    setIsUploading(true);
-    setUploadProgress(0);
-
-    try {
-      // Simulate upload progress
-      const progressInterval = setInterval(() => {
-        setUploadProgress((prev) => {
-          if (prev >= 90) {
-            clearInterval(progressInterval);
-            return prev;
-          }
-          return prev + 10;
-        });
-      }, 200);
-
-      const attachment = await AttachmentService.uploadAttachment(
-        file,
-        session.accessToken
-      );
-
-      clearInterval(progressInterval);
-      setUploadProgress(100);
-
-      // Update form with new attachment ID
-      form.setValue('attachmentId', attachment.id);
-      setCurrentAttachment(attachment);
-      setSelectedFile(null);
-    } catch (error) {
-      setUploadError(
-        error instanceof Error ? error.message : 'Failed to upload file'
-      );
-    } finally {
-      setIsUploading(false);
-      setUploadProgress(0);
-    }
-  };
-
-  const handleFileRemove = () => {
-    setSelectedFile(null);
-    setUploadError(null);
-  };
-
-  const handleAttachmentDelete = async (attachmentId: number) => {
-    if (!session?.accessToken) return;
-
-    try {
-      const resp = await AttachmentService.deleteAttachment(
-        attachmentId,
-        session.accessToken
-      );
-      handleApiResponse(resp);
-      setCurrentAttachment(null);
-      form.setValue('attachmentId', undefined);
-    } catch (error) {
-      console.error('Failed to delete attachment:', error);
-    }
-  };
-
-  const handleAttachmentDownload = (attachment: AttachmentDTO) => {
-    window.open(attachment.downloadUrl, '_blank');
-  };
 
   const handleFormSubmit = async (data: TQuizFormData) => {
     const submitData:
@@ -350,44 +243,6 @@ export function QuizForm({
             </div>
           </div>
 
-          <Separator />
-
-          {/* Attachment Section */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium">
-              {t('quiz.form.attachment', { fallback: 'Attachment' })}
-            </h3>
-
-            {currentAttachment ? (
-              <AttachmentDisplay
-                attachment={currentAttachment}
-                onDownload={handleAttachmentDownload}
-                onDelete={handleAttachmentDelete}
-                showActions={!isSubmitting}
-              />
-            ) : (
-              <FileUpload
-                onFileSelect={handleFileSelect}
-                onFileRemove={handleFileRemove}
-                selectedFile={selectedFile}
-                isUploading={isUploading}
-                uploadProgress={uploadProgress}
-                error={uploadError ?? undefined}
-                disabled={isSubmitting}
-              />
-            )}
-
-            {isLoadingAttachment && (
-              <Alert>
-                <AlertDescription>
-                  {t('quiz.form.loadingAttachment', {
-                    fallback: 'Loading attachment...',
-                  })}
-                </AlertDescription>
-              </Alert>
-            )}
-          </div>
-
           {/* Form Actions */}
           <div className="flex justify-end space-x-3 pt-4">
             {onCancel && (
@@ -400,7 +255,7 @@ export function QuizForm({
                 {t('common.cancel', { fallback: 'Cancel' })}
               </Button>
             )}
-            <Button type="submit" disabled={isSubmitting || isUploading}>
+            <Button type="submit" disabled={isSubmitting}>
               {isSubmitting
                 ? t('common.saving', { fallback: 'Saving...' })
                 : quiz

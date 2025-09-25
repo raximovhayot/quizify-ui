@@ -19,6 +19,24 @@ export class QuestionService {
     return response;
   }
 
+  static async updateQuestion(
+    questionId: number,
+    data: InstructorQuestionSaveRequest
+  ): Promise<IApiResponse<QuestionDataDto>> {
+    const response: IApiResponse<QuestionDataDto> = await apiClient.put(
+      `/instructor/questions/${questionId}`,
+      data
+    );
+    return response;
+  }
+
+  static async deleteQuestion(questionId: number): Promise<IApiResponse<void>> {
+    const response: IApiResponse<void> = await apiClient.delete(
+      `/instructor/questions/${questionId}`
+    );
+    return response;
+  }
+
   static async getQuestions(
     filter: QuestionFilter,
     signal?: AbortSignal

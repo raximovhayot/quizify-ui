@@ -35,7 +35,7 @@ export default function CreateQuizModalPage() {
             fallback: 'Create Quiz',
           })}
         </DialogTitle>
-        <CreateQuizContainer className="border-none shadow-none rounded-none p-0 [&_[data-slot=card-header]]:px-0 [&_[data-slot=card-content]]:px-0 [&_[data-slot=card-footer]]:px-0" />
+        <CreateQuizContainer className="border-none shadow-none rounded-none p-0 [&_[data-slot=card-header]]:px-0 [&_[data-slot=card-content]]:px-0 [&_[data-slot=card-footer]]:px-0 bg-background" />
       </DialogContent>
     </Dialog>
   );

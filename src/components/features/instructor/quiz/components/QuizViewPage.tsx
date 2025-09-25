@@ -8,10 +8,10 @@ import {
   Edit,
   Eye,
   FileText,
+  Play,
   Plus,
   RotateCcw,
   Shuffle,
-  Sparkles,
 } from 'lucide-react';
 
 import { useState } from 'react';
@@ -128,7 +128,7 @@ export function QuizViewPage({ quizId }: QuizViewPageProps) {
         <div className="space-y-6">
           {/* Quiz Info with Configuration Items */}
           <div className="space-y-6">
-            <div className="space-y-4 mb-6">
+            <div className="space-y-4 mb-4">
               <div className="flex items-center gap-3">
                 <Button
                   variant="ghost"
@@ -168,20 +168,41 @@ export function QuizViewPage({ quizId }: QuizViewPageProps) {
                       fallback: 'Edit Quiz',
                     })}
                   </Button>
-                  {quiz.status === QuizStatus.PUBLISHED && (
-                    <div className="flex items-center gap-2">
-                      <Sparkles className="h-5 w-5 text-yellow-500" />
-                      <span className="text-sm font-medium text-muted-foreground">
-                        Live
-                      </span>
-                    </div>
+                  {quiz.status === QuizStatus.DRAFT ? (
+                    <Button
+                      onClick={() => {
+                        // TODO: Implement publish functionality
+                        console.log('Publishing quiz:', quiz.id);
+                      }}
+                      variant="default"
+                      className="flex items-center gap-2"
+                    >
+                      <CheckCircle2 className="h-4 w-4" />
+                      {t('instructor.quiz.action.publish', {
+                        fallback: 'Publish',
+                      })}
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => {
+                        // TODO: Implement start quiz functionality
+                        console.log('Starting quiz:', quiz.id);
+                      }}
+                      variant="default"
+                      className="flex items-center gap-2"
+                    >
+                      <Play className="h-4 w-4" />
+                      {t('instructor.quiz.action.start', {
+                        fallback: 'Start',
+                      })}
+                    </Button>
                   )}
                 </div>
               </div>
             </div>
 
             {quiz.description && (
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl">
+              <p className="text-base text-muted-foreground leading-relaxed max-w-3xl">
                 {quiz.description}
               </p>
             )}
@@ -342,10 +363,7 @@ function QuizViewSkeleton() {
                 <Skeleton className="h-8 w-80" />
                 <div className="flex items-center gap-3">
                   <Skeleton className="h-9 w-28" />
-                  <div className="flex items-center gap-2">
-                    <Skeleton className="h-5 w-5" />
-                    <Skeleton className="h-4 w-24" />
-                  </div>
+                  <Skeleton className="h-9 w-24" />
                 </div>
               </div>
             </div>
