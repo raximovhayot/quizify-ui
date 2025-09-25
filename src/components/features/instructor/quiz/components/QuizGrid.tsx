@@ -23,14 +23,14 @@ export interface QuizGridProps {
   className?: string;
 }
 
-export const QuizGrid = memo(function QuizGrid({
+function Grid({
   quizzes,
   onDelete,
   onUpdateStatus,
   isDeleting = false,
   isUpdatingStatus = false,
   className,
-}: QuizGridProps) {
+}: Readonly<QuizGridProps>) {
   const t = useTranslations();
   const router = useRouter();
 
@@ -73,4 +73,6 @@ export const QuizGrid = memo(function QuizGrid({
       ))}
     </div>
   );
-});
+}
+
+export const QuizGrid = memo(Grid);
