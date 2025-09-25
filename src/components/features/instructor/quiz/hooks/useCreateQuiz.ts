@@ -16,7 +16,8 @@ export function useCreateQuiz() {
 
   return createMutation<QuizDataDTO, InstructorQuizCreateRequest>({
     mutationFn: async (data) => {
-      return await QuizService.createQuiz(data);
+      const created = await QuizService.createQuiz(data);
+      return { data: created, errors: [] };
     },
     successMessage: t('instructor.quiz.create.success', {
       fallback: 'Quiz created successfully',

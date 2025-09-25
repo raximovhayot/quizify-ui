@@ -19,7 +19,8 @@ export function useUpdateQuiz() {
       if (!data.id) {
         throw new Error('Quiz ID is required for update');
       }
-      return await QuizService.updateQuiz(data.id, data);
+      const updated = await QuizService.updateQuiz(data.id, data);
+      return { data: updated, errors: [] };
     },
     successMessage: t('instructor.quiz.update.success', {
       fallback: 'Quiz updated successfully',

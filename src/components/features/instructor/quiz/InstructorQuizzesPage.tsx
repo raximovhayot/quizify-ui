@@ -10,16 +10,13 @@ import { useRouter } from 'next/navigation';
 import { ROUTES_APP } from '@/components/features/instructor/routes';
 import { AppPagination } from '@/components/shared/ui/AppPagination';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 
-import { QuizGrid } from './components/QuizGrid';
-import { QuizListSkeleton } from './components/QuizListSkeleton';
-import {
-  useDeleteQuiz,
-  useQuizzes,
-  useUpdateQuizStatus,
-} from './hooks/useQuizzes';
+import { QuizTable } from './components/QuizTable';
+import { QuizTableSkeleton } from './components/QuizTableSkeleton';
+import { useDeleteQuiz } from './hooks/useDeleteQuiz';
+import { useQuizzes } from './hooks/useQuizzesQuery';
+import { useUpdateQuizStatus } from './hooks/useUpdateQuizStatus';
 import { QuizStatus } from './types/quiz';
 
 export function InstructorQuizzesPage() {
@@ -59,63 +56,61 @@ export function InstructorQuizzesPage() {
   };
 
   return (
-    <div className="space-y-4">
-      {/* Content */}
-      <Card>
-        <CardHeader className="pb-2">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <CardTitle className="text-base font-medium">
-              {t('instructor.quiz.list.title', { fallback: 'Your quizzes' })}
-            </CardTitle>
-            <div className="flex w-full items-center gap-2 sm:w-auto">
-              <form
-                onSubmit={handleSearchSubmit}
-                className="flex-1 sm:w-[320px]"
-              >
-                <div className="relative">
-                  <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input
-                    placeholder={t('instructor.quiz.search.placeholder', {
-                      fallback: 'Search quizzes...',
-                    })}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-              </form>
-              <Button onClick={() => router.push(ROUTES_APP.quizzes.new())}>
-                {t('instructor.quiz.create.button', {
-                  fallback: 'Create Quiz',
+    <div className="space-y-6">
+      {/* Header with Search and Create Button */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            {t('instructor.quiz.list.title', { fallback: 'Your quizzes' })}
+          </h1>
+        </div>
+        <div className="flex w-full items-center gap-2 sm:w-auto">
+          <form onSubmit={handleSearchSubmit} className="flex-1 sm:w-[320px]">
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder={t('instructor.quiz.search.placeholder', {
+                  fallback: 'Search quizzes...',
                 })}
-              </Button>
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
             </div>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {quizzesQuery.isLoading ? (
-            <QuizListSkeleton />
-          ) : (
-            <>
-              <QuizGrid
-                quizzes={quizzesQuery.data?.content || []}
-                onDelete={(id: number) => deleteQuiz.mutate(id)}
-                onUpdateStatus={(id: number, status: QuizStatus) =>
-                  updateStatus.mutate({ id, status })
-                }
-                isDeleting={deleteQuiz.isPending}
-                isUpdatingStatus={updateStatus.isPending}
-              />
+          </form>
+          <Button onClick={() => router.push(ROUTES_APP.quizzes.new())}>
+            {t('instructor.quiz.create.button', {
+              fallback: 'Create Quiz',
+            })}
+          </Button>
+        </div>
+      </div>
 
-              <AppPagination
-                currentPage={quizzesQuery.data?.page || 0}
-                totalPages={quizzesQuery.data?.totalPages || 0}
-                onPageChange={(p) => setPage(p)}
-              />
-            </>
-          )}
-        </CardContent>
-      </Card>
+      {/* Content */}
+      <div className="space-y-4">
+        {quizzesQuery.isLoading ? (
+          <QuizTableSkeleton />
+        ) : (
+          <>
+            <QuizTable
+              quizzes={quizzesQuery.data?.content || []}
+              onDelete={(id: number) => deleteQuiz.mutate(id)}
+              onUpdateStatus={(id: number, status: QuizStatus) =>
+                updateStatus.mutate({ id, status })
+              }
+              searchQuery={search}
+              isDeleting={deleteQuiz.isPending}
+              isUpdatingStatus={updateStatus.isPending}
+            />
+
+            <AppPagination
+              currentPage={quizzesQuery.data?.page || 0}
+              totalPages={quizzesQuery.data?.totalPages || 0}
+              onPageChange={(p) => setPage(p)}
+            />
+          </>
+        )}
+      </div>
     </div>
   );
 }

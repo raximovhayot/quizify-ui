@@ -325,13 +325,29 @@
         "placeholder": "Testlarni qidirish..."
       },
       "results": {
-        "summary": "{start} dan {end} gacha, jami {total} test"
+        "summary": "{start} dan {end} gacha, jami {total} test",
+        "count": "{count} test",
+        "filtered": "{total} dan"
+      },
+      "table": {
+        "title": "Sarlavha",
+        "status": "Holat",
+        "questions": "Savollar",
+        "actions": "Harakatlar",
+        "loading": "Yuklanmoqda...",
+        "sort": {
+          "aria": "{field} bo'yicha saralash"
+        }
       },
       "list": {
         "title": "Sizning testlaringiz",
+        "loading": "Testlar yuklanmoqda...",
         "error": {
           "title": "Testlarni yuklab bo'lmadi",
-          "description": "Testlaringizni yuklashda xatolik yuz berdi. Iltimos, qayta urinib ko'ring."
+          "description": "Testlaringizni yuklashda xatolik yuz berdi. Iltimos, qayta urinib ko'ring.",
+          "load": "Testlarni yuklab bo'lmadi",
+          "delete": "Testni o'chirib bo'lmadi",
+          "update": "Testni yangilab bo'lmadi"
         },
         "no": {
           "data": "Test ma'lumotlari mavjud emas"
@@ -339,7 +355,31 @@
         "empty": {
           "title": "Testlar topilmadi",
           "description": "Boshlash uchun birinchi testingizni yarating"
+        },
+        "filtered": {
+          "empty": {
+            "title": "Qidiruvga mos testlar topilmadi",
+            "description": "Qidiruv mezonlarini o'zgartirib ko'ring"
+          }
         }
+      },
+      "untitled": "Nomsiz",
+      "delete": {
+        "confirm": "Ushbu testni o'chirishni xohlaysizmi?",
+        "success": "Test muvaffaqiyatli o'chirildi",
+        "error": "Testni o'chirib bo'lmadi",
+        "dialog": {
+          "title": "Testni o'chirish",
+          "description": "Ushbu testni o'chirishni xohlaysizmi? Bu amalni bekor qilib bo'lmaydi."
+        }
+      },
+      "success": {
+        "delete": "Test muvaffaqiyatli o'chirildi",
+        "publish": "Test muvaffaqiyatli nashr etildi",
+        "unpublish": "Test muvaffaqiyatli nashrdan olib tashlandi"
+      },
+      "row": {
+        "aria": "{title} uchun test qatori"
       }
     },
     "userMenu": {

@@ -4,7 +4,6 @@ import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 
 import { quizKeys } from '@/components/features/instructor/quiz/keys';
-import { handleApiResponse } from '@/lib/api-utils';
 
 import { TQuizListResponse } from '../schemas/quizSchema';
 import { QuizService } from '../services/quizService';
@@ -17,8 +16,7 @@ export function useDeleteQuiz() {
 
   return useMutation({
     mutationFn: async (quizId: number): Promise<void> => {
-      const resp = await QuizService.deleteQuiz(quizId);
-      handleApiResponse(resp);
+      await QuizService.deleteQuiz(quizId);
     },
     onMutate: async (quizId) => {
       // Cancel outgoing refetches so we don't overwrite our optimistic update

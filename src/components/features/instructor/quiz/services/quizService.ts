@@ -3,6 +3,10 @@ import { IApiResponse, extractApiData } from '@/types/api';
 import { IPageableList } from '@/types/common';
 
 import {
+  quizDataDTOSchema,
+  quizListResponseSchema,
+} from '../schemas/quizSchema';
+import {
   InstructorQuizCreateRequest,
   InstructorQuizUpdateRequest,
   InstructorQuizUpdateStatusRequest,
@@ -43,7 +47,8 @@ export class QuizService {
           status: filter.status,
         },
       });
-    return extractApiData(response);
+    const data = extractApiData(response);
+    return quizListResponseSchema.parse(data);
   }
 
   /**
@@ -62,7 +67,8 @@ export class QuizService {
       `/instructor/quizzes/:id`,
       { signal, params: { id: quizId } }
     );
-    return extractApiData(response);
+    const data = extractApiData(response);
+    return quizDataDTOSchema.parse(data);
   }
 
   /**
@@ -75,12 +81,13 @@ export class QuizService {
    */
   static async createQuiz(
     data: InstructorQuizCreateRequest
-  ): Promise<IApiResponse<QuizDataDTO>> {
+  ): Promise<QuizDataDTO> {
     const response: IApiResponse<QuizDataDTO> = await apiClient.post(
       '/instructor/quizzes',
       data
     );
-    return response;
+    const parsed = quizDataDTOSchema.parse(extractApiData(response));
+    return parsed;
   }
 
   /**
@@ -95,13 +102,14 @@ export class QuizService {
   static async updateQuiz(
     quizId: number,
     data: InstructorQuizUpdateRequest
-  ): Promise<IApiResponse<QuizDataDTO>> {
+  ): Promise<QuizDataDTO> {
     const response: IApiResponse<QuizDataDTO> = await apiClient.put(
       `/instructor/quizzes/:id`,
       data,
       { params: { id: quizId } }
     );
-    return response;
+    const parsed = quizDataDTOSchema.parse(extractApiData(response));
+    return parsed;
   }
 
   /**
@@ -116,13 +124,13 @@ export class QuizService {
   static async updateQuizStatus(
     quizId: number,
     data: InstructorQuizUpdateStatusRequest
-  ): Promise<IApiResponse<void>> {
+  ): Promise<void> {
     const response: IApiResponse<void> = await apiClient.patch(
       `/instructor/quizzes/:id/status`,
       data,
       { params: { id: quizId } }
     );
-    return response;
+    extractApiData(response);
   }
 
   /**
@@ -133,11 +141,11 @@ export class QuizService {
    * @returns Promise resolving when deletion is complete
    * @throws BackendError if deletion fails or quiz not found
    */
-  static async deleteQuiz(quizId: number): Promise<IApiResponse<void>> {
+  static async deleteQuiz(quizId: number): Promise<void> {
     const response: IApiResponse<void> = await apiClient.delete(
       `/instructor/quizzes/:id`,
       { params: { id: quizId } }
     );
-    return response;
+    extractApiData(response);
   }
 }

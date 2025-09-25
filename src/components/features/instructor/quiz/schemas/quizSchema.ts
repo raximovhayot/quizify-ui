@@ -7,7 +7,7 @@ import { QuizStatus } from '../types/quiz';
 // Normalize backend enum values (accept 'DRAFT'/'PUBLISHED' or lowercase) to our lowercase enum
 const statusSchema = z.preprocess(
   (val) => (typeof val === 'string' ? val.toLowerCase() : val),
-  z.enum(QuizStatus)
+  z.nativeEnum(QuizStatus)
 );
 
 const titleSchema = z
@@ -24,11 +24,11 @@ const attachmentIdSchema = z.coerce.number().optional();
 
 // Quiz Settings Schema
 export const quizSettingsSchema = z.object({
-  time: z.coerce.number().min(0, 'Time limit cannot be negative').optional(),
+  time: z.coerce.number().min(0, 'Time limit cannot be negative').default(0),
   attempt: z.coerce
     .number()
     .min(0, 'Attempt limit cannot be negative')
-    .optional(),
+    .default(0),
   shuffleQuestions: z.boolean().optional().default(false),
   shuffleAnswers: z.boolean().optional().default(false),
 });
@@ -41,7 +41,7 @@ export const quizDataDTOSchema = z.object({
   status: statusSchema,
   createdDate: z.string(),
   lastModifiedDate: z.string().optional(),
-  numberOfQuestions: z.coerce.number().optional(),
+  numberOfQuestions: z.coerce.number(),
   settings: quizSettingsSchema,
   attachmentId: attachmentIdSchema,
 });

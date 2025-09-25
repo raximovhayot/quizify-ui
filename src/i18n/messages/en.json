@@ -327,13 +327,29 @@
         "placeholder": "Search quizzes..."
       },
       "results": {
-        "summary": "Showing {start} to {end} of {total} quizzes"
+        "summary": "Showing {start} to {end} of {total} quizzes",
+        "count": "{count} quiz(s)",
+        "filtered": "of {total}"
+      },
+      "table": {
+        "title": "Title",
+        "status": "Status",
+        "questions": "Questions",
+        "actions": "Actions",
+        "loading": "Loading...",
+        "sort": {
+          "aria": "Sort by {field}"
+        }
       },
       "list": {
         "title": "Your quizzes",
+        "loading": "Loading quizzes...",
         "error": {
           "title": "Failed to load quizzes",
-          "description": "There was an error loading your quizzes. Please try again."
+          "description": "There was an error loading your quizzes. Please try again.",
+          "load": "Failed to load quizzes",
+          "delete": "Failed to delete quiz",
+          "update": "Failed to update quiz"
         },
         "no": {
           "data": "No quiz data available"
@@ -341,7 +357,31 @@
         "empty": {
           "title": "No quizzes found",
           "description": "Create your first quiz to get started"
+        },
+        "filtered": {
+          "empty": {
+            "title": "No quizzes match your search",
+            "description": "Try adjusting your search criteria"
+          }
         }
+      },
+      "untitled": "Untitled",
+      "delete": {
+        "confirm": "Are you sure you want to delete this quiz?",
+        "success": "Quiz deleted successfully",
+        "error": "Failed to delete quiz",
+        "dialog": {
+          "title": "Delete Quiz",
+          "description": "Are you sure you want to delete this quiz? This action cannot be undone."
+        }
+      },
+      "success": {
+        "delete": "Quiz deleted successfully",
+        "publish": "Quiz published successfully",
+        "unpublish": "Quiz unpublished successfully"
+      },
+      "row": {
+        "aria": "Quiz row for {title}"
       }
     },
     "userMenu": {

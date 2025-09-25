@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
+import type { Resolver } from 'react-hook-form';
 
 import { useEffect, useState } from 'react';
 
@@ -45,7 +46,7 @@ export function QuizForm({
   onCancel,
   isSubmitting = false,
   className,
-}: QuizFormProps) {
+}: Readonly<QuizFormProps>) {
   const t = useTranslations();
   const { data: session } = useSession();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -57,17 +58,17 @@ export function QuizForm({
   const [isLoadingAttachment, setIsLoadingAttachment] = useState(false);
 
   const form = useForm<TQuizFormData>({
-    resolver: zodResolver(quizFormSchema),
+    resolver: zodResolver(quizFormSchema) as Resolver<TQuizFormData>,
     defaultValues: {
       title: quiz?.title || '',
       description: quiz?.description || '',
       settings: {
-        time: quiz?.settings?.time || undefined,
-        attempt: quiz?.settings?.attempt || undefined,
-        shuffleQuestions: quiz?.settings?.shuffleQuestions || false,
-        shuffleAnswers: quiz?.settings?.shuffleAnswers || false,
+        time: quiz?.settings?.time ?? 0,
+        attempt: quiz?.settings?.attempt ?? 0,
+        shuffleQuestions: quiz?.settings?.shuffleQuestions ?? false,
+        shuffleAnswers: quiz?.settings?.shuffleAnswers ?? false,
       },
-      attachmentId: quiz?.attachmentId || undefined,
+      attachmentId: quiz?.attachmentId ?? undefined,
     },
   });
 

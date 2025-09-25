@@ -4,7 +4,6 @@ import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 
 import { quizKeys } from '@/components/features/instructor/quiz/keys';
-import { handleApiResponse } from '@/lib/api-utils';
 
 import { TQuizListResponse } from '../schemas/quizSchema';
 import { QuizService } from '../services/quizService';
@@ -19,11 +18,7 @@ export function useUpdateQuizStatus() {
     mutationFn: async (
       data: InstructorQuizUpdateStatusRequest
     ): Promise<void> => {
-      const resp = await QuizService.updateQuizStatus(data.id, data);
-      // Normalize and throw on error to trigger onError and toast via api-utils
-      // Success path continues to optimistic success handler
-      // This keeps optimistic UI and centralizes error toasts
-      handleApiResponse(resp);
+      await QuizService.updateQuizStatus(data.id, data);
     },
     onMutate: async (variables) => {
       // Cancel outgoing refetches so we don't overwrite our optimistic update
