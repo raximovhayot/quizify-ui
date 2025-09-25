@@ -382,6 +382,47 @@
       },
       "row": {
         "aria": "Quiz row for {title}"
+      },
+      "view": {
+        "title": "Quiz Details",
+        "stub": "This is a stub page for viewing quiz #{id}. The detailed view will be implemented next.",
+        "backToList": "Back to Quizzes",
+        "id": "ID: {id}",
+        "description": "Description",
+        "questions": "Questions",
+        "created": "Created",
+        "lastModified": "Last Modified",
+        "timeLimit": "Time Limit",
+        "attempts": "Attempts",
+        "shuffleSettings": "Shuffle Settings",
+        "information": {
+          "title": "Quiz Information"
+        },
+        "settings": {
+          "title": "Quiz Settings",
+          "enabled": "Yes",
+          "disabled": "No"
+        },
+        "questions": {
+          "title": "Questions",
+          "showAnswers": "Show Answers",
+          "hideAnswers": "Hide Answers",
+          "addQuestion": "Add Question",
+          "createFirst": "Create Question",
+          "empty": {
+            "title": "No questions yet",
+            "description": "Start building your quiz by adding your first question."
+          },
+          "placeholder": {
+            "title": "Questions will be displayed here",
+            "description": "The detailed question editor and viewer will be implemented in the next phase."
+          },
+          "editQuestions": "Edit Questions"
+        },
+        "error": {
+          "title": "Quiz not found",
+          "description": "The quiz you are looking for does not exist or has been deleted."
+        }
       }
     },
     "userMenu": {

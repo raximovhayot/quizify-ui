@@ -1,25 +1,23 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 
+import { QuizViewPage } from '@/components/features/instructor/quiz/components/QuizViewPage';
+
 export default function QuizDetailsPage() {
-  const t = useTranslations();
   const params = useParams<{ quizId: string }>();
   const quizId = Number(params?.quizId ?? NaN);
 
-  return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-        {t('instructor.quiz.view.title', { fallback: 'Quiz Details' })}
-      </h1>
-      <p className="mt-2 text-sm text-muted-foreground">
-        {t('instructor.quiz.view.stub', {
-          fallback:
-            'This is a stub page for viewing quiz #{id}. The detailed view will be implemented next.',
-          id: quizId,
-        })}
-      </p>
-    </div>
-  );
+  if (isNaN(quizId)) {
+    return (
+      <div className="container mx-auto p-4">
+        <h1 className="text-2xl font-bold text-destructive">Invalid Quiz ID</h1>
+        <p className="text-muted-foreground">
+          The quiz ID provided is not valid.
+        </p>
+      </div>
+    );
+  }
+
+  return <QuizViewPage quizId={quizId} />;
 }

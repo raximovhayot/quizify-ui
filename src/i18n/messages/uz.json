@@ -380,6 +380,47 @@
       },
       "row": {
         "aria": "{title} uchun test qatori"
+      },
+      "view": {
+        "title": "Test tafsilotlari",
+        "stub": "Bu #{id}-testni ko'rish uchun vaqtinchalik sahifa. Batafsil ko'rinish keyinroq qo'shiladi.",
+        "backToList": "Testlarga qaytish",
+        "id": "ID: {id}",
+        "description": "Tavsif",
+        "questions": "Savollar",
+        "created": "Yaratilgan",
+        "lastModified": "Oxirgi o'zgarish",
+        "timeLimit": "Vaqt limiti",
+        "attempts": "Urinishlar",
+        "shuffleSettings": "Aralashtirish sozlamalari",
+        "information": {
+          "title": "Test ma'lumotlari"
+        },
+        "settings": {
+          "title": "Test sozlamalari",
+          "enabled": "Ha",
+          "disabled": "Yo'q"
+        },
+        "questions": {
+          "title": "Savollar",
+          "showAnswers": "Javoblarni ko'rsatish",
+          "hideAnswers": "Javoblarni yashirish",
+          "addQuestion": "Savol qo'shish",
+          "createFirst": "Savol yaratish",
+          "empty": {
+            "title": "Hali savollar yo'q",
+            "description": "Birinchi savolingizni qo'shib, testingizni yaratishni boshlang."
+          },
+          "placeholder": {
+            "title": "Savollar bu yerda ko'rsatiladi",
+            "description": "Batafsil savol muharriri va ko'ruvchisi keyingi bosqichda qo'shiladi."
+          },
+          "editQuestions": "Savollarni tahrirlash"
+        },
+        "error": {
+          "title": "Test topilmadi",
+          "description": "Siz qidirayotgan test mavjud emas yoki o'chirilgan."
+        }
       }
     },
     "userMenu": {
