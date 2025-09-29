@@ -1,7 +1,9 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import { useTranslations } from 'next-intl';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 
 import { QuizForm } from '@/components/features/instructor/quiz/components/QuizForm';
 import { useQuiz } from '@/components/features/instructor/quiz/hooks/useQuiz';
@@ -17,9 +19,15 @@ export default function Page() {
   const t = useTranslations();
   const params = useParams<{ quizId: string }>();
   const quizId = Number(params?.quizId ?? NaN);
+  const pathname = usePathname();
+  const [open, setOpen] = useState(() => Boolean(pathname?.endsWith('/edit')));
 
   const { data: quiz, isLoading, error } = useQuiz(quizId);
   const updateQuizMutation = useUpdateQuiz();
+
+  useEffect(() => {
+    setOpen(Boolean(pathname?.endsWith('/edit')));
+  }, [pathname]);
 
   const handleQuizSubmit = async (data: InstructorQuizUpdateRequest) => {
     if (!quiz) return;
@@ -44,7 +52,7 @@ export default function Page() {
   if (isNaN(quizId)) {
     return (
       <Dialog
-        open
+        open={open}
         onOpenChange={(open) => {
           if (!open) router.push(ROUTES_APP.quizzes.list());
         }}
@@ -77,7 +85,7 @@ export default function Page() {
 
   return (
     <Dialog
-      open
+      open={open}
       onOpenChange={(open) => {
         if (!open) {
           if (quiz) {

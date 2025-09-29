@@ -13,12 +13,12 @@ export default function CreateQuizModalPage() {
   const router = useRouter();
   const pathname = usePathname();
   const t = useTranslations();
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(() =>
+    Boolean(pathname?.endsWith('/quizzes/new'))
+  );
 
   useEffect(() => {
-    if (pathname?.endsWith('/quizzes/new')) {
-      setOpen(true);
-    }
+    setOpen(Boolean(pathname?.endsWith('/quizzes/new')));
   }, [pathname]);
 
   return (
