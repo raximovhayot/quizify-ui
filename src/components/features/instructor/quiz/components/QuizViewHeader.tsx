@@ -50,34 +50,36 @@ export function QuizViewHeader({ quiz }: QuizViewHeaderProps) {
           variant="ghost"
           size="sm"
           onClick={() => router.push(ROUTES_APP.quizzes.list())}
-          className="p-1 h-auto"
+          className="p-1 h-auto shrink-0"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="h-4 w-4 md:h-5 md:w-5" />
         </Button>
         <Badge
           variant={getStatusColor(quiz.status)}
-          className="flex items-center gap-1"
+          className="flex items-center gap-1 text-[11px] sm:text-sm px-2.5 sm:px-3 py-0.5 sm:py-1"
         >
-          <StatusIcon className="h-3 w-3" />
+          <StatusIcon className="h-3 w-3 sm:h-4 sm:w-4" />
           {quiz.status === QuizStatus.PUBLISHED
             ? t('instructor.quiz.status.published', { fallback: 'Published' })
             : t('instructor.quiz.status.draft', { fallback: 'Draft' })}
         </Badge>
-        <span className="text-sm text-muted-foreground">ID: {quiz.id}</span>
+        <span className="text-xs sm:text-sm text-muted-foreground">
+          ID: {quiz.id}
+        </span>
       </div>
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-2xl md:text-3xl font-bold break-words">
           {quiz.title ||
             t('instructor.quiz.untitled', {
               fallback: 'Untitled Quiz',
             })}
         </h1>
-        <div className="flex items-center gap-3">
+        <div className="hidden sm:flex sm:shrink-0 sm:items-center sm:gap-3 sm:justify-end">
           <Button
             onClick={() => router.push(ROUTES_APP.quizzes.edit(quiz.id))}
-            className="flex items-center gap-2"
+            className="w-full sm:w-auto flex items-center gap-2 h-9 px-3 text-sm md:h-10 md:px-4 md:text-base"
           >
-            <Edit className="h-4 w-4" />
+            <Edit className="h-4 w-4 md:h-5 md:w-5" />
             {t('instructor.quiz.action.edit', {
               fallback: 'Edit Quiz',
             })}
@@ -89,9 +91,9 @@ export function QuizViewHeader({ quiz }: QuizViewHeaderProps) {
                 console.log('Publishing quiz:', quiz.id);
               }}
               variant="default"
-              className="flex items-center gap-2"
+              className="w-full sm:w-auto flex items-center gap-2 h-9 px-3 text-sm md:h-10 md:px-4 md:text-base"
             >
-              <CheckCircle2 className="h-4 w-4" />
+              <CheckCircle2 className="h-4 w-4 md:h-5 md:w-5" />
               {t('instructor.quiz.action.publish', {
                 fallback: 'Publish',
               })}
@@ -103,9 +105,9 @@ export function QuizViewHeader({ quiz }: QuizViewHeaderProps) {
                 console.log('Starting quiz:', quiz.id);
               }}
               variant="default"
-              className="flex items-center gap-2"
+              className="w-full sm:w-auto flex items-center gap-2 h-9 px-3 text-sm md:h-10 md:px-4 md:text-base"
             >
-              <Play className="h-4 w-4" />
+              <Play className="h-4 w-4 md:h-5 md:w-5" />
               {t('instructor.quiz.action.start', {
                 fallback: 'Start',
               })}

@@ -44,53 +44,53 @@ export function QuizViewConfiguration({ quiz }: QuizViewConfigurationProps) {
   };
 
   return (
-    <div className="flex flex-wrap gap-4">
-      <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/50">
-        <Clock className="h-4 w-4 text-muted-foreground" />
-        <span className="text-sm font-medium">
+    <div className="flex gap-3 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
+      <div className="flex shrink-0 items-center gap-2 sm:gap-3 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg bg-muted/50">
+        <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
+        <span className="text-xs sm:text-sm font-medium">
           {t('instructor.quiz.form.timeLimit', {
             fallback: 'Time Limit (minutes)',
           })}
         </span>
-        <Badge variant="outline" className="text-xs">
+        <Badge variant="outline" className="text-[10px] sm:text-xs">
           {formatTimeLimit(quiz.settings.time)}
         </Badge>
       </div>
-      <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/50">
-        <RotateCcw className="h-4 w-4 text-muted-foreground" />
-        <span className="text-sm font-medium">
+      <div className="flex shrink-0 items-center gap-2 sm:gap-3 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg bg-muted/50">
+        <RotateCcw className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
+        <span className="text-xs sm:text-sm font-medium">
           {t('instructor.quiz.form.maxAttempts', { fallback: 'Max Attempts' })}
         </span>
-        <Badge variant="outline" className="text-xs">
+        <Badge variant="outline" className="text-[10px] sm:text-xs">
           {formatAttempts(quiz.settings.attempt)}
         </Badge>
       </div>
-      <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/50">
-        <Shuffle className="h-4 w-4 text-muted-foreground" />
-        <span className="text-sm font-medium">
+      <div className="flex shrink-0 items-center gap-2 sm:gap-3 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg bg-muted/50">
+        <Shuffle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
+        <span className="text-xs sm:text-sm font-medium">
           {t('instructor.quiz.form.shuffleQuestions', {
             fallback: 'Shuffle Questions',
           })}
         </span>
         <Badge
           variant={quiz.settings.shuffleQuestions ? 'default' : 'secondary'}
-          className="text-xs"
+          className="text-[10px] sm:text-xs"
         >
           {quiz.settings.shuffleQuestions
             ? t('common.yes', { fallback: 'Yes' })
             : t('common.no', { fallback: 'No' })}
         </Badge>
       </div>
-      <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/50">
-        <Shuffle className="h-4 w-4 text-muted-foreground" />
-        <span className="text-sm font-medium">
+      <div className="flex shrink-0 items-center gap-2 sm:gap-3 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg bg-muted/50">
+        <Shuffle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
+        <span className="text-xs sm:text-sm font-medium">
           {t('instructor.quiz.form.shuffleAnswers', {
             fallback: 'Shuffle Answers',
           })}
         </span>
         <Badge
           variant={quiz.settings.shuffleAnswers ? 'default' : 'secondary'}
-          className="text-xs"
+          className="text-[10px] sm:text-xs"
         >
           {quiz.settings.shuffleAnswers
             ? t('common.yes', { fallback: 'Yes' })

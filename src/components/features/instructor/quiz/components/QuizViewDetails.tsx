@@ -12,7 +12,7 @@ export function QuizViewDetails({ quiz }: QuizViewDetailsProps) {
   }
 
   return (
-    <p className="text-base text-muted-foreground leading-relaxed max-w-3xl">
+    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
       {quiz.description}
     </p>
   );
