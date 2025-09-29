@@ -9,6 +9,7 @@ import { ROUTES_APP } from '@/components/features/instructor/routes';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
+import { useUpdateQuizStatus } from '../hooks/useUpdateQuizStatus';
 import { QuizDataDTO, QuizStatus } from '../types/quiz';
 
 export interface QuizViewHeaderProps {
@@ -18,6 +19,7 @@ export interface QuizViewHeaderProps {
 export function QuizViewHeader({ quiz }: QuizViewHeaderProps) {
   const t = useTranslations();
   const router = useRouter();
+  const updateStatus = useUpdateQuizStatus();
 
   const getStatusColor = (status: QuizStatus) => {
     switch (status) {
@@ -86,17 +88,20 @@ export function QuizViewHeader({ quiz }: QuizViewHeaderProps) {
           </Button>
           {quiz.status === QuizStatus.DRAFT ? (
             <Button
-              onClick={() => {
-                // TODO: Implement publish functionality
-                console.log('Publishing quiz:', quiz.id);
-              }}
+              onClick={() =>
+                updateStatus.mutate({
+                  id: quiz.id,
+                  status: QuizStatus.PUBLISHED,
+                })
+              }
+              disabled={updateStatus.isPending}
               variant="default"
               className="w-full sm:w-auto flex items-center gap-2 h-9 px-3 text-sm md:h-10 md:px-4 md:text-base"
             >
               <CheckCircle2 className="h-4 w-4 md:h-5 md:w-5" />
-              {t('instructor.quiz.action.publish', {
-                fallback: 'Publish',
-              })}
+              {updateStatus.isPending
+                ? t('common.updating', { fallback: 'Updating...' })
+                : t('instructor.quiz.action.publish', { fallback: 'Publish' })}
             </Button>
           ) : (
             <Button

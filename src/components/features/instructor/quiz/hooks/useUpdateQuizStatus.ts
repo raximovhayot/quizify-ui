@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 
 import { quizKeys } from '@/components/features/instructor/quiz/keys';
+import { getErrorMessage } from '@/lib/api-utils';
 
 import { TQuizListResponse } from '../schemas/quizSchema';
 import { QuizService } from '../services/quizService';
@@ -88,11 +89,12 @@ export function useUpdateQuizStatus() {
         );
       }
 
-      console.error('Failed to update quiz status:', error);
+      const backendMessage = getErrorMessage(error);
       toast.error(
-        t('instructor.quiz.status.update.error', {
-          fallback: 'Failed to update quiz status',
-        })
+        backendMessage ||
+          t('instructor.quiz.status.update.error', {
+            fallback: 'Failed to update quiz status',
+          })
       );
     },
   });

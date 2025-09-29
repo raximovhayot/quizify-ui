@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 
 import { useQuiz } from '../hooks/useQuiz';
+import { useUpdateQuizStatus } from '../hooks/useUpdateQuizStatus';
 import { QuizStatus } from '../types/quiz';
 import { QuizViewConfiguration } from './QuizViewConfiguration';
 import { QuizViewDetails } from './QuizViewDetails';
@@ -25,6 +26,7 @@ export function QuizViewPage({ quizId }: QuizViewPageProps) {
   const t = useTranslations();
   const router = useRouter();
   const { data: quiz, isLoading, error } = useQuiz(quizId);
+  const updateStatus = useUpdateQuizStatus();
 
   if (isLoading) {
     return <QuizViewSkeleton />;
@@ -75,17 +77,22 @@ export function QuizViewPage({ quizId }: QuizViewPageProps) {
               </Button>
               {quiz.status === QuizStatus.DRAFT ? (
                 <Button
-                  onClick={() => {
-                    // TODO: Implement publish functionality
-                    console.log('Publishing quiz:', quiz.id);
-                  }}
+                  onClick={() =>
+                    updateStatus.mutate({
+                      id: quiz.id,
+                      status: QuizStatus.PUBLISHED,
+                    })
+                  }
+                  disabled={updateStatus.isPending}
                   variant="default"
                   className="w-full flex items-center gap-2 h-9 px-3 text-sm"
                 >
                   <CheckCircle2 className="h-4 w-4" />
-                  {t('instructor.quiz.action.publish', {
-                    fallback: 'Publish',
-                  })}
+                  {updateStatus.isPending
+                    ? t('common.updating', { fallback: 'Updating...' })
+                    : t('instructor.quiz.action.publish', {
+                        fallback: 'Publish',
+                      })}
                 </Button>
               ) : (
                 <Button
@@ -93,6 +100,7 @@ export function QuizViewPage({ quizId }: QuizViewPageProps) {
                     // TODO: Implement start quiz functionality
                     console.log('Starting quiz:', quiz.id);
                   }}
+                  disabled={updateStatus.isPending}
                   variant="default"
                   className="w-full flex items-center gap-2 h-9 px-3 text-sm"
                 >
