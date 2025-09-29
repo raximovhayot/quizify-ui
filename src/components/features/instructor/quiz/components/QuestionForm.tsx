@@ -8,15 +8,8 @@ import {
   useFormContext,
 } from 'react-hook-form';
 
-import { useState } from 'react';
-
-import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 
-import { AttachmentService } from '@/components/features/attachment/attachmentService';
-import type { AttachmentDTO } from '@/components/features/attachment/attachmentService';
-import { AttachmentDisplay } from '@/components/shared/ui/AttachmentDisplay';
-import { FileUpload } from '@/components/shared/ui/FileUpload';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -30,7 +23,6 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import { handleApiResponse } from '@/lib/api-utils';
 
 import {
   TInstructorQuestionForm,
@@ -55,7 +47,6 @@ export function QuestionForm({
   initialData,
 }: Readonly<QuestionFormProps>) {
   const t = useTranslations();
-  const { data: session } = useSession();
 
   const form = useForm<TInstructorQuestionForm>({
     resolver: zodResolver(instructorQuestionFormSchema),
@@ -87,57 +78,6 @@ export function QuestionForm({
 
   const type = form.watch('questionType');
 
-  // Attachment handling
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [currentAttachment, setCurrentAttachment] =
-    useState<AttachmentDTO | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-
-  async function handleFileSelect(file: File) {
-    if (!session?.accessToken) return;
-    setSelectedFile(file);
-    setUploadError(null);
-    setIsUploading(true);
-    setUploadProgress(0);
-    try {
-      const progressInterval = setInterval(() => {
-        setUploadProgress((p) =>
-          p >= 90 ? (clearInterval(progressInterval), p) : p + 10
-        );
-      }, 200);
-      const attachment = await AttachmentService.uploadAttachment(
-        file,
-        session.accessToken
-      );
-      clearInterval(progressInterval);
-      setUploadProgress(100);
-      form.setValue('attachmentId', attachment.id);
-      setCurrentAttachment(attachment);
-      setSelectedFile(null);
-    } catch (e) {
-      setUploadError(e instanceof Error ? e.message : 'Failed to upload file');
-    } finally {
-      setIsUploading(false);
-      setUploadProgress(0);
-    }
-  }
-  function handleFileRemove() {
-    setSelectedFile(null);
-    setUploadError(null);
-  }
-  async function handleAttachmentDelete(attachmentId: number) {
-    if (!session?.accessToken) return;
-    const resp = await AttachmentService.deleteAttachment(
-      attachmentId,
-      session.accessToken
-    );
-    handleApiResponse(resp);
-    setCurrentAttachment(null);
-    form.setValue('attachmentId', undefined);
-  }
-
   const submit = async (data: TInstructorQuestionForm) => {
     await onSubmit(data);
   };
@@ -148,7 +88,7 @@ export function QuestionForm({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
             <Label htmlFor="questionType">
-              {t('instructor.quiz.question.type', {
+              {t('instructor.quiz.question.type.label', {
                 fallback: 'Question type',
               })}
             </Label>
@@ -171,35 +111,39 @@ export function QuestionForm({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value={QuestionType.MULTIPLE_CHOICE}>
-                      {t('student.quiz.types.multipleChoice', {
-                        fallback: 'Multiple choice',
+                      {t('instructor.quiz.question.type.multipleChoice', {
+                        fallback: 'Multiple Choice',
                       })}
                     </SelectItem>
                     <SelectItem value={QuestionType.TRUE_FALSE}>
-                      {t('student.quiz.types.trueFalse', {
+                      {t('instructor.quiz.question.type.trueFalse', {
                         fallback: 'True/False',
                       })}
                     </SelectItem>
                     <SelectItem value={QuestionType.SHORT_ANSWER}>
-                      {t('student.quiz.types.shortAnswer', {
-                        fallback: 'Short answer',
+                      {t('instructor.quiz.question.type.shortAnswer', {
+                        fallback: 'Short Answer',
                       })}
                     </SelectItem>
                     <SelectItem value={QuestionType.FILL_IN_BLANK}>
-                      {t('student.quiz.types.fillInBlank', {
+                      {t('instructor.quiz.question.type.fillInBlank', {
                         fallback: 'Fill in the blank',
                       })}
                     </SelectItem>
                     <SelectItem value={QuestionType.ESSAY}>
-                      {t('student.quiz.types.essay', { fallback: 'Essay' })}
+                      {t('instructor.quiz.question.type.essay', {
+                        fallback: 'Essay',
+                      })}
                     </SelectItem>
                     <SelectItem value={QuestionType.MATCHING}>
-                      {t('student.quiz.types.matching', {
+                      {t('instructor.quiz.question.type.matching', {
                         fallback: 'Matching',
                       })}
                     </SelectItem>
                     <SelectItem value={QuestionType.RANKING}>
-                      {t('student.quiz.types.ranking', { fallback: 'Ranking' })}
+                      {t('instructor.quiz.question.type.ranking', {
+                        fallback: 'Ranking',
+                      })}
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -216,6 +160,11 @@ export function QuestionForm({
               min={0}
               {...form.register('points', { valueAsNumber: true })}
             />
+            {form.formState.errors.points && (
+              <p className="text-sm text-destructive mt-1">
+                {String((form.formState.errors as any).points?.message)}
+              </p>
+            )}
           </div>
         </div>
 
@@ -231,6 +180,29 @@ export function QuestionForm({
           )}
         </div>
 
+        <div>
+          <Label htmlFor="explanation">
+            {t('instructor.quiz.question.explanation.label', {
+              fallback: 'Explanation (optional)',
+            })}
+          </Label>
+          <Textarea
+            id="explanation"
+            rows={3}
+            placeholder={t('instructor.quiz.question.explanation.placeholder', {
+              fallback:
+                'Add an explanation or feedback shown after answering (optional)',
+            })}
+            {...form.register('explanation')}
+          />
+          {/* No strict validation for explanation, but display if any */}
+          {(form.formState.errors as any)?.explanation?.message && (
+            <p className="text-sm text-destructive mt-1">
+              {String((form.formState.errors as any)?.explanation?.message)}
+            </p>
+          )}
+        </div>
+
         {/* Conditional sections */}
         {type === QuestionType.MULTIPLE_CHOICE && (
           <div className="space-y-2">
@@ -238,6 +210,11 @@ export function QuestionForm({
               {t('instructor.quiz.question.answers', { fallback: 'Answers' })}
             </Label>
             <AnswerListEditor />
+            {(form.formState.errors as any)?.answers?.message && (
+              <p className="text-sm text-destructive mt-1">
+                {String((form.formState.errors as any)?.answers?.message)}
+              </p>
+            )}
           </div>
         )}
         {type === QuestionType.SHORT_ANSWER && (
@@ -246,6 +223,11 @@ export function QuestionForm({
               {t('instructor.quiz.question.answers', { fallback: 'Answers' })}
             </Label>
             <AnswerListEditor enforceCorrect />
+            {(form.formState.errors as any)?.answers?.message && (
+              <p className="text-sm text-destructive mt-1">
+                {String((form.formState.errors as any)?.answers?.message)}
+              </p>
+            )}
           </div>
         )}
         {type === QuestionType.TRUE_FALSE && (
@@ -303,29 +285,6 @@ export function QuestionForm({
 
         <Separator />
 
-        {/* Attachment */}
-        <div className="space-y-2">
-          <Label>{t('quiz.form.attachment', { fallback: 'Attachment' })}</Label>
-          {currentAttachment ? (
-            <AttachmentDisplay
-              attachment={currentAttachment}
-              onDownload={(a) => window.open(a.downloadUrl, '_blank')}
-              onDelete={handleAttachmentDelete}
-              showActions={!isSubmitting}
-            />
-          ) : (
-            <FileUpload
-              onFileSelect={handleFileSelect}
-              onFileRemove={handleFileRemove}
-              selectedFile={selectedFile}
-              isUploading={isUploading}
-              uploadProgress={uploadProgress}
-              error={uploadError ?? undefined}
-              disabled={isSubmitting}
-            />
-          )}
-        </div>
-
         <div className="flex justify-end gap-2 pt-2">
           {onCancel && (
             <Button
@@ -337,7 +296,7 @@ export function QuestionForm({
               {t('common.cancel', { fallback: 'Cancel' })}
             </Button>
           )}
-          <Button type="submit" disabled={isSubmitting || isUploading}>
+          <Button type="submit" disabled={isSubmitting}>
             {isSubmitting
               ? t('common.saving', { fallback: 'Saving...' })
               : t('common.create', { fallback: 'Create' })}
@@ -353,7 +312,8 @@ function MatchingEditor() {
   type TMatchingForm = TInstructorQuestionForm & {
     matchingPairs: { left: string; right: string }[];
   };
-  const { register, watch, setValue } = useFormContext<TMatchingForm>();
+  const { register, watch, setValue, formState } =
+    useFormContext<TMatchingForm>();
   const pairs = (watch('matchingPairs') ?? []) as {
     left: string;
     right: string;
@@ -401,6 +361,15 @@ function MatchingEditor() {
         <Button type="button" variant="outline" onClick={handleAdd}>
           {t('common.add', { fallback: 'Add' })}
         </Button>
+        {((formState.errors as any)?.matchingPairs?.message ||
+          (formState.errors as any)?.matchingPairs?.root?.message) && (
+          <p className="text-sm text-destructive mt-1">
+            {String(
+              (formState.errors as any)?.matchingPairs?.message ||
+                (formState.errors as any)?.matchingPairs?.root?.message
+            )}
+          </p>
+        )}
       </div>
     </div>
   );
@@ -409,7 +378,8 @@ function MatchingEditor() {
 function RankingEditor() {
   const t = useTranslations();
   type TRankingForm = TInstructorQuestionForm & { rankingItems: string[] };
-  const { register, watch, setValue } = useFormContext<TRankingForm>();
+  const { register, watch, setValue, formState } =
+    useFormContext<TRankingForm>();
   const items = (watch('rankingItems') ?? []) as string[];
   const moveItem = (from: number, to: number) => {
     if (to < 0 || to >= items.length) return;
@@ -470,6 +440,15 @@ function RankingEditor() {
         <Button type="button" variant="outline" onClick={addItem}>
           {t('common.add', { fallback: 'Add' })}
         </Button>
+        {((formState.errors as any)?.rankingItems?.message ||
+          (formState.errors as any)?.rankingItems?.root?.message) && (
+          <p className="text-sm text-destructive mt-1">
+            {String(
+              (formState.errors as any)?.rankingItems?.message ||
+                (formState.errors as any)?.rankingItems?.root?.message
+            )}
+          </p>
+        )}
       </div>
     </div>
   );

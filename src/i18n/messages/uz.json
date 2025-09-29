@@ -26,6 +26,13 @@
     "no": "Yo'q",
     "all": "Barchasi",
     "status": "Holat",
+    "add": "Qo'shish",
+    "remove": "O'chirish",
+    "up": "Yuqoriga",
+    "down": "Pastga",
+    "left": "Chap",
+    "right": "O'ng",
+    "item": "Element",
     "pagination": {
       "first": "Birinchi sahifaga o'tish",
       "previous": "Oldingi sahifaga o'tish",
@@ -310,13 +317,27 @@
           "success": "Savol muvaffaqiyatli o'chirildi"
         },
         "create": {
+          "title": "Savol yaratish",
           "success": "Savol muvaffaqiyatli yaratildi"
+        },
+        "explanation": {
+          "label": "Izoh",
+          "placeholder": "Javobdan keyin ko'rsatiladigan ixtiyoriy izoh yoki fikr-mulohaza"
         },
         "update": {
           "success": "Savol muvaffaqiyatli yangilandi"
         },
+        "points": "Ball",
+        "content": "Savol",
+        "answers": "Javoblar",
+        "answer": {
+          "label": "Javob",
+          "placeholder": "Javob matnini kiriting"
+        },
+        "correct": "To'g'ri",
         "type": {
           "label": "Savol turi",
+          "placeholder": "Turini tanlang",
           "multipleChoice": "Bir nechta variantli",
           "trueFalse": "To'g'ri/Yolg'on",
           "shortAnswer": "Qisqa javob",
@@ -324,6 +345,15 @@
           "essay": "Insho",
           "matching": "Moslashtirish",
           "ranking": "Reyting"
+        },
+        "trueFalse": {
+          "correctIsTrue": "To'g'ri javob — To'g'ri"
+        },
+        "fillInBlank": {
+          "template": "Shablon"
+        },
+        "essay": {
+          "criteria": "Baholash mezonlari"
         }
       },
       "no": {

@@ -265,7 +265,7 @@ export function QuestionsList({ quizId, onAddQuestion }: QuestionsListProps) {
         open={!!editingQuestion}
         onOpenChange={() => setEditingQuestion(null)}
       >
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {t('instructor.quiz.question.edit.title', {

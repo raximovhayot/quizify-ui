@@ -27,6 +27,13 @@
     "no": "No",
     "all": "All",
     "status": "Status",
+    "add": "Add",
+    "remove": "Remove",
+    "up": "Up",
+    "down": "Down",
+    "left": "Left",
+    "right": "Right",
+    "item": "Item",
     "pagination": {
       "first": "Go to first page",
       "previous": "Go to previous page",
@@ -312,13 +319,27 @@
           "success": "Question deleted successfully"
         },
         "create": {
+          "title": "Create Question",
           "success": "Question created successfully"
+        },
+        "explanation": {
+          "label": "Explanation",
+          "placeholder": "Optional explanation or feedback shown after answering"
         },
         "update": {
           "success": "Question updated successfully"
         },
+        "points": "Points",
+        "content": "Question",
+        "answers": "Answers",
+        "answer": {
+          "label": "Answer",
+          "placeholder": "Enter answer text"
+        },
+        "correct": "Correct",
         "type": {
           "label": "Question type",
+          "placeholder": "Select type",
           "multipleChoice": "Multiple Choice",
           "trueFalse": "True/False",
           "shortAnswer": "Short Answer",
@@ -326,6 +347,15 @@
           "essay": "Essay",
           "matching": "Matching",
           "ranking": "Ranking"
+        },
+        "trueFalse": {
+          "correctIsTrue": "Correct is True"
+        },
+        "fillInBlank": {
+          "template": "Template"
+        },
+        "essay": {
+          "criteria": "Grading criteria"
         }
       },
       "no": {

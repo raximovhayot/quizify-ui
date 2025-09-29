@@ -42,10 +42,10 @@ export class QuestionService {
     signal?: AbortSignal
   ): Promise<IPageableList<QuestionDataDto>> {
     const response: IApiResponse<IPageableList<QuestionDataDto>> =
-      await apiClient.get(`/instructor/questions`, {
+      await apiClient.get(`/instructor/questions/:quizId/list`, {
         signal,
+        params: { quizId: filter.quizId },
         query: {
-          quizId: filter.quizId,
           page: filter.page,
           size: filter.size,
         },

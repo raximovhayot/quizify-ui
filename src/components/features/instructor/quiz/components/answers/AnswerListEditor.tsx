@@ -52,7 +52,9 @@ export function AnswerListEditor({
         >
           <div className="flex items-center gap-2">
             <Label htmlFor={`${name}.${index}.content`} className="text-sm">
-              {t('instructor.quiz.question.answer', { fallback: 'Answer' })}{' '}
+              {t('instructor.quiz.question.answer.label', {
+                fallback: 'Answer',
+              })}{' '}
               {index + 1}
             </Label>
             <div className="ml-auto flex gap-2">
