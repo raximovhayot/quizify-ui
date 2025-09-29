@@ -247,7 +247,7 @@ export function QuizForm({
                       fallback: 'Shuffle Questions',
                     })}
                   </Label>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-muted-foreground m-0">
                     {t('instructor.quiz.form.shuffleQuestionsHelp', {
                       fallback:
                         'Randomize the order of questions for each attempt',
@@ -275,7 +275,7 @@ export function QuizForm({
                       fallback: 'Shuffle Answers',
                     })}
                   </Label>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-muted-foreground m-0">
                     {t('instructor.quiz.form.shuffleAnswersHelp', {
                       fallback: 'Randomize the order of answer choices',
                     })}
