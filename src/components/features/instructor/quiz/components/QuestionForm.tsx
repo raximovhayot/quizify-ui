@@ -37,6 +37,7 @@ export interface QuestionFormProps {
   onCancel?: () => void;
   isSubmitting?: boolean;
   initialData?: QuestionDataDto;
+  fixedType?: QuestionType; // when provided, hide type selector and enforce this type
 }
 
 export function QuestionForm({
@@ -45,6 +46,7 @@ export function QuestionForm({
   onCancel,
   isSubmitting,
   initialData,
+  fixedType,
 }: Readonly<QuestionFormProps>) {
   const t = useTranslations();
 
@@ -53,27 +55,81 @@ export function QuestionForm({
     defaultValues: initialData
       ? ({
           quizId,
-          questionType: initialData.questionType,
+          questionType: (fixedType ?? initialData.questionType) as QuestionType,
           content: initialData.content,
           explanation: initialData.explanation || '',
           order: initialData.order,
           points: initialData.points,
           trueFalseAnswer: initialData.trueFalseAnswer,
           answers: initialData.answers.map((answer) => ({
+            id: answer.id,
             content: answer.content,
             correct: answer.correct,
             order: answer.order,
           })),
         } as unknown as TInstructorQuestionForm)
-      : ({
-          quizId,
-          questionType: QuestionType.MULTIPLE_CHOICE,
-          content: '',
-          explanation: '',
-          order: 0,
-          points: 1,
-          answers: [{ content: '', correct: true, order: 0 }],
-        } as unknown as TInstructorQuestionForm),
+      : (() => {
+          const typeToUse = (fixedType ??
+            QuestionType.MULTIPLE_CHOICE) as QuestionType;
+          const base = {
+            quizId,
+            questionType: typeToUse,
+            content: '',
+            explanation: '',
+            order: 0,
+            points: 1,
+          } as const;
+          switch (typeToUse) {
+            case QuestionType.MULTIPLE_CHOICE:
+              return {
+                ...base,
+                answers: [
+                  { content: '', correct: true, order: 0 },
+                  { content: '', correct: false, order: 1 },
+                ],
+              } as unknown as TInstructorQuestionForm;
+            case QuestionType.TRUE_FALSE:
+              return {
+                ...base,
+                trueFalseAnswer: false,
+                answers: [],
+              } as unknown as TInstructorQuestionForm;
+            case QuestionType.SHORT_ANSWER:
+              return {
+                ...base,
+                answers: [{ content: '', correct: true, order: 0 }],
+              } as unknown as TInstructorQuestionForm;
+            case QuestionType.FILL_IN_BLANK:
+              return {
+                ...base,
+                blankTemplate: '',
+                answers: [],
+              } as unknown as TInstructorQuestionForm;
+            case QuestionType.ESSAY:
+              return {
+                ...base,
+                gradingCriteria: '',
+                answers: [],
+              } as unknown as TInstructorQuestionForm;
+            case QuestionType.MATCHING:
+              return {
+                ...base,
+                matchingPairs: [{ left: '', right: '' }],
+                answers: [],
+              } as unknown as TInstructorQuestionForm;
+            case QuestionType.RANKING:
+              return {
+                ...base,
+                rankingItems: ['', ''],
+                answers: [],
+              } as unknown as TInstructorQuestionForm;
+            default:
+              return {
+                ...base,
+                answers: [],
+              } as unknown as TInstructorQuestionForm;
+          }
+        })(),
   });
 
   const type = form.watch('questionType');
@@ -86,71 +142,73 @@ export function QuestionForm({
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(submit)} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div>
-            <Label htmlFor="questionType">
-              {t('instructor.quiz.question.type.label', {
-                fallback: 'Question type',
-              })}
-            </Label>
-            <Controller
-              name="questionType"
-              control={form.control}
-              render={({ field }) => (
-                <Select
-                  value={field.value}
-                  onValueChange={field.onChange}
-                  disabled={isSubmitting}
-                >
-                  <SelectTrigger id="questionType">
-                    <SelectValue
-                      placeholder={t(
-                        'instructor.quiz.question.type.placeholder',
-                        { fallback: 'Select type' }
-                      )}
-                    />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={QuestionType.MULTIPLE_CHOICE}>
-                      {t('instructor.quiz.question.type.multipleChoice', {
-                        fallback: 'Multiple Choice',
-                      })}
-                    </SelectItem>
-                    <SelectItem value={QuestionType.TRUE_FALSE}>
-                      {t('instructor.quiz.question.type.trueFalse', {
-                        fallback: 'True/False',
-                      })}
-                    </SelectItem>
-                    <SelectItem value={QuestionType.SHORT_ANSWER}>
-                      {t('instructor.quiz.question.type.shortAnswer', {
-                        fallback: 'Short Answer',
-                      })}
-                    </SelectItem>
-                    <SelectItem value={QuestionType.FILL_IN_BLANK}>
-                      {t('instructor.quiz.question.type.fillInBlank', {
-                        fallback: 'Fill in the blank',
-                      })}
-                    </SelectItem>
-                    <SelectItem value={QuestionType.ESSAY}>
-                      {t('instructor.quiz.question.type.essay', {
-                        fallback: 'Essay',
-                      })}
-                    </SelectItem>
-                    <SelectItem value={QuestionType.MATCHING}>
-                      {t('instructor.quiz.question.type.matching', {
-                        fallback: 'Matching',
-                      })}
-                    </SelectItem>
-                    <SelectItem value={QuestionType.RANKING}>
-                      {t('instructor.quiz.question.type.ranking', {
-                        fallback: 'Ranking',
-                      })}
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-            />
-          </div>
-          <div>
+          {!fixedType && (
+            <div>
+              <Label htmlFor="questionType">
+                {t('instructor.quiz.question.type.label', {
+                  fallback: 'Question type',
+                })}
+              </Label>
+              <Controller
+                name="questionType"
+                control={form.control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    disabled={isSubmitting}
+                  >
+                    <SelectTrigger id="questionType">
+                      <SelectValue
+                        placeholder={t(
+                          'instructor.quiz.question.type.placeholder',
+                          { fallback: 'Select type' }
+                        )}
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={QuestionType.MULTIPLE_CHOICE}>
+                        {t('instructor.quiz.question.type.multipleChoice', {
+                          fallback: 'Multiple Choice',
+                        })}
+                      </SelectItem>
+                      <SelectItem value={QuestionType.TRUE_FALSE}>
+                        {t('instructor.quiz.question.type.trueFalse', {
+                          fallback: 'True/False',
+                        })}
+                      </SelectItem>
+                      <SelectItem value={QuestionType.SHORT_ANSWER}>
+                        {t('instructor.quiz.question.type.shortAnswer', {
+                          fallback: 'Short Answer',
+                        })}
+                      </SelectItem>
+                      <SelectItem value={QuestionType.FILL_IN_BLANK}>
+                        {t('instructor.quiz.question.type.fillInBlank', {
+                          fallback: 'Fill in the blank',
+                        })}
+                      </SelectItem>
+                      <SelectItem value={QuestionType.ESSAY}>
+                        {t('instructor.quiz.question.type.essay', {
+                          fallback: 'Essay',
+                        })}
+                      </SelectItem>
+                      <SelectItem value={QuestionType.MATCHING}>
+                        {t('instructor.quiz.question.type.matching', {
+                          fallback: 'Matching',
+                        })}
+                      </SelectItem>
+                      <SelectItem value={QuestionType.RANKING}>
+                        {t('instructor.quiz.question.type.ranking', {
+                          fallback: 'Ranking',
+                        })}
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
+          )}
+          <div className={!fixedType ? '' : 'md:col-span-2'}>
             <Label htmlFor="points">
               {t('instructor.quiz.question.points', { fallback: 'Points' })}
             </Label>
@@ -209,7 +267,7 @@ export function QuestionForm({
             <Label>
               {t('instructor.quiz.question.answers', { fallback: 'Answers' })}
             </Label>
-            <AnswerListEditor />
+            <AnswerListEditor disabled={isSubmitting} />
             {(form.formState.errors as any)?.answers?.message && (
               <p className="text-sm text-destructive mt-1">
                 {String((form.formState.errors as any)?.answers?.message)}
@@ -222,7 +280,7 @@ export function QuestionForm({
             <Label>
               {t('instructor.quiz.question.answers', { fallback: 'Answers' })}
             </Label>
-            <AnswerListEditor enforceCorrect />
+            <AnswerListEditor enforceCorrect disabled={isSubmitting} />
             {(form.formState.errors as any)?.answers?.message && (
               <p className="text-sm text-destructive mt-1">
                 {String((form.formState.errors as any)?.answers?.message)}

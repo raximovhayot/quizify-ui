@@ -354,6 +354,12 @@
         },
         "essay": {
           "criteria": "Baholash mezonlari"
+        },
+        "matching": {
+          "pairs": "Moslashtirish juftliklari"
+        },
+        "ranking": {
+          "items": "Reyting elementlari"
         }
       },
       "no": {

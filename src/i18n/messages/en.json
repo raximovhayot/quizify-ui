@@ -356,6 +356,12 @@
         },
         "essay": {
           "criteria": "Grading criteria"
+        },
+        "matching": {
+          "pairs": "Matching pairs"
+        },
+        "ranking": {
+          "items": "Ranking items"
         }
       },
       "no": {

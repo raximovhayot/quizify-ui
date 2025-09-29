@@ -42,7 +42,13 @@ import {
   toInstructorQuestionSaveRequest,
 } from '../schemas/questionSchema';
 import { QuestionDataDto, QuestionType } from '../types/question';
-import { QuestionForm } from './QuestionForm';
+import { EssayQuestionForm } from './forms/EssayQuestionForm';
+import { FillInBlankQuestionForm } from './forms/FillInBlankQuestionForm';
+import { MatchingQuestionForm } from './forms/MatchingQuestionForm';
+import { MultipleChoiceQuestionForm } from './forms/MultipleChoiceQuestionForm';
+import { RankingQuestionForm } from './forms/RankingQuestionForm';
+import { ShortAnswerQuestionForm } from './forms/ShortAnswerQuestionForm';
+import { TrueFalseQuestionForm } from './forms/TrueFalseQuestionForm';
 
 export interface QuestionsListProps {
   quizId: number;
@@ -274,13 +280,72 @@ export function QuestionsList({ quizId, onAddQuestion }: QuestionsListProps) {
             </DialogTitle>
           </DialogHeader>
           {editingQuestion && (
-            <QuestionForm
-              quizId={quizId}
-              initialData={editingQuestion}
-              isSubmitting={updateQuestionMutation.isPending}
-              onCancel={() => setEditingQuestion(null)}
-              onSubmit={handleEditQuestion}
-            />
+            <>
+              {editingQuestion.questionType ===
+                QuestionType.MULTIPLE_CHOICE && (
+                <MultipleChoiceQuestionForm
+                  quizId={quizId}
+                  initialData={editingQuestion}
+                  isSubmitting={updateQuestionMutation.isPending}
+                  onCancel={() => setEditingQuestion(null)}
+                  onSubmit={handleEditQuestion}
+                />
+              )}
+              {editingQuestion.questionType === QuestionType.TRUE_FALSE && (
+                <TrueFalseQuestionForm
+                  quizId={quizId}
+                  initialData={editingQuestion}
+                  isSubmitting={updateQuestionMutation.isPending}
+                  onCancel={() => setEditingQuestion(null)}
+                  onSubmit={handleEditQuestion}
+                />
+              )}
+              {editingQuestion.questionType === QuestionType.SHORT_ANSWER && (
+                <ShortAnswerQuestionForm
+                  quizId={quizId}
+                  initialData={editingQuestion}
+                  isSubmitting={updateQuestionMutation.isPending}
+                  onCancel={() => setEditingQuestion(null)}
+                  onSubmit={handleEditQuestion}
+                />
+              )}
+              {editingQuestion.questionType === QuestionType.FILL_IN_BLANK && (
+                <FillInBlankQuestionForm
+                  quizId={quizId}
+                  initialData={editingQuestion}
+                  isSubmitting={updateQuestionMutation.isPending}
+                  onCancel={() => setEditingQuestion(null)}
+                  onSubmit={handleEditQuestion}
+                />
+              )}
+              {editingQuestion.questionType === QuestionType.ESSAY && (
+                <EssayQuestionForm
+                  quizId={quizId}
+                  initialData={editingQuestion}
+                  isSubmitting={updateQuestionMutation.isPending}
+                  onCancel={() => setEditingQuestion(null)}
+                  onSubmit={handleEditQuestion}
+                />
+              )}
+              {editingQuestion.questionType === QuestionType.MATCHING && (
+                <MatchingQuestionForm
+                  quizId={quizId}
+                  initialData={editingQuestion}
+                  isSubmitting={updateQuestionMutation.isPending}
+                  onCancel={() => setEditingQuestion(null)}
+                  onSubmit={handleEditQuestion}
+                />
+              )}
+              {editingQuestion.questionType === QuestionType.RANKING && (
+                <RankingQuestionForm
+                  quizId={quizId}
+                  initialData={editingQuestion}
+                  isSubmitting={updateQuestionMutation.isPending}
+                  onCancel={() => setEditingQuestion(null)}
+                  onSubmit={handleEditQuestion}
+                />
+              )}
+            </>
           )}
         </DialogContent>
       </Dialog>

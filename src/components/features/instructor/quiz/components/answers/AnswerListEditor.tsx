@@ -1,6 +1,6 @@
 'use client';
 
-import { useFieldArray, useFormContext } from 'react-hook-form';
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 import { useTranslations } from 'next-intl';
 
@@ -99,24 +99,27 @@ export function AnswerListEditor({
           />
           {!enforceCorrect && (
             <div className="flex items-center gap-2">
-              <Switch
-                id={`${name}.${index}.correct`}
-                checked={!!answers?.[index]?.correct}
-                onCheckedChange={(checked) => {
-                  // RHF lacks direct setter here; use register's onChange
-                  const input = document.querySelector<HTMLInputElement>(
-                    `input[name='${name}.${index}.correct']`
-                  );
-                  if (input) {
-                    input.checked = !!checked;
-                    input.dispatchEvent(new Event('input', { bubbles: true }));
-                  }
-                }}
-                disabled={disabled}
+              <Controller
+                name={`${name}.${index}.correct` as const}
+                render={({ field }) => (
+                  <>
+                    <Switch
+                      id={`${name}.${index}.correct`}
+                      checked={!!field.value}
+                      onCheckedChange={field.onChange}
+                      disabled={disabled}
+                    />
+                    <Label
+                      htmlFor={`${name}.${index}.correct`}
+                      className="text-sm"
+                    >
+                      {t('instructor.quiz.question.correct', {
+                        fallback: 'Correct',
+                      })}
+                    </Label>
+                  </>
+                )}
               />
-              <Label htmlFor={`${name}.${index}.correct`} className="text-sm">
-                {t('instructor.quiz.question.correct', { fallback: 'Correct' })}
-              </Label>
             </div>
           )}
           {/* Hidden order field to sync order by index */}
