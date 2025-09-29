@@ -191,8 +191,10 @@ export function QuestionsList({ quizId, onAddQuestion }: QuestionsListProps) {
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5" />
-              {t('instructor.quiz.questions', { fallback: 'Questions' })} (
-              {questions.length})
+              {t('instructor.quiz.questions.title', {
+                fallback: 'Questions',
+              })}{' '}
+              ({questions.length})
             </CardTitle>
             <Button onClick={onAddQuestion} size="sm">
               <Plus className="h-4 w-4 mr-2" />

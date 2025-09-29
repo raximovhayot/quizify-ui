@@ -6,6 +6,9 @@
     "cancel": "Bekor qilish",
     "delete": "O'chirish",
     "create": "Yaratish",
+    "creating": "Yaratilmoqda...",
+    "updating": "Yangilanmoqda...",
+    "deleting": "O'chirilmoqda...",
     "error": {
       "title": "Nimadir noto'g'ri ketdi",
       "description": "Ma'lumotlarni yuklashda muammo yuz berdi. Iltimos, qayta urinib ko'ring.",
@@ -19,6 +22,8 @@
     "view": "Ko'rish",
     "true": "To'g'ri",
     "false": "Yolg'on",
+    "yes": "Ha",
+    "no": "Yo'q",
     "all": "Barchasi",
     "status": "Holat",
     "pagination": {
@@ -266,7 +271,13 @@
       "edit": {
         "dialogTitle": "Testni tahrirlash",
         "title": "Testni tahrirlash",
-        "stub": "Bu #{id}-testni tahrirlash uchun vaqtinchalik sahifa. To'liq tahrirlash interfeysi keyinroq qo'shiladi."
+        "stub": "Bu #{id}-testni tahrirlash uchun vaqtinchalik sahifa. To'liq tahrirlash interfeysi keyinroq qo'shiladi.",
+        "error": {
+          "invalidId": "Noto'g'ri test ID",
+          "invalidIdDescription": "Berilgan test identifikatori yaroqsiz.",
+          "loadFailed": "Testni yuklab bo'lmadi",
+          "loadFailedDescription": "Test ma'lumotlarini yuklashda xatolik yuz berdi."
+        }
       },
       "delete": {
         "success": "Test muvaffaqiyatli o'chirildi",
@@ -276,8 +287,45 @@
           "description": "Ushbu testni o'chirishni xohlaysizmi? Bu amalni bekor qilib bo'lmaydi."
         }
       },
-      "questions": "Savollar",
+      "questions": {
+        "title": "Savollar",
+        "error": {
+          "title": "Savollarni yuklab bo'lmadi",
+          "description": "Savollar ro'yxatini yuklashda xatolik yuz berdi."
+        },
+        "empty": {
+          "title": "Hali savollar yo'q",
+          "description": "Talabalarni qiziqtiradigan va o'rgatuvchi savollar yaratish orqali testingizni boshlang."
+        }
+      },
       "created": "Yaratilgan",
+      "question": {
+        "add": "Savol qo'shish",
+        "edit": {
+          "title": "Savolni tahrirlash"
+        },
+        "delete": {
+          "title": "Savolni o'chirish",
+          "description": "Ushbu savolni o'chirishni xohlaysizmi? Bu amalni bekor qilib bo'lmaydi.",
+          "success": "Savol muvaffaqiyatli o'chirildi"
+        },
+        "create": {
+          "success": "Savol muvaffaqiyatli yaratildi"
+        },
+        "update": {
+          "success": "Savol muvaffaqiyatli yangilandi"
+        },
+        "type": {
+          "label": "Savol turi",
+          "multipleChoice": "Bir nechta variantli",
+          "trueFalse": "To'g'ri/Yolg'on",
+          "shortAnswer": "Qisqa javob",
+          "fillInBlank": "Bo'shliqlarni to'ldirish",
+          "essay": "Insho",
+          "matching": "Moslashtirish",
+          "ranking": "Reyting"
+        }
+      },
       "no": {
         "quizzes": "Hali testlar yaratilmagan."
       },
@@ -304,7 +352,8 @@
         "edit": "Tahrirlash",
         "delete": "O'chirish",
         "publish": "Nashr etish",
-        "unpublish": "Nashrdan olib tashlash"
+        "unpublish": "Nashrdan olib tashlash",
+        "start": "Boshlash"
       },
       "shuffle": {
         "questions": "Savollarni aralashtirish",
@@ -320,6 +369,23 @@
       "update": {
         "success": "Test muvaffaqiyatli yangilandi",
         "error": "Testni yangilab bo'lmadi"
+      },
+      "form": {
+        "editTitle": "Testni tahrirlash",
+        "createTitle": "Yangi test yaratish",
+        "title": "Test nomi",
+        "titlePlaceholder": "Test nomini kiriting...",
+        "description": "Tavsif",
+        "descriptionPlaceholder": "Test tavsifini kiriting...",
+        "settings": "Test sozlamalari",
+        "timeLimit": "Vaqt cheklovi (daqiqa)",
+        "timeLimitHelp": "0 — cheklanmagan vaqt",
+        "maxAttempts": "Maks. urinishlar",
+        "maxAttemptsHelp": "0 — cheklanmagan urinishlar",
+        "shuffleQuestions": "Savollarni aralashtirish",
+        "shuffleQuestionsHelp": "Har bir urinishda savollar tartibini aralashtirish",
+        "shuffleAnswers": "Javoblarni aralashtirish",
+        "shuffleAnswersHelp": "Javob variantlari tartibini aralashtirish"
       },
       "search": {
         "placeholder": "Testlarni qidirish..."

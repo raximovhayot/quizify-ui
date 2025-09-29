@@ -79,8 +79,10 @@ export function QuizForm({
       <CardHeader>
         <CardTitle>
           {quiz
-            ? t('quiz.form.editTitle', { fallback: 'Edit Quiz' })
-            : t('quiz.form.createTitle', { fallback: 'Create New Quiz' })}
+            ? t('instructor.quiz.form.editTitle', { fallback: 'Edit Quiz' })
+            : t('instructor.quiz.form.createTitle', {
+                fallback: 'Create New Quiz',
+              })}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -90,130 +92,175 @@ export function QuizForm({
         >
           {/* Basic Information */}
           <div className="space-y-4">
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="title">
-                {t('quiz.form.title', { fallback: 'Title' })} *
+                {t('instructor.quiz.form.title', { fallback: 'Quiz Title' })}
               </Label>
-              <Input
-                id="title"
-                {...form.register('title')}
-                placeholder={t('quiz.form.titlePlaceholder', {
-                  fallback: 'Enter quiz title',
-                })}
-                disabled={isSubmitting}
+              <Controller
+                name="title"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <div>
+                    <Input
+                      {...field}
+                      id="title"
+                      placeholder={t('instructor.quiz.form.titlePlaceholder', {
+                        fallback: 'Enter quiz title...',
+                      })}
+                      disabled={isSubmitting}
+                    />
+                    {fieldState.error && (
+                      <p className="text-sm text-destructive mt-1">
+                        {fieldState.error.message}
+                      </p>
+                    )}
+                  </div>
+                )}
               />
-              {form.formState.errors.title && (
-                <p className="text-sm text-destructive mt-1">
-                  {form.formState.errors.title.message}
-                </p>
-              )}
             </div>
 
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="description">
-                {t('quiz.form.description', { fallback: 'Description' })}
-              </Label>
-              <Textarea
-                id="description"
-                {...form.register('description')}
-                placeholder={t('quiz.form.descriptionPlaceholder', {
-                  fallback: 'Enter quiz description (optional)',
+                {t('instructor.quiz.form.description', {
+                  fallback: 'Description',
                 })}
-                rows={3}
-                disabled={isSubmitting}
+              </Label>
+              <Controller
+                name="description"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <div>
+                    <Textarea
+                      {...field}
+                      id="description"
+                      placeholder={t(
+                        'instructor.quiz.form.descriptionPlaceholder',
+                        {
+                          fallback: 'Enter quiz description...',
+                        }
+                      )}
+                      disabled={isSubmitting}
+                      rows={3}
+                    />
+                    {fieldState.error && (
+                      <p className="text-sm text-destructive mt-1">
+                        {fieldState.error.message}
+                      </p>
+                    )}
+                  </div>
+                )}
               />
-              {form.formState.errors.description && (
-                <p className="text-sm text-destructive mt-1">
-                  {form.formState.errors.description.message}
-                </p>
-              )}
             </div>
           </div>
 
           <Separator />
 
-          {/* Quiz Settings */}
-          <div className="space-y-3">
+          {/* Settings */}
+          <div className="space-y-4">
             <h3 className="text-lg font-medium">
-              {t('quiz.form.settings', { fallback: 'Quiz Settings' })}
+              {t('instructor.quiz.form.settings', {
+                fallback: 'Quiz Settings',
+              })}
             </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div>
-                <Label htmlFor="time" className="text-sm">
-                  {t('quiz.form.timeLimit', {
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="time">
+                  {t('instructor.quiz.form.timeLimit', {
                     fallback: 'Time Limit (minutes)',
                   })}
                 </Label>
-                <Input
-                  id="time"
-                  type="number"
-                  min="0"
-                  className="h-9"
-                  {...form.register('settings.time', {
-                    setValueAs: (v) => {
-                      if (v === '' || v === null || typeof v === 'undefined')
-                        return undefined;
-                      const n = Number(v);
-                      return Number.isNaN(n) ? undefined : n;
-                    },
-                  })}
-                  placeholder={t('quiz.form.timeLimitPlaceholder', {
-                    fallback: 'No limit',
-                  })}
-                  disabled={isSubmitting}
+                <Controller
+                  name="settings.time"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <div>
+                      <Input
+                        {...field}
+                        id="time"
+                        type="number"
+                        min="0"
+                        placeholder="0"
+                        disabled={isSubmitting}
+                        onChange={(e) =>
+                          field.onChange(Number(e.target.value) || 0)
+                        }
+                      />
+                      {fieldState.error && (
+                        <p className="text-sm text-destructive mt-1">
+                          {fieldState.error.message}
+                        </p>
+                      )}
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {t('instructor.quiz.form.timeLimitHelp', {
+                          fallback: '0 means unlimited time',
+                        })}
+                      </p>
+                    </div>
+                  )}
                 />
-                {form.formState.errors.settings?.time && (
-                  <p className="text-sm text-destructive mt-1">
-                    {form.formState.errors.settings.time.message}
-                  </p>
-                )}
               </div>
 
-              <div>
-                <Label htmlFor="attempt" className="text-sm">
-                  {t('quiz.form.attemptLimit', { fallback: 'Attempt Limit' })}
+              <div className="space-y-2">
+                <Label htmlFor="attempt">
+                  {t('instructor.quiz.form.maxAttempts', {
+                    fallback: 'Max Attempts',
+                  })}
                 </Label>
-                <Input
-                  id="attempt"
-                  type="number"
-                  min="0"
-                  className="h-9"
-                  {...form.register('settings.attempt', {
-                    setValueAs: (v) => {
-                      if (v === '' || v === null || typeof v === 'undefined')
-                        return undefined;
-                      const n = Number(v);
-                      return Number.isNaN(n) ? undefined : n;
-                    },
-                  })}
-                  placeholder={t('quiz.form.attemptLimitPlaceholder', {
-                    fallback: 'Unlimited',
-                  })}
-                  disabled={isSubmitting}
+                <Controller
+                  name="settings.attempt"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <div>
+                      <Input
+                        {...field}
+                        id="attempt"
+                        type="number"
+                        min="0"
+                        placeholder="0"
+                        disabled={isSubmitting}
+                        onChange={(e) =>
+                          field.onChange(Number(e.target.value) || 0)
+                        }
+                      />
+                      {fieldState.error && (
+                        <p className="text-sm text-destructive mt-1">
+                          {fieldState.error.message}
+                        </p>
+                      )}
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {t('instructor.quiz.form.maxAttemptsHelp', {
+                          fallback: '0 means unlimited attempts',
+                        })}
+                      </p>
+                    </div>
+                  )}
                 />
-                {form.formState.errors.settings?.attempt && (
-                  <p className="text-sm text-destructive mt-1">
-                    {form.formState.errors.settings.attempt.message}
-                  </p>
-                )}
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <Label htmlFor="shuffleQuestions" className="text-sm">
-                  {t('quiz.form.shuffleQuestions', {
-                    fallback: 'Shuffle Questions',
-                  })}
-                </Label>
+                <div className="space-y-0.5">
+                  <Label htmlFor="shuffleQuestions">
+                    {t('instructor.quiz.form.shuffleQuestions', {
+                      fallback: 'Shuffle Questions',
+                    })}
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    {t('instructor.quiz.form.shuffleQuestionsHelp', {
+                      fallback:
+                        'Randomize the order of questions for each attempt',
+                    })}
+                  </p>
+                </div>
                 <Controller
                   name="settings.shuffleQuestions"
                   control={form.control}
                   render={({ field }) => (
                     <Switch
                       id="shuffleQuestions"
-                      checked={!!field.value}
+                      checked={field.value}
                       onCheckedChange={field.onChange}
                       disabled={isSubmitting}
                     />
@@ -222,18 +269,25 @@ export function QuizForm({
               </div>
 
               <div className="flex items-center justify-between">
-                <Label htmlFor="shuffleAnswers" className="text-sm">
-                  {t('quiz.form.shuffleAnswers', {
-                    fallback: 'Shuffle Answers',
-                  })}
-                </Label>
+                <div className="space-y-0.5">
+                  <Label htmlFor="shuffleAnswers">
+                    {t('instructor.quiz.form.shuffleAnswers', {
+                      fallback: 'Shuffle Answers',
+                    })}
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    {t('instructor.quiz.form.shuffleAnswersHelp', {
+                      fallback: 'Randomize the order of answer choices',
+                    })}
+                  </p>
+                </div>
                 <Controller
                   name="settings.shuffleAnswers"
                   control={form.control}
                   render={({ field }) => (
                     <Switch
                       id="shuffleAnswers"
-                      checked={!!field.value}
+                      checked={field.value}
                       onCheckedChange={field.onChange}
                       disabled={isSubmitting}
                     />
@@ -243,8 +297,8 @@ export function QuizForm({
             </div>
           </div>
 
-          {/* Form Actions */}
-          <div className="flex justify-end space-x-3 pt-4">
+          {/* Actions */}
+          <div className="flex justify-end gap-3 pt-4">
             {onCancel && (
               <Button
                 type="button"
@@ -257,7 +311,9 @@ export function QuizForm({
             )}
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting
-                ? t('common.saving', { fallback: 'Saving...' })
+                ? quiz
+                  ? t('common.updating', { fallback: 'Updating...' })
+                  : t('common.creating', { fallback: 'Creating...' })
                 : quiz
                   ? t('common.update', { fallback: 'Update' })
                   : t('common.create', { fallback: 'Create' })}
