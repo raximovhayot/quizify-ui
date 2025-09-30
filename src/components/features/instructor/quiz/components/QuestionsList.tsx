@@ -44,13 +44,10 @@ import {
   toInstructorQuestionSaveRequest,
 } from '../schemas/questionSchema';
 import { QuestionDataDto, QuestionType } from '../types/question';
-import { EssayQuestionForm } from './forms/EssayQuestionForm';
-import { FillInBlankQuestionForm } from './forms/FillInBlankQuestionForm';
-import { MatchingQuestionForm } from './forms/MatchingQuestionForm';
-import { MultipleChoiceQuestionForm } from './forms/MultipleChoiceQuestionForm';
-import { RankingQuestionForm } from './forms/RankingQuestionForm';
-import { ShortAnswerQuestionForm } from './forms/ShortAnswerQuestionForm';
-import { TrueFalseQuestionForm } from './forms/TrueFalseQuestionForm';
+import {
+  QuestionFormRenderer,
+  getQuestionTypeLabel,
+} from './factories/questionFormRegistry';
 
 export interface QuestionsListProps {
   quizId: number;
@@ -75,38 +72,7 @@ export function QuestionsList({ quizId, onAddQuestion }: QuestionsListProps) {
 
   const questions = questionsData?.content || [];
 
-  const getQuestionTypeLabel = (type: QuestionType) => {
-    switch (type) {
-      case QuestionType.MULTIPLE_CHOICE:
-        return t('instructor.quiz.question.type.multipleChoice', {
-          fallback: 'Multiple Choice',
-        });
-      case QuestionType.TRUE_FALSE:
-        return t('instructor.quiz.question.type.trueFalse', {
-          fallback: 'True/False',
-        });
-      case QuestionType.SHORT_ANSWER:
-        return t('instructor.quiz.question.type.shortAnswer', {
-          fallback: 'Short Answer',
-        });
-      case QuestionType.FILL_IN_BLANK:
-        return t('instructor.quiz.question.type.fillInBlank', {
-          fallback: 'Fill in Blank',
-        });
-      case QuestionType.ESSAY:
-        return t('instructor.quiz.question.type.essay', { fallback: 'Essay' });
-      case QuestionType.MATCHING:
-        return t('instructor.quiz.question.type.matching', {
-          fallback: 'Matching',
-        });
-      case QuestionType.RANKING:
-        return t('instructor.quiz.question.type.ranking', {
-          fallback: 'Ranking',
-        });
-      default:
-        return type;
-    }
-  };
+  // label resolution is centralized in the registry via getQuestionTypeLabel(t, type)
 
   const handleEditQuestion = async (formData: TInstructorQuestionForm) => {
     if (!editingQuestion) return;
@@ -224,7 +190,7 @@ export function QuestionsList({ quizId, onAddQuestion }: QuestionsListProps) {
                         #{index + 1}
                       </span>
                       <Badge variant="outline" className="text-xs">
-                        {getQuestionTypeLabel(question.questionType)}
+                        {getQuestionTypeLabel(t, question.questionType)}
                       </Badge>
                       <Badge variant="secondary" className="text-xs">
                         {question.points} pts
@@ -294,72 +260,14 @@ export function QuestionsList({ quizId, onAddQuestion }: QuestionsListProps) {
             </DialogTitle>
           </DialogHeader>
           {editingQuestion && (
-            <>
-              {editingQuestion.questionType ===
-                QuestionType.MULTIPLE_CHOICE && (
-                <MultipleChoiceQuestionForm
-                  quizId={quizId}
-                  initialData={editingQuestion}
-                  isSubmitting={updateQuestionMutation.isPending}
-                  onCancel={() => setEditingQuestion(null)}
-                  onSubmit={handleEditQuestion}
-                />
-              )}
-              {editingQuestion.questionType === QuestionType.TRUE_FALSE && (
-                <TrueFalseQuestionForm
-                  quizId={quizId}
-                  initialData={editingQuestion}
-                  isSubmitting={updateQuestionMutation.isPending}
-                  onCancel={() => setEditingQuestion(null)}
-                  onSubmit={handleEditQuestion}
-                />
-              )}
-              {editingQuestion.questionType === QuestionType.SHORT_ANSWER && (
-                <ShortAnswerQuestionForm
-                  quizId={quizId}
-                  initialData={editingQuestion}
-                  isSubmitting={updateQuestionMutation.isPending}
-                  onCancel={() => setEditingQuestion(null)}
-                  onSubmit={handleEditQuestion}
-                />
-              )}
-              {editingQuestion.questionType === QuestionType.FILL_IN_BLANK && (
-                <FillInBlankQuestionForm
-                  quizId={quizId}
-                  initialData={editingQuestion}
-                  isSubmitting={updateQuestionMutation.isPending}
-                  onCancel={() => setEditingQuestion(null)}
-                  onSubmit={handleEditQuestion}
-                />
-              )}
-              {editingQuestion.questionType === QuestionType.ESSAY && (
-                <EssayQuestionForm
-                  quizId={quizId}
-                  initialData={editingQuestion}
-                  isSubmitting={updateQuestionMutation.isPending}
-                  onCancel={() => setEditingQuestion(null)}
-                  onSubmit={handleEditQuestion}
-                />
-              )}
-              {editingQuestion.questionType === QuestionType.MATCHING && (
-                <MatchingQuestionForm
-                  quizId={quizId}
-                  initialData={editingQuestion}
-                  isSubmitting={updateQuestionMutation.isPending}
-                  onCancel={() => setEditingQuestion(null)}
-                  onSubmit={handleEditQuestion}
-                />
-              )}
-              {editingQuestion.questionType === QuestionType.RANKING && (
-                <RankingQuestionForm
-                  quizId={quizId}
-                  initialData={editingQuestion}
-                  isSubmitting={updateQuestionMutation.isPending}
-                  onCancel={() => setEditingQuestion(null)}
-                  onSubmit={handleEditQuestion}
-                />
-              )}
-            </>
+            <QuestionFormRenderer
+              type={editingQuestion.questionType}
+              quizId={quizId}
+              initialData={editingQuestion}
+              isSubmitting={updateQuestionMutation.isPending}
+              onCancel={() => setEditingQuestion(null)}
+              onSubmit={handleEditQuestion}
+            />
           )}
         </DialogContent>
       </Dialog>
