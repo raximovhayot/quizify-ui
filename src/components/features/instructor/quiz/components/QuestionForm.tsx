@@ -60,13 +60,70 @@ export function QuestionForm({
           explanation: initialData.explanation || '',
           order: initialData.order,
           points: initialData.points,
-          trueFalseAnswer: initialData.trueFalseAnswer,
-          answers: initialData.answers.map((answer) => ({
-            id: answer.id,
-            content: answer.content,
-            correct: answer.correct,
-            order: answer.order,
-          })),
+          // Per-type defaults from initialData
+          ...(initialData.questionType === QuestionType.TRUE_FALSE
+            ? {
+                trueFalseAnswer: initialData.trueFalseAnswer ?? false,
+                answers: [],
+              }
+            : {}),
+          ...(initialData.questionType === QuestionType.FILL_IN_BLANK
+            ? { blankTemplate: initialData.blankTemplate ?? '', answers: [] }
+            : {}),
+          ...(initialData.questionType === QuestionType.ESSAY
+            ? {
+                gradingCriteria: initialData.gradingCriteria ?? '',
+                answers: [],
+              }
+            : {}),
+          ...(initialData.questionType === QuestionType.MATCHING
+            ? {
+                matchingPairs: (() => {
+                  try {
+                    const parsed = initialData.matchingConfig
+                      ? JSON.parse(initialData.matchingConfig)
+                      : [];
+                    if (Array.isArray(parsed)) {
+                      return parsed.map((p: any) => ({
+                        left: String(p.left ?? ''),
+                        right: String(p.right ?? ''),
+                      }));
+                    }
+                  } catch {}
+                  return [{ left: '', right: '' }];
+                })(),
+                answers: [],
+              }
+            : {}),
+          ...(initialData.questionType === QuestionType.RANKING
+            ? {
+                rankingItems: (() => {
+                  try {
+                    const parsed = initialData.correctOrder
+                      ? JSON.parse(initialData.correctOrder)
+                      : [];
+                    return Array.isArray(parsed)
+                      ? parsed.map((x: any) => String(x))
+                      : [];
+                  } catch {
+                    return [];
+                  }
+                })(),
+                answers: [],
+              }
+            : {}),
+          // For types that use answers directly (MCQ/Short Answer)
+          ...(initialData.questionType === QuestionType.MULTIPLE_CHOICE ||
+          initialData.questionType === QuestionType.SHORT_ANSWER
+            ? {
+                answers: initialData.answers.map((answer) => ({
+                  id: answer.id,
+                  content: answer.content,
+                  correct: answer.correct,
+                  order: answer.order,
+                })),
+              }
+            : {}),
         } as unknown as TInstructorQuestionForm)
       : (() => {
           const typeToUse = (fixedType ??

@@ -198,20 +198,39 @@ export function toInstructorQuestionSaveRequest(
       };
     }
     case QuestionType.MATCHING: {
-      const f = form as TMatchingInput;
+      const f = form as unknown as Partial<TMatchingInput> & {
+        matchingConfig?: string;
+        matchingPairs?: { left: string; right: string }[];
+      };
+      const matchingConfig =
+        typeof f.matchingConfig === 'string' && f.matchingConfig.length > 0
+          ? f.matchingConfig
+          : JSON.stringify(
+              (f.matchingPairs ?? []).map((p) => ({
+                left: p.left,
+                right: p.right,
+              }))
+            );
       return {
         ...base,
-        matchingConfig: JSON.stringify(f.matchingPairs),
+        matchingConfig,
         answers: [],
-      };
+      } as InstructorQuestionSaveRequest;
     }
     case QuestionType.RANKING: {
-      const f = form as TRankingInput;
+      const f = form as unknown as Partial<TRankingInput> & {
+        correctOrder?: string;
+        rankingItems?: string[];
+      };
+      const correctOrder =
+        typeof f.correctOrder === 'string' && f.correctOrder.length > 0
+          ? f.correctOrder
+          : JSON.stringify(f.rankingItems ?? []);
       return {
         ...base,
-        correctOrder: JSON.stringify(f.rankingItems),
+        correctOrder,
         answers: [],
-      };
+      } as InstructorQuestionSaveRequest;
     }
     default:
       return { ...base, answers: [] };
@@ -234,6 +253,11 @@ export const questionDataDtoSchema = z.object({
   explanation: z.string().optional(),
   order: z.number().int(),
   points: z.number().int(),
+  // Optional fields per type for editing/prefill
   trueFalseAnswer: z.boolean().optional(),
+  blankTemplate: z.string().optional(),
+  gradingCriteria: z.string().optional(),
+  matchingConfig: z.string().optional(),
+  correctOrder: z.string().optional(),
   answers: z.array(answerDataDtoSchema),
 });

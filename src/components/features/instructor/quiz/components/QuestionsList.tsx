@@ -7,6 +7,7 @@ import {
   MoreVertical,
   Plus,
   Trash2,
+  XIcon,
 } from 'lucide-react';
 
 import { useState } from 'react';
@@ -18,6 +19,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -269,9 +271,21 @@ export function QuestionsList({ quizId, onAddQuestion }: QuestionsListProps) {
       {/* Edit Question Modal */}
       <Dialog
         open={!!editingQuestion}
-        onOpenChange={() => setEditingQuestion(null)}
+        onOpenChange={(nextOpen) => {
+          if (!nextOpen) setEditingQuestion(null);
+        }}
       >
-        <DialogContent className="w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent
+          className="w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto"
+          showCloseButton={false}
+        >
+          <DialogClose
+            type="button"
+            className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+          >
+            <XIcon />
+            <span className="sr-only">Close</span>
+          </DialogClose>
           <DialogHeader>
             <DialogTitle>
               {t('instructor.quiz.question.edit.title', {
@@ -353,9 +367,18 @@ export function QuestionsList({ quizId, onAddQuestion }: QuestionsListProps) {
       {/* Delete Question Modal */}
       <Dialog
         open={!!deletingQuestion}
-        onOpenChange={() => setDeletingQuestion(null)}
+        onOpenChange={(nextOpen) => {
+          if (!nextOpen) setDeletingQuestion(null);
+        }}
       >
-        <DialogContent>
+        <DialogContent showCloseButton={false}>
+          <DialogClose
+            type="button"
+            className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+          >
+            <XIcon />
+            <span className="sr-only">Close</span>
+          </DialogClose>
           <DialogHeader>
             <DialogTitle>
               {t('instructor.quiz.question.delete.title', {

@@ -25,7 +25,12 @@ export interface QuestionDataDto {
   explanation?: string;
   order: number;
   points: number;
+  // Type-specific optional fields for prefill in edit forms
   trueFalseAnswer?: boolean;
+  blankTemplate?: string; // FILL_IN_BLANK
+  gradingCriteria?: string; // ESSAY
+  matchingConfig?: string; // MATCHING (JSON string of pairs)
+  correctOrder?: string; // RANKING (JSON string array)
   answers: AnswerDataDto[];
 }
 
