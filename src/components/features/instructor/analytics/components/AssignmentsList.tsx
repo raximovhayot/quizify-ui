@@ -94,12 +94,9 @@ export function AssignmentsList({
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder={t(
-                  'instructor.analytics.assignments.search.placeholder',
-                  {
-                    fallback: 'Search assignments...',
-                  }
-                )}
+                placeholder={t('common.search', {
+                  fallback: 'Search assignments...',
+                })}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
@@ -121,12 +118,12 @@ export function AssignmentsList({
                   })}
                 </SelectItem>
                 <SelectItem value={AssignmentStatus.PUBLISHED}>
-                  {t('instructor.analytics.assignments.status.published', {
+                  {t('common.published', {
                     fallback: 'Published',
                   })}
                 </SelectItem>
                 <SelectItem value={AssignmentStatus.DRAFT}>
-                  {t('instructor.analytics.assignments.status.draft', {
+                  {t('common.draft', {
                     fallback: 'Draft',
                   })}
                 </SelectItem>

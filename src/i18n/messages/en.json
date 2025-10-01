@@ -35,6 +35,12 @@
     "left": "Left",
     "right": "Right",
     "item": "Item",
+    "publish": "Publish",
+    "unpublish": "Unpublish",
+    "start": "Start",
+    "published": "Published",
+    "draft": "Draft",
+    "unlimited": "Unlimited",
     "pagination": {
       "first": "Go to first page",
       "previous": "Go to previous page",

@@ -71,8 +71,8 @@ export function QuizViewPage({ quizId }: QuizViewPageProps) {
                 className="w-full flex items-center gap-2 h-9 px-3 text-sm"
               >
                 <Edit className="h-4 w-4" />
-                {t('instructor.quiz.action.edit', {
-                  fallback: 'Edit Quiz',
+                {t('common.edit', {
+                  fallback: 'Edit',
                 })}
               </Button>
               {quiz.status === QuizStatus.DRAFT ? (
@@ -90,7 +90,7 @@ export function QuizViewPage({ quizId }: QuizViewPageProps) {
                   <CheckCircle2 className="h-4 w-4" />
                   {updateStatus.isPending
                     ? t('common.updating', { fallback: 'Updating...' })
-                    : t('instructor.quiz.action.publish', {
+                    : t('common.publish', {
                         fallback: 'Publish',
                       })}
                 </Button>
@@ -105,7 +105,7 @@ export function QuizViewPage({ quizId }: QuizViewPageProps) {
                   className="w-full flex items-center gap-2 h-9 px-3 text-sm"
                 >
                   <Play className="h-4 w-4" />
-                  {t('instructor.quiz.action.start', {
+                  {t('common.start', {
                     fallback: 'Start',
                   })}
                 </Button>

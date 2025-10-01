@@ -48,9 +48,9 @@ function QuizTableRowComponent({
   const getStatusLabel = (status: QuizStatus) => {
     switch (status) {
       case QuizStatus.PUBLISHED:
-        return t('instructor.quiz.status.published', { fallback: 'Published' });
+        return t('common.published', { fallback: 'Published' });
       case QuizStatus.DRAFT:
-        return t('instructor.quiz.status.draft', { fallback: 'Draft' });
+        return t('common.draft', { fallback: 'Draft' });
       default:
         return status;
     }

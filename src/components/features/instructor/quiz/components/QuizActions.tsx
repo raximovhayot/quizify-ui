@@ -55,13 +55,13 @@ export const QuizActions = memo(function QuizActions({
         className="text-sm text-primary hover:underline disabled:opacity-50"
         aria-label={
           quiz.status === QuizStatus.PUBLISHED
-            ? t('instructor.quiz.action.unpublish', { fallback: 'Unpublish' })
-            : t('instructor.quiz.action.publish', { fallback: 'Publish' })
+            ? t('common.unpublish', { fallback: 'Unpublish' })
+            : t('common.publish', { fallback: 'Publish' })
         }
       >
         {quiz.status === QuizStatus.PUBLISHED
-          ? t('instructor.quiz.action.unpublish', { fallback: 'Unpublish' })
-          : t('instructor.quiz.action.publish', { fallback: 'Publish' })}
+          ? t('common.unpublish', { fallback: 'Unpublish' })
+          : t('common.publish', { fallback: 'Publish' })}
       </button>
       <button
         onClick={handleDelete}

@@ -62,8 +62,8 @@ export function QuizViewHeader({ quiz }: QuizViewHeaderProps) {
         >
           <StatusIcon className="h-3 w-3 sm:h-4 sm:w-4" />
           {quiz.status === QuizStatus.PUBLISHED
-            ? t('instructor.quiz.status.published', { fallback: 'Published' })
-            : t('instructor.quiz.status.draft', { fallback: 'Draft' })}
+            ? t('common.published', { fallback: 'Published' })
+            : t('common.draft', { fallback: 'Draft' })}
         </Badge>
         <span className="text-xs sm:text-sm text-muted-foreground">
           ID: {quiz.id}
@@ -82,8 +82,8 @@ export function QuizViewHeader({ quiz }: QuizViewHeaderProps) {
             className="w-full sm:w-auto flex items-center gap-2 h-9 px-3 text-sm md:h-10 md:px-4 md:text-base"
           >
             <Edit className="h-4 w-4 md:h-5 md:w-5" />
-            {t('instructor.quiz.action.edit', {
-              fallback: 'Edit Quiz',
+            {t('common.edit', {
+              fallback: 'Edit',
             })}
           </Button>
           {quiz.status === QuizStatus.DRAFT ? (
@@ -101,7 +101,7 @@ export function QuizViewHeader({ quiz }: QuizViewHeaderProps) {
               <CheckCircle2 className="h-4 w-4 md:h-5 md:w-5" />
               {updateStatus.isPending
                 ? t('common.updating', { fallback: 'Updating...' })
-                : t('instructor.quiz.action.publish', { fallback: 'Publish' })}
+                : t('common.publish', { fallback: 'Publish' })}
             </Button>
           ) : (
             <Button
@@ -113,7 +113,7 @@ export function QuizViewHeader({ quiz }: QuizViewHeaderProps) {
               className="w-full sm:w-auto flex items-center gap-2 h-9 px-3 text-sm md:h-10 md:px-4 md:text-base"
             >
               <Play className="h-4 w-4 md:h-5 md:w-5" />
-              {t('instructor.quiz.action.start', {
+              {t('common.start', {
                 fallback: 'Start',
               })}
             </Button>

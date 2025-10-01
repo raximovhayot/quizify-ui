@@ -16,8 +16,7 @@ export function QuizViewConfiguration({ quiz }: QuizViewConfigurationProps) {
   const t = useTranslations();
 
   const formatTimeLimit = (minutes: number) => {
-    if (minutes === 0)
-      return t('instructor.quiz.time.unlimited', { fallback: 'Unlimited' });
+    if (minutes === 0) return t('common.unlimited', { fallback: 'Unlimited' });
     if (minutes < 60)
       return t('instructor.quiz.time.minutes', {
         fallback: '{minutes}m',
@@ -35,8 +34,7 @@ export function QuizViewConfiguration({ quiz }: QuizViewConfigurationProps) {
   };
 
   const formatAttempts = (attempts: number) => {
-    if (attempts === 0)
-      return t('instructor.quiz.attempts.unlimited', { fallback: 'Unlimited' });
+    if (attempts === 0) return t('common.unlimited', { fallback: 'Unlimited' });
     return t('instructor.quiz.attempts.count', {
       fallback: '{count}',
       count: attempts,

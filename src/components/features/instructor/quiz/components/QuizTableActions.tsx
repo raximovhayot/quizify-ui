@@ -77,27 +77,27 @@ function QuizTableActionsComponent({
           onClick={() => router.push(ROUTES_APP.quizzes.detail(quiz.id))}
         >
           <Eye className="mr-2 h-4 w-4" />
-          {t('instructor.quiz.action.view', { fallback: 'View' })}
+          {t('common.view', { fallback: 'View' })}
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => router.push(ROUTES_APP.quizzes.edit(quiz.id))}
         >
           <Edit className="mr-2 h-4 w-4" />
-          {t('instructor.quiz.action.edit', { fallback: 'Edit' })}
+          {t('common.edit', { fallback: 'Edit' })}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleStatusToggle}>
           {quiz.status === QuizStatus.PUBLISHED ? (
             <>
               <FileText className="mr-2 h-4 w-4" />
-              {t('instructor.quiz.action.unpublish', {
+              {t('common.unpublish', {
                 fallback: 'Unpublish',
               })}
             </>
           ) : (
             <>
               <FileText className="mr-2 h-4 w-4" />
-              {t('instructor.quiz.action.publish', {
+              {t('common.publish', {
                 fallback: 'Publish',
               })}
             </>
@@ -109,7 +109,7 @@ function QuizTableActionsComponent({
           className="text-destructive focus:text-destructive"
         >
           <Trash2 className="mr-2 h-4 w-4" />
-          {t('instructor.quiz.action.delete', { fallback: 'Delete' })}
+          {t('common.delete', { fallback: 'Delete' })}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

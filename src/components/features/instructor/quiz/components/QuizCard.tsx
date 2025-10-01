@@ -67,9 +67,9 @@ export function QuizCard({
   const getStatusLabel = (status: QuizStatus) => {
     switch (status) {
       case QuizStatus.PUBLISHED:
-        return t('instructor.quiz.status.published', { fallback: 'Published' });
+        return t('common.published', { fallback: 'Published' });
       case QuizStatus.DRAFT:
-        return t('instructor.quiz.status.draft', { fallback: 'Draft' });
+        return t('common.draft', { fallback: 'Draft' });
       default:
         return status;
     }
@@ -85,7 +85,7 @@ export function QuizCard({
 
   const formatTime = (minutes: number) => {
     if (minutes === 0) {
-      return t('instructor.quiz.time.unlimited', { fallback: 'Unlimited' });
+      return t('common.unlimited', { fallback: 'Unlimited' });
     }
     if (minutes < 60) {
       return t('instructor.quiz.time.minutes', {
@@ -110,7 +110,7 @@ export function QuizCard({
 
   const formatAttempts = (attempts: number) => {
     if (attempts === 0) {
-      return t('instructor.quiz.attempts.unlimited', { fallback: 'Unlimited' });
+      return t('common.unlimited', { fallback: 'Unlimited' });
     }
     return t('instructor.quiz.attempts.count', {
       fallback: '{count} attempts',
@@ -167,13 +167,13 @@ export function QuizCard({
                 onClick={() => router.push(ROUTES_APP.quizzes.detail(quiz.id))}
               >
                 <Eye className="mr-2 h-4 w-4" />
-                {t('instructor.quiz.action.view', { fallback: 'View' })}
+                {t('common.view', { fallback: 'View' })}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => router.push(ROUTES_APP.quizzes.edit(quiz.id))}
               >
                 <Edit className="mr-2 h-4 w-4" />
-                {t('instructor.quiz.action.edit', { fallback: 'Edit' })}
+                {t('common.edit', { fallback: 'Edit' })}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               {onUpdateStatus && (
@@ -181,14 +181,14 @@ export function QuizCard({
                   {quiz.status === QuizStatus.PUBLISHED ? (
                     <>
                       <FileText className="mr-2 h-4 w-4" />
-                      {t('instructor.quiz.action.unpublish', {
+                      {t('common.unpublish', {
                         fallback: 'Unpublish',
                       })}
                     </>
                   ) : (
                     <>
                       <Users className="mr-2 h-4 w-4" />
-                      {t('instructor.quiz.action.publish', {
+                      {t('common.publish', {
                         fallback: 'Publish',
                       })}
                     </>
@@ -202,7 +202,7 @@ export function QuizCard({
                   className="text-destructive focus:text-destructive"
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
-                  {t('instructor.quiz.action.delete', { fallback: 'Delete' })}
+                  {t('common.delete', { fallback: 'Delete' })}
                 </DropdownMenuItem>
               )}
             </DropdownMenuContent>
