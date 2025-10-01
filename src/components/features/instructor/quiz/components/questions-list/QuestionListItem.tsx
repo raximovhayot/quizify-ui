@@ -46,7 +46,10 @@ export function QuestionListItem({
               {getQuestionTypeLabel(t, question.questionType)}
             </Badge>
             <Badge variant="secondary" className="text-xs">
-              {question.points} pts
+              {t('common.points.short', {
+                count: question.points,
+                fallback: '{count} pts',
+              })}
             </Badge>
           </div>
           <p className="text-sm font-medium line-clamp-2">{question.content}</p>

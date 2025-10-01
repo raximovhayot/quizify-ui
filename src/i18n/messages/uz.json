@@ -42,6 +42,10 @@
       "current": "{page}-sahifa, joriy sahifa",
       "goto": "{page}-sahifaga o'tish",
       "info": "{current}-sahifa, jami {total}"
+    },
+    "close": "Yopish",
+    "points": {
+      "short": "{count} ball"
     }
   },
   "auth": {
@@ -297,6 +301,8 @@
       },
       "questions": {
         "title": "Savollar",
+        "showAnswers": "Javoblarni ko'rsatish",
+        "hideAnswers": "Javoblarni yashirish",
         "error": {
           "title": "Savollarni yuklab bo'lmadi",
           "description": "Savollar ro'yxatini yuklashda xatolik yuz berdi."
