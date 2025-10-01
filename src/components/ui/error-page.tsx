@@ -1,6 +1,7 @@
 'use client';
 
 import { AlertTriangle, ArrowLeft, Home } from 'lucide-react';
+
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 

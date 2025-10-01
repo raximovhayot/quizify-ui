@@ -43,20 +43,24 @@ After analyzing 125+ component files, we identified common patterns and extracte
 ### Components Refactored
 
 #### Auth Forms
+
 - `SignInForm.tsx` - 32% reduction (140 → 95 lines)
 - `SignUpForm.tsx` - 35% reduction (100 → 65 lines)
 - `ForgotPasswordForm.tsx` - 38% reduction (92 → 57 lines)
 - `ResetPasswordForm.tsx` - 31% reduction (135 → 93 lines)
 
 #### Profile Forms
+
 - `ProfileUpdatePasswordForm.tsx` - 34% reduction (143 → 95 lines)
 - `ProfileUpdateDetailsForm.tsx` - Using FormCard for consistency
 
 #### Data Display
+
 - `HistoryCard.tsx` - 41% reduction (46 → 27 lines)
 - `QuizListCard.tsx` - 27% reduction (62 → 45 lines)
 
 ### Overall Metrics
+
 - **Total lines removed**: ~150+ lines of boilerplate
 - **Average code reduction**: 33%
 - **Components refactored**: 8 major components
@@ -76,6 +80,7 @@ After analyzing 125+ component files, we identified common patterns and extracte
 ### Before and After: Auth Form
 
 **Before:**
+
 ```tsx
 <Card>
   <CardHeader className="text-center">
@@ -105,15 +110,12 @@ After analyzing 125+ component files, we identified common patterns and extracte
 ```
 
 **After:**
+
 ```tsx
 <FormCard title="Sign In" description="Enter your credentials" centerHeader>
   <Form {...form}>
     <form onSubmit={onSubmit}>
-      <PasswordField
-        control={form.control}
-        name="password"
-        label="Password"
-      />
+      <PasswordField control={form.control} name="password" label="Password" />
     </form>
   </Form>
 </FormCard>
@@ -122,6 +124,7 @@ After analyzing 125+ component files, we identified common patterns and extracte
 ### Before and After: Data Card
 
 **Before:**
+
 ```tsx
 <Card>
   <CardHeader className="flex flex-row items-center justify-between">
@@ -138,6 +141,7 @@ After analyzing 125+ component files, we identified common patterns and extracte
 ```
 
 **After:**
+
 ```tsx
 <DataCard
   title="Recent Quizzes"
@@ -157,6 +161,7 @@ After analyzing 125+ component files, we identified common patterns and extracte
 ## Next Steps
 
 Additional components that could benefit from this pattern:
+
 - Text input fields (similar to PasswordField and PhoneField)
 - Select/dropdown fields
 - File upload fields
@@ -167,6 +172,7 @@ Additional components that could benefit from this pattern:
 ## Contributing
 
 When creating new forms or data displays:
+
 1. Use `FormCard` for consistent form layouts
 2. Use `PasswordField` and `PhoneField` instead of manual FormField
 3. Use `DataCard` for data lists with loading/error states

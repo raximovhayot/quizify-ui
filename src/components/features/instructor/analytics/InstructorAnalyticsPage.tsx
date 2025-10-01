@@ -6,17 +6,14 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { ErrorDisplay } from '@/components/shared/ui/ErrorDisplay';
 
-import { ROUTES_APP } from '../routes';
-import { QuizzesContent } from './components/QuizzesContent';
-import { useDeleteQuiz } from './hooks/useDeleteQuiz';
-import { useQuizzes } from './hooks/useQuizzesQuery';
-import { useUpdateQuizStatus } from './hooks/useUpdateQuizStatus';
-import { QuizStatus } from './types/quiz';
+import { AnalyticsContent } from './components/AnalyticsContent';
+import { useAssignments } from './hooks/useAssignments';
+import { AssignmentStatus } from './types/assignment';
 
-export function InstructorQuizzesPage() {
+export function InstructorAnalyticsPage() {
   const router = useRouter();
   const pathname = usePathname();
-  const safePath = pathname ?? '/instructor/quizzes';
+  const safePath = pathname ?? '/instructor/analytics';
   const searchParams = useSearchParams();
 
   // Extract filter from URL params
@@ -35,7 +32,7 @@ export function InstructorQuizzesPage() {
       page,
       size,
       search,
-      status: statusParam as QuizStatus | undefined,
+      status: statusParam as AssignmentStatus | string | undefined,
     };
   }, [searchParams]);
 
@@ -73,7 +70,7 @@ export function InstructorQuizzesPage() {
   );
 
   const onStatusFilter = useCallback(
-    (status: QuizStatus | undefined) => {
+    (status: AssignmentStatus | string | undefined) => {
       const params = new URLSearchParams(searchParams?.toString() ?? '');
       if (status) params.set('status', String(status));
       else params.delete('status');
@@ -94,41 +91,35 @@ export function InstructorQuizzesPage() {
   );
 
   // Data fetching
-  const quizzesQuery = useQuizzes(filter);
-  const deleteQuiz = useDeleteQuiz();
-  const updateStatus = useUpdateQuizStatus();
+  const { data, isLoading, isFetching, error, refetch } =
+    useAssignments(filter);
 
   // Error state
-  if (quizzesQuery.error) {
+  if (error) {
     return (
       <div className="p-6">
         <ErrorDisplay
-          error={quizzesQuery.error}
-          onRetry={() => quizzesQuery.refetch()}
+          error={error}
+          onRetry={() => refetch()}
+          title="Failed to load analytics"
+          description="Please try again later."
         />
       </div>
     );
   }
 
   return (
-    <QuizzesContent
-      data={quizzesQuery.data}
-      isLoading={quizzesQuery.isLoading}
-      isFetching={quizzesQuery.isFetching}
+    <AnalyticsContent
+      data={data}
+      isLoading={isLoading}
+      isFetching={isFetching}
       filter={filter}
       onSearch={onSearch}
       onStatusFilter={onStatusFilter}
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}
-      onCreate={() => router.push(ROUTES_APP.quizzes.new())}
-      onDelete={(id: number) => deleteQuiz.mutate(id)}
-      onUpdateStatus={(id: number, status: QuizStatus) =>
-        updateStatus.mutate({ id, status })
-      }
-      isDeleting={deleteQuiz.isPending}
-      isUpdatingStatus={updateStatus.isPending}
     />
   );
 }
 
-export default InstructorQuizzesPage;
+export default InstructorAnalyticsPage;

@@ -48,6 +48,30 @@ import {
  * @since 2025-01-01
  */
 
+/**
+ * Enhanced Error Boundary with comprehensive error handling
+ *
+ * Provides feature-specific error boundaries with error reporting, logging,
+ * and user-friendly fallback components for better error handling throughout
+ * the application.
+ *
+ * @fileoverview Enhanced error boundary components and utilities
+ * @version 1.0.0
+ * @since 2025-01-01
+ */
+
+/**
+ * Enhanced Error Boundary with comprehensive error handling
+ *
+ * Provides feature-specific error boundaries with error reporting, logging,
+ * and user-friendly fallback components for better error handling throughout
+ * the application.
+ *
+ * @fileoverview Enhanced error boundary components and utilities
+ * @version 1.0.0
+ * @since 2025-01-01
+ */
+
 // =============================================================================
 // ERROR TYPES AND INTERFACES
 // =============================================================================

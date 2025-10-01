@@ -9,6 +9,7 @@ This directory contains reusable UI components for common patterns throughout th
 A standardized card layout for displaying data with loading states, error handling, and optional actions.
 
 **Props:**
+
 - `title` (string, required): The card title
 - `icon` (ReactNode, optional): Icon to display next to title
 - `isLoading` (boolean, optional): Show loading spinner (default: false)
@@ -18,9 +19,11 @@ A standardized card layout for displaying data with loading states, error handli
 - `headerClassName` (string, optional): Custom header className
 
 **Example:**
+
 ```tsx
-import { DataCard } from '@/components/shared/ui/DataCard';
 import { BookOpen } from 'lucide-react';
+
+import { DataCard } from '@/components/shared/ui/DataCard';
 
 <DataCard
   title="Recent Quizzes"
@@ -30,16 +33,18 @@ import { BookOpen } from 'lucide-react';
   actions={<RefreshButton />}
 >
   <QuizList items={quizzes} />
-</DataCard>
+</DataCard>;
 ```
 
 **Usage:**
+
 - Quiz lists
 - History lists
 - Analytics cards
 - Any data display with loading/error states
 
 **Benefits:**
+
 - Consistent loading indicator placement
 - Standardized error display
 - Unified card header with icons and actions
@@ -52,6 +57,7 @@ import { BookOpen } from 'lucide-react';
 An enhanced empty state component with multiple variants for different contexts.
 
 **Props:**
+
 - `icon` (JSX.Element, optional): Custom icon (auto-selected based on variant)
 - `message` (string, required): Main message
 - `description` (string, optional): Additional description
@@ -71,9 +77,9 @@ import { EmptyState } from '@/components/shared/ui/EmptyState';
 import { Inbox } from 'lucide-react';
 
 // Inline variant (original pattern)
-<EmptyState 
+<EmptyState
   variant="inline"
-  message="No quizzes found" 
+  message="No quizzes found"
 />
 
 // Default variant
@@ -94,12 +100,14 @@ import { Inbox } from 'lucide-react';
 ```
 
 **Usage:**
+
 - Empty quiz lists
 - No search results
 - Empty history
 - Placeholder content
 
 **Benefits:**
+
 - Three variants for different contexts
 - Optional action buttons
 - Consistent empty state styling
@@ -122,6 +130,7 @@ import { Inbox } from 'lucide-react';
 ### DataCard Migration
 
 **Before:**
+
 ```tsx
 <Card>
   <CardHeader className="flex flex-row items-center justify-between gap-4">
@@ -135,16 +144,13 @@ import { Inbox } from 'lucide-react';
     </div>
   </CardHeader>
   <CardContent>
-    {error ? (
-      <div className="text-destructive text-sm">{error}</div>
-    ) : (
-      children
-    )}
+    {error ? <div className="text-destructive text-sm">{error}</div> : children}
   </CardContent>
 </Card>
 ```
 
 **After:**
+
 ```tsx
 <DataCard
   title="Recent Quizzes"
@@ -164,6 +170,7 @@ import { Inbox } from 'lucide-react';
 ### EmptyState Migration
 
 **Before:**
+
 ```tsx
 <div className="flex items-center gap-2 text-sm text-muted-foreground">
   <AlertCircle className="h-5 w-5" />
@@ -172,14 +179,13 @@ import { Inbox } from 'lucide-react';
 ```
 
 **After:**
+
 ```tsx
-<EmptyState 
-  variant="inline"
-  message="No quizzes found" 
-/>
+<EmptyState variant="inline" message="No quizzes found" />
 ```
 
 For more prominent empty states:
+
 ```tsx
 <EmptyState
   variant="large"

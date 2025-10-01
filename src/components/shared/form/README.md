@@ -9,6 +9,7 @@ This directory contains reusable form components that provide consistent pattern
 A standardized card layout for forms with title, optional description, and content area.
 
 **Props:**
+
 - `title` (string, required): The card title
 - `description` (string, optional): Optional description below the title
 - `children` (ReactNode, required): Form content
@@ -16,21 +17,17 @@ A standardized card layout for forms with title, optional description, and conte
 - `centerHeader` (boolean, optional): Center the header text (default: false)
 
 **Example:**
+
 ```tsx
 import { FormCard } from '@/components/shared/form';
 
-<FormCard 
-  title="Sign In" 
-  description="Enter your credentials"
-  centerHeader
->
-  <form>
-    {/* Form fields */}
-  </form>
-</FormCard>
+<FormCard title="Sign In" description="Enter your credentials" centerHeader>
+  <form>{/* Form fields */}</form>
+</FormCard>;
 ```
 
 **Usage:**
+
 - Auth forms (SignIn, SignUp, ForgotPassword, ResetPassword)
 - Profile forms (UpdatePassword, UpdateDetails)
 - Any form that needs consistent card styling
@@ -42,6 +39,7 @@ import { FormCard } from '@/components/shared/form';
 A reusable password input field with built-in label, validation, and error display.
 
 **Props:**
+
 - `control` (any, required): React Hook Form control object
 - `name` (string, required): Field name in the form
 - `label` (string, required): Label text
@@ -49,9 +47,11 @@ A reusable password input field with built-in label, validation, and error displ
 - `disabled` (boolean, optional): Disable the input (default: false)
 
 **Example:**
+
 ```tsx
-import { PasswordField } from '@/components/shared/form';
 import { useForm } from 'react-hook-form';
+
+import { PasswordField } from '@/components/shared/form';
 
 const form = useForm();
 
@@ -61,16 +61,18 @@ const form = useForm();
   label="Password"
   placeholder="Enter your password"
   disabled={isSubmitting}
-/>
+/>;
 ```
 
 **Usage:**
+
 - Sign in forms
 - Sign up forms
 - Password reset forms
 - Profile password update forms
 
 **Benefits:**
+
 - Eliminates 10+ lines of boilerplate per password field
 - Consistent password field styling and behavior
 - Built-in validation message display
@@ -82,6 +84,7 @@ const form = useForm();
 A reusable phone number input field with built-in label, validation, and error display.
 
 **Props:**
+
 - `control` (any, required): React Hook Form control object
 - `name` (string, required): Field name in the form
 - `label` (string, required): Label text
@@ -89,9 +92,11 @@ A reusable phone number input field with built-in label, validation, and error d
 - `disabled` (boolean, optional): Disable the input (default: false)
 
 **Example:**
+
 ```tsx
-import { PhoneField } from '@/components/shared/form';
 import { useForm } from 'react-hook-form';
+
+import { PhoneField } from '@/components/shared/form';
 
 const form = useForm();
 
@@ -101,16 +106,18 @@ const form = useForm();
   label="Phone Number"
   placeholder="+1234567890"
   disabled={isSubmitting}
-/>
+/>;
 ```
 
 **Usage:**
+
 - Sign in forms
 - Sign up forms
 - Forgot password forms
 - Any form requiring phone input
 
 **Benefits:**
+
 - Eliminates 10+ lines of boilerplate per phone field
 - Consistent phone field styling with `type="tel"`
 - Built-in validation message display
@@ -127,6 +134,7 @@ const form = useForm();
 ## Migration Guide
 
 ### Before (Old Pattern)
+
 ```tsx
 <Card>
   <CardHeader className="text-center">
@@ -143,8 +151,8 @@ const form = useForm();
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input 
-                  type="password" 
+                <Input
+                  type="password"
                   placeholder="Enter your password"
                   {...field}
                 />
@@ -160,12 +168,9 @@ const form = useForm();
 ```
 
 ### After (New Pattern)
+
 ```tsx
-<FormCard 
-  title="Sign In" 
-  description="Enter your credentials"
-  centerHeader
->
+<FormCard title="Sign In" description="Enter your credentials" centerHeader>
   <Form {...form}>
     <form onSubmit={onSubmit}>
       <PasswordField

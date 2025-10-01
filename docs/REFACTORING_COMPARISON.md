@@ -4,13 +4,13 @@ This document shows side-by-side comparisons of code before and after refactorin
 
 ## 📊 Overall Impact
 
-| Metric | Value |
-|--------|-------|
-| Components Refactored | 8 major components |
-| Total Lines Removed | ~244 lines |
-| Average Code Reduction | 33% |
-| New Reusable Components | 5 components |
-| Breaking Changes | 0 (fully backward compatible) |
+| Metric                  | Value                         |
+| ----------------------- | ----------------------------- |
+| Components Refactored   | 8 major components            |
+| Total Lines Removed     | ~244 lines                    |
+| Average Code Reduction  | 33%                           |
+| New Reusable Components | 5 components                  |
+| Breaking Changes        | 0 (fully backward compatible) |
 
 ---
 
@@ -21,9 +21,10 @@ This document shows side-by-side comparisons of code before and after refactorin
 **Lines**: 140 → 95 (32% reduction)
 
 #### Before (140 lines)
+
 ```tsx
 import { useTranslations } from 'next-intl';
-import { useNextAuthSignIn } from '@/hooks/useNextAuthSignIn';
+
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -42,6 +43,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { InlineLoading } from '@/components/ui/loading-spinner';
+import { useNextAuthSignIn } from '@/hooks/useNextAuthSignIn';
 
 export function SignInForm() {
   const t = useTranslations();
@@ -53,9 +55,7 @@ export function SignInForm() {
         <CardTitle className="text-2xl font-bold">
           {t('auth.signIn.title', { default: 'Sign In' })}
         </CardTitle>
-        <CardDescription>
-          {t('auth.signIn.description')}
-        </CardDescription>
+        <CardDescription>{t('auth.signIn.description')}</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -115,13 +115,15 @@ export function SignInForm() {
 ```
 
 #### After (95 lines)
+
 ```tsx
 import { useTranslations } from 'next-intl';
-import { useNextAuthSignIn } from '@/hooks/useNextAuthSignIn';
+
 import { FormCard, PasswordField, PhoneField } from '@/components/shared/form';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { InlineLoading } from '@/components/ui/loading-spinner';
+import { useNextAuthSignIn } from '@/hooks/useNextAuthSignIn';
 
 export function SignInForm() {
   const t = useTranslations();
@@ -167,6 +169,7 @@ export function SignInForm() {
 ```
 
 **Improvements**:
+
 - ✅ 45 lines removed
 - ✅ Eliminated Card/CardHeader/CardContent boilerplate
 - ✅ Eliminated 2 FormField render prop boilerplates
@@ -181,6 +184,7 @@ export function SignInForm() {
 **Lines**: 143 → 95 (34% reduction)
 
 #### Before (143 lines)
+
 ```tsx
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -235,6 +239,7 @@ export function ProfileUpdatePasswordForm() {
 ```
 
 #### After (95 lines)
+
 ```tsx
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -277,6 +282,7 @@ export function ProfileUpdatePasswordForm() {
 ```
 
 **Improvements**:
+
 - ✅ 48 lines removed
 - ✅ Eliminated Card/CardHeader/CardContent boilerplate
 - ✅ Eliminated 3 FormField render prop boilerplates (30+ lines each)
@@ -291,9 +297,12 @@ export function ProfileUpdatePasswordForm() {
 **Lines**: 46 → 27 (41% reduction)
 
 #### Before (46 lines)
+
 ```tsx
 import { Loader2 } from 'lucide-react';
+
 import type { ReactNode } from 'react';
+
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 interface HistoryCardProps {
@@ -335,8 +344,10 @@ export function HistoryCard({
 ```
 
 #### After (27 lines)
+
 ```tsx
 import type { ReactNode } from 'react';
+
 import { DataCard } from '@/components/shared/ui/DataCard';
 
 interface HistoryCardProps {
@@ -368,6 +379,7 @@ export function HistoryCard({
 ```
 
 **Improvements**:
+
 - ✅ 19 lines removed (41% reduction)
 - ✅ Eliminated Card/CardHeader/CardContent structure
 - ✅ Eliminated loading indicator logic
@@ -425,32 +437,33 @@ Now just 5-7 lines:
 
 ### Components Created
 
-| Component | Lines | Purpose | Usage Count |
-|-----------|-------|---------|-------------|
-| FormCard | 54 | Form container | 6+ forms |
-| PasswordField | 63 | Password input | 10+ fields |
-| PhoneField | 62 | Phone input | 4+ fields |
-| DataCard | 69 | Data display | 2+ cards |
-| EmptyState | 91 | Empty states | Multiple |
+| Component     | Lines | Purpose        | Usage Count |
+| ------------- | ----- | -------------- | ----------- |
+| FormCard      | 54    | Form container | 6+ forms    |
+| PasswordField | 63    | Password input | 10+ fields  |
+| PhoneField    | 62    | Phone input    | 4+ fields   |
+| DataCard      | 69    | Data display   | 2+ cards    |
+| EmptyState    | 91    | Empty states   | Multiple    |
 
 ### Components Refactored
 
-| Component | Before | After | Saved | Reduction |
-|-----------|--------|-------|-------|-----------|
-| SignInForm | 140 | 95 | 45 | 32% |
-| SignUpForm | 100 | 65 | 35 | 35% |
-| ForgotPasswordForm | 92 | 57 | 35 | 38% |
-| ResetPasswordForm | 135 | 93 | 42 | 31% |
-| ProfileUpdatePasswordForm | 143 | 95 | 48 | 34% |
-| HistoryCard | 46 | 27 | 19 | 41% |
-| QuizListCard | 62 | 45 | 17 | 27% |
-| **TOTAL** | **718** | **477** | **241** | **33%** |
+| Component                 | Before  | After   | Saved   | Reduction |
+| ------------------------- | ------- | ------- | ------- | --------- |
+| SignInForm                | 140     | 95      | 45      | 32%       |
+| SignUpForm                | 100     | 65      | 35      | 35%       |
+| ForgotPasswordForm        | 92      | 57      | 35      | 38%       |
+| ResetPasswordForm         | 135     | 93      | 42      | 31%       |
+| ProfileUpdatePasswordForm | 143     | 95      | 48      | 34%       |
+| HistoryCard               | 46      | 27      | 19      | 41%       |
+| QuizListCard              | 62      | 45      | 17      | 27%       |
+| **TOTAL**                 | **718** | **477** | **241** | **33%**   |
 
 ---
 
 ## 6. Developer Experience Improvements
 
 ### Before: Creating a New Form
+
 1. Import Card, CardHeader, CardTitle, CardDescription, CardContent
 2. Import Form, FormField, FormItem, FormLabel, FormControl, FormMessage
 3. Import Input
@@ -459,6 +472,7 @@ Now just 5-7 lines:
 6. Total: ~50-85 lines of boilerplate
 
 ### After: Creating a New Form
+
 1. Import FormCard, PasswordField, PhoneField
 2. Import Form
 3. Write FormCard (3 lines)
@@ -472,12 +486,14 @@ Now just 5-7 lines:
 ## 7. Consistency Benefits
 
 ### Before
+
 - Different Card header styles across forms
 - Inconsistent loading indicator placement
 - Varied error message display
 - Different spacing and layout patterns
 
 ### After
+
 - ✅ Standardized Card headers via FormCard
 - ✅ Consistent loading indicators via DataCard
 - ✅ Uniform error display
@@ -488,6 +504,7 @@ Now just 5-7 lines:
 ## Summary
 
 This refactoring successfully:
+
 - ✅ Reduced code by 33% on average
 - ✅ Improved code maintainability
 - ✅ Standardized UI patterns
