@@ -1,20 +1,13 @@
 'use client';
 
-import {
-  BarChart3,
-  BookOpen,
-  CheckCircle2,
-  Clock,
-  Search,
-  Users,
-} from 'lucide-react';
+import { Search } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
 import { useTranslations } from 'next-intl';
 
 import { AppPagination } from '@/components/shared/ui/AppPagination';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -30,8 +23,8 @@ import {
   AssignmentFilter,
   AssignmentStatus,
 } from '../types/assignment';
-import { AnalyticsListSkeleton } from './AnalyticsListSkeleton';
-import { AssignmentCard } from './AssignmentCard';
+import { AssignmentsTable } from './AssignmentsTable';
+import { AssignmentsTableSkeleton } from './AssignmentsTableSkeleton';
 
 export interface AnalyticsContentProps {
   data: IPageableList<AssignmentDTO> | undefined;
@@ -83,7 +76,7 @@ export function AnalyticsContent({
 
   // Show skeleton while loading initially
   if (isLoading && !data) {
-    return <AnalyticsListSkeleton />;
+    return <AssignmentsTableSkeleton />;
   }
 
   const assignments = data?.content || [];
@@ -92,105 +85,20 @@ export function AnalyticsContent({
   const currentPage = data?.page || 0;
   const pageSize = data?.size || 10;
 
-  // Calculate stats (mock data for now - can be enhanced with real backend data)
-  const publishedCount = assignments.filter(
-    (a) => a.status === AssignmentStatus.PUBLISHED
-  ).length;
-  const draftCount = assignments.filter(
-    (a) => a.status === AssignmentStatus.DRAFT
-  ).length;
-
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-          {t('instructor.analytics.title', { fallback: 'Analytics' })}
-        </h1>
-        <p className="text-sm sm:text-base text-muted-foreground mt-1">
-          {t('instructor.analytics.subtitle', {
-            fallback: 'Track quiz performance and student progress',
-          })}
-        </p>
-      </div>
-
-      {/* Stats Overview */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              {t('instructor.analytics.stats.total', {
-                fallback: 'Total Assignments',
-              })}
-            </CardTitle>
-            <BookOpen className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalElements}</div>
-            <p className="text-xs text-muted-foreground">
-              {t('instructor.analytics.stats.total.subtitle', {
-                fallback: 'All time',
-              })}
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              {t('instructor.analytics.stats.published', {
-                fallback: 'Published',
-              })}
-            </CardTitle>
-            <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{publishedCount}</div>
-            <p className="text-xs text-muted-foreground">
-              {t('instructor.analytics.stats.published.subtitle', {
-                fallback: 'Active assignments',
-              })}
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              {t('instructor.analytics.stats.draft', {
-                fallback: 'Drafts',
-              })}
-            </CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{draftCount}</div>
-            <p className="text-xs text-muted-foreground">
-              {t('instructor.analytics.stats.draft.subtitle', {
-                fallback: 'In progress',
-              })}
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              {t('instructor.analytics.stats.completion', {
-                fallback: 'Avg. Completion',
-              })}
-            </CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">—</div>
-            <p className="text-xs text-muted-foreground">
-              {t('instructor.analytics.stats.completion.subtitle', {
-                fallback: 'Coming soon',
-              })}
-            </p>
-          </CardContent>
-        </Card>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+            {t('instructor.analytics.title', { fallback: 'Analytics' })}
+          </h1>
+          <p className="text-sm sm:text-base text-muted-foreground mt-1">
+            {t('instructor.analytics.subtitle', {
+              fallback: 'Track quiz performance and student progress',
+            })}
+          </p>
+        </div>
       </div>
 
       {/* Filters */}
@@ -267,36 +175,11 @@ export function AnalyticsContent({
         </Select>
       </div>
 
-      {/* Assignment List */}
-      {assignments.length === 0 ? (
-        <Card className="p-8 text-center">
-          <Users className="mx-auto h-12 w-12 text-muted-foreground" />
-          <h3 className="mt-2 text-sm font-semibold">
-            {filter.search || filter.status
-              ? t('instructor.analytics.no.results', {
-                  fallback: 'No assignments found',
-                })
-              : t('instructor.analytics.empty', {
-                  fallback: 'No assignments yet',
-                })}
-          </h3>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {filter.search || filter.status
-              ? t('instructor.analytics.no.results.description', {
-                  fallback: 'Try adjusting your filters',
-                })
-              : t('instructor.analytics.empty.description', {
-                  fallback: 'Create a quiz and assign it to students',
-                })}
-          </p>
-        </Card>
-      ) : (
-        <div className="grid gap-3">
-          {assignments.map((assignment) => (
-            <AssignmentCard key={assignment.id} assignment={assignment} />
-          ))}
-        </div>
-      )}
+      {/* Assignments Table */}
+      <AssignmentsTable
+        assignments={assignments}
+        searchQuery={filter.search || ''}
+      />
 
       {/* Pagination */}
       {totalPages > 1 && (
