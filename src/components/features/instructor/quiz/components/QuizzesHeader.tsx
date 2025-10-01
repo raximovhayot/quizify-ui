@@ -44,6 +44,7 @@ export function QuizzesHeader({
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
               className="pl-10"
+              aria-label={t('common.search', { fallback: 'Search' })}
             />
           </div>
         </form>
