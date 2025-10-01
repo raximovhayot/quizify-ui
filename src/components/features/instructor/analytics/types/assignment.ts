@@ -18,4 +18,5 @@ export interface AssignmentFilter {
   size?: number; // default 10
   search?: string;
   status?: AssignmentStatus | string;
+  [key: string]: unknown; // Index signature for BaseFilter compatibility
 }

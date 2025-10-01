@@ -1,9 +1,10 @@
 'use client';
 
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
+import { useUrlFilter } from '@/components/shared/hooks/useUrlFilter';
 import { ErrorDisplay } from '@/components/shared/ui/ErrorDisplay';
 
 import { ROUTES_APP } from '../routes';
@@ -11,86 +12,26 @@ import { QuizzesContent } from './components/QuizzesContent';
 import { useDeleteQuiz } from './hooks/useDeleteQuiz';
 import { useQuizzes } from './hooks/useQuizzesQuery';
 import { useUpdateQuizStatus } from './hooks/useUpdateQuizStatus';
-import { QuizStatus } from './types/quiz';
+import { QuizFilter, QuizStatus } from './types/quiz';
 
 export function InstructorQuizzesPage() {
   const router = useRouter();
-  const pathname = usePathname();
-  const safePath = pathname ?? '/instructor/quizzes';
-  const searchParams = useSearchParams();
 
-  // Extract filter from URL params
-  const filter = useMemo(() => {
-    const pageParam = searchParams?.get('page');
-    const sizeParam = searchParams?.get('size');
-    const search = searchParams?.get('search') || undefined;
-    const statusParam = searchParams?.get('status') || undefined;
-
-    const page = pageParam ? Math.max(0, parseInt(pageParam, 10) || 0) : 0;
-    const size = sizeParam
-      ? Math.min(100, Math.max(1, parseInt(sizeParam, 10) || 10))
-      : 10;
-
-    return {
-      page,
-      size,
-      search,
-      status: statusParam as QuizStatus | undefined,
-    };
-  }, [searchParams]);
-
-  // URL update helper
-  const updateUrl = useCallback(
-    (params: URLSearchParams, method: 'push' | 'replace' = 'push') => {
-      const query = params.toString();
-      const url = query ? `${safePath}?${query}` : safePath;
-      if (method === 'replace') router.replace(url);
-      else router.push(url);
-    },
-    [safePath, router]
-  );
+  // Use shared URL filter hook
+  const { filter, setPage, setSize, setSearch, updateFilter } =
+    useUrlFilter<QuizFilter>({
+      defaultSize: 10,
+      parseFilter: (params) => ({
+        status: params.get('status') as QuizStatus | undefined,
+      }),
+    });
 
   // Filter handlers
-  const onPageChange = useCallback(
-    (page: number) => {
-      const params = new URLSearchParams(searchParams?.toString() ?? '');
-      params.set('page', Math.max(0, page).toString());
-      updateUrl(params, 'push');
-    },
-    [searchParams, updateUrl]
-  );
-
-  const onSearch = useCallback(
-    (search: string) => {
-      const params = new URLSearchParams(searchParams?.toString() ?? '');
-      const value = (search || '').trim();
-      if (value) params.set('search', value);
-      else params.delete('search');
-      params.set('page', '0');
-      updateUrl(params, 'push');
-    },
-    [searchParams, updateUrl]
-  );
-
   const onStatusFilter = useCallback(
     (status: QuizStatus | undefined) => {
-      const params = new URLSearchParams(searchParams?.toString() ?? '');
-      if (status) params.set('status', String(status));
-      else params.delete('status');
-      params.set('page', '0');
-      updateUrl(params, 'push');
+      updateFilter({ status, page: 0 });
     },
-    [searchParams, updateUrl]
-  );
-
-  const onPageSizeChange = useCallback(
-    (size: number) => {
-      const params = new URLSearchParams(searchParams?.toString() ?? '');
-      params.set('size', Math.min(100, Math.max(1, size)).toString());
-      params.set('page', '0');
-      updateUrl(params, 'push');
-    },
-    [searchParams, updateUrl]
+    [updateFilter]
   );
 
   // Data fetching
@@ -116,10 +57,10 @@ export function InstructorQuizzesPage() {
       isLoading={quizzesQuery.isLoading}
       isFetching={quizzesQuery.isFetching}
       filter={filter}
-      onSearch={onSearch}
+      onSearch={setSearch}
       onStatusFilter={onStatusFilter}
-      onPageChange={onPageChange}
-      onPageSizeChange={onPageSizeChange}
+      onPageChange={setPage}
+      onPageSizeChange={setSize}
       onCreate={() => router.push(ROUTES_APP.quizzes.new())}
       onDelete={(id: number) => deleteQuiz.mutate(id)}
       onUpdateStatus={(id: number, status: QuizStatus) =>
