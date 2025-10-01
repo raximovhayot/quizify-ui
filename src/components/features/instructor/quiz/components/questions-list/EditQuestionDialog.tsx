@@ -52,7 +52,7 @@ export function EditQuestionDialog({
         </DialogClose>
         <DialogHeader>
           <DialogTitle>
-            {t('instructor.quiz.question.edit.title', {
+            {t('common.editQuestion', {
               fallback: 'Edit Question',
             })}
           </DialogTitle>

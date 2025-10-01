@@ -52,7 +52,7 @@ export function AnswerListEditor({
         >
           <div className="flex items-center gap-2">
             <Label htmlFor={`${name}.${index}.content`} className="text-sm">
-              {t('instructor.quiz.question.answer.label', {
+              {t('common.question.answer.label', {
                 fallback: 'Answer',
               })}{' '}
               {index + 1}
@@ -92,7 +92,7 @@ export function AnswerListEditor({
           <Input
             id={`${name}.${index}.content`}
             {...register(`${name}.${index}.content` as const)}
-            placeholder={t('instructor.quiz.question.answer.placeholder', {
+            placeholder={t('common.question.answer.placeholder', {
               fallback: 'Enter answer text',
             })}
             disabled={disabled}
@@ -113,7 +113,7 @@ export function AnswerListEditor({
                       htmlFor={`${name}.${index}.correct`}
                       className="text-sm"
                     >
-                      {t('instructor.quiz.question.correct', {
+                      {t('common.question.correct', {
                         fallback: 'Correct',
                       })}
                     </Label>

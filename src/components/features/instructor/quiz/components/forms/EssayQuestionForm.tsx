@@ -38,7 +38,7 @@ export function EssayQuestionForm(props: EssayQuestionFormProps) {
     return (
       <div>
         <Label htmlFor="gradingCriteria">
-          {t('instructor.quiz.question.essay.criteria', {
+          {t('common.question.essay.criteria', {
             fallback: 'Grading criteria',
           })}
         </Label>

@@ -81,7 +81,7 @@ export function QuizViewQuestions({ quiz }: QuizViewQuestionsProps) {
           </DialogClose>
           <DialogHeader>
             <DialogTitle>
-              {t('instructor.quiz.question.create.title', {
+              {t('common.createQuestion', {
                 fallback: 'Create Question',
               })}
             </DialogTitle>
@@ -89,7 +89,7 @@ export function QuizViewQuestions({ quiz }: QuizViewQuestionsProps) {
           <div className="space-y-4">
             <div>
               <Label htmlFor="create-question-type">
-                {t('instructor.quiz.question.type.label', {
+                {t('common.question.type.label', {
                   fallback: 'Question type',
                 })}
               </Label>
@@ -100,12 +100,9 @@ export function QuizViewQuestions({ quiz }: QuizViewQuestionsProps) {
               >
                 <SelectTrigger id="create-question-type">
                   <SelectValue
-                    placeholder={t(
-                      'instructor.quiz.question.type.placeholder',
-                      {
-                        fallback: 'Select type',
-                      }
-                    )}
+                    placeholder={t('common.question.type.placeholder', {
+                      fallback: 'Select type',
+                    })}
                   />
                 </SelectTrigger>
                 <SelectContent>

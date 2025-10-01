@@ -44,12 +44,12 @@ export function DeleteQuestionDialog({
         </DialogClose>
         <DialogHeader>
           <DialogTitle>
-            {t('instructor.quiz.question.delete.title', {
+            {t('common.deleteQuestion', {
               fallback: 'Delete Question',
             })}
           </DialogTitle>
           <DialogDescription>
-            {t('instructor.quiz.question.delete.description', {
+            {t('common.deleteConfirmation.question', {
               fallback:
                 'Are you sure you want to delete this question? This action cannot be undone.',
             })}

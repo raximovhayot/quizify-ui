@@ -35,7 +35,7 @@ export function useCreateQuestion() {
     mutationFn: async (data) => {
       return await QuestionService.createQuestion(data);
     },
-    successMessage: t('instructor.quiz.question.create.success', {
+    successMessage: t('common.entities.question.createSuccess', {
       fallback: 'Question created successfully',
     }),
     invalidateQueries: [questionKeys.lists()],
@@ -58,7 +58,7 @@ export function useUpdateQuestion() {
     mutationFn: async ({ questionId, data }) => {
       return await QuestionService.updateQuestion(questionId, data);
     },
-    successMessage: t('instructor.quiz.question.update.success', {
+    successMessage: t('common.entities.question.updateSuccess', {
       fallback: 'Question updated successfully',
     }),
     invalidateQueries: [questionKeys.lists()],
@@ -76,7 +76,7 @@ export function useDeleteQuestion() {
     mutationFn: async (questionId) => {
       return await QuestionService.deleteQuestion(questionId);
     },
-    successMessage: t('instructor.quiz.question.delete.success', {
+    successMessage: t('common.entities.question.deleteSuccess', {
       fallback: 'Question deleted successfully',
     }),
     invalidateQueries: [questionKeys.lists()],

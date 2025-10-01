@@ -40,9 +40,7 @@ export function MultipleChoiceQuestionForm(
     );
     return (
       <div className="space-y-2">
-        <Label>
-          {t('instructor.quiz.question.answers', { fallback: 'Answers' })}
-        </Label>
+        <Label>{t('common.answers', { fallback: 'Answers' })}</Label>
         <AnswerListEditor disabled={props.isSubmitting} />
         {answersErrorMsg && (
           <p className="text-sm text-destructive mt-1">{answersErrorMsg}</p>

@@ -39,7 +39,7 @@ export function FillInBlankQuestionForm(
     return (
       <div>
         <Label htmlFor="blankTemplate">
-          {t('instructor.quiz.question.fillInBlank.template', {
+          {t('common.question.fillInBlank.template', {
             fallback: 'Template',
           })}
         </Label>

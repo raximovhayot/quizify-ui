@@ -44,8 +44,71 @@
       "info": "{current}-sahifa, jami {total}"
     },
     "close": "Yopish",
+    "questions": "Savollar",
+    "showAnswers": "Javoblarni ko'rsatish",
+    "hideAnswers": "Javoblarni yashirish",
+    "addQuestion": "Savol qo'shish",
+    "answers": "Javoblar",
+    "createQuestion": "Savol yaratish",
+    "editQuestion": "Savolni tahrirlash",
+    "deleteQuestion": "Savolni o'chirish",
+    "questionTypes": {
+      "multipleChoice": "Bir nechta variantli",
+      "trueFalse": "To'g'ri/Yolg'on",
+      "shortAnswer": "Qisqa javob",
+      "fillInBlank": "Bo'shliqlarni to'ldirish",
+      "essay": "Insho",
+      "matching": "Moslashtirish",
+      "ranking": "Reyting"
+    },
     "points": {
       "short": "{count} ball"
+    },
+    "question": {
+      "points": "Ball",
+      "content": "Savol",
+      "explanation": {
+        "label": "Izoh",
+        "placeholder": "Javobdan keyin ko'rsatiladigan ixtiyoriy izoh yoki fikr-mulohaza"
+      },
+      "type": {
+        "label": "Savol turi",
+        "placeholder": "Turini tanlang"
+      },
+      "fillInBlank": {
+        "template": "Shablon"
+      },
+      "ranking": {
+        "items": "Reyting elementlari"
+      },
+      "answer": {
+        "label": "Javob",
+        "placeholder": "Javob matnini kiriting"
+      },
+      "correct": "To'g'ri",
+      "essay": {
+        "criteria": "Baholash mezonlari"
+      },
+      "matching": {
+        "pairs": "Moslashtirish juftliklari"
+      },
+      "trueFalse": {
+        "correctIsTrue": "To'g'ri javob — To'g'ri"
+      }
+    },
+    "entities": {
+      "question": {
+        "createSuccess": "Savol muvaffaqiyatli yaratildi",
+        "updateSuccess": "Savol muvaffaqiyatli yangilandi",
+        "deleteSuccess": "Savol muvaffaqiyatli o'chirildi"
+      }
+    },
+    "deleteConfirmation": {
+      "question": "Ushbu savolni o'chirishni xohlaysizmi? Bu amalni bekor qilib bo'lmaydi."
+    },
+    "questionsEmpty": {
+      "title": "Hali savollar yo'q",
+      "description": "Talabalarni qiziqtiradigan va o'rgatuvchi savollar yaratish orqali testingizni boshlang."
     }
   },
   "auth": {
@@ -301,12 +364,6 @@
       },
       "questions": {
         "title": "Savollar",
-        "showAnswers": "Javoblarni ko'rsatish",
-        "hideAnswers": "Javoblarni yashirish",
-        "error": {
-          "title": "Savollarni yuklab bo'lmadi",
-          "description": "Savollar ro'yxatini yuklashda xatolik yuz berdi."
-        },
         "empty": {
           "title": "Hali savollar yo'q",
           "description": "Talabalarni qiziqtiradigan va o'rgatuvchi savollar yaratish orqali testingizni boshlang."
@@ -314,7 +371,6 @@
       },
       "created": "Yaratilgan",
       "question": {
-        "add": "Savol qo'shish",
         "edit": {
           "title": "Savolni tahrirlash"
         },
@@ -336,7 +392,6 @@
         },
         "points": "Ball",
         "content": "Savol",
-        "answers": "Javoblar",
         "answer": {
           "label": "Javob",
           "placeholder": "Javob matnini kiriting"
@@ -512,8 +567,6 @@
         },
         "questions": {
           "title": "Savollar",
-          "showAnswers": "Javoblarni ko'rsatish",
-          "hideAnswers": "Javoblarni yashirish",
           "addQuestion": "Savol qo'shish",
           "createFirst": "Savol yaratish",
           "empty": {

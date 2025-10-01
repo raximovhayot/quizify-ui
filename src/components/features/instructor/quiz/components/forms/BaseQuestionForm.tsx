@@ -88,7 +88,7 @@ export function BaseQuestionForm({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div className="md:col-span-2">
             <Label htmlFor="points">
-              {t('instructor.quiz.question.points', { fallback: 'Points' })}
+              {t('common.question.points', { fallback: 'Points' })}
             </Label>
             <Input
               id="points"
@@ -106,7 +106,7 @@ export function BaseQuestionForm({
 
         <div>
           <Label htmlFor="content">
-            {t('instructor.quiz.question.content', { fallback: 'Question' })}
+            {t('common.question.content', { fallback: 'Question' })}
           </Label>
           <Textarea id="content" rows={3} {...form.register('content')} />
           {form.formState.errors.content && (
@@ -118,14 +118,14 @@ export function BaseQuestionForm({
 
         <div>
           <Label htmlFor="explanation">
-            {t('instructor.quiz.question.explanation.label', {
+            {t('common.question.explanation.label', {
               fallback: 'Explanation (optional)',
             })}
           </Label>
           <Textarea
             id="explanation"
             rows={3}
-            placeholder={t('instructor.quiz.question.explanation.placeholder', {
+            placeholder={t('common.question.explanation.placeholder', {
               fallback:
                 'Add an explanation or feedback shown after answering (optional)',
             })}

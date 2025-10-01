@@ -26,7 +26,7 @@ export function QuestionsListHeader({
       <div className="flex items-center justify-between">
         <CardTitle className="flex items-center gap-2">
           <FileText className="h-5 w-5" />
-          {t('instructor.quiz.questions.title', {
+          {t('common.questions', {
             fallback: 'Questions',
           })}{' '}
           ({count})
@@ -41,14 +41,14 @@ export function QuestionsListHeader({
             {showAnswers ? (
               <>
                 <EyeOff className="h-4 w-4 mr-2" />
-                {t('instructor.quiz.questions.hideAnswers', {
+                {t('common.hideAnswers', {
                   fallback: 'Hide answers',
                 })}
               </>
             ) : (
               <>
                 <Eye className="h-4 w-4 mr-2" />
-                {t('instructor.quiz.questions.showAnswers', {
+                {t('common.showAnswers', {
                   fallback: 'Show answers',
                 })}
               </>
@@ -56,7 +56,7 @@ export function QuestionsListHeader({
           </Button>
           <Button onClick={onAddQuestion} size="sm">
             <Plus className="h-4 w-4 mr-2" />
-            {t('instructor.quiz.question.add', { fallback: 'Add Question' })}
+            {t('common.addQuestion', { fallback: 'Add Question' })}
           </Button>
         </div>
       </div>

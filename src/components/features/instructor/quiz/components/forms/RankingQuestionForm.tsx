@@ -57,7 +57,7 @@ export function RankingQuestionForm(props: RankingQuestionFormProps) {
     return (
       <div className="space-y-2">
         <Label>
-          {t('instructor.quiz.question.ranking.items', {
+          {t('common.question.ranking.items', {
             fallback: 'Ranking items',
           })}
         </Label>

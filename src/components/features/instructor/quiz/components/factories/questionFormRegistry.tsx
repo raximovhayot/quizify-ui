@@ -55,37 +55,37 @@ export function QuestionFormRenderer({
 // Translate function shape we expect from next-intl useTranslations()
 export type TranslateFn = (key: string, params: { fallback: string }) => string;
 
-// Centralized i18n keys and fallbacks per QuestionType
+// Centralized i18n keys and fallbacks per QuestionType (shared under common)
 const questionTypeLabelKeys: Record<
   QuestionType,
   { key: string; fallback: string }
 > = {
   [QuestionType.MULTIPLE_CHOICE]: {
-    key: 'instructor.quiz.question.type.multipleChoice',
+    key: 'common.questionTypes.multipleChoice',
     fallback: 'Multiple Choice',
   },
   [QuestionType.TRUE_FALSE]: {
-    key: 'instructor.quiz.question.type.trueFalse',
+    key: 'common.questionTypes.trueFalse',
     fallback: 'True/False',
   },
   [QuestionType.SHORT_ANSWER]: {
-    key: 'instructor.quiz.question.type.shortAnswer',
+    key: 'common.questionTypes.shortAnswer',
     fallback: 'Short Answer',
   },
   [QuestionType.FILL_IN_BLANK]: {
-    key: 'instructor.quiz.question.type.fillInBlank',
+    key: 'common.questionTypes.fillInBlank',
     fallback: 'Fill in Blank',
   },
   [QuestionType.ESSAY]: {
-    key: 'instructor.quiz.question.type.essay',
+    key: 'common.questionTypes.essay',
     fallback: 'Essay',
   },
   [QuestionType.MATCHING]: {
-    key: 'instructor.quiz.question.type.matching',
+    key: 'common.questionTypes.matching',
     fallback: 'Matching',
   },
   [QuestionType.RANKING]: {
-    key: 'instructor.quiz.question.type.ranking',
+    key: 'common.questionTypes.ranking',
     fallback: 'Ranking',
   },
 };

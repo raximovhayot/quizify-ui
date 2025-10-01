@@ -56,7 +56,7 @@ export function MatchingQuestionForm(props: MatchingQuestionFormProps) {
     return (
       <div className="space-y-2">
         <Label>
-          {t('instructor.quiz.question.matching.pairs', {
+          {t('common.question.matching.pairs', {
             fallback: 'Matching pairs',
           })}
         </Label>

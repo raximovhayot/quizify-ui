@@ -35,7 +35,7 @@ export function TrueFalseQuestionForm(props: TrueFalseQuestionFormProps) {
                 onCheckedChange={field.onChange}
               />
               <Label htmlFor="trueFalseAnswer">
-                {t('instructor.quiz.question.trueFalse.correctIsTrue', {
+                {t('common.question.trueFalse.correctIsTrue', {
                   fallback: 'Correct is True',
                 })}
               </Label>

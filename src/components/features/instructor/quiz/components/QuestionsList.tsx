@@ -89,13 +89,14 @@ export function QuestionsList({ quizId, onAddQuestion }: QuestionsListProps) {
           <div className="text-center py-8">
             <AlertTriangle className="h-12 w-12 text-destructive mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">
-              {t('instructor.quiz.questions.error.title', {
-                fallback: 'Failed to load questions',
+              {t('common.error.title', {
+                fallback: 'Something went wrong',
               })}
             </h3>
             <p className="text-muted-foreground">
-              {t('instructor.quiz.questions.error.description', {
-                fallback: 'There was an error loading the questions.',
+              {t('common.error.description', {
+                fallback:
+                  'There was a problem loading the data. Please try again.',
               })}
             </p>
           </div>
@@ -113,19 +114,19 @@ export function QuestionsList({ quizId, onAddQuestion }: QuestionsListProps) {
               <Plus className="h-12 w-12 text-muted-foreground" />
             </div>
             <h3 className="text-xl font-semibold mb-2">
-              {t('instructor.quiz.questions.empty.title', {
+              {t('common.questionsEmpty.title', {
                 fallback: 'No questions yet',
               })}
             </h3>
             <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-              {t('instructor.quiz.questions.empty.description', {
+              {t('common.questionsEmpty.description', {
                 fallback:
                   'Start building your quiz by creating engaging questions that will challenge and educate your students.',
               })}
             </p>
             <Button onClick={onAddQuestion} size="lg">
               <Plus className="h-4 w-4 mr-2" />
-              {t('instructor.quiz.question.add', { fallback: 'Add Question' })}
+              {t('common.addQuestion', { fallback: 'Add Question' })}
             </Button>
           </div>
         </CardContent>
