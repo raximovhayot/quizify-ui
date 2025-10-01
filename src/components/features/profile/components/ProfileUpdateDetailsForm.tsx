@@ -13,7 +13,7 @@ import { useProfile } from '@/components/features/profile/hooks/useProfile';
 import { useUpdateProfile } from '@/components/features/profile/hooks/useUpdateProfile';
 import { profileDetailsUpdateSchema } from '@/components/features/profile/schemas/profile';
 import { DashboardType } from '@/components/features/profile/types/account';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { FormCard } from '@/components/shared/form';
 import {
   Form,
   FormControl,
@@ -67,106 +67,99 @@ export function ProfileUpdateDetailsForm() {
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          {t('profile.details.title', { fallback: 'Edit details' })}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={onSubmit} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="firstName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    {t('auth.firstName.label', { fallback: 'First Name' })}
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder={t('auth.firstName.placeholder', {
-                        fallback: 'John',
-                      })}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+    <FormCard title={t('profile.details.title', { fallback: 'Edit details' })}>
+      <Form {...form}>
+        <form onSubmit={onSubmit} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="firstName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  {t('auth.firstName.label', { fallback: 'First Name' })}
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder={t('auth.firstName.placeholder', {
+                      fallback: 'John',
+                    })}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="lastName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    {t('auth.lastName.label', { fallback: 'Last Name' })}
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder={t('auth.lastName.placeholder', {
-                        fallback: 'Doe',
-                      })}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="lastName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  {t('auth.lastName.label', { fallback: 'Last Name' })}
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder={t('auth.lastName.placeholder', {
+                      fallback: 'Doe',
+                    })}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="language"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    {t('language.label', { fallback: 'Default language' })}
-                  </FormLabel>
-                  <FormControl>
-                    <Select
-                      value={String(field.value)}
-                      onValueChange={(val) => field.onChange(val as Language)}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="en">
-                          {t('language.en', { fallback: 'English' })}
-                        </SelectItem>
-                        <SelectItem value="ru">
-                          {t('language.ru', { fallback: 'Russian' })}
-                        </SelectItem>
-                        <SelectItem value="uz">
-                          {t('language.uz', { fallback: 'Uzbek' })}
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="language"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  {t('language.label', { fallback: 'Default language' })}
+                </FormLabel>
+                <FormControl>
+                  <Select
+                    value={String(field.value)}
+                    onValueChange={(val) => field.onChange(val as Language)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="en">
+                        {t('language.en', { fallback: 'English' })}
+                      </SelectItem>
+                      <SelectItem value="ru">
+                        {t('language.ru', { fallback: 'Russian' })}
+                      </SelectItem>
+                      <SelectItem value="uz">
+                        {t('language.uz', { fallback: 'Uzbek' })}
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <DefaultDashboardSelection
-              form={form}
-              isSubmitting={updateProfile.isPending || isLoading}
-            />
+          <DefaultDashboardSelection
+            form={form}
+            isSubmitting={updateProfile.isPending || isLoading}
+          />
 
-            <SubmitButton
-              isSubmitting={updateProfile.isPending || isLoading}
-              loadingText={t('common.saving', { fallback: 'Saving...' })}
-              submitText={t('common.save', { fallback: 'Save' })}
-              className="w-full md:w-auto"
-            />
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+          <SubmitButton
+            isSubmitting={updateProfile.isPending || isLoading}
+            loadingText={t('common.saving', { fallback: 'Saving...' })}
+            submitText={t('common.save', { fallback: 'Save' })}
+            className="w-full md:w-auto"
+          />
+        </form>
+      </Form>
+    </FormCard>
   );
 }
 

@@ -10,16 +10,8 @@ import { useTranslations } from 'next-intl';
 
 import { useChangePassword } from '@/components/features/profile/hooks/useChangePassword';
 import { profilePasswordUpdateSchema } from '@/components/features/profile/schemas/profile';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { FormCard, PasswordField } from '@/components/shared/form';
+import { Form } from '@/components/ui/form';
 import { SubmitButton } from '@/components/ui/submit-button';
 
 export function ProfileUpdatePasswordForm() {
@@ -49,93 +41,49 @@ export function ProfileUpdatePasswordForm() {
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          {t('profile.password.title', { fallback: 'Update password' })}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={onSubmit} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="currentPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    {t('auth.password.label', { fallback: 'Password' })}
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder={t('auth.password.placeholder', {
-                        fallback: 'Enter your password',
-                      })}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+    <FormCard
+      title={t('profile.password.title', { fallback: 'Update password' })}
+    >
+      <Form {...form}>
+        <form onSubmit={onSubmit} className="space-y-4">
+          <PasswordField
+            control={form.control}
+            name="currentPassword"
+            label={t('auth.password.label', { fallback: 'Password' })}
+            placeholder={t('auth.password.placeholder', {
+              fallback: 'Enter your password',
+            })}
+          />
 
-            <FormField
-              control={form.control}
-              name="newPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    {t('auth.password.new.label', { fallback: 'New Password' })}
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder={t('auth.password.placeholder', {
-                        fallback: 'Enter your password',
-                      })}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <PasswordField
+            control={form.control}
+            name="newPassword"
+            label={t('auth.password.new.label', { fallback: 'New Password' })}
+            placeholder={t('auth.password.placeholder', {
+              fallback: 'Enter your password',
+            })}
+          />
 
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    {t('auth.password.confirm.label', {
-                      fallback: 'Confirm Password',
-                    })}
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder={t('auth.password.confirm.placeholder', {
-                        fallback: 'Confirm your password',
-                      })}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <PasswordField
+            control={form.control}
+            name="confirmPassword"
+            label={t('auth.password.confirm.label', {
+              fallback: 'Confirm Password',
+            })}
+            placeholder={t('auth.password.confirm.placeholder', {
+              fallback: 'Confirm your password',
+            })}
+          />
 
-            <SubmitButton
-              isSubmitting={changePassword.isPending}
-              loadingText={t('common.saving', { fallback: 'Saving...' })}
-              submitText={t('common.save', { fallback: 'Save' })}
-              className="w-full md:w-auto"
-            />
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+          <SubmitButton
+            isSubmitting={changePassword.isPending}
+            loadingText={t('common.saving', { fallback: 'Saving...' })}
+            submitText={t('common.save', { fallback: 'Save' })}
+            className="w-full md:w-auto"
+          />
+        </form>
+      </Form>
+    </FormCard>
   );
 }
 
