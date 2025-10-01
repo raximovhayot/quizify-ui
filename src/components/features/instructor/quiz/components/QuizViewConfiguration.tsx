@@ -18,15 +18,15 @@ export function QuizViewConfiguration({ quiz }: QuizViewConfigurationProps) {
   const formatTimeLimit = (minutes: number) => {
     if (minutes === 0) return t('common.unlimited', { fallback: 'Unlimited' });
     if (minutes < 60)
-      return t('instructor.quiz.time.minutes', {
-        fallback: '{minutes}m',
-        minutes,
+      return t('common.time.minutes', {
+        fallback: '{count}m',
+        count: minutes,
       });
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
     if (remainingMinutes === 0)
-      return t('instructor.quiz.time.hours', { fallback: '{hours}h', hours });
-    return t('instructor.quiz.time.hoursMinutes', {
+      return t('common.time.hours', { fallback: '{count}h', count: hours });
+    return t('common.time.hoursMinutes', {
       fallback: '{hours}h {minutes}m',
       hours,
       minutes: remainingMinutes,
@@ -35,8 +35,8 @@ export function QuizViewConfiguration({ quiz }: QuizViewConfigurationProps) {
 
   const formatAttempts = (attempts: number) => {
     if (attempts === 0) return t('common.unlimited', { fallback: 'Unlimited' });
-    return t('instructor.quiz.attempts.count', {
-      fallback: '{count}',
+    return t('common.attempts', {
+      fallback: '{count} attempts',
       count: attempts,
     });
   };

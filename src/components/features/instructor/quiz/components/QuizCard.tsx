@@ -88,20 +88,20 @@ export function QuizCard({
       return t('common.unlimited', { fallback: 'Unlimited' });
     }
     if (minutes < 60) {
-      return t('instructor.quiz.time.minutes', {
-        fallback: '{minutes}m',
-        minutes,
+      return t('common.time.minutes', {
+        fallback: '{count}m',
+        count: minutes,
       });
     }
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
     if (remainingMinutes === 0) {
-      return t('instructor.quiz.time.hours', {
-        fallback: '{hours}h',
-        hours,
+      return t('common.time.hours', {
+        fallback: '{count}h',
+        count: hours,
       });
     }
-    return t('instructor.quiz.time.hoursMinutes', {
+    return t('common.time.hoursMinutes', {
       fallback: '{hours}h {minutes}m',
       hours,
       minutes: remainingMinutes,
@@ -112,7 +112,7 @@ export function QuizCard({
     if (attempts === 0) {
       return t('common.unlimited', { fallback: 'Unlimited' });
     }
-    return t('instructor.quiz.attempts.count', {
+    return t('common.attempts', {
       fallback: '{count} attempts',
       count: attempts,
     });
@@ -223,7 +223,7 @@ export function QuizCard({
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4 text-muted-foreground" />
               <span className="text-muted-foreground">
-                {t('instructor.quiz.time', { fallback: 'Time' })}:
+                {t('common.timeLabel', { fallback: 'Time' })}:
               </span>
               <span className="font-medium">
                 {formatTime(quiz.settings?.time)}
@@ -235,7 +235,7 @@ export function QuizCard({
             <div className="flex items-center gap-2">
               <Users className="h-4 w-4 text-muted-foreground" />
               <span className="text-muted-foreground">
-                {t('instructor.quiz.attempts', { fallback: 'Attempts' })}:
+                {t('common.attemptsLabel', { fallback: 'Attempts' })}:
               </span>
               <span className="font-medium">
                 {formatAttempts(quiz.settings?.attempt)}

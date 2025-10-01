@@ -116,7 +116,16 @@
     "questionsEmpty": {
       "title": "Hali savollar yo'q",
       "description": "Talabalarni qiziqtiradigan va o'rgatuvchi savollar yaratish orqali testingizni boshlang."
-    }
+    },
+    "time": {
+      "minutes": "{count}d",
+      "hours": "{count}s",
+      "hoursMinutes": "{hours}s {minutes}d"
+    },
+    "attempts": "{count} urinish",
+    "attemptsUnlimited": "Cheklanmagan",
+    "timeLabel": "Vaqt",
+    "attemptsLabel": "Urinishlar"
   },
   "auth": {
     "signIn": {
