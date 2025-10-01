@@ -20,6 +20,7 @@
     "retry": "Try Again",
     "actions": "Actions",
     "view": "View",
+    "edit": "Edit",
     "search": "Search",
     "true": "True",
     "false": "False",
@@ -363,68 +364,8 @@
           "description": "Are you sure you want to delete this quiz? This action cannot be undone."
         }
       },
-      "questions": {
-        "title": "Questions",
-        "empty": {
-          "title": "No questions yet",
-          "description": "Start building your quiz by creating engaging questions that will challenge and educate your students."
-        }
-      },
       "created": "Created",
-      "question": {
-        "edit": {
-          "title": "Edit Question"
-        },
-        "delete": {
-          "title": "Delete Question",
-          "description": "Are you sure you want to delete this question? This action cannot be undone.",
-          "success": "Question deleted successfully"
-        },
-        "create": {
-          "title": "Create Question",
-          "success": "Question created successfully"
-        },
-        "explanation": {
-          "label": "Explanation",
-          "placeholder": "Optional explanation or feedback shown after answering"
-        },
-        "update": {
-          "success": "Question updated successfully"
-        },
-        "points": "Points",
-        "content": "Question",
-        "answer": {
-          "label": "Answer",
-          "placeholder": "Enter answer text"
-        },
-        "correct": "Correct",
-        "type": {
-          "label": "Question type",
-          "placeholder": "Select type",
-          "multipleChoice": "Multiple Choice",
-          "trueFalse": "True/False",
-          "shortAnswer": "Short Answer",
-          "fillInBlank": "Fill in Blank",
-          "essay": "Essay",
-          "matching": "Matching",
-          "ranking": "Ranking"
-        },
-        "trueFalse": {
-          "correctIsTrue": "Correct is True"
-        },
-        "fillInBlank": {
-          "template": "Template"
-        },
-        "essay": {
-          "criteria": "Grading criteria"
-        },
-        "matching": {
-          "pairs": "Matching pairs"
-        },
-        "ranking": {
-          "items": "Ranking items"
-        }
-      },
+      "question": {},
       "no": {
         "quizzes": "No quizzes created yet."
       },

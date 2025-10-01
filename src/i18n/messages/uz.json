@@ -362,68 +362,8 @@
           "description": "Ushbu testni o'chirishni xohlaysizmi? Bu amalni bekor qilib bo'lmaydi."
         }
       },
-      "questions": {
-        "title": "Savollar",
-        "empty": {
-          "title": "Hali savollar yo'q",
-          "description": "Talabalarni qiziqtiradigan va o'rgatuvchi savollar yaratish orqali testingizni boshlang."
-        }
-      },
       "created": "Yaratilgan",
-      "question": {
-        "edit": {
-          "title": "Savolni tahrirlash"
-        },
-        "delete": {
-          "title": "Savolni o'chirish",
-          "description": "Ushbu savolni o'chirishni xohlaysizmi? Bu amalni bekor qilib bo'lmaydi.",
-          "success": "Savol muvaffaqiyatli o'chirildi"
-        },
-        "create": {
-          "title": "Savol yaratish",
-          "success": "Savol muvaffaqiyatli yaratildi"
-        },
-        "explanation": {
-          "label": "Izoh",
-          "placeholder": "Javobdan keyin ko'rsatiladigan ixtiyoriy izoh yoki fikr-mulohaza"
-        },
-        "update": {
-          "success": "Savol muvaffaqiyatli yangilandi"
-        },
-        "points": "Ball",
-        "content": "Savol",
-        "answer": {
-          "label": "Javob",
-          "placeholder": "Javob matnini kiriting"
-        },
-        "correct": "To'g'ri",
-        "type": {
-          "label": "Savol turi",
-          "placeholder": "Turini tanlang",
-          "multipleChoice": "Bir nechta variantli",
-          "trueFalse": "To'g'ri/Yolg'on",
-          "shortAnswer": "Qisqa javob",
-          "fillInBlank": "Bo'shliqlarni to'ldirish",
-          "essay": "Insho",
-          "matching": "Moslashtirish",
-          "ranking": "Reyting"
-        },
-        "trueFalse": {
-          "correctIsTrue": "To'g'ri javob — To'g'ri"
-        },
-        "fillInBlank": {
-          "template": "Shablon"
-        },
-        "essay": {
-          "criteria": "Baholash mezonlari"
-        },
-        "matching": {
-          "pairs": "Moslashtirish juftliklari"
-        },
-        "ranking": {
-          "items": "Reyting elementlari"
-        }
-      },
+      "question": {},
       "no": {
         "quizzes": "Hali testlar yaratilmagan."
       },
