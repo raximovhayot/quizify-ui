@@ -7,12 +7,20 @@ import { usePathname, useRouter } from 'next/navigation';
 
 import { CreateQuizContainer } from '@/components/features/instructor/quiz/components/CreateQuizContainer';
 import { ROUTES_APP } from '@/components/features/instructor/routes';
+import { useResponsive } from '@/components/shared/hooks/useResponsive';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
 
 export default function CreateQuizModalPage() {
   const router = useRouter();
   const pathname = usePathname();
   const t = useTranslations();
+  const { isMobile } = useResponsive();
   const [open, setOpen] = useState(() =>
     Boolean(pathname?.endsWith('/quizzes/new'))
   );
@@ -21,21 +29,46 @@ export default function CreateQuizModalPage() {
     setOpen(Boolean(pathname?.endsWith('/quizzes/new')));
   }, [pathname]);
 
+  const handleOpenChange = (nextOpen: boolean) => {
+    setOpen(nextOpen);
+    if (!nextOpen) router.push(ROUTES_APP.quizzes.list());
+  };
+
+  const content = (
+    <CreateQuizContainer className="border-none shadow-none rounded-none p-0 [&_[data-slot=card-header]]:px-0 [&_[data-slot=card-content]]:px-0 [&_[data-slot=card-footer]]:px-0 bg-background" />
+  );
+
+  // Mobile: Use Sheet (bottom drawer)
+  if (isMobile) {
+    return (
+      <Sheet open={open} onOpenChange={handleOpenChange}>
+        <SheetContent
+          side="bottom"
+          className="h-[90vh] overflow-y-auto px-4 pb-safe"
+        >
+          <SheetHeader className="pb-4">
+            <SheetTitle>
+              {t('instructor.quiz.create.dialogTitle', {
+                fallback: 'Create Quiz',
+              })}
+            </SheetTitle>
+          </SheetHeader>
+          <div className="pb-8">{content}</div>
+        </SheetContent>
+      </Sheet>
+    );
+  }
+
+  // Desktop: Use Dialog
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(nextOpen) => {
-        setOpen(nextOpen);
-        if (!nextOpen) router.push(ROUTES_APP.quizzes.list());
-      }}
-    >
-      <DialogContent>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogTitle className="sr-only">
           {t('instructor.quiz.create.dialogTitle', {
             fallback: 'Create Quiz',
           })}
         </DialogTitle>
-        <CreateQuizContainer className="border-none shadow-none rounded-none p-0 [&_[data-slot=card-header]]:px-0 [&_[data-slot=card-content]]:px-0 [&_[data-slot=card-footer]]:px-0 bg-background" />
+        {content}
       </DialogContent>
     </Dialog>
   );
