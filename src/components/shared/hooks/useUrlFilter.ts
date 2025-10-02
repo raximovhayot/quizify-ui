@@ -84,7 +84,8 @@ export function useUrlFilter<T extends BaseFilter>({
   const updateUrl = useCallback(
     (params: URLSearchParams) => {
       const query = params.toString();
-      const url = query ? `${pathname}?${query}` : pathname;
+      const currentPath = pathname ?? '/';
+      const url = query ? `${currentPath}?${query}` : currentPath;
       router.push(url);
     },
     [pathname, router]
@@ -145,7 +146,7 @@ export function useUrlFilter<T extends BaseFilter>({
   );
 
   const resetFilters = useCallback(() => {
-    router.push(pathname);
+    router.push(pathname ?? '/');
   }, [pathname, router]);
 
   return {

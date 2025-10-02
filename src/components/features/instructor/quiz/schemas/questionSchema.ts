@@ -21,7 +21,7 @@ export type TAnswerForm = z.input<typeof answerFormSchema>;
 // Base fields common to all forms
 const baseFormSchema = z.object({
   quizId: z.number().int().positive(),
-  questionType: z.enum(QuestionType),
+  questionType: z.nativeEnum(QuestionType),
   content: z.string().trim().min(1, 'Question content is required'),
   explanation: z.string().trim().optional(),
   order: z.number().int().nonnegative().default(0),
@@ -146,7 +146,7 @@ export const answerDataDtoSchema = z.object({
 
 export const questionDataDtoSchema = z.object({
   id: z.number(),
-  questionType: z.enum(QuestionType),
+  questionType: z.nativeEnum(QuestionType),
   content: z.string(),
   explanation: z.string().optional(),
   order: z.number().int(),
