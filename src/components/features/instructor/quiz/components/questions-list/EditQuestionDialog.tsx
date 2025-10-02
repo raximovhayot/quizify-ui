@@ -64,7 +64,7 @@ export function EditQuestionDialog({
           snapPoints={['60vh', '80vh', '95vh']}
           className="overflow-y-auto px-4 pb-safe rounded-t-2xl"
         >
-          <SheetHeader className="pb-4">
+          <SheetHeader className="pb-4" hasResizeHandle>
             <SheetTitle>
               {t('common.editQuestion', {
                 fallback: 'Edit Question',

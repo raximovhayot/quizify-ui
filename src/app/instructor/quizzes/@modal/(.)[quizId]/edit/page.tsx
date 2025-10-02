@@ -92,7 +92,7 @@ export default function Page() {
             snapPoints={['60vh', '80vh', '95vh']}
             className="overflow-y-auto px-4 pb-safe rounded-t-2xl"
           >
-            <SheetHeader className="pb-4">
+            <SheetHeader className="pb-4" hasResizeHandle>
               <SheetTitle>
                 {t('instructor.quiz.edit.dialogTitle', {
                   fallback: 'Edit Quiz',
@@ -195,7 +195,7 @@ export default function Page() {
           snapPoints={['60vh', '80vh', '95vh']}
           className="overflow-y-auto px-4 pb-safe rounded-t-2xl"
         >
-          <SheetHeader className="pb-4">
+          <SheetHeader className="pb-4" hasResizeHandle>
             <SheetTitle>
               {t('instructor.quiz.edit.dialogTitle', { fallback: 'Edit Quiz' })}
             </SheetTitle>

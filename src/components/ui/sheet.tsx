@@ -173,11 +173,14 @@ function SheetContent({
       >
         {resizable && side === 'bottom' && (
           <div
-            className="absolute top-0 left-0 right-0 h-6 flex items-center justify-center cursor-grab active:cursor-grabbing z-10"
+            className="absolute top-0 left-0 right-0 h-8 flex items-center justify-center cursor-grab active:cursor-grabbing z-10 touch-none"
             onMouseDown={handleDragStart}
             onTouchStart={handleDragStart}
+            role="button"
+            aria-label="Drag to resize"
+            tabIndex={0}
           >
-            <div className="w-12 h-1.5 bg-muted-foreground/30 rounded-full" />
+            <div className="w-16 h-1.5 bg-muted-foreground/40 rounded-full hover:bg-muted-foreground/60 transition-colors" />
           </div>
         )}
         {children}
@@ -190,11 +193,19 @@ function SheetContent({
   );
 }
 
-function SheetHeader({ className, ...props }: React.ComponentProps<'div'>) {
+function SheetHeader({
+  className,
+  hasResizeHandle = false,
+  ...props
+}: React.ComponentProps<'div'> & { hasResizeHandle?: boolean }) {
   return (
     <div
       data-slot="sheet-header"
-      className={cn('flex flex-col gap-1.5 p-4 pt-8', className)}
+      className={cn(
+        'flex flex-col gap-1.5 p-4',
+        hasResizeHandle && 'pt-10',
+        className
+      )}
       {...props}
     />
   );
