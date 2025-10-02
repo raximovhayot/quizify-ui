@@ -19,6 +19,8 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 
+import { useIsHydrated } from '../hooks/useIsHydrated';
+
 export interface RichTextEditorProps {
   content: string;
   onChange: (content: string) => void;
@@ -38,6 +40,8 @@ export function RichTextEditor({
   minHeight = '120px',
   id,
 }: RichTextEditorProps) {
+  const isHydrated = useIsHydrated();
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -51,6 +55,7 @@ export function RichTextEditor({
     ],
     content,
     editable: !disabled,
+    immediatelyRender: false, // Fix SSR hydration mismatch
     onUpdate: ({ editor }) => {
       const html = editor.getHTML();
       onChange(html);
@@ -80,8 +85,26 @@ export function RichTextEditor({
     }
   }, [disabled, editor]);
 
-  if (!editor) {
-    return null;
+  // Show loading state during SSR/hydration
+  if (!isHydrated || !editor) {
+    return (
+      <div
+        className={cn(
+          'border rounded-md overflow-hidden bg-background',
+          disabled && 'opacity-60',
+          className
+        )}
+      >
+        <div className="border-b bg-muted/30 p-2 flex flex-wrap items-center gap-1">
+          <div className="h-8 w-8 bg-muted rounded animate-pulse" />
+          <div className="h-8 w-8 bg-muted rounded animate-pulse" />
+          <div className="h-8 w-8 bg-muted rounded animate-pulse" />
+        </div>
+        <div className="p-3" style={{ minHeight }}>
+          <div className="h-4 bg-muted rounded w-1/2 animate-pulse" />
+        </div>
+      </div>
+    );
   }
 
   return (
