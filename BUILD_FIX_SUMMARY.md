@@ -47,18 +47,20 @@ SKIP_ENV_VALIDATION=true npm run lint
 ---
 
 ### 2. Zod v4 Enum Usage ❌ → ✅
-**Problem:** `z.enum()` with TypeScript enums fails. `z.nativeEnum()` is deprecated in Zod v4.
+**Problem:** TypeScript enum validation issues in older Zod version
 
-**Solution:** Convert enums to arrays with `as const`:
+**Solution:** Upgraded Zod from 4.0.5 to 4.1.11
+
+In Zod 4.1.11+, `z.nativeEnum()` has been deprecated and merged into `z.enum()`. Now you can pass TypeScript enums directly:
+
 ```typescript
-// Correct Zod v4 approach
-z.enum([DashboardType.INSTRUCTOR, DashboardType.STUDENT] as const, { ... })
+// ✅ Correct in Zod 4.1.11+ (current approach)
+z.enum(DashboardType, { ... })
 ```
 
 **Files Changed:**
-- `src/components/features/profile/schemas/profile.ts` (2 occurrences)
-- `src/components/features/student/history/schemas/attemptSchema.ts` (1 occurrence)
-- `src/components/features/instructor/quiz/schemas/questionSchema.ts` (2 occurrences)
+- `package.json` - Upgraded `zod` from `^4.0.5` to `^4.1.11`
+- Schema files use the standard `z.enum(EnumType, options)` pattern
 
 ---
 

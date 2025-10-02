@@ -86,88 +86,38 @@ const geistMono = Geist_Mono({
 
 ---
 
-### 2. ❌ Zod Enum Usage Incompatibility with Zod v4
+### 2. ❌ Zod Enum Usage - Fixed in Zod 4.1.11+
 
-**Error:**
-TypeScript enums passed directly to `z.enum()` cause runtime validation errors in Zod v4.
+**Previous Issue (Zod 4.0.5):**
+TypeScript enums passed directly to `z.enum()` caused runtime validation errors.
 
-**Root Cause:**  
-In Zod v4, `z.enum()` expects an array of string literals `[string, ...string[]]`, not a TypeScript enum object. The previous workaround of using `z.nativeEnum()` is now deprecated in Zod v4.
+**Solution:**
+Upgraded Zod from 4.0.5 to 4.1.11 where `z.nativeEnum()` has been merged into `z.enum()`.
 
-**Locations:**
-- `src/components/features/profile/schemas/profile.ts` (lines 80, 116, 121)
-- `src/components/features/student/history/schemas/attemptSchema.ts` (line 10)
-- `src/components/features/instructor/quiz/schemas/questionSchema.ts` (lines 24, 149)
+**In Zod 4.1.11+, the correct approach is to pass TypeScript enums directly to `z.enum()`:**
 
-**Solution:**  
-Convert TypeScript enums to arrays of their values using `as const` for type inference.
-
-**Changed:**
 ```typescript
-// BEFORE (doesn't work in Zod v4)
+// ✅ CORRECT in Zod 4.1.11+ (current approach)
 dashboardType: z.enum(DashboardType, {
   message: t('auth.validation.dashboardTypeRequired', {
     default: 'Please select your role',
   }),
 }),
-
-// DEPRECATED (do not use)
-dashboardType: z.nativeEnum(DashboardType, { ... })
-
-// AFTER (correct Zod v4 usage)
-dashboardType: z.enum(
-  [DashboardType.INSTRUCTOR, DashboardType.STUDENT] as const,
-  {
-    message: t('auth.validation.dashboardTypeRequired', {
-      default: 'Please select your role',
-    }),
-  }
-),
 ```
 
-**Examples by Enum:**
+**Historical Context:**
+- Zod 4.0.5: Required workarounds (array with `as const` or `z.nativeEnum()`)
+- Zod 4.1.11+: `z.nativeEnum()` deprecated and merged into `z.enum()`
+- Now: Simply use `z.enum(EnumType, options)` directly
 
-1. **DashboardType** (2 values):
-```typescript
-z.enum([DashboardType.INSTRUCTOR, DashboardType.STUDENT] as const, { ... })
-```
+**Files Using This Pattern:**
+- `src/components/features/profile/schemas/profile.ts` (DashboardType, Language)
+- `src/components/features/student/history/schemas/attemptSchema.ts` (AttemptStatus)
+- `src/components/features/instructor/quiz/schemas/questionSchema.ts` (QuestionType)
 
-2. **Language** (3 values):
-```typescript
-z.enum([Language.EN, Language.RU, Language.UZ] as const, { ... })
-```
-
-3. **AttemptStatus** (3 values):
-```typescript
-z.enum([
-  AttemptStatus.CREATED,
-  AttemptStatus.STARTED,
-  AttemptStatus.FINISHED
-] as const)
-```
-
-4. **QuestionType** (7 values):
-```typescript
-z.enum([
-  QuestionType.MULTIPLE_CHOICE,
-  QuestionType.TRUE_FALSE,
-  QuestionType.SHORT_ANSWER,
-  QuestionType.FILL_IN_BLANK,
-  QuestionType.ESSAY,
-  QuestionType.MATCHING,
-  QuestionType.RANKING,
-] as const)
-```
-
-**Why This Works:**
-- `as const` creates a readonly tuple type that Zod can properly infer
-- This approach is type-safe and doesn't use deprecated APIs
-- The array explicitly lists all enum values, making validation work correctly
-
-**Files Modified:**
-1. `profile.ts` - Fixed `DashboardType` and `Language` enums (2 occurrences)
-2. `attemptSchema.ts` - Fixed `AttemptStatus` enum (1 occurrence)
-3. `questionSchema.ts` - Fixed `QuestionType` enum (2 occurrences)
+**Package Version:**
+- Updated from: `zod@^4.0.5`
+- Updated to: `zod@^4.1.11`
 
 ---
 

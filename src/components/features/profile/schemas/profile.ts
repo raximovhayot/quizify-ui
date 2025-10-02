@@ -77,14 +77,11 @@ export const profileCompleteDetailsSchema = (
             'Password must contain at least one uppercase letter, one lowercase letter, and one number',
         })
       ),
-    dashboardType: z.enum(
-      [DashboardType.INSTRUCTOR, DashboardType.STUDENT] as const,
-      {
-        message: t('auth.validation.dashboardTypeRequired', {
-          default: 'Please select your role',
-        }),
-      }
-    ),
+    dashboardType: z.enum(DashboardType, {
+      message: t('auth.validation.dashboardTypeRequired', {
+        default: 'Please select your role',
+      }),
+    }),
   });
 };
 
@@ -116,19 +113,16 @@ export const profileDetailsUpdateSchema = (
       )
       .min(2)
       .max(50),
-    language: z.enum([Language.EN, Language.RU, Language.UZ] as const, {
+    language: z.enum(Language, {
       message: t('profile.validation.languageRequired', {
         fallback: 'Language is required',
       }),
     }),
-    dashboardType: z.enum(
-      [DashboardType.INSTRUCTOR, DashboardType.STUDENT] as const,
-      {
-        message: t('auth.validation.dashboardTypeRequired', {
-          fallback: 'Please select your role',
-        }),
-      }
-    ),
+    dashboardType: z.enum(DashboardType, {
+      message: t('auth.validation.dashboardTypeRequired', {
+        fallback: 'Please select your role',
+      }),
+    }),
   });
 
 export const profilePasswordUpdateSchema = (
