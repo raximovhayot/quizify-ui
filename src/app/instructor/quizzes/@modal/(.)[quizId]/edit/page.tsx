@@ -57,7 +57,7 @@ export default function Page() {
           if (!open) router.push(ROUTES_APP.quizzes.list());
         }}
       >
-        <DialogContent>
+        <DialogContent className="rounded-2xl">
           <DialogTitle className="sr-only">
             {t('instructor.quiz.edit.dialogTitle', { fallback: 'Edit Quiz' })}
           </DialogTitle>
@@ -96,7 +96,7 @@ export default function Page() {
         }
       }}
     >
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl">
         <DialogTitle className="sr-only">
           {t('instructor.quiz.edit.dialogTitle', { fallback: 'Edit Quiz' })}
         </DialogTitle>
