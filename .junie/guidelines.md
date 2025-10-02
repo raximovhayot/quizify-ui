@@ -5,10 +5,12 @@
 ### Environment Setup
 
 **Required:**
+
 - `NEXTAUTH_SECRET` — NextAuth.js authentication secret
 - `NEXT_PUBLIC_API_BASE_URL` — Backend API base URL (default: `http://localhost:8080/api`)
 
 **Optional for dev:**
+
 - `NEXTAUTH_URL` — Usually auto-detected
 - `NEXT_PUBLIC_ENV_NAME`, `NEXT_PUBLIC_ENV_EMOJI`, `NEXT_PUBLIC_ENV_COLOR_SCHEME` — Environment display settings
 - `SKIP_ENV_VALIDATION` — Skip env checks (mainly for Docker)
@@ -48,6 +50,7 @@
 - **Path Aliases**: Use `@/` for `src/` imports
 
 **Structure:**
+
 - All source in `src/`
 - **Features**: `src/components/features/[feature]/`
 - **shadcn components**: `src/components/ui/`
@@ -57,6 +60,7 @@
 - Co-locate styles and types with related code
 
 **Naming Conventions:**
+
 - **Components**: PascalCase with `.tsx` extension (`UserProfile.tsx`)
 - **Hooks**: camelCase with `use` prefix (`useUsers.ts`)
 - **Services**: camelCase with `Service` suffix (`userService.ts`)
@@ -77,17 +81,18 @@
 - Validate forms with Zod, manage forms with React Hook Form
 
 **Example - Container/Presentational Pattern:**
+
 ```tsx
 // UserListContainer.tsx (Container)
 export function UserListContainer() {
-  const { data, isLoading, error } = useQuery({ 
-    queryKey: ['users'], 
-    queryFn: userService.getUsers 
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['users'],
+    queryFn: userService.getUsers,
   });
-  
+
   if (isLoading) return <LoadingSpinner />;
   if (error) return <ErrorDisplay error={error} />;
-  
+
   return <UserList users={data} />;
 }
 
@@ -99,7 +104,7 @@ interface UserListProps {
 export function UserList({ users }: UserListProps) {
   return (
     <ul>
-      {users.map(user => (
+      {users.map((user) => (
         <li key={user.id}>{user.name}</li>
       ))}
     </ul>

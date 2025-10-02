@@ -6,31 +6,28 @@ import React from 'react';
 
 import { useTranslations } from 'next-intl';
 
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-interface QuizzesHeaderProps {
-  titleKey?: string; // i18n key, defaults to instructor.quiz.list.title
+interface AnalyticsHeaderProps {
+  titleKey?: string; // i18n key, defaults to instructor.analytics.title
   searchQuery: string;
   onSearchChange: (value: string) => void;
   onSearchSubmit: (e: React.FormEvent) => void;
-  onCreate: () => void;
 }
 
-export function QuizzesHeader({
-  titleKey = 'instructor.quiz.list.title',
+export function AnalyticsHeader({
+  titleKey = 'instructor.analytics.title',
   searchQuery,
   onSearchChange,
   onSearchSubmit,
-  onCreate,
-}: Readonly<QuizzesHeaderProps>) {
+}: Readonly<AnalyticsHeaderProps>) {
   const t = useTranslations();
 
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">
-          {t(titleKey, { fallback: 'Your quizzes' })}
+          {t(titleKey, { fallback: 'Analytics' })}
         </h1>
       </div>
       <div className="flex w-full items-center gap-2 sm:w-auto">
@@ -38,9 +35,12 @@ export function QuizzesHeader({
           <div className="relative">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder={t('instructor.quiz.search.placeholder', {
-                fallback: 'Search quizzes...',
-              })}
+              placeholder={t(
+                'instructor.analytics.assignments.search.placeholder',
+                {
+                  fallback: 'Search assignments...',
+                }
+              )}
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
               className="pl-10"
@@ -48,12 +48,9 @@ export function QuizzesHeader({
             />
           </div>
         </form>
-        <Button onClick={onCreate}>
-          {t('instructor.quiz.create.button', { fallback: 'Create Quiz' })}
-        </Button>
       </div>
     </div>
   );
 }
 
-export default QuizzesHeader;
+export default AnalyticsHeader;

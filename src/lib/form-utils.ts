@@ -18,19 +18,22 @@ export interface FormConfig<T extends FieldValues> {
  * Strict form field names type - ensures only valid field names can be used
  */
 export type StrictFieldPath<T extends FieldValues> = {
-  [K in keyof T]: T[K] extends object 
-    ? K extends string 
+  [K in keyof T]: T[K] extends object
+    ? K extends string
       ? `${K}` | `${K}.${StrictFieldPath<T[K]>}`
       : never
     : K extends string
-    ? K
-    : never;
+      ? K
+      : never;
 }[keyof T];
 
 /**
  * Type-safe form field configuration
  */
-export interface TypedFormField<T extends FieldValues, K extends StrictFieldPath<T>> {
+export interface TypedFormField<
+  T extends FieldValues,
+  K extends StrictFieldPath<T>,
+> {
   name: K;
   label: string;
   placeholder?: string;

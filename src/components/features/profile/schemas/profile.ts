@@ -130,14 +130,12 @@ export const profilePasswordUpdateSchema = (
 ) =>
   z
     .object({
-      currentPassword: z
-        .string()
-        .min(
-          1,
-          t('auth.validation.passwordRequired', {
-            fallback: 'Password is required',
-          })
-        ),
+      currentPassword: z.string().min(
+        1,
+        t('auth.validation.passwordRequired', {
+          fallback: 'Password is required',
+        })
+      ),
       newPassword: z
         .string()
         .min(
@@ -153,14 +151,12 @@ export const profilePasswordUpdateSchema = (
               'Password must contain at least one uppercase letter, one lowercase letter, and one number',
           })
         ),
-      confirmPassword: z
-        .string()
-        .min(
-          1,
-          t('auth.validation.confirmPasswordRequired', {
-            fallback: 'Please confirm your password',
-          })
-        ),
+      confirmPassword: z.string().min(
+        1,
+        t('auth.validation.confirmPasswordRequired', {
+          fallback: 'Please confirm your password',
+        })
+      ),
     })
     .refine((data) => data.newPassword === data.confirmPassword, {
       path: ['confirmPassword'],

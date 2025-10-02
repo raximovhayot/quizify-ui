@@ -1,7 +1,7 @@
 'use client';
 
-import { AssignmentsListContainer } from '@/components/features/instructor/analytics/components/AssignmentsListContainer';
+import InstructorAnalyticsPage from '@/components/features/instructor/analytics/InstructorAnalyticsPage';
 
-export default function InstructorAnalyticsPage() {
-  return <AssignmentsListContainer />;
+export default function InstructorAnalytics() {
+  return <InstructorAnalyticsPage />;
 }
