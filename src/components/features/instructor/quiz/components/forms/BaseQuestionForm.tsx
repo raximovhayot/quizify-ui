@@ -5,6 +5,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { useTranslations } from 'next-intl';
 
+import { RichTextField } from '@/components/shared/form/RichTextField';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -105,15 +106,16 @@ export function BaseQuestionForm({
         </div>
 
         <div>
-          <Label htmlFor="content">
-            {t('common.question.content', { fallback: 'Question' })}
-          </Label>
-          <Textarea id="content" rows={3} {...form.register('content')} />
-          {form.formState.errors.content && (
-            <p className="text-sm text-destructive mt-1">
-              {String(form.formState.errors.content.message)}
-            </p>
-          )}
+          <RichTextField
+            control={form.control}
+            name="content"
+            label={t('common.question.content', { fallback: 'Question' })}
+            placeholder={t('common.question.content.placeholder', {
+              fallback: 'Enter your question here. You can use formatting...',
+            })}
+            minHeight="150px"
+            required
+          />
         </div>
 
         <div>

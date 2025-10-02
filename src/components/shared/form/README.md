@@ -185,3 +185,159 @@ const form = useForm();
 ```
 
 **Result**: Reduced from ~30 lines to ~15 lines (50% reduction)
+
+---
+
+### RichTextEditor
+
+A rich text editor built with Tiptap that provides formatting capabilities for content creation.
+
+**Features:**
+- Text formatting: Bold, Italic, Code
+- Lists: Bullet lists, Ordered lists
+- Undo/Redo support
+- Placeholder support
+- Disabled state
+- Responsive toolbar
+- Dark mode support
+
+**Props:**
+- `content: string` - HTML content to display/edit
+- `onChange: (content: string) => void` - Callback when content changes
+- `placeholder?: string` - Placeholder text
+- `disabled?: boolean` - Disable editing
+- `className?: string` - Additional CSS classes
+- `minHeight?: string` - Minimum height (default: "120px")
+- `id?: string` - HTML id attribute
+
+**Example:**
+```tsx
+import { RichTextEditor } from '@/components/shared/form/RichTextEditor';
+
+function MyComponent() {
+  const [content, setContent] = useState('');
+
+  return (
+    <RichTextEditor
+      content={content}
+      onChange={setContent}
+      placeholder="Start typing..."
+      minHeight="150px"
+    />
+  );
+}
+```
+
+**Usage:**
+- Question content editing
+- Quiz descriptions
+- Explanations and feedback
+- Any text that needs rich formatting
+
+---
+
+### RichTextField
+
+A React Hook Form compatible wrapper for RichTextEditor.
+
+**Props:**
+- `control: Control` - React Hook Form control
+- `name: string` - Field name
+- `label: string` - Label text
+- `placeholder?: string` - Placeholder text
+- `minHeight?: string` - Minimum height
+- `disabled?: boolean` - Disable editing
+- `required?: boolean` - Show required indicator
+
+**Example:**
+```tsx
+import { RichTextField } from '@/components/shared/form/RichTextField';
+import { useForm } from 'react-hook-form';
+
+function MyForm() {
+  const { control } = useForm();
+
+  return (
+    <RichTextField
+      control={control}
+      name="content"
+      label="Question Content"
+      placeholder="Enter your question..."
+      required
+    />
+  );
+}
+```
+
+**Usage:**
+- Integrated with React Hook Form
+- Automatic validation and error display
+- Used in question creation/editing forms
+
+---
+
+### RichTextDisplay
+
+A read-only component to display rich text content with proper styling.
+
+**Props:**
+- `content: string` - HTML content to display
+- `className?: string` - Additional CSS classes
+
+**Example:**
+```tsx
+import { RichTextDisplay } from '@/components/shared/form/RichTextEditor';
+
+function QuestionPreview({ content }) {
+  return <RichTextDisplay content={content} />;
+}
+```
+
+**Usage:**
+- Question previews
+- Display formatted content anywhere in the app
+
+---
+
+### stripHtml
+
+A utility function to extract plain text from HTML content.
+
+**Example:**
+```tsx
+import { stripHtml } from '@/components/shared/form/RichTextEditor';
+
+const plainText = stripHtml('<p>Hello <strong>world</strong></p>');
+// Output: "Hello world"
+```
+
+**Usage:**
+- Preview snippets
+- Search indexing
+- Plain text fallbacks
+
+---
+
+## Rich Text Styling
+
+The rich text editor uses Tailwind's prose classes. Custom styles are in `src/app/globals.css`:
+
+- `.ProseMirror` - Editor container styles
+- `.prose` - Rich text display styles
+- Custom placeholder styles for empty editor
+
+## Mobile Support
+
+All components are fully responsive:
+- Touch-friendly toolbar buttons
+- Optimized button sizes for mobile
+- Responsive toolbar layout with wrapping
+- Proper focus handling on mobile keyboards
+
+## Accessibility
+
+- ARIA labels on all interactive elements
+- Keyboard navigation support
+- Screen reader compatible
+- Proper focus management
+- Semantic HTML output
