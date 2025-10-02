@@ -4,9 +4,17 @@
 
 Revamp quiz and question creation/editing flow to provide better mobile experience with drag-to-resize functionality and improved responsive layouts.
 
+## ⚠️ Important Update (Refactored)
+
+**Per code review feedback, the implementation has been refactored:**
+- ❌ **DO NOT** modify shadcn/ui components in `components/ui/`
+- ✅ **Created new component:** `ResizableSheet` that wraps the original Sheet
+- ✅ **Reverted:** `sheet.tsx` to original shadcn/ui state
+- ✅ All functionality preserved, architecture follows best practices
+
 ## ✨ Key Features
 
-### 1. Drag-to-Resize Mobile Sheets
+### 1. Drag-to-Resize Mobile Sheets (ResizableSheet Component)
 - ✅ Implemented custom `useDragResize` hook for touch/mouse drag events
 - ✅ Three snap points: 60vh, 80vh, 95vh (customizable)
 - ✅ Smooth transitions with visual feedback
@@ -26,10 +34,13 @@ Revamp quiz and question creation/editing flow to provide better mobile experien
 - ✅ Responsive grid breakpoints (sm: instead of md:)
 - ✅ Safe area padding for notched devices
 
-## 📁 Files Changed (11 files)
+## 📁 Files Changed
 
-### Core Components
-- `src/components/ui/sheet.tsx` - Added drag-to-resize functionality
+### New Components
+- `src/components/shared/ui/ResizableSheet.tsx` - New wrapper component for resizable sheets
+
+### Core Components (Reverted)
+- `src/components/ui/sheet.tsx` - **Restored to original shadcn/ui state**
 
 ### Modal Pages
 - `src/app/instructor/quizzes/@modal/(.)new/page.tsx` - Quiz creation

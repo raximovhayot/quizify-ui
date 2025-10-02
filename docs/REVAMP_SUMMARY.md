@@ -4,6 +4,20 @@
 
 This document summarizes the comprehensive revamp of the quiz and question management flow, focusing on improved mobile responsiveness and user experience.
 
+## ⚠️ Important Architecture Update
+
+**Per code review feedback, the implementation was refactored to follow best practices:**
+
+### What Changed
+- ❌ **Initial approach:** Modified `src/components/ui/sheet.tsx` (shadcn/ui component)
+- ✅ **Final approach:** Created new `ResizableSheet` component that wraps the original
+- ✅ **Result:** Original UI library components remain untouched, functionality preserved
+
+### Why This Matters
+- Maintains clean separation between UI library and custom components
+- Easier to upgrade shadcn/ui components in the future
+- Follows best practice of extending rather than modifying third-party components
+
 ## Key Improvements
 
 ### 1. 🎯 Drag-to-Resize Mobile Sheets
@@ -85,42 +99,46 @@ This document summarizes the comprehensive revamp of the quiz and question manag
 
 ## Files Modified
 
-### Core Components
-1. `src/components/ui/sheet.tsx`
-   - Added drag-to-resize functionality
-   - Enhanced SheetContent with resizable prop
-   - Improved SheetHeader with hasResizeHandle prop
-   - Added visual drag handle
+### New Components Created
+1. **`src/components/shared/ui/ResizableSheet.tsx`** - NEW resizable sheet wrapper
+   - Contains all drag-to-resize functionality
+   - Wraps original shadcn/ui Sheet components
+   - Exports: `ResizableSheet`, `ResizableSheetContent`, `ResizableSheetHeader`, `ResizableSheetTitle`
+
+### Core UI Components
+2. **`src/components/ui/sheet.tsx`** - REVERTED to original shadcn/ui state
+   - No modifications to third-party UI library components
+   - Maintains clean separation between library and custom code
 
 ### Modal Pages
-2. `src/app/instructor/quizzes/@modal/(.)new/page.tsx`
-   - Integrated resizable sheet for quiz creation
+3. `src/app/instructor/quizzes/@modal/(.)new/page.tsx`
+   - Updated to use ResizableSheet components
    
-3. `src/app/instructor/quizzes/@modal/(.)[quizId]/edit/page.tsx`
-   - Added responsive layout for quiz editing
+4. `src/app/instructor/quizzes/@modal/(.)[quizId]/edit/page.tsx`
+   - Updated to use ResizableSheet components
    - Unified mobile/desktop rendering
 
 ### Feature Components
-4. `src/components/features/instructor/quiz/components/CreateQuestionModal.tsx`
-   - Updated to use resizable sheets
+5. `src/components/features/instructor/quiz/components/CreateQuestionModal.tsx`
+   - Updated to use ResizableSheet components
    
-5. `src/components/features/instructor/quiz/components/questions-list/EditQuestionDialog.tsx`
-   - Enhanced with drag-to-resize
+6. `src/components/features/instructor/quiz/components/questions-list/EditQuestionDialog.tsx`
+   - Updated to use ResizableSheet components
 
 ### Form Components
-6. `src/components/features/instructor/quiz/components/QuizForm.tsx`
+7. `src/components/features/instructor/quiz/components/QuizForm.tsx`
    - Improved responsive grid breakpoints
    - Full-width mobile buttons
 
-7. `src/components/features/instructor/quiz/components/forms/BaseQuestionForm.tsx`
+8. `src/components/features/instructor/quiz/components/forms/BaseQuestionForm.tsx`
    - Responsive layout updates
    - Mobile-optimized button layout
 
-8. `src/components/features/instructor/quiz/components/forms/MatchingQuestionForm.tsx`
+9. `src/components/features/instructor/quiz/components/forms/MatchingQuestionForm.tsx`
    - Added mobile-friendly labels
    - Improved paired input layout
 
-9. `src/components/features/instructor/quiz/components/forms/RankingQuestionForm.tsx`
+10. `src/components/features/instructor/quiz/components/forms/RankingQuestionForm.tsx`
    - Better button grouping on mobile
    - Full-width buttons for touch
 
