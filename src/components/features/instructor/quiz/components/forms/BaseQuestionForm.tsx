@@ -86,8 +86,8 @@ export function BaseQuestionForm({
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(submit)} className="space-y-4">
         {/* Type is fixed; no selector here */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div className="md:col-span-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="sm:col-span-2">
             <Label htmlFor="points">
               {t('common.question.points', { fallback: 'Points' })}
             </Label>
@@ -145,18 +145,23 @@ export function BaseQuestionForm({
 
         <Separator />
 
-        <div className="flex justify-end gap-2 pt-2">
+        <div className="flex flex-col sm:flex-row justify-end gap-2 pt-2">
           {onCancel && (
             <Button
               type="button"
               variant="outline"
               onClick={onCancel}
               disabled={isSubmitting}
+              className="w-full sm:w-auto"
             >
               {t('common.cancel', { fallback: 'Cancel' })}
             </Button>
           )}
-          <Button type="submit" disabled={isSubmitting}>
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full sm:w-auto"
+          >
             {isSubmitting
               ? t('common.saving', { fallback: 'Saving...' })
               : initialData

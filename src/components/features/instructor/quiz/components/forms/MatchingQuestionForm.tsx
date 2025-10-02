@@ -60,33 +60,47 @@ export function MatchingQuestionForm(props: MatchingQuestionFormProps) {
             fallback: 'Matching pairs',
           })}
         </Label>
-        <div className="space-y-2">
+        <div className="space-y-3">
           {pairs.map((_, index) => (
             <div
               key={index}
-              className="grid grid-cols-1 sm:grid-cols-5 gap-2 items-center"
+              className="grid grid-cols-1 sm:grid-cols-5 gap-2 items-end"
             >
-              <Input
-                className="sm:col-span-2"
-                placeholder={t('common.left', { fallback: 'Left' })}
-                {...register(`matchingPairs.${index}.left` as const)}
-              />
-              <Input
-                className="sm:col-span-2"
-                placeholder={t('common.right', { fallback: 'Right' })}
-                {...register(`matchingPairs.${index}.right` as const)}
-              />
+              <div className="sm:col-span-2 space-y-1">
+                <Label className="text-xs text-muted-foreground sm:hidden">
+                  {t('common.left', { fallback: 'Left' })}
+                </Label>
+                <Input
+                  placeholder={t('common.left', { fallback: 'Left' })}
+                  {...register(`matchingPairs.${index}.left` as const)}
+                />
+              </div>
+              <div className="sm:col-span-2 space-y-1">
+                <Label className="text-xs text-muted-foreground sm:hidden">
+                  {t('common.right', { fallback: 'Right' })}
+                </Label>
+                <Input
+                  placeholder={t('common.right', { fallback: 'Right' })}
+                  {...register(`matchingPairs.${index}.right` as const)}
+                />
+              </div>
               <Button
                 type="button"
                 variant="destructive"
                 size="sm"
                 onClick={() => handleRemove(index)}
+                className="w-full sm:w-auto"
               >
                 {t('common.remove', { fallback: 'Remove' })}
               </Button>
             </div>
           ))}
-          <Button type="button" variant="outline" onClick={handleAdd}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleAdd}
+            className="w-full sm:w-auto"
+          >
             {t('common.add', { fallback: 'Add' })}
           </Button>
           {matchingErrorMsg && (

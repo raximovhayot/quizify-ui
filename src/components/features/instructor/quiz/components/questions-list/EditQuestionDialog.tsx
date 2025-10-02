@@ -6,18 +6,18 @@ import { useTranslations } from 'next-intl';
 
 import { useResponsive } from '@/components/shared/hooks/useResponsive';
 import {
+  ResizableSheet,
+  ResizableSheetContent,
+  ResizableSheetHeader,
+  ResizableSheetTitle,
+} from '@/components/shared/ui/ResizableSheet';
+import {
   Dialog,
   DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
 
 import type { TInstructorQuestionForm } from '../../schemas/questionSchema';
 import { QuestionDataDto } from '../../types/question';
@@ -57,21 +57,23 @@ export function EditQuestionDialog({
   // Mobile: Use Sheet (bottom drawer)
   if (isMobile) {
     return (
-      <Sheet open={open} onOpenChange={(next) => !next && onClose()}>
-        <SheetContent
+      <ResizableSheet open={open} onOpenChange={(next) => !next && onClose()}>
+        <ResizableSheetContent
           side="bottom"
-          className="h-[90vh] overflow-y-auto px-4 pb-safe rounded-t-2xl"
+          resizable
+          snapPoints={['60vh', '80vh', '95vh']}
+          className="overflow-y-auto px-4 pb-safe rounded-t-2xl"
         >
-          <SheetHeader className="pb-4">
-            <SheetTitle>
+          <ResizableSheetHeader className="pb-4" hasResizeHandle>
+            <ResizableSheetTitle>
               {t('common.editQuestion', {
                 fallback: 'Edit Question',
               })}
-            </SheetTitle>
-          </SheetHeader>
+            </ResizableSheetTitle>
+          </ResizableSheetHeader>
           <div className="pb-8">{formContent}</div>
-        </SheetContent>
-      </Sheet>
+        </ResizableSheetContent>
+      </ResizableSheet>
     );
   }
 

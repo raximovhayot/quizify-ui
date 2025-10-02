@@ -61,43 +61,56 @@ export function RankingQuestionForm(props: RankingQuestionFormProps) {
             fallback: 'Ranking items',
           })}
         </Label>
-        <div className="space-y-2">
+        <div className="space-y-3">
           {items.map((_, index) => (
-            <div key={index} className="flex items-center gap-2">
+            <div
+              key={index}
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2"
+            >
               <Input
                 className="flex-1"
                 placeholder={t('common.item', { fallback: 'Item' })}
                 {...register(`rankingItems.${index}` as const)}
               />
-              <Button
-                type="button"
-                size="sm"
-                variant="secondary"
-                onClick={() => moveItem(index, Math.max(0, index - 1))}
-              >
-                {t('common.up', { fallback: 'Up' })}
-              </Button>
-              <Button
-                type="button"
-                size="sm"
-                variant="secondary"
-                onClick={() =>
-                  moveItem(index, Math.min(items.length - 1, index + 1))
-                }
-              >
-                {t('common.down', { fallback: 'Down' })}
-              </Button>
-              <Button
-                type="button"
-                size="sm"
-                variant="destructive"
-                onClick={() => removeItem(index)}
-              >
-                {t('common.remove', { fallback: 'Remove' })}
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => moveItem(index, Math.max(0, index - 1))}
+                  className="flex-1 sm:flex-none"
+                >
+                  {t('common.up', { fallback: 'Up' })}
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="secondary"
+                  onClick={() =>
+                    moveItem(index, Math.min(items.length - 1, index + 1))
+                  }
+                  className="flex-1 sm:flex-none"
+                >
+                  {t('common.down', { fallback: 'Down' })}
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="destructive"
+                  onClick={() => removeItem(index)}
+                  className="flex-1 sm:flex-none"
+                >
+                  {t('common.remove', { fallback: 'Remove' })}
+                </Button>
+              </div>
             </div>
           ))}
-          <Button type="button" variant="outline" onClick={addItem}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={addItem}
+            className="w-full sm:w-auto"
+          >
             {t('common.add', { fallback: 'Add' })}
           </Button>
           {rankingErrorMsg && (

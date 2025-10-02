@@ -8,13 +8,13 @@ import { usePathname, useRouter } from 'next/navigation';
 import { CreateQuizContainer } from '@/components/features/instructor/quiz/components/CreateQuizContainer';
 import { ROUTES_APP } from '@/components/features/instructor/routes';
 import { useResponsive } from '@/components/shared/hooks/useResponsive';
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
+  ResizableSheet,
+  ResizableSheetContent,
+  ResizableSheetHeader,
+  ResizableSheetTitle,
+} from '@/components/shared/ui/ResizableSheet';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 
 export default function CreateQuizModalPage() {
   const router = useRouter();
@@ -41,21 +41,23 @@ export default function CreateQuizModalPage() {
   // Mobile: Use Sheet (bottom drawer)
   if (isMobile) {
     return (
-      <Sheet open={open} onOpenChange={handleOpenChange}>
-        <SheetContent
+      <ResizableSheet open={open} onOpenChange={handleOpenChange}>
+        <ResizableSheetContent
           side="bottom"
-          className="h-[90vh] overflow-y-auto px-4 pb-safe rounded-t-2xl"
+          resizable
+          snapPoints={['60vh', '80vh', '95vh']}
+          className="overflow-y-auto px-4 pb-safe rounded-t-2xl"
         >
-          <SheetHeader className="pb-4">
-            <SheetTitle>
+          <ResizableSheetHeader className="pb-4" hasResizeHandle>
+            <ResizableSheetTitle>
               {t('instructor.quiz.create.dialogTitle', {
                 fallback: 'Create Quiz',
               })}
-            </SheetTitle>
-          </SheetHeader>
+            </ResizableSheetTitle>
+          </ResizableSheetHeader>
           <div className="pb-8">{content}</div>
-        </SheetContent>
-      </Sheet>
+        </ResizableSheetContent>
+      </ResizableSheet>
     );
   }
 
