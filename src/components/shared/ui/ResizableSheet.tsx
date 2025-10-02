@@ -10,6 +10,23 @@ import {
 } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 
+// Helper function to convert CSS height values to pixels
+function parseHeightToPixels(height: string, viewportHeight: number): number {
+  if (height.endsWith('vh')) {
+    const value = parseFloat(height.replace('vh', ''));
+    return (value / 100) * viewportHeight;
+  }
+  if (height.endsWith('%')) {
+    const value = parseFloat(height.replace('%', ''));
+    return (value / 100) * viewportHeight;
+  }
+  if (height.endsWith('px')) {
+    return parseFloat(height.replace('px', ''));
+  }
+  // Fallback: try to parse as number (assume pixels)
+  return parseFloat(height) || 0;
+}
+
 // Hook to handle drag-to-resize for bottom sheets
 function useDragResize(
   enabled: boolean,
@@ -26,12 +43,16 @@ function useDragResize(
     (e: React.TouchEvent | React.MouseEvent) => {
       if (!enabled) return;
       setIsDragging(true);
-      const clientY = 'touches' in e ? e.touches[0]?.clientY ?? 0 : e.clientY;
+      const clientY = 'touches' in e ? (e.touches[0]?.clientY ?? 0) : e.clientY;
       startY.current = clientY;
-      startHeight.current =
-        window.innerHeight * (currentSnapIndex / (snapPoints.length - 1));
+      // Calculate the actual pixel height of the current snap point
+      const currentSnapPoint = snapPoints[currentSnapIndex] ?? snapPoints[0];
+      startHeight.current = parseHeightToPixels(
+        currentSnapPoint!,
+        window.innerHeight
+      );
     },
-    [enabled, currentSnapIndex, snapPoints.length]
+    [enabled, currentSnapIndex, snapPoints]
   );
 
   const handleDragMove = React.useCallback(
@@ -44,17 +65,18 @@ function useDragResize(
       // Calculate which snap point we're closest to
       const viewportHeight = window.innerHeight;
       const targetHeight = startHeight.current + deltaY;
-      const targetPercentage = (targetHeight / viewportHeight) * 100;
+
+      // Convert all snap points to pixels
+      const snapHeightsInPixels = snapPoints.map((point) =>
+        parseHeightToPixels(point, viewportHeight)
+      );
 
       // Find closest snap point
-      const snapPercentages = snapPoints.map((point) =>
-        parseInt(point.replace('vh', ''), 10)
-      );
       let closestIndex = 0;
-      let minDiff = Math.abs(snapPercentages[0]! - targetPercentage);
+      let minDiff = Math.abs(snapHeightsInPixels[0]! - targetHeight);
 
-      snapPercentages.forEach((snap, index) => {
-        const diff = Math.abs(snap - targetPercentage);
+      snapHeightsInPixels.forEach((snapHeight, index) => {
+        const diff = Math.abs(snapHeight - targetHeight);
         if (diff < minDiff) {
           minDiff = diff;
           closestIndex = index;
@@ -146,7 +168,8 @@ function ResizableSheetContent({
   );
 }
 
-interface ResizableSheetHeaderProps extends Omit<React.ComponentProps<typeof SheetHeader>, 'children'> {
+interface ResizableSheetHeaderProps
+  extends Omit<React.ComponentProps<typeof SheetHeader>, 'children'> {
   hasResizeHandle?: boolean;
   children?: React.ReactNode;
 }
