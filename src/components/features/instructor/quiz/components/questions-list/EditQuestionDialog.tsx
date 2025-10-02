@@ -4,6 +4,7 @@ import { XIcon } from 'lucide-react';
 
 import { useTranslations } from 'next-intl';
 
+import { useResponsive } from '@/components/shared/hooks/useResponsive';
 import {
   Dialog,
   DialogClose,
@@ -11,6 +12,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
 
 import type { TInstructorQuestionForm } from '../../schemas/questionSchema';
 import { QuestionDataDto } from '../../types/question';
@@ -34,7 +41,41 @@ export function EditQuestionDialog({
   onSubmit,
 }: Readonly<EditQuestionDialogProps>) {
   const t = useTranslations();
+  const { isMobile } = useResponsive();
 
+  const formContent = question ? (
+    <QuestionFormRenderer
+      type={question.questionType}
+      quizId={quizId}
+      initialData={question}
+      isSubmitting={isSubmitting}
+      onCancel={onClose}
+      onSubmit={onSubmit}
+    />
+  ) : null;
+
+  // Mobile: Use Sheet (bottom drawer)
+  if (isMobile) {
+    return (
+      <Sheet open={open} onOpenChange={(next) => !next && onClose()}>
+        <SheetContent
+          side="bottom"
+          className="h-[90vh] overflow-y-auto px-4 pb-safe"
+        >
+          <SheetHeader className="pb-4">
+            <SheetTitle>
+              {t('common.editQuestion', {
+                fallback: 'Edit Question',
+              })}
+            </SheetTitle>
+          </SheetHeader>
+          <div className="pb-8">{formContent}</div>
+        </SheetContent>
+      </Sheet>
+    );
+  }
+
+  // Desktop: Use Dialog
   return (
     <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
       <DialogContent
@@ -57,16 +98,7 @@ export function EditQuestionDialog({
             })}
           </DialogTitle>
         </DialogHeader>
-        {question && (
-          <QuestionFormRenderer
-            type={question.questionType}
-            quizId={quizId}
-            initialData={question}
-            isSubmitting={isSubmitting}
-            onCancel={onClose}
-            onSubmit={onSubmit}
-          />
-        )}
+        {formContent}
       </DialogContent>
     </Dialog>
   );

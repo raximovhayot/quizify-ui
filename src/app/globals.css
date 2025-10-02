@@ -167,4 +167,80 @@
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-muted-foreground/50;
   }
+
+  /* Tiptap editor styles */
+  .ProseMirror {
+    @apply focus:outline-none;
+  }
+
+  .ProseMirror p.is-editor-empty:first-child::before {
+    @apply text-muted-foreground;
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+  }
+
+  /* Prose styles for rich text display */
+  .prose {
+    @apply text-foreground;
+  }
+
+  .prose p {
+    @apply mt-0 mb-3;
+  }
+
+  .prose strong {
+    @apply font-semibold;
+  }
+
+  .prose em {
+    @apply italic;
+  }
+
+  .prose code {
+    @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono;
+  }
+
+  .prose ul,
+  .prose ol {
+    @apply my-3 pl-6;
+  }
+
+  .prose ul {
+    @apply list-disc;
+  }
+
+  .prose ol {
+    @apply list-decimal;
+  }
+
+  .prose li {
+    @apply my-1;
+  }
+
+  .prose h1,
+  .prose h2,
+  .prose h3 {
+    @apply font-semibold mt-4 mb-2;
+  }
+
+  .prose h1 {
+    @apply text-xl;
+  }
+
+  .prose h2 {
+    @apply text-lg;
+  }
+
+  .prose h3 {
+    @apply text-base;
+  }
+
+  /* Mobile safe area support */
+  @supports (padding-bottom: env(safe-area-inset-bottom)) {
+    .pb-safe {
+      padding-bottom: max(2rem, env(safe-area-inset-bottom));
+    }
+  }
 }
