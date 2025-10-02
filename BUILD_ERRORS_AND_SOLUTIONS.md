@@ -25,17 +25,48 @@ getaddrinfo ENOTFOUND fonts.googleapis.com
 ```
 
 **Root Cause:**  
-The build environment cannot access external domains like `fonts.googleapis.com` due to sandboxed environment restrictions.
+The build environment cannot access external domains like `fonts.googleapis.com` due to network restrictions in certain CI/CD environments or sandboxed builds.
 
 **Location:**  
 `src/app/layout.tsx` (lines 3, 9-17)
 
-**Solution:**  
-Removed Google Fonts imports and font initialization. The application now uses system fonts instead.
+**Current Status:**  
+⚠️ Google Fonts are restored as requested, but builds will fail in environments where `fonts.googleapis.com` is blocked. 
+
+**Solutions:**
+
+**Option 1: Configure Network Access (Recommended for Production)**
+- Add `fonts.googleapis.com` and `fonts.gstatic.com` to your CI/CD allowlist
+- For GitHub Actions: Configure setup steps before firewall activation
+- For other CI/CD: Check provider-specific documentation for network allowlisting
+
+**Option 2: Use Local Fonts**
+1. Download Geist and Geist Mono font files
+2. Place them in `/public/fonts/` directory
+3. Update `src/app/layout.tsx` to use `next/font/local`:
+
+```typescript
+import localFont from 'next/font/local';
+
+const geistSans = localFont({
+  src: '../public/fonts/GeistVF.woff2',
+  variable: '--font-geist-sans',
+  weight: '100 900',
+});
+
+const geistMono = localFont({
+  src: '../public/fonts/GeistMonoVF.woff2',
+  variable: '--font-geist-mono',
+  weight: '100 900',
+});
+```
+
+**Option 3: Skip Font Loading in CI (Quick Fix)**
+Use environment-based conditional loading or system fonts fallback for CI builds.
 
 **Changed:**
 ```typescript
-// BEFORE
+// CURRENT (will fail if fonts.googleapis.com is blocked)
 import { Geist, Geist_Mono } from 'next/font/google';
 
 const geistSans = Geist({
@@ -47,29 +78,21 @@ const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
 });
-
-// ...
-<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-
-// AFTER
-// Removed Google Fonts imports
-<body className="antialiased">
 ```
 
-**Alternative Solutions:**
-1. Use local font files by downloading Geist and Geist Mono and adding them to `/public/fonts/`
-2. Configure Next.js to use `next/font/local` with the downloaded font files
-3. Use environment-specific font loading (Google Fonts in production, system fonts in CI)
+**Font Files:**
+- Geist: https://github.com/vercel/geist-font
+- Download variable fonts (GeistVF.woff2, GeistMonoVF.woff2) for best performance
 
 ---
 
 ### 2. ❌ Zod Enum Usage Incompatibility with Zod v4
 
 **Error:**
-Build would fail at runtime with schema parsing errors when using TypeScript enums with `z.enum()`.
+TypeScript enums passed directly to `z.enum()` cause runtime validation errors in Zod v4.
 
 **Root Cause:**  
-In Zod v4, `z.enum()` expects an array of string literals, not TypeScript enum objects. For TypeScript enums, you must use `z.nativeEnum()`.
+In Zod v4, `z.enum()` expects an array of string literals `[string, ...string[]]`, not a TypeScript enum object. The previous workaround of using `z.nativeEnum()` is now deprecated in Zod v4.
 
 **Locations:**
 - `src/components/features/profile/schemas/profile.ts` (lines 80, 116, 121)
@@ -77,24 +100,69 @@ In Zod v4, `z.enum()` expects an array of string literals, not TypeScript enum o
 - `src/components/features/instructor/quiz/schemas/questionSchema.ts` (lines 24, 149)
 
 **Solution:**  
-Changed all occurrences of `z.enum(TypeScriptEnum)` to `z.nativeEnum(TypeScriptEnum)`.
+Convert TypeScript enums to arrays of their values using `as const` for type inference.
 
 **Changed:**
 ```typescript
-// BEFORE
+// BEFORE (doesn't work in Zod v4)
 dashboardType: z.enum(DashboardType, {
   message: t('auth.validation.dashboardTypeRequired', {
     default: 'Please select your role',
   }),
 }),
 
-// AFTER
-dashboardType: z.nativeEnum(DashboardType, {
-  message: t('auth.validation.dashboardTypeRequired', {
-    default: 'Please select your role',
-  }),
-}),
+// DEPRECATED (do not use)
+dashboardType: z.nativeEnum(DashboardType, { ... })
+
+// AFTER (correct Zod v4 usage)
+dashboardType: z.enum(
+  [DashboardType.INSTRUCTOR, DashboardType.STUDENT] as const,
+  {
+    message: t('auth.validation.dashboardTypeRequired', {
+      default: 'Please select your role',
+    }),
+  }
+),
 ```
+
+**Examples by Enum:**
+
+1. **DashboardType** (2 values):
+```typescript
+z.enum([DashboardType.INSTRUCTOR, DashboardType.STUDENT] as const, { ... })
+```
+
+2. **Language** (3 values):
+```typescript
+z.enum([Language.EN, Language.RU, Language.UZ] as const, { ... })
+```
+
+3. **AttemptStatus** (3 values):
+```typescript
+z.enum([
+  AttemptStatus.CREATED,
+  AttemptStatus.STARTED,
+  AttemptStatus.FINISHED
+] as const)
+```
+
+4. **QuestionType** (7 values):
+```typescript
+z.enum([
+  QuestionType.MULTIPLE_CHOICE,
+  QuestionType.TRUE_FALSE,
+  QuestionType.SHORT_ANSWER,
+  QuestionType.FILL_IN_BLANK,
+  QuestionType.ESSAY,
+  QuestionType.MATCHING,
+  QuestionType.RANKING,
+] as const)
+```
+
+**Why This Works:**
+- `as const` creates a readonly tuple type that Zod can properly infer
+- This approach is type-safe and doesn't use deprecated APIs
+- The array explicitly lists all enum values, making validation work correctly
 
 **Files Modified:**
 1. `profile.ts` - Fixed `DashboardType` and `Language` enums (2 occurrences)

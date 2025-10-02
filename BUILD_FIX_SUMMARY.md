@@ -29,20 +29,31 @@ SKIP_ENV_VALIDATION=true npm run lint
 
 ## 🔧 Issues Fixed
 
-### 1. Google Fonts Loading Failure ❌ → ✅
-**Problem:** Build failed trying to fetch fonts from `fonts.googleapis.com` (not accessible in sandboxed environment)
+### 1. Google Fonts Loading Failure ⚠️
+**Problem:** Build failed trying to fetch fonts from `fonts.googleapis.com` (blocked in certain network environments)
 
-**Solution:** Removed Google Fonts imports, now using system fonts
+**Status:** Google Fonts restored but requires network access configuration
+
+**Solutions:**
+1. Add `fonts.googleapis.com` and `fonts.gstatic.com` to CI/CD allowlist
+2. Use local fonts with `next/font/local` (download Geist fonts to `/public/fonts/`)
+3. Configure environment-based font loading
 
 **Files Changed:**
-- `src/app/layout.tsx`
+- `src/app/layout.tsx` (Google Fonts imports restored)
+
+**Note:** See BUILD_ERRORS_AND_SOLUTIONS.md for detailed local font setup instructions.
 
 ---
 
 ### 2. Zod v4 Enum Usage ❌ → ✅
-**Problem:** Using `z.enum()` with TypeScript enums (incompatible with Zod v4)
+**Problem:** `z.enum()` with TypeScript enums fails. `z.nativeEnum()` is deprecated in Zod v4.
 
-**Solution:** Changed to `z.nativeEnum()` for all TypeScript enums
+**Solution:** Convert enums to arrays with `as const`:
+```typescript
+// Correct Zod v4 approach
+z.enum([DashboardType.INSTRUCTOR, DashboardType.STUDENT] as const, { ... })
+```
 
 **Files Changed:**
 - `src/components/features/profile/schemas/profile.ts` (2 occurrences)

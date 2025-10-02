@@ -7,7 +7,11 @@ export const attemptListDTOSchema = z.object({
   id: z.number().int().positive(),
   title: z.string(),
   attempt: z.number().int().nonnegative(),
-  status: z.nativeEnum(AttemptStatus),
+  status: z.enum([
+    AttemptStatus.CREATED,
+    AttemptStatus.STARTED,
+    AttemptStatus.FINISHED,
+  ] as const),
   correct: z.number().int().nonnegative().optional(),
   incorrect: z.number().int().nonnegative().optional(),
   notChosen: z.number().int().nonnegative().optional(),
