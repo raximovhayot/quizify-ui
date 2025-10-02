@@ -90,7 +90,8 @@
       },
       "answer": {
         "label": "Javob",
-        "placeholder": "Javob matnini kiriting"
+        "placeholder": "Javob matnini kiriting",
+        "richPlaceholder": "Javob matnini kiriting. Formatlashdan foydalanishingiz mumkin..."
       },
       "correct": "To'g'ri",
       "essay": {
@@ -301,7 +302,9 @@
     }
   },
   "profile": {
-    "details": { "title": "Ma'lumotlarni tahrirlash" },
+    "details": {
+      "title": "Ma'lumotlarni tahrirlash"
+    },
     "update": {
       "success": "Profil muvaffaqiyatli yangilandi",
       "error": "Profilni yangilab bo'lmadi"
@@ -358,7 +361,44 @@
       "filter": {
         "all": "Barcha holatlar"
       },
-      "view": "Ko'rish",
+      "view": {
+        "title": "Test tafsilotlari",
+        "stub": "Bu #{id}-testni ko'rish uchun vaqtinchalik sahifa. Batafsil ko'rinish keyinroq qo'shiladi.",
+        "backToList": "Testlarga qaytish",
+        "id": "ID: {id}",
+        "description": "Tavsif",
+        "questions": {
+          "title": "Savollar",
+          "addQuestion": "Savol qo'shish",
+          "createFirst": "Savol yaratish",
+          "empty": {
+            "title": "Hali savollar yo'q",
+            "description": "Birinchi savolingizni qo'shib, testingizni yaratishni boshlang."
+          },
+          "placeholder": {
+            "title": "Savollar bu yerda ko'rsatiladi",
+            "description": "Batafsil savol muharriri va ko'ruvchisi keyingi bosqichda qo'shiladi."
+          },
+          "editQuestions": "Savollarni tahrirlash"
+        },
+        "created": "Yaratilgan",
+        "lastModified": "Oxirgi o'zgarish",
+        "timeLimit": "Vaqt limiti",
+        "attempts": "Urinishlar",
+        "shuffleSettings": "Aralashtirish sozlamalari",
+        "information": {
+          "title": "Test ma'lumotlari"
+        },
+        "settings": {
+          "title": "Test sozlamalari",
+          "enabled": "Ha",
+          "disabled": "Yo'q"
+        },
+        "error": {
+          "title": "Test topilmadi",
+          "description": "Siz qidirayotgan test mavjud emas yoki o'chirilgan."
+        }
+      },
       "edit": {
         "dialogTitle": "Testni tahrirlash",
         "title": "Testni tahrirlash",
@@ -371,9 +411,10 @@
         }
       },
       "delete": {
+        "confirm": "Ushbu testni o'chirishni xohlaysizmi?",
         "success": "Test muvaffaqiyatli o'chirildi",
         "error": "Testni o'chirib bo'lmadi",
-        "confirm": {
+        "dialog": {
           "title": "Testni o'chirish",
           "description": "Ushbu testni o'chirishni xohlaysizmi? Bu amalni bekor qilib bo'lmaydi."
         }
@@ -484,15 +525,6 @@
         }
       },
       "untitled": "Nomsiz",
-      "delete": {
-        "confirm": "Ushbu testni o'chirishni xohlaysizmi?",
-        "success": "Test muvaffaqiyatli o'chirildi",
-        "error": "Testni o'chirib bo'lmadi",
-        "dialog": {
-          "title": "Testni o'chirish",
-          "description": "Ushbu testni o'chirishni xohlaysizmi? Bu amalni bekor qilib bo'lmaydi."
-        }
-      },
       "success": {
         "delete": "Test muvaffaqiyatli o'chirildi",
         "publish": "Test muvaffaqiyatli nashr etildi",
@@ -500,45 +532,6 @@
       },
       "row": {
         "aria": "{title} uchun test qatori"
-      },
-      "view": {
-        "title": "Test tafsilotlari",
-        "stub": "Bu #{id}-testni ko'rish uchun vaqtinchalik sahifa. Batafsil ko'rinish keyinroq qo'shiladi.",
-        "backToList": "Testlarga qaytish",
-        "id": "ID: {id}",
-        "description": "Tavsif",
-        "questions": "Savollar",
-        "created": "Yaratilgan",
-        "lastModified": "Oxirgi o'zgarish",
-        "timeLimit": "Vaqt limiti",
-        "attempts": "Urinishlar",
-        "shuffleSettings": "Aralashtirish sozlamalari",
-        "information": {
-          "title": "Test ma'lumotlari"
-        },
-        "settings": {
-          "title": "Test sozlamalari",
-          "enabled": "Ha",
-          "disabled": "Yo'q"
-        },
-        "questions": {
-          "title": "Savollar",
-          "addQuestion": "Savol qo'shish",
-          "createFirst": "Savol yaratish",
-          "empty": {
-            "title": "Hali savollar yo'q",
-            "description": "Birinchi savolingizni qo'shib, testingizni yaratishni boshlang."
-          },
-          "placeholder": {
-            "title": "Savollar bu yerda ko'rsatiladi",
-            "description": "Batafsil savol muharriri va ko'ruvchisi keyingi bosqichda qo'shiladi."
-          },
-          "editQuestions": "Savollarni tahrirlash"
-        },
-        "error": {
-          "title": "Test topilmadi",
-          "description": "Siz qidirayotgan test mavjud emas yoki o'chirilgan."
-        }
       }
     },
     "userMenu": {
@@ -577,8 +570,12 @@
   },
   "student": {
     "profile": {
-      "details": { "title": "Ma'lumotlarni tahrirlash" },
-      "password": { "title": "Parolni yangilash" }
+      "details": {
+        "title": "Ma'lumotlarni tahrirlash"
+      },
+      "password": {
+        "title": "Parolni yangilash"
+      }
     },
     "role": "Talaba",
     "navigation": {

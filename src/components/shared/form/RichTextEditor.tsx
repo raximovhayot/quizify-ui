@@ -90,15 +90,15 @@ export function RichTextEditor({
     return (
       <div
         className={cn(
-          'border rounded-md overflow-hidden bg-background',
+          'border rounded-xl overflow-hidden bg-background',
           disabled && 'opacity-60',
           className
         )}
       >
-        <div className="border-b bg-muted/30 p-2 flex flex-wrap items-center gap-1">
-          <div className="h-8 w-8 bg-muted rounded animate-pulse" />
-          <div className="h-8 w-8 bg-muted rounded animate-pulse" />
-          <div className="h-8 w-8 bg-muted rounded animate-pulse" />
+        <div className="border-b bg-muted/20 p-2 flex flex-wrap items-center gap-1">
+          <div className="h-8 w-8 bg-muted rounded-lg animate-pulse" />
+          <div className="h-8 w-8 bg-muted rounded-lg animate-pulse" />
+          <div className="h-8 w-8 bg-muted rounded-lg animate-pulse" />
         </div>
         <div className="p-3" style={{ minHeight }}>
           <div className="h-4 bg-muted rounded w-1/2 animate-pulse" />
@@ -110,13 +110,13 @@ export function RichTextEditor({
   return (
     <div
       className={cn(
-        'border rounded-md overflow-hidden bg-background',
+        'border rounded-xl overflow-hidden bg-background transition-all hover:border-primary/50',
         disabled && 'opacity-60',
         className
       )}
     >
       {/* Toolbar */}
-      <div className="border-b bg-muted/30 p-2 flex flex-wrap items-center gap-1">
+      <div className="border-b bg-muted/20 p-2 flex flex-wrap items-center gap-1">
         <Button
           type="button"
           variant="ghost"
@@ -125,7 +125,10 @@ export function RichTextEditor({
           disabled={
             disabled || !editor.can().chain().focus().toggleBold().run()
           }
-          className={cn('h-8 w-8 p-0', editor.isActive('bold') && 'bg-accent')}
+          className={cn(
+            'h-8 w-8 p-0 rounded-lg',
+            editor.isActive('bold') && 'bg-accent'
+          )}
           aria-label="Bold"
         >
           <Bold className="h-4 w-4" />
@@ -140,7 +143,7 @@ export function RichTextEditor({
             disabled || !editor.can().chain().focus().toggleItalic().run()
           }
           className={cn(
-            'h-8 w-8 p-0',
+            'h-8 w-8 p-0 rounded-lg',
             editor.isActive('italic') && 'bg-accent'
           )}
           aria-label="Italic"
@@ -156,7 +159,10 @@ export function RichTextEditor({
           disabled={
             disabled || !editor.can().chain().focus().toggleCode().run()
           }
-          className={cn('h-8 w-8 p-0', editor.isActive('code') && 'bg-accent')}
+          className={cn(
+            'h-8 w-8 p-0 rounded-lg',
+            editor.isActive('code') && 'bg-accent'
+          )}
           aria-label="Code"
         >
           <Code className="h-4 w-4" />
@@ -173,7 +179,7 @@ export function RichTextEditor({
             disabled || !editor.can().chain().focus().toggleBulletList().run()
           }
           className={cn(
-            'h-8 w-8 p-0',
+            'h-8 w-8 p-0 rounded-lg',
             editor.isActive('bulletList') && 'bg-accent'
           )}
           aria-label="Bullet List"
@@ -190,7 +196,7 @@ export function RichTextEditor({
             disabled || !editor.can().chain().focus().toggleOrderedList().run()
           }
           className={cn(
-            'h-8 w-8 p-0',
+            'h-8 w-8 p-0 rounded-lg',
             editor.isActive('orderedList') && 'bg-accent'
           )}
           aria-label="Ordered List"
@@ -206,7 +212,7 @@ export function RichTextEditor({
           size="sm"
           onClick={() => editor.chain().focus().undo().run()}
           disabled={disabled || !editor.can().chain().focus().undo().run()}
-          className="h-8 w-8 p-0"
+          className="h-8 w-8 p-0 rounded-lg"
           aria-label="Undo"
         >
           <Undo className="h-4 w-4" />
@@ -218,7 +224,7 @@ export function RichTextEditor({
           size="sm"
           onClick={() => editor.chain().focus().redo().run()}
           disabled={disabled || !editor.can().chain().focus().redo().run()}
-          className="h-8 w-8 p-0"
+          className="h-8 w-8 p-0 rounded-lg"
           aria-label="Redo"
         >
           <Redo className="h-4 w-4" />
