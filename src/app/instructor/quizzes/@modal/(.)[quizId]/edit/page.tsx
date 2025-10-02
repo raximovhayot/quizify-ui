@@ -11,14 +11,14 @@ import { useUpdateQuiz } from '@/components/features/instructor/quiz/hooks/useQu
 import { InstructorQuizUpdateRequest } from '@/components/features/instructor/quiz/types/quiz';
 import { ROUTES_APP } from '@/components/features/instructor/routes';
 import { useResponsive } from '@/components/shared/hooks/useResponsive';
+import {
+  ResizableSheet,
+  ResizableSheetContent,
+  ResizableSheetHeader,
+  ResizableSheetTitle,
+} from '@/components/shared/ui/ResizableSheet';
 import { ContentPlaceholder } from '@/components/shared/ui/ContentPlaceholder';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Page() {
@@ -80,28 +80,28 @@ export default function Page() {
 
     if (isMobile) {
       return (
-        <Sheet
+        <ResizableSheet
           open={open}
           onOpenChange={(nextOpen) => {
             if (!nextOpen) router.push(ROUTES_APP.quizzes.list());
           }}
         >
-          <SheetContent
+          <ResizableSheetContent
             side="bottom"
             resizable
             snapPoints={['60vh', '80vh', '95vh']}
             className="overflow-y-auto px-4 pb-safe rounded-t-2xl"
           >
-            <SheetHeader className="pb-4" hasResizeHandle>
-              <SheetTitle>
+            <ResizableSheetHeader className="pb-4" hasResizeHandle>
+              <ResizableSheetTitle>
                 {t('instructor.quiz.edit.dialogTitle', {
                   fallback: 'Edit Quiz',
                 })}
-              </SheetTitle>
-            </SheetHeader>
+              </ResizableSheetTitle>
+            </ResizableSheetHeader>
             <div className="pb-8">{errorContent}</div>
-          </SheetContent>
-        </Sheet>
+          </ResizableSheetContent>
+        </ResizableSheet>
       );
     }
 
@@ -177,7 +177,7 @@ export default function Page() {
   // Mobile: Use Sheet (bottom drawer)
   if (isMobile) {
     return (
-      <Sheet
+      <ResizableSheet
         open={open}
         onOpenChange={(nextOpen) => {
           if (!nextOpen) {
@@ -189,20 +189,20 @@ export default function Page() {
           }
         }}
       >
-        <SheetContent
+        <ResizableSheetContent
           side="bottom"
           resizable
           snapPoints={['60vh', '80vh', '95vh']}
           className="overflow-y-auto px-4 pb-safe rounded-t-2xl"
         >
-          <SheetHeader className="pb-4" hasResizeHandle>
-            <SheetTitle>
+          <ResizableSheetHeader className="pb-4" hasResizeHandle>
+            <ResizableSheetTitle>
               {t('instructor.quiz.edit.dialogTitle', { fallback: 'Edit Quiz' })}
-            </SheetTitle>
-          </SheetHeader>
+            </ResizableSheetTitle>
+          </ResizableSheetHeader>
           <div className="pb-8">{content}</div>
-        </SheetContent>
-      </Sheet>
+        </ResizableSheetContent>
+      </ResizableSheet>
     );
   }
 

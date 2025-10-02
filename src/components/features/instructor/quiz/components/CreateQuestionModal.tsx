@@ -8,6 +8,12 @@ import { useTranslations } from 'next-intl';
 
 import { useResponsive } from '@/components/shared/hooks/useResponsive';
 import {
+  ResizableSheet,
+  ResizableSheetContent,
+  ResizableSheetHeader,
+  ResizableSheetTitle,
+} from '@/components/shared/ui/ResizableSheet';
+import {
   Dialog,
   DialogClose,
   DialogContent,
@@ -22,12 +28,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
 
 import { useCreateQuestion } from '../hooks/useQuestions';
 import type { TInstructorQuestionForm } from '../schemas/questionSchema';
@@ -110,23 +110,23 @@ export function CreateQuestionModal({
   // Mobile: Use Sheet (bottom drawer)
   if (isMobile) {
     return (
-      <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent
+      <ResizableSheet open={open} onOpenChange={onOpenChange}>
+        <ResizableSheetContent
           side="bottom"
           resizable
           snapPoints={['60vh', '80vh', '95vh']}
           className="overflow-y-auto px-4 pb-safe rounded-t-2xl"
         >
-          <SheetHeader className="pb-4" hasResizeHandle>
-            <SheetTitle>
+          <ResizableSheetHeader className="pb-4" hasResizeHandle>
+            <ResizableSheetTitle>
               {t('common.createQuestion', {
                 fallback: 'Create Question',
               })}
-            </SheetTitle>
-          </SheetHeader>
+            </ResizableSheetTitle>
+          </ResizableSheetHeader>
           <div className="pb-8">{formContent}</div>
-        </SheetContent>
-      </Sheet>
+        </ResizableSheetContent>
+      </ResizableSheet>
     );
   }
 
