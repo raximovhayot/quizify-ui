@@ -432,16 +432,6 @@
           "error": "Test holatini yangilab bo'lmadi"
         }
       },
-      "time": {
-        "unlimited": "Cheklanmagan",
-        "minutes": "{minutes}d",
-        "hours": "{hours}s",
-        "hoursMinutes": "{hours}s {minutes}d"
-      },
-      "attempts": {
-        "unlimited": "Cheklanmagan",
-        "count": "{count} urinish"
-      },
       "action": {
         "view": "Ko'rish",
         "edit": "Tahrirlash",
