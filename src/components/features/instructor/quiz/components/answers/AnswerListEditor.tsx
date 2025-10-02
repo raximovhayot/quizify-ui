@@ -23,17 +23,12 @@ export function AnswerListEditor({
   disabled,
 }: AnswerListEditorProps) {
   const t = useTranslations();
-  const { control, register, watch } =
-    useFormContext<TInstructorQuestionForm>();
+  const { control, register } = useFormContext<TInstructorQuestionForm>();
 
   const { fields, append, remove, move } = useFieldArray<
     TInstructorQuestionForm,
     'answers'
   >({ control, name });
-
-  const answers = watch(name) as
-    | { content: string; correct?: boolean }[]
-    | undefined;
 
   const handleAdd = () => {
     append({
@@ -98,7 +93,7 @@ export function AnswerListEditor({
           <Controller
             control={control}
             name={`${name}.${index}.content` as const}
-            render={({ field }) => (
+            render={() => (
               <RichTextField
                 control={control}
                 name={`${name}.${index}.content` as const}

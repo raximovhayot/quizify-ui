@@ -59,7 +59,7 @@ const trueFalsePreview: OptionsPreviewFn = ({ q, showCorrect, t }) => {
   );
 };
 
-const rankingPreview: OptionsPreviewFn = ({ q, showCorrect, t }) => {
+const rankingPreview: OptionsPreviewFn = ({ q, showCorrect }) => {
   const rawAnswers = Array.isArray(q.answers) ? q.answers : [];
   let items: string[] = rawAnswers.length
     ? rawAnswers
@@ -115,7 +115,7 @@ const rankingPreview: OptionsPreviewFn = ({ q, showCorrect, t }) => {
   );
 };
 
-const matchingPreview: OptionsPreviewFn = ({ q, showCorrect, t }) => {
+const matchingPreview: OptionsPreviewFn = ({ q, showCorrect }) => {
   const rawAnswers = Array.isArray(q.answers) ? q.answers : [];
   let pairs: { left: string; right?: string }[] = [];
   try {
