@@ -123,13 +123,16 @@ const matchingPreview: OptionsPreviewFn = ({ q, showCorrect, t }) => {
     ) {
       const parsed = JSON.parse(q.matchingConfig);
       if (Array.isArray(parsed)) {
-        pairs = parsed.map((p: any) => {
+        pairs = parsed.map((p: unknown) => {
           if (Array.isArray(p) && p.length >= 2)
             return { left: String(p[0]), right: String(p[1]) };
           if (p && typeof p === 'object')
             return {
-              left: String(p.left ?? ''),
-              right: p.right != null ? String(p.right) : undefined,
+              left: String((p as Record<string, unknown>).left ?? ''),
+              right:
+                (p as Record<string, unknown>).right != null
+                  ? String((p as Record<string, unknown>).right)
+                  : undefined,
             };
           return { left: String(p) };
         });

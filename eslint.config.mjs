@@ -20,6 +20,7 @@ const eslintConfig = [
       '**/*.jpeg',
       '**/*.gif',
       '**/*.svg',
+      '**/*.md',
       'node_modules/**',
       '.next/**',
       'out/**',
