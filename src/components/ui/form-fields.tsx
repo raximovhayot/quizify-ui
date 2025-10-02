@@ -1,6 +1,5 @@
-import { Control, FieldPath, FieldValues } from 'react-hook-form';
-
 import { useTranslations } from 'next-intl';
+import { Control, FieldPath, FieldValues } from 'react-hook-form';
 
 import {
   FormControl,
