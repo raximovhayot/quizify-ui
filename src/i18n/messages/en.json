@@ -99,7 +99,8 @@
       },
       "answer": {
         "label": "Answer",
-        "placeholder": "Enter answer text"
+        "placeholder": "Enter answer text",
+        "richPlaceholder": "Enter answer text. You can use formatting..."
       },
       "correct": "Correct",
       "essay": {
@@ -302,7 +303,9 @@
     }
   },
   "profile": {
-    "details": { "title": "Edit details" },
+    "details": {
+      "title": "Edit details"
+    },
     "update": {
       "success": "Profile updated successfully",
       "error": "Failed to update profile"
@@ -359,7 +362,44 @@
       "filter": {
         "all": "All Status"
       },
-      "view": "View",
+      "view": {
+        "title": "Quiz Details",
+        "stub": "This is a stub page for viewing quiz #{id}. The detailed view will be implemented next.",
+        "backToList": "Back to Quizzes",
+        "id": "ID: {id}",
+        "description": "Description",
+        "questions": {
+          "title": "Questions",
+          "addQuestion": "Add Question",
+          "createFirst": "Create Question",
+          "empty": {
+            "title": "No questions yet",
+            "description": "Start building your quiz by adding your first question."
+          },
+          "placeholder": {
+            "title": "Questions will be displayed here",
+            "description": "The detailed question editor and viewer will be implemented in the next phase."
+          },
+          "editQuestions": "Edit Questions"
+        },
+        "created": "Created",
+        "lastModified": "Last Modified",
+        "timeLimit": "Time Limit",
+        "attempts": "Attempts",
+        "shuffleSettings": "Shuffle Settings",
+        "information": {
+          "title": "Quiz Information"
+        },
+        "settings": {
+          "title": "Quiz Settings",
+          "enabled": "Yes",
+          "disabled": "No"
+        },
+        "error": {
+          "title": "Quiz not found",
+          "description": "The quiz you are looking for does not exist or has been deleted."
+        }
+      },
       "edit": {
         "dialogTitle": "Edit Quiz",
         "title": "Edit Quiz",
@@ -372,9 +412,10 @@
         }
       },
       "delete": {
+        "confirm": "Are you sure you want to delete this quiz?",
         "success": "Quiz deleted successfully",
         "error": "Failed to delete quiz",
-        "confirm": {
+        "dialog": {
           "title": "Delete Quiz",
           "description": "Are you sure you want to delete this quiz? This action cannot be undone."
         }
@@ -445,15 +486,6 @@
         }
       },
       "untitled": "Untitled",
-      "delete": {
-        "confirm": "Are you sure you want to delete this quiz?",
-        "success": "Quiz deleted successfully",
-        "error": "Failed to delete quiz",
-        "dialog": {
-          "title": "Delete Quiz",
-          "description": "Are you sure you want to delete this quiz? This action cannot be undone."
-        }
-      },
       "success": {
         "delete": "Quiz deleted successfully",
         "publish": "Quiz published successfully",
@@ -461,45 +493,6 @@
       },
       "row": {
         "aria": "Quiz row for {title}"
-      },
-      "view": {
-        "title": "Quiz Details",
-        "stub": "This is a stub page for viewing quiz #{id}. The detailed view will be implemented next.",
-        "backToList": "Back to Quizzes",
-        "id": "ID: {id}",
-        "description": "Description",
-        "questions": "Questions",
-        "created": "Created",
-        "lastModified": "Last Modified",
-        "timeLimit": "Time Limit",
-        "attempts": "Attempts",
-        "shuffleSettings": "Shuffle Settings",
-        "information": {
-          "title": "Quiz Information"
-        },
-        "settings": {
-          "title": "Quiz Settings",
-          "enabled": "Yes",
-          "disabled": "No"
-        },
-        "questions": {
-          "title": "Questions",
-          "addQuestion": "Add Question",
-          "createFirst": "Create Question",
-          "empty": {
-            "title": "No questions yet",
-            "description": "Start building your quiz by adding your first question."
-          },
-          "placeholder": {
-            "title": "Questions will be displayed here",
-            "description": "The detailed question editor and viewer will be implemented in the next phase."
-          },
-          "editQuestions": "Edit Questions"
-        },
-        "error": {
-          "title": "Quiz not found",
-          "description": "The quiz you are looking for does not exist or has been deleted."
-        }
       }
     },
     "userMenu": {
@@ -538,8 +531,12 @@
   },
   "student": {
     "profile": {
-      "details": { "title": "Edit details" },
-      "password": { "title": "Update password" }
+      "details": {
+        "title": "Edit details"
+      },
+      "password": {
+        "title": "Update password"
+      }
     },
     "role": "Student",
     "navigation": {

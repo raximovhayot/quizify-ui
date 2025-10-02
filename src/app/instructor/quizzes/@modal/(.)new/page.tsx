@@ -44,7 +44,7 @@ export default function CreateQuizModalPage() {
       <Sheet open={open} onOpenChange={handleOpenChange}>
         <SheetContent
           side="bottom"
-          className="h-[90vh] overflow-y-auto px-4 pb-safe"
+          className="h-[90vh] overflow-y-auto px-4 pb-safe rounded-t-2xl"
         >
           <SheetHeader className="pb-4">
             <SheetTitle>
@@ -62,7 +62,7 @@ export default function CreateQuizModalPage() {
   // Desktop: Use Dialog
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl">
         <DialogTitle className="sr-only">
           {t('instructor.quiz.create.dialogTitle', {
             fallback: 'Create Quiz',

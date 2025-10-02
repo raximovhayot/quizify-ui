@@ -4,8 +4,8 @@ import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 import { useTranslations } from 'next-intl';
 
+import { RichTextField } from '@/components/shared/form/RichTextField';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 
@@ -23,17 +23,12 @@ export function AnswerListEditor({
   disabled,
 }: AnswerListEditorProps) {
   const t = useTranslations();
-  const { control, register, watch } =
-    useFormContext<TInstructorQuestionForm>();
+  const { control, register } = useFormContext<TInstructorQuestionForm>();
 
   const { fields, append, remove, move } = useFieldArray<
     TInstructorQuestionForm,
     'answers'
   >({ control, name });
-
-  const answers = watch(name) as
-    | { content: string; correct?: boolean }[]
-    | undefined;
 
   const handleAdd = () => {
     append({
@@ -48,10 +43,13 @@ export function AnswerListEditor({
       {fields.map((field, index) => (
         <div
           key={field.id}
-          className="flex flex-col gap-2 border rounded-md p-3"
+          className="flex flex-col gap-3 border rounded-lg p-4 bg-card"
         >
           <div className="flex items-center gap-2">
-            <Label htmlFor={`${name}.${index}.content`} className="text-sm">
+            <Label
+              htmlFor={`${name}.${index}.content`}
+              className="text-sm font-medium"
+            >
               {t('common.question.answer.label', {
                 fallback: 'Answer',
               })}{' '}
@@ -61,41 +59,52 @@ export function AnswerListEditor({
               <Button
                 type="button"
                 size="sm"
-                variant="secondary"
+                variant="ghost"
                 onClick={() => move(index, Math.max(0, index - 1))}
                 disabled={disabled || index === 0}
+                className="h-8"
               >
                 {t('common.up', { fallback: 'Up' })}
               </Button>
               <Button
                 type="button"
                 size="sm"
-                variant="secondary"
+                variant="ghost"
                 onClick={() =>
                   move(index, Math.min(fields.length - 1, index + 1))
                 }
                 disabled={disabled || index === fields.length - 1}
+                className="h-8"
               >
                 {t('common.down', { fallback: 'Down' })}
               </Button>
               <Button
                 type="button"
                 size="sm"
-                variant="destructive"
+                variant="ghost"
                 onClick={() => remove(index)}
                 disabled={disabled}
+                className="h-8 text-destructive hover:text-destructive"
               >
                 {t('common.remove', { fallback: 'Remove' })}
               </Button>
             </div>
           </div>
-          <Input
-            id={`${name}.${index}.content`}
-            {...register(`${name}.${index}.content` as const)}
-            placeholder={t('common.question.answer.placeholder', {
-              fallback: 'Enter answer text',
-            })}
-            disabled={disabled}
+          <Controller
+            control={control}
+            name={`${name}.${index}.content` as const}
+            render={() => (
+              <RichTextField
+                control={control}
+                name={`${name}.${index}.content` as const}
+                label=""
+                placeholder={t('common.question.answer.richPlaceholder', {
+                  fallback: 'Enter answer text. You can use formatting...',
+                })}
+                minHeight="100px"
+                disabled={disabled}
+              />
+            )}
           />
           {!enforceCorrect && (
             <div className="flex items-center gap-2">

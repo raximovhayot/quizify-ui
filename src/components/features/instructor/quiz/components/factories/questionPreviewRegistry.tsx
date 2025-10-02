@@ -2,6 +2,8 @@
 
 import { ReactNode } from 'react';
 
+import { RichTextDisplay } from '@/components/shared/form/RichTextEditor';
+
 import { QuestionDataDto, QuestionType } from '../../types/question';
 import type { TranslateFn } from './questionFormRegistry';
 
@@ -57,7 +59,7 @@ const trueFalsePreview: OptionsPreviewFn = ({ q, showCorrect, t }) => {
   );
 };
 
-const rankingPreview: OptionsPreviewFn = ({ q, showCorrect, t }) => {
+const rankingPreview: OptionsPreviewFn = ({ q, showCorrect }) => {
   const rawAnswers = Array.isArray(q.answers) ? q.answers : [];
   let items: string[] = rawAnswers.length
     ? rawAnswers
@@ -113,7 +115,7 @@ const rankingPreview: OptionsPreviewFn = ({ q, showCorrect, t }) => {
   );
 };
 
-const matchingPreview: OptionsPreviewFn = ({ q, showCorrect, t }) => {
+const matchingPreview: OptionsPreviewFn = ({ q, showCorrect }) => {
   const rawAnswers = Array.isArray(q.answers) ? q.answers : [];
   let pairs: { left: string; right?: string }[] = [];
   try {
@@ -206,12 +208,14 @@ const shortAnswerPreview: OptionsPreviewFn = ({ q, showCorrect }) => {
           return (
             <li
               key={a.id ?? a.order ?? idx}
-              className={`text-sm flex items-center gap-2 ${isCorrect ? 'bg-green-100 dark:bg-green-900/20 rounded-md' : ''}`}
+              className={`text-sm flex items-center gap-2 ${isCorrect ? 'bg-green-100 dark:bg-green-900/20 rounded-md p-1' : ''}`}
             >
-              <span className="inline-flex items-center justify-center size-5 rounded-full text-[0.7rem] font-medium bg-muted text-muted-foreground">
+              <span className="inline-flex items-center justify-center size-5 rounded-full text-[0.7rem] font-medium bg-muted text-muted-foreground shrink-0">
                 {marker}
               </span>
-              <span className="line-clamp-1 flex-1">{a.content}</span>
+              <div className="line-clamp-2 flex-1 overflow-hidden">
+                <RichTextDisplay content={a.content} className="text-sm" />
+              </div>
             </li>
           );
         })}
@@ -236,12 +240,14 @@ const defaultAnswersPreview: OptionsPreviewFn = ({ q, showCorrect }) => {
           return (
             <li
               key={a.id ?? a.order ?? idx}
-              className={`text-sm flex items-center gap-2 ${isCorrect ? 'bg-green-100 dark:bg-green-900/20 rounded-md' : ''}`}
+              className={`text-sm flex items-center gap-2 ${isCorrect ? 'bg-green-100 dark:bg-green-900/20 rounded-md p-1' : ''}`}
             >
-              <span className="inline-flex items-center justify-center size-5 rounded-full text-[0.7rem] font-medium bg-muted text-muted-foreground">
+              <span className="inline-flex items-center justify-center size-5 rounded-full text-[0.7rem] font-medium bg-muted text-muted-foreground shrink-0">
                 {marker}
               </span>
-              <span className="line-clamp-1 flex-1">{a.content}</span>
+              <div className="line-clamp-2 flex-1 overflow-hidden">
+                <RichTextDisplay content={a.content} className="text-sm" />
+              </div>
             </li>
           );
         })}

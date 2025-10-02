@@ -9,6 +9,7 @@ import {
   QuestionType,
 } from '@/components/features/instructor/quiz/types/question';
 import { QuizDataDTO } from '@/components/features/instructor/quiz/types/quiz';
+import { RichTextDisplay } from '@/components/shared/form/RichTextEditor';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -199,14 +200,19 @@ function renderAnswers(
   const sortedAnswers = [...q.answers].sort((a, b) => a.order - b.order);
   return (
     <div>
-      <div className="text-sm text-muted-foreground">
+      <div className="text-sm text-muted-foreground mb-2">
         {t('student.quiz.answers', { fallback: 'Answers' })}
       </div>
-      <ul className="list-disc pl-5 text-sm">
+      <ul className="space-y-2">
         {sortedAnswers.map((a) => (
           <li key={a.order} className={a.correct ? 'font-semibold' : ''}>
-            {a.content}
-            {a.correct ? ' ✓' : ''}
+            <div className="flex items-start gap-2">
+              <span className="text-sm mt-1">•</span>
+              <div className="flex-1">
+                <RichTextDisplay content={a.content} className="text-sm" />
+                {a.correct && <span className="ml-2">✓</span>}
+              </div>
+            </div>
           </li>
         ))}
       </ul>
