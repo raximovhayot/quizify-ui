@@ -637,6 +637,37 @@
         "endTimeLabel": "End Time",
         "submit": "Create Assignment"
       }
+    },
+    "grading": {
+      "title": "Essay Grading",
+      "gradeEssay": "Grade Essay",
+      "gradeEssays": "Grade Essays",
+      "student": "Student",
+      "question": "Question",
+      "gradingCriteria": "Grading Criteria",
+      "studentAnswer": "Student Answer",
+      "noAnswer": "No answer provided",
+      "score": "Score",
+      "feedback": "Feedback (Optional)",
+      "feedbackPlaceholder": "Provide feedback to the student...",
+      "submitGrade": "Submit Grade",
+      "grading": "Grading...",
+      "success": "Graded successfully",
+      "successDescription": "The essay has been graded.",
+      "error": "Failed to grade essay",
+      "error.title": "Failed to load grading data",
+      "error.description": "There was an error loading the essay answers.",
+      "essayAnswers": "Essay Answers",
+      "searchStudents": "Search students...",
+      "noResults": "No essays found",
+      "noEssays": "No essay answers to grade",
+      "status": "Status",
+      "pending": "Pending",
+      "graded": "Graded",
+      "grade": "Grade",
+      "regrade": "Regrade",
+      "totalEssayQuestions": "Essay Questions",
+      "totalAnswers": "Total Answers"
     }
   },
   "student": {

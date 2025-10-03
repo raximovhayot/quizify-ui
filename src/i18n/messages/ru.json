@@ -533,6 +533,37 @@
         "endTimeLabel": "Время окончания",
         "submit": "Создать задание"
       }
+    },
+    "grading": {
+      "title": "Оценка эссе",
+      "gradeEssay": "Оценить эссе",
+      "gradeEssays": "Оценить эссе",
+      "student": "Студент",
+      "question": "Вопрос",
+      "gradingCriteria": "Критерии оценки",
+      "studentAnswer": "Ответ студента",
+      "noAnswer": "Ответ не предоставлен",
+      "score": "Балл",
+      "feedback": "Отзыв (необязательно)",
+      "feedbackPlaceholder": "Предоставьте отзыв студенту...",
+      "submitGrade": "Отправить оценку",
+      "grading": "Оценивание...",
+      "success": "Успешно оценено",
+      "successDescription": "Эссе было оценено.",
+      "error": "Не удалось оценить эссе",
+      "error.title": "Не удалось загрузить данные оценки",
+      "error.description": "Произошла ошибка при загрузке ответов на эссе.",
+      "essayAnswers": "Ответы на эссе",
+      "searchStudents": "Поиск студентов...",
+      "noResults": "Эссе не найдены",
+      "noEssays": "Нет ответов на эссе для оценки",
+      "status": "Статус",
+      "pending": "Ожидание",
+      "graded": "Оценено",
+      "grade": "Оценить",
+      "regrade": "Переоценить",
+      "totalEssayQuestions": "Вопросы эссе",
+      "totalAnswers": "Всего ответов"
     }
   },
   "student": {

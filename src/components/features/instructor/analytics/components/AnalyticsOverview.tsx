@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowLeft, Download, TrendingUp, Users } from 'lucide-react';
+import { ArrowLeft, Download, FileEdit, TrendingUp, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
@@ -111,10 +111,19 @@ export function AnalyticsOverview({ analytics, loading }: AnalyticsOverviewProps
             {t('instructor.analytics.quiz', { fallback: 'Quiz' })}: {analytics.quizTitle}
           </p>
         </div>
-        <Button onClick={handleExport} variant="outline">
-          <Download className="mr-2 h-4 w-4" />
-          {t('instructor.analytics.export', { fallback: 'Export CSV' })}
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={() => router.push(`/instructor/grading/${analytics.assignmentId}`)}
+            variant="outline"
+          >
+            <FileEdit className="mr-2 h-4 w-4" />
+            {t('instructor.grading.gradeEssays', { fallback: 'Grade Essays' })}
+          </Button>
+          <Button onClick={handleExport} variant="outline">
+            <Download className="mr-2 h-4 w-4" />
+            {t('instructor.analytics.export', { fallback: 'Export CSV' })}
+          </Button>
+        </div>
       </div>
 
       {/* Stats Grid */}

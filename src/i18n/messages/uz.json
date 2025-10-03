@@ -654,6 +654,37 @@
         "endTimeLabel": "Tugash vaqti",
         "submit": "Topshiriq yaratish"
       }
+    },
+    "grading": {
+      "title": "Insho baholash",
+      "gradeEssay": "Inshoni baholash",
+      "gradeEssays": "Insholarni baholash",
+      "student": "Talaba",
+      "question": "Savol",
+      "gradingCriteria": "Baholash mezonlari",
+      "studentAnswer": "Talaba javobi",
+      "noAnswer": "Javob berilmagan",
+      "score": "Ball",
+      "feedback": "Fikr-mulohaza (ixtiyoriy)",
+      "feedbackPlaceholder": "Talabaga fikr-mulohaza bering...",
+      "submitGrade": "Baholashni yuborish",
+      "grading": "Baholanmoqda...",
+      "success": "Muvaffaqiyatli baholandi",
+      "successDescription": "Insho baholandi.",
+      "error": "Inshoni baholashda xatolik",
+      "error.title": "Baholash ma'lumotlarini yuklashda xatolik",
+      "error.description": "Insho javoblarini yuklashda xatolik yuz berdi.",
+      "essayAnswers": "Insho javoblari",
+      "searchStudents": "Talabalarni qidirish...",
+      "noResults": "Insholar topilmadi",
+      "noEssays": "Baholash uchun insho javoblari yo'q",
+      "status": "Holat",
+      "pending": "Kutilmoqda",
+      "graded": "Baholandi",
+      "grade": "Baholash",
+      "regrade": "Qayta baholash",
+      "totalEssayQuestions": "Insho savollari",
+      "totalAnswers": "Jami javoblar"
     }
   },
   "student": {
