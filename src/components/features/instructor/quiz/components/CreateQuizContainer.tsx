@@ -12,10 +12,12 @@ import { QuizForm } from './QuizForm';
 
 export interface CreateQuizContainerProps {
   className?: string;
+  hideTitle?: boolean;
 }
 
 export function CreateQuizContainer({
   className,
+  hideTitle = false,
 }: Readonly<CreateQuizContainerProps>) {
   const router = useRouter();
   const createQuizMutation = useCreateQuiz();
@@ -39,6 +41,7 @@ export function CreateQuizContainer({
       onCancel={handleCancel}
       isSubmitting={createQuizMutation.isPending}
       className={className}
+      hideTitle={hideTitle}
     />
   );
 }
