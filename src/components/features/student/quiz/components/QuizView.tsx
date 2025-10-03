@@ -21,7 +21,7 @@ interface QuizViewProps {
   className?: string;
 }
 
-export function QuizView({ quiz, questions, className }: QuizViewProps) {
+export function QuizView({ quiz: _quiz, questions, className }: QuizViewProps) {
   const t = useTranslations();
   const [showAnswers, setShowAnswers] = useState(false);
   const [showExplanations, setShowExplanations] = useState(false);
@@ -34,95 +34,49 @@ export function QuizView({ quiz, questions, className }: QuizViewProps) {
 
   return (
     <div className={className}>
-      <Card className="mb-6">
-        <CardHeader data-slot="card-header">
-          <div className="flex flex-col gap-2">
-            <h1 className="text-2xl font-semibold">{quiz.title}</h1>
-            {quiz.description && (
-              <p className="text-muted-foreground">{quiz.description}</p>
-            )}
-            <div className="flex flex-wrap items-center gap-2 mt-2">
-              <Badge variant="secondary">
-                {t('student.quiz.questions', { fallback: 'Questions' })}:{' '}
-                {quiz.numberOfQuestions}
-              </Badge>
-              <Badge variant="secondary">
-                {t('student.quiz.timeLimit', { fallback: 'Time Limit' })}:{' '}
-                {quiz.settings?.time === 0
-                  ? t('student.quiz.unlimited', { fallback: 'Unlimited' })
-                  : `${quiz.settings?.time} ${t('student.quiz.minutes', { fallback: 'min' })}`}
-              </Badge>
-              <Badge variant="secondary">
-                {t('student.quiz.attempts', { fallback: 'Attempts' })}:{' '}
-                {quiz.settings?.attempt === 0
-                  ? t('student.quiz.unlimited', { fallback: 'Unlimited' })
-                  : quiz.settings?.attempt}
-              </Badge>
-              {(quiz.settings?.shuffleQuestions ||
-                quiz.settings?.shuffleAnswers) && (
-                <Badge variant="outline">
-                  {quiz.settings?.shuffleQuestions && (
-                    <span className="mr-1">
-                      {t('student.quiz.shuffleQuestions', {
-                        fallback: 'Shuffle Questions',
-                      })}
-                    </span>
-                  )}
-                  {quiz.settings?.shuffleAnswers && (
-                    <span>
-                      {t('student.quiz.shuffleAnswers', {
-                        fallback: 'Shuffle Answers',
-                      })}
-                    </span>
-                  )}
-                </Badge>
-              )}
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent data-slot="card-content">
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-2">
-              <Switch
-                id="toggle-answers"
-                checked={showAnswers}
-                onCheckedChange={setShowAnswers}
-              />
-              <Label htmlFor="toggle-answers" className="cursor-pointer">
-                {t('student.quiz.showAnswers', { fallback: 'Show answers' })}
-              </Label>
-            </div>
-            <div className="flex items-center gap-2">
-              <Switch
-                id="toggle-explanations"
-                checked={showExplanations}
-                onCheckedChange={setShowExplanations}
-              />
-              <Label htmlFor="toggle-explanations" className="cursor-pointer">
-                {t('student.quiz.showExplanations', {
-                  fallback: 'Show explanations',
-                })}
-              </Label>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Simple controls section */}
+      <div className="mb-6 flex flex-col sm:flex-row gap-4 sm:gap-6">
+        <div className="flex items-center gap-2">
+          <Switch
+            id="toggle-answers"
+            checked={showAnswers}
+            onCheckedChange={setShowAnswers}
+          />
+          <Label htmlFor="toggle-answers" className="cursor-pointer">
+            {t('student.quiz.showAnswers', { fallback: 'Show answers' })}
+          </Label>
+        </div>
+        <div className="flex items-center gap-2">
+          <Switch
+            id="toggle-explanations"
+            checked={showExplanations}
+            onCheckedChange={setShowExplanations}
+          />
+          <Label htmlFor="toggle-explanations" className="cursor-pointer">
+            {t('student.quiz.showExplanations', {
+              fallback: 'Show explanations',
+            })}
+          </Label>
+        </div>
+      </div>
 
       <div className="space-y-4">
         {sortedQuestions.map((q, idx) => (
           <Card key={q.id}>
             <CardHeader data-slot="card-header">
-              <div className="flex items-start justify-between gap-4">
-                <div>
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4">
+                <div className="flex-1 min-w-0">
                   <div className="text-sm text-muted-foreground">
                     {t('student.quiz.questionNumber', {
                       fallback: 'Question {n}',
                       n: idx + 1,
                     })}
                   </div>
-                  <div className="mt-1 font-medium">{q.content}</div>
+                  <div className="mt-1 font-medium break-words">
+                    {q.content}
+                  </div>
                 </div>
-                <Badge variant="secondary">
+                <Badge variant="secondary" className="self-start shrink-0">
                   {formatQuestionType(q.questionType, t)}
                 </Badge>
               </div>
@@ -137,7 +91,7 @@ export function QuizView({ quiz, questions, className }: QuizViewProps) {
                   <div className="text-sm text-muted-foreground">
                     {t('student.quiz.explanation', { fallback: 'Explanation' })}
                   </div>
-                  <div className="text-sm">{q.explanation}</div>
+                  <div className="text-sm break-words">{q.explanation}</div>
                 </div>
               )}
             </CardContent>
