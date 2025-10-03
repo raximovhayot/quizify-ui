@@ -132,7 +132,8 @@
     "show": "Ko'rsatish",
     "hide": "Yashirish",
     "pleaseWait": "Iltimos kuting...",
-    "unexpectedError": "Kutilmagan xatolik yuz berdi"
+    "unexpectedError": "Kutilmagan xatolik yuz berdi",
+    "submitting": "Topshirilmoqda..."
   },
   "auth": {
     "signIn": {
@@ -700,6 +701,31 @@
         "passed": "O'tgan",
         "failed": "Muvaffaqiyatsiz"
       }
+    },
+    "attempt": {
+      "timeRunningOut": "Vaqt tugamoqda!",
+      "progress": "Jarayon",
+      "answered": "javob berildi",
+      "previous": "Oldingi",
+      "next": "Keyingi",
+      "questionNumber": "Savol {{current}} dan {{total}}",
+      "questionLabel": "Savol {{number}}",
+      "point": "ball",
+      "points": "ball",
+      "yourAnswer": "Sizning javobingiz",
+      "typeAnswer": "Javobingizni bu yerga kiriting...",
+      "typeEssay": "Inshoyingizni bu yerga yozing...",
+      "questionTypeNotSupported": "Bu savol turi hali interfeysda qo'llab-quvvatlanmaydi. Iltimos, o'qituvchingiz bilan bog'laning.",
+      "saveAnswer": "Javobni saqlash",
+      "updateAnswer": "Javobni yangilash",
+      "takingQuiz": "Viktorina topshirish",
+      "attemptNumber": "Urinish #{{number}}",
+      "error": "Viktorinani yuklashda xato",
+      "errorMessage": "Viktorinani yuklab bo'lmadi. Iltimos, keyinroq urinib ko'ring.",
+      "submitQuiz": "Viktorinani topshirish",
+      "confirmSubmit": "Viktorinani topshirilsinmi?",
+      "confirmSubmitMessage": "Siz {{answered}} ta savolga {{total}} tadan javob berdingiz. Topshirishni xohlaysizmi? Topshirgandan keyin javoblaringizni o'zgartira olmaysiz.",
+      "confirmSubmitButton": "Ha, topshirish"
     }
   },
   "notFound": {

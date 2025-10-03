@@ -134,7 +134,8 @@
     "show": "Show",
     "hide": "Hide",
     "pleaseWait": "Please wait...",
-    "unexpectedError": "An unexpected error occurred"
+    "unexpectedError": "An unexpected error occurred",
+    "submitting": "Submitting..."
   },
   "auth": {
     "signIn": {
@@ -683,6 +684,31 @@
         "passed": "Passed",
         "failed": "Failed"
       }
+    },
+    "attempt": {
+      "timeRunningOut": "Time running out!",
+      "progress": "Progress",
+      "answered": "answered",
+      "previous": "Previous",
+      "next": "Next",
+      "questionNumber": "Question {{current}} of {{total}}",
+      "questionLabel": "Question {{number}}",
+      "point": "point",
+      "points": "points",
+      "yourAnswer": "Your Answer",
+      "typeAnswer": "Type your answer here...",
+      "typeEssay": "Type your essay here...",
+      "questionTypeNotSupported": "This question type is not yet supported in the interface. Please contact your instructor.",
+      "saveAnswer": "Save Answer",
+      "updateAnswer": "Update Answer",
+      "takingQuiz": "Taking Quiz",
+      "attemptNumber": "Attempt #{{number}}",
+      "error": "Error Loading Quiz",
+      "errorMessage": "Unable to load the quiz. Please try again later.",
+      "submitQuiz": "Submit Quiz",
+      "confirmSubmit": "Submit Quiz?",
+      "confirmSubmitMessage": "You have answered {{answered}} out of {{total}} questions. Are you sure you want to submit? You cannot change your answers after submission.",
+      "confirmSubmitButton": "Yes, Submit"
     }
   },
   "notFound": {
