@@ -726,6 +726,37 @@
       "confirmSubmit": "Viktorinani topshirilsinmi?",
       "confirmSubmitMessage": "Siz {{answered}} ta savolga {{total}} tadan javob berdingiz. Topshirishni xohlaysizmi? Topshirgandan keyin javoblaringizni o'zgartira olmaysiz.",
       "confirmSubmitButton": "Ha, topshirish"
+    },
+    "assignment": {
+      "upcoming": "Tez orada boshlanadi",
+      "active": "Hozir faol",
+      "expired": "Muddati o'tgan",
+      "startTime": "Boshlanish vaqti",
+      "endTime": "Tugash vaqti",
+      "timeLimit": "Vaqt cheklovi",
+      "minutes": "daqiqa",
+      "attempts": "Urinishlar",
+      "unlimited": "Cheklanmagan",
+      "notStarted": "Hali boshlanmagan",
+      "ended": "Topshiriq tugadi",
+      "noAttemptsLeft": "Urinishlar tugadi",
+      "startAttempt": "Urinishni boshlash",
+      "confirmStart": "Urinishni boshlash?",
+      "confirmStartMessage": "Boshlasangiz, taymer ishga tushadi. Viktorinani yakunlash uchun yetarli vaqtingiz borligiga ishonch hosil qiling.",
+      "confirmStartButton": "Ha, hozir boshlash"
+    },
+    "results": {
+      "title": "Viktorina natijalari",
+      "error": "Natijalarni yuklashda xato",
+      "errorMessage": "Natijalaringizni yuklab bo'lmadi. Iltimos, keyinroq urinib ko'ring.",
+      "scoreLabel": "Sizning natijangiz",
+      "correct": "To'g'ri",
+      "incorrect": "Noto'g'ri",
+      "unanswered": "Javobsiz",
+      "timeSpent": "Sarflangan vaqt",
+      "detailedResults": "Batafsil natijalar",
+      "questionNumber": "Savol {{number}}",
+      "viewHistory": "Tarixni ko'rish"
     }
   },
   "notFound": {

@@ -709,6 +709,37 @@
       "confirmSubmit": "Submit Quiz?",
       "confirmSubmitMessage": "You have answered {{answered}} out of {{total}} questions. Are you sure you want to submit? You cannot change your answers after submission.",
       "confirmSubmitButton": "Yes, Submit"
+    },
+    "assignment": {
+      "upcoming": "Starts soon",
+      "active": "Active now",
+      "expired": "Expired",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "timeLimit": "Time Limit",
+      "minutes": "minutes",
+      "attempts": "Attempts",
+      "unlimited": "Unlimited",
+      "notStarted": "Not Started Yet",
+      "ended": "Assignment Ended",
+      "noAttemptsLeft": "No Attempts Left",
+      "startAttempt": "Start Attempt",
+      "confirmStart": "Start Attempt?",
+      "confirmStartMessage": "Once you start, the timer will begin. Make sure you have enough time to complete the quiz.",
+      "confirmStartButton": "Yes, Start Now"
+    },
+    "results": {
+      "title": "Quiz Results",
+      "error": "Error Loading Results",
+      "errorMessage": "Unable to load your results. Please try again later.",
+      "scoreLabel": "Your Score",
+      "correct": "Correct",
+      "incorrect": "Incorrect",
+      "unanswered": "Unanswered",
+      "timeSpent": "Time Spent",
+      "detailedResults": "Detailed Results",
+      "questionNumber": "Question {{number}}",
+      "viewHistory": "View History"
     }
   },
   "notFound": {
