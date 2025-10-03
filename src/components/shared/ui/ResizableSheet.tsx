@@ -221,8 +221,12 @@ function ResizableSheetContent({
       ref={contentRef}
       side={side}
       className={cn(
-        resizable && side === 'bottom' && 'transition-all ease-in-out',
+        resizable &&
+          side === 'bottom' &&
+          'transition-all duration-300 ease-in-out',
         isDragging && 'duration-0',
+        // Ensure close button is above drag handle
+        '[&>button]:z-50',
         className
       )}
       style={heightStyle}
@@ -264,9 +268,24 @@ function ResizableSheetHeader({
   );
 }
 
+interface ResizableSheetTitleProps
+  extends React.ComponentProps<typeof SheetTitle> {}
+
+function ResizableSheetTitle({
+  className,
+  ...props
+}: ResizableSheetTitleProps) {
+  return (
+    <SheetTitle
+      className={cn('text-lg', className)}
+      {...props}
+    />
+  );
+}
+
 export {
   Sheet as ResizableSheet,
   ResizableSheetContent,
   ResizableSheetHeader,
-  SheetTitle as ResizableSheetTitle,
+  ResizableSheetTitle,
 };
