@@ -39,11 +39,11 @@ export function QuestionListItem({
   const t = useTranslations();
 
   return (
-    <div className="border rounded-lg p-4 hover:bg-muted/50 transition-colors">
+    <div className="border rounded-lg p-4 sm:p-5 hover:bg-muted/50 transition-colors">
       <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 space-y-2 min-w-0">
+        <div className="flex-1 space-y-3 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-sm font-medium text-muted-foreground shrink-0">
+            <span className="text-sm font-semibold text-muted-foreground shrink-0 bg-muted px-2 py-0.5 rounded">
               #{index + 1}
             </span>
             <Badge variant="outline" className="text-xs">
@@ -58,7 +58,7 @@ export function QuestionListItem({
           </div>
 
           {/* Display rich text content */}
-          <div className="text-sm font-medium line-clamp-3 break-words">
+          <div className="text-sm sm:text-base font-medium line-clamp-3 break-words">
             {question.content?.includes('<') ? (
               <RichTextDisplay
                 content={question.content}
@@ -70,7 +70,7 @@ export function QuestionListItem({
           </div>
 
           {question.explanation && (
-            <p className="text-xs text-muted-foreground line-clamp-2">
+            <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
               {stripHtml(question.explanation)}
             </p>
           )}

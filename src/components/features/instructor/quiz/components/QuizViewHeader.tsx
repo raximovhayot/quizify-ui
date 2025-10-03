@@ -1,6 +1,6 @@
 'use client';
 
-import { AlertCircle, ArrowLeft, CheckCircle2, Edit, Play } from 'lucide-react';
+import { AlertCircle, ArrowLeft, CheckCircle2 } from 'lucide-react';
 
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
@@ -9,7 +9,6 @@ import { ROUTES_APP } from '@/components/features/instructor/routes';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
-import { useUpdateQuizStatus } from '../hooks/useUpdateQuizStatus';
 import { QuizDataDTO, QuizStatus } from '../types/quiz';
 
 export interface QuizViewHeaderProps {
@@ -19,7 +18,6 @@ export interface QuizViewHeaderProps {
 export function QuizViewHeader({ quiz }: QuizViewHeaderProps) {
   const t = useTranslations();
   const router = useRouter();
-  const updateStatus = useUpdateQuizStatus();
 
   const getStatusColor = (status: QuizStatus) => {
     switch (status) {
@@ -46,79 +44,34 @@ export function QuizViewHeader({ quiz }: QuizViewHeaderProps) {
   const StatusIcon = getStatusIcon(quiz.status);
 
   return (
-    <div className="space-y-4 mb-4">
-      <div className="flex items-center gap-3">
+    <div className="space-y-4">
+      <div className="flex items-center gap-3 flex-wrap">
         <Button
           variant="ghost"
           size="sm"
           onClick={() => router.push(ROUTES_APP.quizzes.list())}
-          className="p-1 h-auto shrink-0"
+          className="p-2 h-auto shrink-0"
         >
-          <ArrowLeft className="h-4 w-4 md:h-5 md:w-5" />
+          <ArrowLeft className="h-5 w-5" />
         </Button>
         <Badge
           variant={getStatusColor(quiz.status)}
-          className="flex items-center gap-1 text-[11px] sm:text-sm px-2.5 sm:px-3 py-0.5 sm:py-1"
+          className="flex items-center gap-1.5 text-sm px-3 py-1.5"
         >
-          <StatusIcon className="h-3 w-3 sm:h-4 sm:w-4" />
+          <StatusIcon className="h-4 w-4" />
           {quiz.status === QuizStatus.PUBLISHED
             ? t('common.published', { fallback: 'Published' })
             : t('common.draft', { fallback: 'Draft' })}
         </Badge>
-        <span className="text-xs sm:text-sm text-muted-foreground">
-          ID: {quiz.id}
-        </span>
+        <span className="text-sm text-muted-foreground">ID: {quiz.id}</span>
       </div>
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-2xl md:text-3xl font-bold break-words">
+      <div>
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight break-words">
           {quiz.title ||
             t('instructor.quiz.untitled', {
               fallback: 'Untitled Quiz',
             })}
         </h1>
-        <div className="hidden sm:flex sm:shrink-0 sm:items-center sm:gap-3 sm:justify-end">
-          <Button
-            onClick={() => router.push(ROUTES_APP.quizzes.edit(quiz.id))}
-            className="w-full sm:w-auto flex items-center gap-2 h-9 px-3 text-sm md:h-10 md:px-4 md:text-base"
-          >
-            <Edit className="h-4 w-4 md:h-5 md:w-5" />
-            {t('common.edit', {
-              fallback: 'Edit',
-            })}
-          </Button>
-          {quiz.status === QuizStatus.DRAFT ? (
-            <Button
-              onClick={() =>
-                updateStatus.mutate({
-                  id: quiz.id,
-                  status: QuizStatus.PUBLISHED,
-                })
-              }
-              disabled={updateStatus.isPending}
-              variant="default"
-              className="w-full sm:w-auto flex items-center gap-2 h-9 px-3 text-sm md:h-10 md:px-4 md:text-base"
-            >
-              <CheckCircle2 className="h-4 w-4 md:h-5 md:w-5" />
-              {updateStatus.isPending
-                ? t('common.updating', { fallback: 'Updating...' })
-                : t('common.publish', { fallback: 'Publish' })}
-            </Button>
-          ) : (
-            <Button
-              onClick={() => {
-                // TODO: Implement start quiz functionality
-                console.log('Starting quiz:', quiz.id);
-              }}
-              variant="default"
-              className="w-full sm:w-auto flex items-center gap-2 h-9 px-3 text-sm md:h-10 md:px-4 md:text-base"
-            >
-              <Play className="h-4 w-4 md:h-5 md:w-5" />
-              {t('common.start', {
-                fallback: 'Start',
-              })}
-            </Button>
-          )}
-        </div>
       </div>
     </div>
   );
