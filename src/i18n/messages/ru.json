@@ -132,7 +132,9 @@
     "hide": "Скрыть",
     "pleaseWait": "Пожалуйста, подождите...",
     "unexpectedError": "Произошла непредвиденная ошибка",
-    "submitting": "Отправка..."
+    "submitting": "Отправка...",
+    "checking": "Проверка...",
+    "joining": "Присоединение..."
   },
   "auth": {
     "signIn": {
@@ -515,7 +517,8 @@
       "title": "Панель студента",
       "toggleMenu": "Переключить меню",
       "home": "Главная",
-      "history": "История"
+      "history": "История",
+      "assignments": "Задания"
     },
     "userMenu": {
       "title": "Меню пользователя",
@@ -622,7 +625,33 @@
       "startAttempt": "Начать попытку",
       "confirmStart": "Начать попытку?",
       "confirmStartMessage": "Как только вы начнете, таймер запустится. Убедитесь, что у вас достаточно времени для прохождения викторины.",
-      "confirmStartButton": "Да, начать сейчас"
+      "confirmStartButton": "Да, начать сейчас",
+      "joinTitle": "Присоединиться к заданию",
+      "joinCodeLabel": "Код задания",
+      "joinCodePlaceholder": "Введите код",
+      "checkCode": "Проверить",
+      "joinHint": "Введите код, предоставленный вашим преподавателем, чтобы присоединиться к заданию.",
+      "alreadyRegistered": "Уже зарегистрирован",
+      "confirmJoin": "Присоединиться к заданию?",
+      "startsAt": "Начинается:",
+      "endsAt": "Заканчивается:",
+      "alreadyRegisteredMessage": "Вы уже зарегистрированы для этого задания.",
+      "cannotJoin": "Вы не можете присоединиться к этому заданию в данный момент.",
+      "viewAssignment": "Посмотреть задание",
+      "confirmJoinButton": "Да, присоединиться",
+      "errorLoading": "Ошибка загрузки заданий",
+      "errorMessage": "Не удалось загрузить ваши задания. Пожалуйста, попробуйте позже.",
+      "noRegistrations": "Пока нет заданий",
+      "noRegistrationsMessage": "Присоединитесь к заданию, используя код, чтобы начать.",
+      "myAssignments": "Мои задания",
+      "statusCompleted": "Завершено",
+      "statusCancelled": "Отменено",
+      "statusUpcoming": "Предстоящее",
+      "statusActive": "Активно",
+      "statusExpired": "Истекло",
+      "starts": "Начинается",
+      "ends": "Заканчивается",
+      "viewDetails": "Подробности"
     },
     "results": {
       "title": "Результаты викторины",

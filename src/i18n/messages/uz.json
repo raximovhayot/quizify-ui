@@ -133,7 +133,9 @@
     "hide": "Yashirish",
     "pleaseWait": "Iltimos kuting...",
     "unexpectedError": "Kutilmagan xatolik yuz berdi",
-    "submitting": "Topshirilmoqda..."
+    "submitting": "Topshirilmoqda...",
+    "checking": "Tekshirilmoqda...",
+    "joining": "Qo'shilmoqda..."
   },
   "auth": {
     "signIn": {
@@ -636,7 +638,8 @@
       "title": "Talaba paneli",
       "toggleMenu": "Menyuni almashtirish",
       "home": "Bosh sahifa",
-      "history": "Tarix"
+      "history": "Tarix",
+      "assignments": "Topshiriqlar"
     },
     "userMenu": {
       "title": "Foydalanuvchi menyusi",
@@ -743,7 +746,33 @@
       "startAttempt": "Urinishni boshlash",
       "confirmStart": "Urinishni boshlash?",
       "confirmStartMessage": "Boshlasangiz, taymer ishga tushadi. Viktorinani yakunlash uchun yetarli vaqtingiz borligiga ishonch hosil qiling.",
-      "confirmStartButton": "Ha, hozir boshlash"
+      "confirmStartButton": "Ha, hozir boshlash",
+      "joinTitle": "Topshiriqqa qo'shilish",
+      "joinCodeLabel": "Topshiriq kodi",
+      "joinCodePlaceholder": "Kodni kiriting",
+      "checkCode": "Tekshirish",
+      "joinHint": "Topshiriqqa qo'shilish uchun o'qituvchi tomonidan berilgan kodni kiriting.",
+      "alreadyRegistered": "Allaqachon ro'yxatdan o'tgan",
+      "confirmJoin": "Topshiriqqa qo'shilsinmi?",
+      "startsAt": "Boshlanadi:",
+      "endsAt": "Tugaydi:",
+      "alreadyRegisteredMessage": "Siz bu topshiriqqa allaqachon ro'yxatdan o'tgansiz.",
+      "cannotJoin": "Hozirda bu topshiriqqa qo'shila olmaysiz.",
+      "viewAssignment": "Topshiriqni ko'rish",
+      "confirmJoinButton": "Ha, qo'shilish",
+      "errorLoading": "Topshiriqlarni yuklashda xato",
+      "errorMessage": "Topshiriqlaringizni yuklab bo'lmadi. Iltimos, keyinroq urinib ko'ring.",
+      "noRegistrations": "Hali topshiriqlar yo'q",
+      "noRegistrationsMessage": "Boshlash uchun kod yordamida topshiriqqa qo'shiling.",
+      "myAssignments": "Mening topshiriqlarim",
+      "statusCompleted": "Tugallangan",
+      "statusCancelled": "Bekor qilingan",
+      "statusUpcoming": "Yaqinlashib kelayotgan",
+      "statusActive": "Faol",
+      "statusExpired": "Muddati o'tgan",
+      "starts": "Boshlanadi",
+      "ends": "Tugaydi",
+      "viewDetails": "Tafsilotlar"
     },
     "results": {
       "title": "Viktorina natijalari",
