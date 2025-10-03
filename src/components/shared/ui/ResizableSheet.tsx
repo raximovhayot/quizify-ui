@@ -268,19 +268,13 @@ function ResizableSheetHeader({
   );
 }
 
-interface ResizableSheetTitleProps
-  extends React.ComponentProps<typeof SheetTitle> {}
+type ResizableSheetTitleProps = React.ComponentProps<typeof SheetTitle>;
 
 function ResizableSheetTitle({
   className,
   ...props
 }: ResizableSheetTitleProps) {
-  return (
-    <SheetTitle
-      className={cn('text-lg', className)}
-      {...props}
-    />
-  );
+  return <SheetTitle className={cn('text-lg', className)} {...props} />;
 }
 
 export {
