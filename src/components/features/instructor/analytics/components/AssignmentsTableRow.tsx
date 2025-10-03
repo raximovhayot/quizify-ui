@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import { Eye } from 'lucide-react';
 
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -64,9 +65,11 @@ export function AssignmentsTableRow({ assignment }: AssignmentsTableRowProps) {
         {formatDate(assignment.dueDate)}
       </TableCell>
       <TableCell className="text-right">
-        <Button variant="ghost" size="sm" disabled>
-          <Eye className="h-4 w-4 mr-2" />
-          {t('common.view', { fallback: 'View' })}
+        <Button variant="ghost" size="sm" asChild>
+          <Link href={`/instructor/analytics/${assignment.id}`}>
+            <Eye className="h-4 w-4 mr-2" />
+            {t('common.view', { fallback: 'View' })}
+          </Link>
         </Button>
       </TableCell>
     </TableRow>
