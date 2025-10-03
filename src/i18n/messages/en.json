@@ -420,7 +420,8 @@
         },
         "details": {
           "title": "Details"
-        }
+        },
+        "monitorQuiz": "Monitor Quiz"
       },
       "edit": {
         "dialogTitle": "Edit Quiz",

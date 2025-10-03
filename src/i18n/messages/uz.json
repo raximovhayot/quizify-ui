@@ -419,7 +419,8 @@
         },
         "details": {
           "title": "Tafsilotlar"
-        }
+        },
+        "monitorQuiz": "Viktorinani kuzatish"
       },
       "edit": {
         "dialogTitle": "Testni tahrirlash",

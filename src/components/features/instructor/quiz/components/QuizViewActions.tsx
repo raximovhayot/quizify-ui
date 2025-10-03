@@ -76,15 +76,15 @@ export function QuizViewActions({ quiz }: QuizViewActionsProps) {
           ) : (
             <Button
               onClick={() => {
-                // TODO: Implement start quiz functionality
-                console.log('Starting quiz:', quiz.id);
+                // Navigate to analytics to monitor quiz attempts
+                router.push(ROUTES_APP.analytics.root());
               }}
               className="w-full flex items-center justify-center gap-2"
               size="lg"
             >
               <Play className="h-4 w-4" />
-              {t('common.start', {
-                fallback: 'Start',
+              {t('instructor.quiz.view.monitorQuiz', {
+                fallback: 'Monitor Quiz',
               })}
             </Button>
           )}
