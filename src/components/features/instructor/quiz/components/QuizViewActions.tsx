@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+
 import { CheckCircle2, Edit, Play } from 'lucide-react';
 
 import { useTranslations } from 'next-intl';
@@ -17,6 +19,7 @@ import {
 
 import { useUpdateQuizStatus } from '../hooks/useUpdateQuizStatus';
 import { QuizDataDTO, QuizStatus } from '../types/quiz';
+import { StartQuizDialog } from './StartQuizDialog';
 
 export interface QuizViewActionsProps {
   quiz: QuizDataDTO;
@@ -26,70 +29,77 @@ export function QuizViewActions({ quiz }: QuizViewActionsProps) {
   const t = useTranslations();
   const router = useRouter();
   const updateStatus = useUpdateQuizStatus();
+  const [startQuizDialogOpen, setStartQuizDialogOpen] = useState(false);
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-lg">
-          {t('instructor.quiz.view.actions.title', {
-            fallback: 'Actions',
-          })}
-        </CardTitle>
-        <CardDescription>
-          {t('instructor.quiz.view.actions.description', {
-            fallback: 'Manage your quiz',
-          })}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
-          <Button
-            onClick={() => router.push(ROUTES_APP.quizzes.edit(quiz.id))}
-            className="w-full flex items-center justify-center gap-2"
-            variant="outline"
-            size="lg"
-          >
-            <Edit className="h-4 w-4" />
-            {t('common.edit', {
-              fallback: 'Edit',
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">
+            {t('instructor.quiz.view.actions.title', {
+              fallback: 'Actions',
             })}
-          </Button>
-          {quiz.status === QuizStatus.DRAFT ? (
+          </CardTitle>
+          <CardDescription>
+            {t('instructor.quiz.view.actions.description', {
+              fallback: 'Manage your quiz',
+            })}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
             <Button
-              onClick={() =>
-                updateStatus.mutate({
-                  id: quiz.id,
-                  status: QuizStatus.PUBLISHED,
-                })
-              }
-              disabled={updateStatus.isPending}
+              onClick={() => router.push(ROUTES_APP.quizzes.edit(quiz.id))}
               className="w-full flex items-center justify-center gap-2"
+              variant="outline"
               size="lg"
             >
-              <CheckCircle2 className="h-4 w-4" />
-              {updateStatus.isPending
-                ? t('common.updating', { fallback: 'Updating...' })
-                : t('common.publish', {
-                    fallback: 'Publish',
-                  })}
-            </Button>
-          ) : (
-            <Button
-              onClick={() => {
-                // Navigate to analytics to monitor quiz attempts
-                router.push(ROUTES_APP.analytics.root());
-              }}
-              className="w-full flex items-center justify-center gap-2"
-              size="lg"
-            >
-              <Play className="h-4 w-4" />
-              {t('instructor.quiz.view.monitorQuiz', {
-                fallback: 'Monitor Quiz',
+              <Edit className="h-4 w-4" />
+              {t('common.edit', {
+                fallback: 'Edit',
               })}
             </Button>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+            {quiz.status === QuizStatus.DRAFT ? (
+              <Button
+                onClick={() =>
+                  updateStatus.mutate({
+                    id: quiz.id,
+                    status: QuizStatus.PUBLISHED,
+                  })
+                }
+                disabled={updateStatus.isPending}
+                className="w-full flex items-center justify-center gap-2"
+                size="lg"
+              >
+                <CheckCircle2 className="h-4 w-4" />
+                {updateStatus.isPending
+                  ? t('common.updating', { fallback: 'Updating...' })
+                  : t('common.publish', {
+                      fallback: 'Publish',
+                    })}
+              </Button>
+            ) : (
+              <Button
+                onClick={() => setStartQuizDialogOpen(true)}
+                className="w-full flex items-center justify-center gap-2"
+                size="lg"
+              >
+                <Play className="h-4 w-4" />
+                {t('instructor.quiz.startQuiz', {
+                  fallback: 'Start Quiz',
+                })}
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      <StartQuizDialog
+        quizId={quiz.id}
+        quizTitle={quiz.title}
+        open={startQuizDialogOpen}
+        onOpenChange={setStartQuizDialogOpen}
+      />
+    </>
   );
 }

@@ -546,7 +546,8 @@
       "row": {
         "aria": "{title} uchun test qatori"
       },
-      "questions": "Savollar"
+      "questions": "Savollar",
+      "startQuiz": "Viktorinani boshlash"
     },
     "userMenu": {
       "title": "Foydalanuvchi menyusi",
@@ -604,6 +605,19 @@
         "title": "Sarlavha",
         "created": "Yaratilgan",
         "due": "Muddat"
+      }
+    },
+    "assignment": {
+      "create": {
+        "title": "Viktorinani boshlash",
+        "description": "Talabalaringiz uchun viktorinani boshlash uchun topshiriq yarating.",
+        "titleLabel": "Topshiriq nomi",
+        "titlePlaceholder": "Topshiriq nomini kiriting",
+        "descriptionLabel": "Tavsif (ixtiyoriy)",
+        "descriptionPlaceholder": "Topshiriq tavsifini kiriting",
+        "startTimeLabel": "Boshlanish vaqti",
+        "endTimeLabel": "Tugash vaqti",
+        "submit": "Topshiriq yaratish"
       }
     }
   },

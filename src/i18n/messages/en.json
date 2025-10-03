@@ -529,7 +529,8 @@
       },
       "update": {
         "success": "Quiz updated successfully"
-      }
+      },
+      "startQuiz": "Start Quiz"
     },
     "userMenu": {
       "title": "User menu",
@@ -587,6 +588,19 @@
         "title": "Title",
         "created": "Created",
         "due": "Due"
+      }
+    },
+    "assignment": {
+      "create": {
+        "title": "Start Quiz",
+        "description": "Create an assignment to start the quiz for your students.",
+        "titleLabel": "Assignment Title",
+        "titlePlaceholder": "Enter assignment title",
+        "descriptionLabel": "Description (optional)",
+        "descriptionPlaceholder": "Enter assignment description",
+        "startTimeLabel": "Start Time",
+        "endTimeLabel": "End Time",
+        "submit": "Create Assignment"
       }
     }
   },
