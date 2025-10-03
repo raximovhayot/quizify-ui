@@ -59,7 +59,7 @@ export function BaseQuestionForm({
   quizId,
   fixedType,
   onSubmit,
-  onSubmitAndContinue,
+  onSubmitAndContinue: _onSubmitAndContinue,
   onCancel,
   isSubmitting,
   initialData,
