@@ -7,6 +7,7 @@ Revamp quiz and question creation/editing flow to provide better mobile experien
 ## ⚠️ Important Update (Refactored)
 
 **Per code review feedback, the implementation has been refactored:**
+
 - ❌ **DO NOT** modify shadcn/ui components in `components/ui/`
 - ✅ **Created new component:** `ResizableSheet` that wraps the original Sheet
 - ✅ **Reverted:** `sheet.tsx` to original shadcn/ui state
@@ -15,6 +16,7 @@ Revamp quiz and question creation/editing flow to provide better mobile experien
 ## ✨ Key Features
 
 ### 1. Drag-to-Resize Mobile Sheets (ResizableSheet Component)
+
 - ✅ Implemented custom `useDragResize` hook for touch/mouse drag events
 - ✅ Three snap points: 60vh, 80vh, 95vh (customizable)
 - ✅ Smooth transitions with visual feedback
@@ -22,6 +24,7 @@ Revamp quiz and question creation/editing flow to provide better mobile experien
 - ✅ Touch-optimized with proper event handling
 
 ### 2. Responsive Mobile Layouts
+
 - ✅ All quiz and question forms now mobile-responsive
 - ✅ Sheet (mobile) vs Dialog (desktop) pattern
 - ✅ Full-width buttons on mobile for better touch targets
@@ -29,6 +32,7 @@ Revamp quiz and question creation/editing flow to provide better mobile experien
 - ✅ Improved spacing and touch target sizes (min 44x44px)
 
 ### 3. Enhanced Form UX
+
 - ✅ Mobile-friendly labels for paired inputs (Matching questions)
 - ✅ Better button grouping on mobile (Ranking questions)
 - ✅ Responsive grid breakpoints (sm: instead of md:)
@@ -37,26 +41,32 @@ Revamp quiz and question creation/editing flow to provide better mobile experien
 ## 📁 Files Changed
 
 ### New Components
+
 - `src/components/shared/ui/ResizableSheet.tsx` - New wrapper component for resizable sheets
 
 ### Core Components (Reverted)
+
 - `src/components/ui/sheet.tsx` - **Restored to original shadcn/ui state**
 
 ### Modal Pages
+
 - `src/app/instructor/quizzes/@modal/(.)new/page.tsx` - Quiz creation
 - `src/app/instructor/quizzes/@modal/(.)[quizId]/edit/page.tsx` - Quiz editing
 
 ### Feature Components
+
 - `src/components/features/instructor/quiz/components/CreateQuestionModal.tsx`
 - `src/components/features/instructor/quiz/components/questions-list/EditQuestionDialog.tsx`
 
 ### Form Components
+
 - `src/components/features/instructor/quiz/components/QuizForm.tsx`
 - `src/components/features/instructor/quiz/components/forms/BaseQuestionForm.tsx`
 - `src/components/features/instructor/quiz/components/forms/MatchingQuestionForm.tsx`
 - `src/components/features/instructor/quiz/components/forms/RankingQuestionForm.tsx`
 
 ### Documentation
+
 - `docs/REVAMP_SUMMARY.md` - Technical implementation details
 - `docs/RESIZABLE_SHEETS_GUIDE.md` - Developer quick start guide
 
@@ -81,27 +91,32 @@ Revamp quiz and question creation/editing flow to provide better mobile experien
 ### New Props
 
 **SheetContent**:
+
 - `resizable?: boolean` - Enable drag-to-resize (default: false)
 - `snapPoints?: string[]` - Height snap points (default: ['50vh', '75vh', '90vh'])
 
 **SheetHeader**:
+
 - `hasResizeHandle?: boolean` - Add padding for drag handle (default: false)
 
 ## 📱 Mobile UX Improvements
 
 ### Touch Targets
+
 - Drag handle: 16px × 8px (increased from 12px × 6px)
 - Buttons: Minimum 32-40px height
 - Inputs: 36px height (h-9)
 - All interactive elements: 44×44px minimum
 
 ### Visual Feedback
+
 - Cursor changes (grab/grabbing)
 - Hover states on drag handle
 - Smooth color transitions
 - Clear visual hierarchy
 
 ### Responsive Patterns
+
 - Stack on mobile, grid on desktop
 - Full-width buttons on mobile
 - Proper spacing (3-4 units)
@@ -110,6 +125,7 @@ Revamp quiz and question creation/editing flow to provide better mobile experien
 ## ✅ Testing
 
 ### Manual Testing Completed
+
 - ✅ TypeScript compilation (no errors)
 - ✅ ESLint checks (no new warnings)
 - ✅ Code formatting (Prettier)
@@ -117,6 +133,7 @@ Revamp quiz and question creation/editing flow to provide better mobile experien
 - ✅ Responsive breakpoints verified
 
 ### Browser Support
+
 - ✅ Touch events (iOS Safari, Chrome Mobile)
 - ✅ Mouse events (Desktop browsers)
 - ✅ CSS transitions (All modern browsers)
@@ -125,6 +142,7 @@ Revamp quiz and question creation/editing flow to provide better mobile experien
 ## 📚 Documentation
 
 ### Added Documentation
+
 1. **REVAMP_SUMMARY.md** - Complete technical overview
    - Implementation details
    - API reference
@@ -142,11 +160,13 @@ Revamp quiz and question creation/editing flow to provide better mobile experien
 ## 🎨 Design Decisions
 
 ### Snap Points Strategy
+
 - **60vh** - Small forms, quick edits
 - **80vh** - Default, most forms start here
 - **95vh** - Maximum content view
 
 ### Why These Values?
+
 - 60vh: Shows content without overwhelming
 - 80vh: Balances visibility and context
 - 95vh: Maximum usable space while preserving header
@@ -154,12 +174,14 @@ Revamp quiz and question creation/editing flow to provide better mobile experien
 ## 🚀 Performance
 
 ### Optimizations
+
 - useCallback for event handlers
 - Proper event listener cleanup
 - Transition disabling during drag
 - Minimal re-renders
 
 ### Metrics
+
 - No layout shifts during resize
 - Smooth 60fps animations
 - Fast initial render
@@ -167,6 +189,7 @@ Revamp quiz and question creation/editing flow to provide better mobile experien
 ## ♿ Accessibility
 
 ### WCAG 2.1 Compliance
+
 - ✅ Level AA color contrast
 - ✅ Keyboard navigation
 - ✅ Screen reader support
@@ -174,6 +197,7 @@ Revamp quiz and question creation/editing flow to provide better mobile experien
 - ✅ Focus indicators
 
 ### Screen Reader
+
 - Drag handle: `role="button"` with `aria-label="Drag to resize"`
 - Sheet titles announced on open
 - Form errors properly associated
@@ -181,6 +205,7 @@ Revamp quiz and question creation/editing flow to provide better mobile experien
 ## 🔄 Backward Compatibility
 
 All changes are backward compatible:
+
 - Existing sheets continue to work unchanged
 - New props are optional with sensible defaults
 - No breaking changes to existing API
@@ -188,12 +213,14 @@ All changes are backward compatible:
 ## 🎯 Impact
 
 ### User Experience
+
 - ✅ Better mobile form interaction
 - ✅ More control over form visibility
 - ✅ Improved touch targets
 - ✅ Consistent responsive experience
 
 ### Developer Experience
+
 - ✅ Simple API with sensible defaults
 - ✅ Comprehensive documentation
 - ✅ Clear migration path

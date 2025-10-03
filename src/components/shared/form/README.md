@@ -193,6 +193,7 @@ const form = useForm();
 A rich text editor built with Tiptap that provides formatting capabilities for content creation.
 
 **Features:**
+
 - Text formatting: Bold, Italic, Code
 - Lists: Bullet lists, Ordered lists
 - Undo/Redo support
@@ -202,6 +203,7 @@ A rich text editor built with Tiptap that provides formatting capabilities for c
 - Dark mode support
 
 **Props:**
+
 - `content: string` - HTML content to display/edit
 - `onChange: (content: string) => void` - Callback when content changes
 - `placeholder?: string` - Placeholder text
@@ -211,6 +213,7 @@ A rich text editor built with Tiptap that provides formatting capabilities for c
 - `id?: string` - HTML id attribute
 
 **Example:**
+
 ```tsx
 import { RichTextEditor } from '@/components/shared/form/RichTextEditor';
 
@@ -229,6 +232,7 @@ function MyComponent() {
 ```
 
 **Usage:**
+
 - Question content editing
 - Quiz descriptions
 - Explanations and feedback
@@ -241,6 +245,7 @@ function MyComponent() {
 A React Hook Form compatible wrapper for RichTextEditor.
 
 **Props:**
+
 - `control: Control` - React Hook Form control
 - `name: string` - Field name
 - `label: string` - Label text
@@ -250,9 +255,11 @@ A React Hook Form compatible wrapper for RichTextEditor.
 - `required?: boolean` - Show required indicator
 
 **Example:**
+
 ```tsx
-import { RichTextField } from '@/components/shared/form/RichTextField';
 import { useForm } from 'react-hook-form';
+
+import { RichTextField } from '@/components/shared/form/RichTextField';
 
 function MyForm() {
   const { control } = useForm();
@@ -270,6 +277,7 @@ function MyForm() {
 ```
 
 **Usage:**
+
 - Integrated with React Hook Form
 - Automatic validation and error display
 - Used in question creation/editing forms
@@ -281,10 +289,12 @@ function MyForm() {
 A read-only component to display rich text content with proper styling.
 
 **Props:**
+
 - `content: string` - HTML content to display
 - `className?: string` - Additional CSS classes
 
 **Example:**
+
 ```tsx
 import { RichTextDisplay } from '@/components/shared/form/RichTextEditor';
 
@@ -294,6 +304,7 @@ function QuestionPreview({ content }) {
 ```
 
 **Usage:**
+
 - Question previews
 - Display formatted content anywhere in the app
 
@@ -304,6 +315,7 @@ function QuestionPreview({ content }) {
 A utility function to extract plain text from HTML content.
 
 **Example:**
+
 ```tsx
 import { stripHtml } from '@/components/shared/form/RichTextEditor';
 
@@ -312,6 +324,7 @@ const plainText = stripHtml('<p>Hello <strong>world</strong></p>');
 ```
 
 **Usage:**
+
 - Preview snippets
 - Search indexing
 - Plain text fallbacks
@@ -329,6 +342,7 @@ The rich text editor uses Tailwind's prose classes. Custom styles are in `src/ap
 ## Mobile Support
 
 All components are fully responsive:
+
 - Touch-friendly toolbar buttons
 - Optimized button sizes for mobile
 - Responsive toolbar layout with wrapping
