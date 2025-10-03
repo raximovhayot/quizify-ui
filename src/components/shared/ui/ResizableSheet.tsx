@@ -221,7 +221,9 @@ function ResizableSheetContent({
       ref={contentRef}
       side={side}
       className={cn(
-        resizable && side === 'bottom' && 'transition-all ease-in-out',
+        resizable &&
+          side === 'bottom' &&
+          'transition-all duration-300 ease-in-out',
         isDragging && 'duration-0',
         className
       )}
