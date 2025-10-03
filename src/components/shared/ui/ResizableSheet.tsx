@@ -62,6 +62,12 @@ function useDragResize(
       const heightDiff = window.innerHeight - viewport.height;
       const keyboardOpen = heightDiff > 100; // threshold of 100px
       setIsKeyboardOpen(keyboardOpen);
+
+      // When keyboard opens, automatically adjust to the smallest snap point
+      // to ensure input fields are visible
+      if (keyboardOpen && currentSnapIndex !== 0) {
+        setCurrentSnapIndex(0);
+      }
     };
 
     window.visualViewport.addEventListener('resize', handleResize);
@@ -70,7 +76,7 @@ function useDragResize(
     return () => {
       window.visualViewport?.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [currentSnapIndex]);
 
   const handleDragStart = React.useCallback(
     (e: React.TouchEvent | React.MouseEvent) => {
@@ -182,6 +188,28 @@ function ResizableSheetContent({
 }: ResizableSheetContentProps) {
   const { currentHeight, handleDragStart, isDragging, isKeyboardOpen } =
     useDragResize(resizable && side === 'bottom', snapPoints);
+  const contentRef = React.useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to focused element when keyboard opens
+  React.useEffect(() => {
+    if (!isKeyboardOpen || !contentRef.current) return;
+
+    const activeElement = document.activeElement;
+    if (
+      activeElement &&
+      (activeElement.tagName === 'INPUT' ||
+        activeElement.tagName === 'TEXTAREA' ||
+        activeElement.hasAttribute('contenteditable'))
+    ) {
+      // Small delay to ensure keyboard animation is complete
+      setTimeout(() => {
+        activeElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }, 300);
+    }
+  }, [isKeyboardOpen]);
 
   const heightStyle =
     resizable && side === 'bottom'
@@ -190,6 +218,7 @@ function ResizableSheetContent({
 
   return (
     <SheetContent
+      ref={contentRef}
       side={side}
       className={cn(
         resizable && side === 'bottom' && 'transition-all ease-in-out',
