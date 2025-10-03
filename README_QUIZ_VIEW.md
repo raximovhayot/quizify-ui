@@ -9,11 +9,13 @@ The instructor quiz view page has been completely revamped with a modern, card-b
 ### How to Test
 
 1. **Start the dev server:**
+
    ```bash
    npm run dev
    ```
 
 2. **Navigate to a quiz view page:**
+
    ```
    http://localhost:3000/instructor/quizzes/[quizId]
    ```
@@ -26,10 +28,12 @@ The instructor quiz view page has been completely revamped with a modern, card-b
 ### Component Changes
 
 #### New Files
+
 - `src/components/features/instructor/quiz/components/QuizViewActions.tsx`
 - `src/components/features/instructor/quiz/components/QuizViewSkeleton.tsx`
 
 #### Modified Files
+
 - `src/components/features/instructor/quiz/components/QuizViewPage.tsx`
 - `src/components/features/instructor/quiz/components/QuizViewHeader.tsx`
 - `src/components/features/instructor/quiz/components/QuizViewDetails.tsx`
@@ -40,18 +44,18 @@ The instructor quiz view page has been completely revamped with a modern, card-b
 ### Key Technical Details
 
 #### Responsive Grid
+
 ```tsx
 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
   <div className="lg:col-span-2">
     {/* Main content: 66.6% width on desktop */}
   </div>
-  <div className="lg:col-span-1">
-    {/* Sidebar: 33.3% width on desktop */}
-  </div>
+  <div className="lg:col-span-1">{/* Sidebar: 33.3% width on desktop */}</div>
 </div>
 ```
 
 #### Container System
+
 ```tsx
 <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 max-w-7xl">
   {/* Content with responsive padding and max-width */}
@@ -59,7 +63,9 @@ The instructor quiz view page has been completely revamped with a modern, card-b
 ```
 
 #### Card Pattern
+
 All sections now use consistent Card components:
+
 ```tsx
 <Card>
   <CardHeader>
@@ -68,9 +74,7 @@ All sections now use consistent Card components:
       Title
     </CardTitle>
   </CardHeader>
-  <CardContent>
-    {/* Content */}
-  </CardContent>
+  <CardContent>{/* Content */}</CardContent>
 </Card>
 ```
 
@@ -94,48 +98,57 @@ All sections now use consistent Card components:
 ```typescript
 // From src/components/shared/hooks/useResponsive.ts
 const breakpoints = {
-  xs: 0,      // Default mobile
-  sm: 640,    // Small tablets
-  md: 768,    // Tablets
-  lg: 1024,   // Desktop (grid activates)
-  xl: 1280,   // Large desktop
-  '2xl': 1536 // Extra large
-}
+  xs: 0, // Default mobile
+  sm: 640, // Small tablets
+  md: 768, // Tablets
+  lg: 1024, // Desktop (grid activates)
+  xl: 1280, // Large desktop
+  '2xl': 1536, // Extra large
+};
 ```
 
 ### Common Issues
 
 #### Issue: Layout not responsive
+
 **Solution:** Check that container classes are applied:
+
 ```tsx
-className="container mx-auto px-4 sm:px-6 lg:px-8"
+className = 'container mx-auto px-4 sm:px-6 lg:px-8';
 ```
 
 #### Issue: Cards not showing
+
 **Solution:** Verify Card imports:
+
 ```tsx
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 ```
 
 #### Issue: Grid not switching to 3 columns
+
 **Solution:** Check grid classes:
+
 ```tsx
-className="grid grid-cols-1 lg:grid-cols-3"
+className = 'grid grid-cols-1 lg:grid-cols-3';
 ```
 
 ### Style Guide
 
 #### Spacing Scale
+
 - Mobile: `gap-6` (24px)
 - Desktop: `gap-8` (32px)
 - Cards: `space-y-6` or `space-y-8`
 
 #### Typography
+
 - Page Title: `text-3xl sm:text-4xl`
 - Card Title: `text-lg`
 - Body Text: `text-sm sm:text-base`
 
 #### Touch Targets
+
 - Minimum: 44x44px
 - Buttons: `size="lg"` or custom sizing
 - Icon buttons: `h-8 w-8` minimum
@@ -143,17 +156,19 @@ className="grid grid-cols-1 lg:grid-cols-3"
 ### Integration Points
 
 #### Parent Page
+
 ```tsx
 // src/app/instructor/quizzes/[quizId]/page.tsx
 export default function QuizDetailsPage() {
   const params = useParams<{ quizId: string }>();
   const quizId = Number(params?.quizId ?? NaN);
-  
+
   return <QuizViewPage quizId={quizId} />;
 }
 ```
 
 #### Data Fetching
+
 ```tsx
 // Uses existing hooks
 const { data: quiz, isLoading, error } = useQuiz(quizId);
@@ -184,6 +199,7 @@ npm run pretty
 ### Questions?
 
 If you have questions about the implementation:
+
 1. Check the documentation files listed above
 2. Review the code comments in the components
 3. Test the responsive behavior in browser DevTools
@@ -194,17 +210,20 @@ If you have questions about the implementation:
 ### Design System
 
 #### Colors
+
 - Cards: `bg-card` with `border`
 - Muted backgrounds: `bg-muted/50`
 - Text: `text-card-foreground`, `text-muted-foreground`
 - Badges: `variant="outline"`, `variant="default"`, `variant="secondary"`
 
 #### Spacing
+
 - Between sections: 6-8 units (24-32px)
 - Card padding: Built into Card component
 - Grid gap: 6-8 units (24-32px)
 
 #### Layout
+
 - Max content width: 1280px (`max-w-7xl`)
 - Content ratio: 2:1 (main content to sidebar)
 - Mobile: Single column, full width
@@ -230,6 +249,7 @@ If you have questions about the implementation:
 ### Test Scenarios
 
 #### Basic Functionality
+
 1. View quiz details
 2. Edit quiz
 3. Publish/unpublish quiz
@@ -237,6 +257,7 @@ If you have questions about the implementation:
 5. View question answers
 
 #### Responsive Testing
+
 1. Test at 375px (iPhone SE)
 2. Test at 414px (iPhone 12)
 3. Test at 768px (iPad)
@@ -244,6 +265,7 @@ If you have questions about the implementation:
 5. Test at 1440px (Desktop)
 
 #### Edge Cases
+
 1. Very long quiz titles
 2. Quiz with no description
 3. Quiz with many questions (20+)
@@ -251,6 +273,7 @@ If you have questions about the implementation:
 5. Different setting combinations
 
 #### Browser Testing
+
 - Chrome (latest)
 - Firefox (latest)
 - Safari (latest)
@@ -261,6 +284,7 @@ If you have questions about the implementation:
 ### Expected Behavior
 
 #### Mobile (< 768px)
+
 - Single column layout
 - Full-width cards
 - Shortened button labels
@@ -268,12 +292,14 @@ If you have questions about the implementation:
 - Adequate touch targets
 
 #### Tablet (768-1023px)
+
 - Single column layout
 - Full button labels
 - Better spacing
 - Larger text
 
 #### Desktop (≥ 1024px)
+
 - 3-column grid
 - Sidebar visible
 - Actions always accessible
@@ -282,6 +308,7 @@ If you have questions about the implementation:
 ### Reporting Issues
 
 When reporting issues, include:
+
 1. Screen size/device
 2. Browser and version
 3. Steps to reproduce
@@ -291,6 +318,7 @@ When reporting issues, include:
 ## Summary
 
 The quiz view page now features:
+
 - ✅ Modern card-based design
 - ✅ Fully responsive (mobile to desktop)
 - ✅ Better visual hierarchy

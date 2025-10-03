@@ -3,6 +3,7 @@
 ## Component Structure
 
 ### Before
+
 ```
 QuizViewPage
 ├── QuizViewHeader (with actions inline)
@@ -17,6 +18,7 @@ QuizViewPage
 ```
 
 ### After
+
 ```
 QuizViewPage (with container + grid)
 ├── QuizViewHeader (simplified, no actions)
@@ -34,6 +36,7 @@ QuizViewPage (with container + grid)
 ### QuizViewPage.tsx
 
 #### Before (205 lines)
+
 ```tsx
 export function QuizViewPage({ quizId }: QuizViewPageProps) {
   const t = useTranslations();
@@ -48,7 +51,7 @@ export function QuizViewPage({ quizId }: QuizViewPageProps) {
       <div className="w-full space-y-8">
         <div className="space-y-6">
           <QuizViewHeader quiz={quiz} />
-          
+
           {/* Mobile arrangement */}
           <div className="sm:hidden space-y-3">
             <QuizViewDetails quiz={quiz} />
@@ -71,7 +74,7 @@ export function QuizViewPage({ quizId }: QuizViewPageProps) {
             </div>
             <QuizViewConfiguration quiz={quiz} />
           </div>
-          
+
           {/* Desktop arrangement */}
           <div className="hidden sm:block space-y-6">
             <QuizViewDetails quiz={quiz} />
@@ -91,6 +94,7 @@ export function QuizViewPage({ quizId }: QuizViewPageProps) {
 ```
 
 #### After (78 lines)
+
 ```tsx
 export function QuizViewPage({ quizId }: QuizViewPageProps) {
   const t = useTranslations();
@@ -136,6 +140,7 @@ export function QuizViewPage({ quizId }: QuizViewPageProps) {
 ### QuizViewHeader.tsx
 
 #### Before (125 lines)
+
 ```tsx
 export function QuizViewHeader({ quiz }: QuizViewHeaderProps) {
   const t = useTranslations();
@@ -158,7 +163,7 @@ export function QuizViewHeader({ quiz }: QuizViewHeaderProps) {
       </div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-2xl md:text-3xl font-bold">{quiz.title}</h1>
-        
+
         {/* Desktop actions */}
         <div className="hidden sm:flex sm:shrink-0 sm:items-center sm:gap-3">
           <Button onClick={() => router.push(ROUTES_APP.quizzes.edit(quiz.id))}>
@@ -184,6 +189,7 @@ export function QuizViewHeader({ quiz }: QuizViewHeaderProps) {
 ```
 
 #### After (77 lines)
+
 ```tsx
 export function QuizViewHeader({ quiz }: QuizViewHeaderProps) {
   const t = useTranslations();
@@ -224,6 +230,7 @@ export function QuizViewHeader({ quiz }: QuizViewHeaderProps) {
 ### QuizViewDetails.tsx
 
 #### Before (19 lines)
+
 ```tsx
 export function QuizViewDetails({ quiz }: QuizViewDetailsProps) {
   if (!quiz.description) {
@@ -239,6 +246,7 @@ export function QuizViewDetails({ quiz }: QuizViewDetailsProps) {
 ```
 
 #### After (43 lines)
+
 ```tsx
 export function QuizViewDetails({ quiz }: QuizViewDetailsProps) {
   const t = useTranslations();
@@ -270,6 +278,7 @@ export function QuizViewDetails({ quiz }: QuizViewDetailsProps) {
 ### QuizViewConfiguration.tsx
 
 #### Before (100 lines)
+
 ```tsx
 export function QuizViewConfiguration({ quiz }: QuizViewConfigurationProps) {
   const t = useTranslations();
@@ -292,6 +301,7 @@ export function QuizViewConfiguration({ quiz }: QuizViewConfigurationProps) {
 ```
 
 #### After (124 lines - with Card structure)
+
 ```tsx
 export function QuizViewConfiguration({ quiz }: QuizViewConfigurationProps) {
   const t = useTranslations();
@@ -382,27 +392,32 @@ export function QuizViewActions({ quiz }: QuizViewActionsProps) {
 ## Key Improvements Summary
 
 ### 1. Reduced Complexity
+
 - QuizViewPage: 205 → 78 lines (-62%)
 - QuizViewHeader: 125 → 77 lines (-38%)
 - Removed duplicate mobile/desktop logic
 
 ### 2. Better Separation of Concerns
+
 - Actions moved to dedicated component
 - Each section is a self-contained card
 - No inline conditional rendering for layout
 
 ### 3. Improved Maintainability
+
 - Single responsive grid layout
 - Container-based design
 - Consistent card pattern
 
 ### 4. Enhanced UX
+
 - Clear visual hierarchy with cards
 - Better spacing and touch targets
 - Responsive grid adapts automatically
 - No horizontal scrolling on mobile
 
 ### 5. Better Code Organization
+
 ```
 Before:
 - Mixed concerns (layout + actions + state)

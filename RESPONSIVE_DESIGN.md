@@ -154,8 +154,9 @@ Max Width: 1280px (7xl)
 ## Tailwind Classes Breakdown
 
 ### Container Responsiveness
+
 ```tsx
-className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 max-w-7xl"
+className = 'container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 max-w-7xl';
 ```
 
 - `container` - Tailwind container utility
@@ -168,8 +169,9 @@ className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 max-w-7xl"
 - `max-w-7xl` - Maximum width of 1280px
 
 ### Grid Responsiveness
+
 ```tsx
-className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8"
+className = 'grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8';
 ```
 
 - `grid` - CSS Grid layout
@@ -179,20 +181,22 @@ className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8"
 - `sm:gap-8` - 32px gap on small screens and up
 
 ### Column Spanning
+
 ```tsx
 // Main content
-className="lg:col-span-2"
+className = 'lg:col-span-2';
 
 // Sidebar
-className="lg:col-span-1"
+className = 'lg:col-span-1';
 ```
 
 - On mobile/tablet: Both sections full width (1 column)
 - On desktop: Main takes 2/3, sidebar takes 1/3
 
 ### Typography Responsiveness
+
 ```tsx
-className="text-3xl sm:text-4xl font-bold tracking-tight"
+className = 'text-3xl sm:text-4xl font-bold tracking-tight';
 ```
 
 - `text-3xl` - 30px on mobile
@@ -200,12 +204,13 @@ className="text-3xl sm:text-4xl font-bold tracking-tight"
 - Progressive enhancement approach
 
 ### Button Responsiveness
+
 ```tsx
 // Mobile
-className="flex-1 sm:flex-none"
+className = 'flex-1 sm:flex-none';
 
 // Desktop
-className="w-full flex items-center justify-center gap-2"
+className = 'w-full flex items-center justify-center gap-2';
 ```
 
 - Mobile: Buttons grow to fill space
@@ -213,15 +218,16 @@ className="w-full flex items-center justify-center gap-2"
 
 ## Breakpoint Summary
 
-| Breakpoint | Width | Layout | Columns | Padding | Gap |
-|------------|-------|--------|---------|---------|-----|
-| Mobile     | < 768px | Single | 1 | px-4 | gap-6 |
-| Tablet     | 768-1023px | Single | 1 | px-6 | gap-6 |
-| Desktop    | ≥ 1024px | Grid | 3 (2:1) | px-8 | gap-8 |
+| Breakpoint | Width      | Layout | Columns | Padding | Gap   |
+| ---------- | ---------- | ------ | ------- | ------- | ----- |
+| Mobile     | < 768px    | Single | 1       | px-4    | gap-6 |
+| Tablet     | 768-1023px | Single | 1       | px-6    | gap-6 |
+| Desktop    | ≥ 1024px   | Grid   | 3 (2:1) | px-8    | gap-8 |
 
 ## Adaptive Features
 
 ### Mobile Optimizations
+
 - Shortened button labels ("Show" vs "Show Answers")
 - Full-width buttons
 - Stacked layout
@@ -229,6 +235,7 @@ className="w-full flex items-center justify-center gap-2"
 - Single column for easy scrolling
 
 ### Desktop Optimizations
+
 - Sidebar keeps actions visible
 - 2:1 content ratio
 - Better use of horizontal space
@@ -236,6 +243,7 @@ className="w-full flex items-center justify-center gap-2"
 - Multi-column for efficiency
 
 ### Transition Points
+
 - 640px (sm): Increased padding
 - 768px (md): Larger text, full button labels
 - 1024px (lg): Grid layout activates, 3 columns
@@ -243,6 +251,7 @@ className="w-full flex items-center justify-center gap-2"
 ## Visual Consistency
 
 All screen sizes maintain:
+
 - Card-based design
 - Consistent spacing scale (6, 8 units)
 - Same color scheme
