@@ -48,7 +48,7 @@ export default function CreateQuizModalPage() {
         <ResizableSheetContent
           side="bottom"
           resizable
-          snapPoints={['60vh', '80vh', '95vh']}
+          snapPoints={['40vh', '65vh', '85vh']}
           className="overflow-y-auto px-4 pb-safe rounded-t-2xl"
         >
           <ResizableSheetHeader className="pb-4" hasResizeHandle>
