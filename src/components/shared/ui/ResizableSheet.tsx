@@ -10,6 +10,15 @@ import {
 } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 
+// Helper function to get the current viewport height (keyboard-aware)
+function getViewportHeight(): number {
+  // Use visualViewport for keyboard-aware height on mobile
+  if (typeof window !== 'undefined' && window.visualViewport) {
+    return window.visualViewport.height;
+  }
+  return typeof window !== 'undefined' ? window.innerHeight : 0;
+}
+
 // Helper function to convert CSS height values to pixels
 function parseHeightToPixels(height: string, viewportHeight: number): number {
   if (height.endsWith('vh')) {
@@ -36,23 +45,69 @@ function useDragResize(
     snapPoints.length - 1
   );
   const [isDragging, setIsDragging] = React.useState(false);
+  const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false);
   const startY = React.useRef(0);
   const startHeight = React.useRef(0);
+  const initialViewportHeight = React.useRef(0);
+
+  // Detect keyboard open/close by monitoring visualViewport
+  React.useEffect(() => {
+    if (typeof window === 'undefined' || !window.visualViewport) return;
+
+    const handleResize = () => {
+      const viewport = window.visualViewport;
+      if (!viewport) return;
+
+      // If visualViewport height is significantly less than window height, keyboard is likely open
+      const heightDiff = window.innerHeight - viewport.height;
+      const keyboardOpen = heightDiff > 100; // threshold of 100px
+      setIsKeyboardOpen(keyboardOpen);
+
+      // When keyboard opens, automatically adjust to the smallest snap point
+      // to ensure input fields are visible
+      if (keyboardOpen && currentSnapIndex !== 0) {
+        setCurrentSnapIndex(0);
+      }
+    };
+
+    window.visualViewport.addEventListener('resize', handleResize);
+    handleResize(); // Check initial state
+
+    return () => {
+      window.visualViewport?.removeEventListener('resize', handleResize);
+    };
+  }, [currentSnapIndex]);
 
   const handleDragStart = React.useCallback(
     (e: React.TouchEvent | React.MouseEvent) => {
       if (!enabled) return;
+
+      // Don't allow dragging when keyboard is open or when focused on an input
+      if (isKeyboardOpen) return;
+      const activeElement = document.activeElement;
+      if (
+        activeElement?.tagName === 'INPUT' ||
+        activeElement?.tagName === 'TEXTAREA' ||
+        activeElement?.hasAttribute('contenteditable')
+      ) {
+        return;
+      }
+
       setIsDragging(true);
       const clientY = 'touches' in e ? (e.touches[0]?.clientY ?? 0) : e.clientY;
       startY.current = clientY;
+
+      // Store initial viewport height to avoid recalculation during drag
+      initialViewportHeight.current = getViewportHeight();
+
       // Calculate the actual pixel height of the current snap point
       const currentSnapPoint = snapPoints[currentSnapIndex] ?? snapPoints[0];
       startHeight.current = parseHeightToPixels(
         currentSnapPoint!,
-        window.innerHeight
+        initialViewportHeight.current
       );
     },
-    [enabled, currentSnapIndex, snapPoints]
+    [enabled, currentSnapIndex, snapPoints, isKeyboardOpen]
   );
 
   const handleDragMove = React.useCallback(
@@ -62,8 +117,8 @@ function useDragResize(
       if (!clientY) return;
       const deltaY = startY.current - clientY;
 
-      // Calculate which snap point we're closest to
-      const viewportHeight = window.innerHeight;
+      // Use the stored viewport height to prevent flickering
+      const viewportHeight = initialViewportHeight.current;
       const targetHeight = startHeight.current + deltaY;
 
       // Convert all snap points to pixels
@@ -95,7 +150,7 @@ function useDragResize(
   React.useEffect(() => {
     if (isDragging) {
       window.addEventListener('mousemove', handleDragMove);
-      window.addEventListener('touchmove', handleDragMove);
+      window.addEventListener('touchmove', handleDragMove, { passive: false });
       window.addEventListener('mouseup', handleDragEnd);
       window.addEventListener('touchend', handleDragEnd);
 
@@ -112,6 +167,7 @@ function useDragResize(
     currentHeight: snapPoints[currentSnapIndex],
     handleDragStart,
     isDragging,
+    isKeyboardOpen,
   };
 }
 
@@ -130,10 +186,30 @@ function ResizableSheetContent({
   snapPoints = ['50vh', '75vh', '90vh'],
   ...props
 }: ResizableSheetContentProps) {
-  const { currentHeight, handleDragStart, isDragging } = useDragResize(
-    resizable && side === 'bottom',
-    snapPoints
-  );
+  const { currentHeight, handleDragStart, isDragging, isKeyboardOpen } =
+    useDragResize(resizable && side === 'bottom', snapPoints);
+  const contentRef = React.useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to focused element when keyboard opens
+  React.useEffect(() => {
+    if (!isKeyboardOpen || !contentRef.current) return;
+
+    const activeElement = document.activeElement;
+    if (
+      activeElement &&
+      (activeElement.tagName === 'INPUT' ||
+        activeElement.tagName === 'TEXTAREA' ||
+        activeElement.hasAttribute('contenteditable'))
+    ) {
+      // Small delay to ensure keyboard animation is complete
+      setTimeout(() => {
+        activeElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }, 300);
+    }
+  }, [isKeyboardOpen]);
 
   const heightStyle =
     resizable && side === 'bottom'
@@ -142,6 +218,7 @@ function ResizableSheetContent({
 
   return (
     <SheetContent
+      ref={contentRef}
       side={side}
       className={cn(
         resizable && side === 'bottom' && 'transition-all ease-in-out',
@@ -151,7 +228,7 @@ function ResizableSheetContent({
       style={heightStyle}
       {...props}
     >
-      {resizable && side === 'bottom' && (
+      {resizable && side === 'bottom' && !isKeyboardOpen && (
         <div
           className="absolute top-0 left-0 right-0 h-8 flex items-center justify-center cursor-grab active:cursor-grabbing z-10 touch-none"
           onMouseDown={handleDragStart}
