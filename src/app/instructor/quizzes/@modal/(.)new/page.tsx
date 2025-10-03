@@ -35,7 +35,10 @@ export default function CreateQuizModalPage() {
   };
 
   const content = (
-    <CreateQuizContainer className="border-none shadow-none rounded-none p-0 [&_[data-slot=card-header]]:px-0 [&_[data-slot=card-content]]:px-0 [&_[data-slot=card-footer]]:px-0 bg-background" />
+    <CreateQuizContainer
+      hideTitle
+      className="border-none shadow-none rounded-none p-0 [&_[data-slot=card-header]]:px-0 [&_[data-slot=card-content]]:px-0 [&_[data-slot=card-footer]]:px-0 bg-background"
+    />
   );
 
   // Mobile: Use Sheet (bottom drawer)

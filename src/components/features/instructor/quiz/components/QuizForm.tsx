@@ -29,6 +29,7 @@ export interface QuizFormProps {
   onCancel?: () => void;
   isSubmitting?: boolean;
   className?: string;
+  hideTitle?: boolean;
 }
 
 export function QuizForm({
@@ -37,6 +38,7 @@ export function QuizForm({
   onCancel,
   isSubmitting = false,
   className,
+  hideTitle = false,
 }: Readonly<QuizFormProps>) {
   const t = useTranslations();
 
@@ -76,15 +78,17 @@ export function QuizForm({
 
   return (
     <Card className={className}>
-      <CardHeader>
-        <CardTitle>
-          {quiz
-            ? t('instructor.quiz.form.editTitle', { fallback: 'Edit Quiz' })
-            : t('instructor.quiz.form.createTitle', {
-                fallback: 'Create New Quiz',
-              })}
-        </CardTitle>
-      </CardHeader>
+      {!hideTitle && (
+        <CardHeader>
+          <CardTitle>
+            {quiz
+              ? t('instructor.quiz.form.editTitle', { fallback: 'Edit Quiz' })
+              : t('instructor.quiz.form.createTitle', {
+                  fallback: 'Create New Quiz',
+                })}
+          </CardTitle>
+        </CardHeader>
+      )}
       <CardContent>
         <form
           onSubmit={form.handleSubmit(handleFormSubmit)}

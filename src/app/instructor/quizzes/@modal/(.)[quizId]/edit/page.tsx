@@ -11,13 +11,13 @@ import { useUpdateQuiz } from '@/components/features/instructor/quiz/hooks/useQu
 import { InstructorQuizUpdateRequest } from '@/components/features/instructor/quiz/types/quiz';
 import { ROUTES_APP } from '@/components/features/instructor/routes';
 import { useResponsive } from '@/components/shared/hooks/useResponsive';
+import { ContentPlaceholder } from '@/components/shared/ui/ContentPlaceholder';
 import {
   ResizableSheet,
   ResizableSheetContent,
   ResizableSheetHeader,
   ResizableSheetTitle,
 } from '@/components/shared/ui/ResizableSheet';
-import { ContentPlaceholder } from '@/components/shared/ui/ContentPlaceholder';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -164,6 +164,7 @@ export default function Page() {
       onSubmit={handleQuizSubmit}
       onCancel={handleCancel}
       isSubmitting={updateQuizMutation.isPending}
+      hideTitle
       className="border-none shadow-none rounded-none p-0 [&_[data-slot=card-header]]:px-0 [&_[data-slot=card-content]]:px-0 [&_[data-slot=card-footer]]:px-0 bg-background"
     />
   ) : null;
