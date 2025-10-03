@@ -73,7 +73,9 @@
     },
     "question": {
       "points": "Ball",
-      "content": "Savol",
+      "content": {
+        "placeholder": "Savolingizni shu yerga kiriting..."
+      },
       "explanation": {
         "label": "Izoh",
         "placeholder": "Javobdan keyin ko'rsatiladigan ixtiyoriy izoh yoki fikr-mulohaza"
@@ -126,7 +128,11 @@
     "attempts": "{count} urinish",
     "attemptsUnlimited": "Cheklanmagan",
     "timeLabel": "Vaqt",
-    "attemptsLabel": "Urinishlar"
+    "attemptsLabel": "Urinishlar",
+    "show": "Ko'rsatish",
+    "hide": "Yashirish",
+    "pleaseWait": "Iltimos kuting...",
+    "unexpectedError": "Kutilmagan xatolik yuz berdi"
   },
   "auth": {
     "signIn": {
@@ -149,7 +155,8 @@
         "description": "Telefoningizga tasdiqlash kodi yubordik"
       },
       "sendCode": "Tasdiqlash kodini yuborish",
-      "sendingCode": "Kod yuborilmoqda..."
+      "sendingCode": "Kod yuborilmoqda...",
+      "codeSent": "Tasdiqlash kodi yuborildi"
     },
     "phone": {
       "label": "Telefon raqami",
@@ -190,7 +197,8 @@
       "success": "Telefon muvaffaqiyatli tasdiqlandi! Profil sozlashga yo'naltirilmoqda...",
       "resendSuccess": "Yangi tasdiqlash kodi yuborildi",
       "changePhone": "Telefon raqamini o'zgartirish",
-      "phoneRequired": "Telefon raqamni kiritish majburiy"
+      "phoneRequired": "Telefon raqamni kiritish majburiy",
+      "expired": "Tasdiqlash kodi muddati tugagan"
     },
     "forgotPassword": {
       "link": "Parolni unutdingizmi?",
@@ -245,7 +253,11 @@
       "passwordPattern": "Parol kamida bitta katta harf, bitta kichik harf va bitta raqamdan iborat bo'lishi kerak",
       "firstNameRequired": "Ism kiritish shart",
       "lastNameRequired": "Familiya kiritish shart",
-      "dashboardTypeRequired": "Iltimos, rolingizni tanlang"
+      "dashboardTypeRequired": "Iltimos, rolingizni tanlang",
+      "firstNameMinLength": "Ism kamida 2 ta belgidan iborat bo'lishi kerak",
+      "firstNameMaxLength": "Ism 50 ta belgidan oshmasligi kerak",
+      "lastNameMinLength": "Familiya kamida 2 ta belgidan iborat bo'lishi kerak",
+      "lastNameMaxLength": "Familiya 50 ta belgidan oshmasligi kerak"
     }
   },
   "navigation": {
@@ -397,6 +409,16 @@
         "error": {
           "title": "Test topilmadi",
           "description": "Siz qidirayotgan test mavjud emas yoki o'chirilgan."
+        },
+        "actions": {
+          "title": "Harakatlar",
+          "description": "Viktorinangizni boshqaring"
+        },
+        "configuration": {
+          "title": "Konfiguratsiya"
+        },
+        "details": {
+          "title": "Tafsilotlar"
         }
       },
       "edit": {
@@ -419,7 +441,7 @@
           "description": "Ushbu testni o'chirishni xohlaysizmi? Bu amalni bekor qilib bo'lmaydi."
         }
       },
-      "created": "Yaratilgan",
+      "created": "{date} yaratilgan",
       "question": {},
       "no": {
         "quizzes": "Hali testlar yaratilmagan."
@@ -446,13 +468,13 @@
       },
       "create": {
         "dialogTitle": "Test yaratish",
-        "button": "Test yaratish",
+        "button": "Viktorina yaratish",
         "first": "Birinchi testingizni yarating",
-        "success": "Test muvaffaqiyatli yaratildi",
+        "success": "Viktorina muvaffaqiyatli yaratildi",
         "error": "Testni yaratib bo'lmadi"
       },
       "update": {
-        "success": "Test muvaffaqiyatli yangilandi",
+        "success": "Viktorina muvaffaqiyatli yangilandi",
         "error": "Testni yangilab bo'lmadi"
       },
       "form": {
@@ -522,7 +544,8 @@
       },
       "row": {
         "aria": "{title} uchun test qatori"
-      }
+      },
+      "questions": "Savollar"
     },
     "userMenu": {
       "title": "Foydalanuvchi menyusi",
@@ -555,6 +578,31 @@
           "title": "Topshiriqlarni yuklab bo‘lmadi",
           "description": "Iltimos, qayta urinib ko‘ring."
         }
+      },
+      "assignment": {
+        "created": "Yaratilgan",
+        "due": "Muddat",
+        "students": "Talabalar",
+        "view": "Ko'rish"
+      },
+      "list": {
+        "empty": {
+          "title": "Hali topshiriqlar yo'q",
+          "description": "Birinchi viktorinani yaratish bilan boshlang"
+        },
+        "filtered": {
+          "empty": {
+            "description": "Filtrlarni o'zgartirib ko'ring"
+          }
+        }
+      },
+      "results": {
+        "count": "{count} natija"
+      },
+      "table": {
+        "title": "Sarlavha",
+        "created": "Yaratilgan",
+        "due": "Muddat"
       }
     }
   },
@@ -643,6 +691,35 @@
     "title": "Sahifa topilmadi",
     "description": "Siz izlayotgan sahifa mavjud emas yoki ko'chirilgan.",
     "goHome": "Bosh sahifaga o'tish",
-    "goToDashboard": "Panelga o'tish"
+    "goToDashboard": "Panelga o'tish",
+    "403": {
+      "title": "Kirish rad etildi",
+      "message": "Sizda ushbu resursga kirish huquqi yo'q"
+    },
+    "404": {
+      "title": "Sahifa topilmadi",
+      "message": "Siz qidirayotgan sahifa mavjud emas"
+    },
+    "500": {
+      "title": "Server xatosi",
+      "message": "Serverda xatolik yuz berdi"
+    },
+    "generic": {
+      "title": "Xatolik",
+      "message": "Xatolik yuz berdi"
+    }
+  },
+  "actions": {
+    "goBack": "Orqaga",
+    "goHome": "Bosh sahifaga"
+  },
+  "attachment": {
+    "delete": "Ilova o'chirish",
+    "deleteConfirm": {
+      "title": "Ilova o'chirilsinmi?",
+      "description": "Bu amalni bekor qilib bo'lmaydi."
+    },
+    "download": "Yuklab olish",
+    "uploadedOn": "{date} da yuklangan"
   }
 }

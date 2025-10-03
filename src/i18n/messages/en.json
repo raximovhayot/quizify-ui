@@ -82,7 +82,9 @@
     },
     "question": {
       "points": "Points",
-      "content": "Question",
+      "content": {
+        "placeholder": "Enter your question here..."
+      },
       "explanation": {
         "label": "Explanation",
         "placeholder": "Optional explanation or feedback shown after answering"
@@ -128,7 +130,11 @@
       "description": "Start building your quiz by creating engaging questions that will challenge and educate your students."
     },
     "timeLabel": "Time",
-    "attemptsLabel": "Attempts"
+    "attemptsLabel": "Attempts",
+    "show": "Show",
+    "hide": "Hide",
+    "pleaseWait": "Please wait...",
+    "unexpectedError": "An unexpected error occurred"
   },
   "auth": {
     "signIn": {
@@ -151,7 +157,8 @@
         "description": "We sent a verification code to your phone"
       },
       "sendCode": "Send Verification Code",
-      "sendingCode": "Sending Code..."
+      "sendingCode": "Sending Code...",
+      "codeSent": "Verification code sent"
     },
     "phone": {
       "label": "Phone Number",
@@ -191,7 +198,8 @@
       "resendIn": "Resend in {seconds}s",
       "success": "Phone verified successfully! Redirecting to profile setup...",
       "resendSuccess": "New verification code sent",
-      "changePhone": "Change phone number"
+      "changePhone": "Change phone number",
+      "expired": "Verification code expired"
     },
     "forgotPassword": {
       "link": "Forgot your password?",
@@ -244,7 +252,11 @@
       "passwordPattern": "Password must contain at least one uppercase letter, one lowercase letter, and one number",
       "firstNameRequired": "First name is required",
       "lastNameRequired": "Last name is required",
-      "dashboardTypeRequired": "Please select your role"
+      "dashboardTypeRequired": "Please select your role",
+      "firstNameMinLength": "First name must be at least 2 characters",
+      "firstNameMaxLength": "First name must not exceed 50 characters",
+      "lastNameMinLength": "Last name must be at least 2 characters",
+      "lastNameMaxLength": "Last name must not exceed 50 characters"
     },
     "backToSignIn": "Back to Sign In",
     "signOut": "Sign Out"
@@ -398,6 +410,16 @@
         "error": {
           "title": "Quiz not found",
           "description": "The quiz you are looking for does not exist or has been deleted."
+        },
+        "actions": {
+          "title": "Actions",
+          "description": "Manage your quiz"
+        },
+        "configuration": {
+          "title": "Configuration"
+        },
+        "details": {
+          "title": "Details"
         }
       },
       "edit": {
@@ -493,6 +515,19 @@
       },
       "row": {
         "aria": "Quiz row for {title}"
+      },
+      "create": {
+        "button": "Create Quiz",
+        "success": "Quiz created successfully"
+      },
+      "created": "Created {date}",
+      "questions": "Questions",
+      "shuffle": {
+        "answers": "Shuffle answers",
+        "questions": "Shuffle questions"
+      },
+      "update": {
+        "success": "Quiz updated successfully"
       }
     },
     "userMenu": {
@@ -526,6 +561,31 @@
           "title": "Failed to load assignments",
           "description": "Please try again."
         }
+      },
+      "assignment": {
+        "created": "Created",
+        "due": "Due",
+        "students": "Students",
+        "view": "View"
+      },
+      "list": {
+        "empty": {
+          "title": "No assignments yet",
+          "description": "Get started by creating your first quiz assignment"
+        },
+        "filtered": {
+          "empty": {
+            "description": "Try adjusting your filters"
+          }
+        }
+      },
+      "results": {
+        "count": "{count} results"
+      },
+      "table": {
+        "title": "Title",
+        "created": "Created",
+        "due": "Due"
       }
     }
   },
@@ -614,6 +674,35 @@
     "title": "Page not found",
     "description": "The page you’re looking for doesn’t exist or has been moved.",
     "goHome": "Go to Home",
-    "goToDashboard": "Go to Dashboard"
+    "goToDashboard": "Go to Dashboard",
+    "403": {
+      "title": "Access Denied",
+      "message": "You don't have permission to access this resource"
+    },
+    "404": {
+      "title": "Page Not Found",
+      "message": "The page you're looking for doesn't exist"
+    },
+    "500": {
+      "title": "Server Error",
+      "message": "Something went wrong on our end"
+    },
+    "generic": {
+      "title": "Error",
+      "message": "An error occurred"
+    }
+  },
+  "actions": {
+    "goBack": "Go Back",
+    "goHome": "Go Home"
+  },
+  "attachment": {
+    "delete": "Delete Attachment",
+    "deleteConfirm": {
+      "title": "Delete Attachment?",
+      "description": "This action cannot be undone."
+    },
+    "download": "Download",
+    "uploadedOn": "Uploaded on {date}"
   }
 }
