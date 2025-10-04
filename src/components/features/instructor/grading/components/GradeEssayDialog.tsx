@@ -2,9 +2,11 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CheckCircle2, X } from 'lucide-react';
-import { useTranslations } from 'next-intl';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+
+import { useState } from 'react';
+
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -26,12 +28,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
+import { sanitizeHtml } from '@/lib/sanitize';
 
 import { useGradeEssay } from '../hooks/useGrading';
-import {
-  GradeEssayFormData,
-  gradeEssaySchema,
-} from '../schemas/gradingSchema';
+import { GradeEssayFormData, gradeEssaySchema } from '../schemas/gradingSchema';
 import { EssayAnswer } from '../types/grading';
 
 interface GradeEssayDialogProps {
@@ -106,12 +106,14 @@ export function GradeEssayDialog({
           <div className="rounded-lg border p-4 bg-muted/50">
             <h4 className="font-medium mb-2">
               {t('instructor.grading.question', { fallback: 'Question' })} (
-              {answer.questionPoints} {t('common.points', { fallback: 'points' })}
-              )
+              {answer.questionPoints}{' '}
+              {t('common.points', { fallback: 'points' })})
             </h4>
             <div
               className="text-sm"
-              dangerouslySetInnerHTML={{ __html: answer.questionText }}
+              dangerouslySetInnerHTML={{
+                __html: sanitizeHtml(answer.questionText),
+              }}
             />
           </div>
 
@@ -139,7 +141,9 @@ export function GradeEssayDialog({
             <div className="text-sm whitespace-pre-wrap">
               {answer.studentAnswer || (
                 <span className="text-muted-foreground italic">
-                  {t('instructor.grading.noAnswer', { fallback: 'No answer provided' })}
+                  {t('instructor.grading.noAnswer', {
+                    fallback: 'No answer provided',
+                  })}
                 </span>
               )}
             </div>
@@ -187,9 +191,12 @@ export function GradeEssayDialog({
                     <FormControl>
                       <Textarea
                         rows={4}
-                        placeholder={t('instructor.grading.feedbackPlaceholder', {
-                          fallback: 'Provide feedback to the student...',
-                        })}
+                        placeholder={t(
+                          'instructor.grading.feedbackPlaceholder',
+                          {
+                            fallback: 'Provide feedback to the student...',
+                          }
+                        )}
                         {...field}
                       />
                     </FormControl>
@@ -211,7 +218,9 @@ export function GradeEssayDialog({
                 <Button type="submit" disabled={isSubmitting}>
                   <CheckCircle2 className="mr-2 h-4 w-4" />
                   {isSubmitting
-                    ? t('instructor.grading.grading', { fallback: 'Grading...' })
+                    ? t('instructor.grading.grading', {
+                        fallback: 'Grading...',
+                      })
                     : t('instructor.grading.submitGrade', {
                         fallback: 'Submit Grade',
                       })}

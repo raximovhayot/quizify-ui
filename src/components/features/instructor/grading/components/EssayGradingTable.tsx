@@ -1,8 +1,10 @@
 'use client';
 
 import { CheckCircle2, ClipboardCheck, FileEdit, XCircle } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+
 import { useState } from 'react';
+
+import { useTranslations } from 'next-intl';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -17,6 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { sanitizeHtml } from '@/lib/sanitize';
 
 import { EssayAnswer } from '../types/grading';
 import { GradeEssayDialog } from './GradeEssayDialog';
@@ -30,9 +33,9 @@ export function EssayGradingTable({ essays, loading }: EssayGradingTableProps) {
   const t = useTranslations();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedEssay, setSelectedEssay] = useState<EssayAnswer | null>(null);
-  const [filterStatus, setFilterStatus] = useState<'ALL' | 'PENDING' | 'GRADED'>(
-    'ALL'
-  );
+  const [filterStatus, setFilterStatus] = useState<
+    'ALL' | 'PENDING' | 'GRADED'
+  >('ALL');
 
   if (loading) {
     return <EssayGradingTableSkeleton />;
@@ -73,7 +76,9 @@ export function EssayGradingTable({ essays, loading }: EssayGradingTableProps) {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <CardTitle className="flex items-center gap-2">
               <FileEdit className="h-5 w-5" />
-              {t('instructor.grading.essayAnswers', { fallback: 'Essay Answers' })}
+              {t('instructor.grading.essayAnswers', {
+                fallback: 'Essay Answers',
+              })}
             </CardTitle>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <div className="flex gap-2">
@@ -130,7 +135,9 @@ export function EssayGradingTable({ essays, loading }: EssayGradingTableProps) {
                       {t('instructor.grading.student', { fallback: 'Student' })}
                     </TableHead>
                     <TableHead className="w-[40%]">
-                      {t('instructor.grading.question', { fallback: 'Question' })}
+                      {t('instructor.grading.question', {
+                        fallback: 'Question',
+                      })}
                     </TableHead>
                     <TableHead>
                       {t('instructor.grading.status', { fallback: 'Status' })}
@@ -158,7 +165,7 @@ export function EssayGradingTable({ essays, loading }: EssayGradingTableProps) {
                         <div
                           className="line-clamp-2 text-sm"
                           dangerouslySetInnerHTML={{
-                            __html: essay.questionText || '',
+                            __html: sanitizeHtml(essay.questionText || ''),
                           }}
                         />
                       </TableCell>
@@ -170,7 +177,11 @@ export function EssayGradingTable({ essays, loading }: EssayGradingTableProps) {
                               {essay.currentScore}/{essay.questionPoints}
                             </div>
                             <div className="text-sm text-muted-foreground">
-                              {((essay.currentScore / essay.questionPoints) * 100).toFixed(0)}%
+                              {(
+                                (essay.currentScore / essay.questionPoints) *
+                                100
+                              ).toFixed(0)}
+                              %
                             </div>
                           </div>
                         ) : (

@@ -23,6 +23,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { captureException } from '@/lib/error-tracking';
 
 /**
  * Enhanced Error Boundary with comprehensive error handling
@@ -313,7 +314,7 @@ class ErrorReportingService {
   }
 
   /**
-   * Report error to external services (placeholder for actual implementation)
+   * Report error to external services (Sentry integration)
    */
   async reportError(
     error: Error,
@@ -323,21 +324,28 @@ class ErrorReportingService {
     if (!context?.reportable) return;
 
     try {
-      // In a real implementation, this would send to an error reporting services
-      // like Sentry, LogRocket, or a custom endpoint
-      const errorReport = {
-        message: error.message,
-        stack: error.stack,
-        componentStack: errorInfo.componentStack,
-        context,
-        timestamp: new Date().toISOString(),
-      };
+      // Send to centralized error tracking (Sentry)
+      captureException(error, {
+        componentName: context.feature,
+        actionName: context.action,
+        additionalData: {
+          componentStack: errorInfo.componentStack,
+          retryCount: this.retryCount,
+          context,
+        },
+        tags: {
+          feature: context.feature || 'unknown',
+          severity: context.severity || 'error',
+        },
+      });
 
       if (this.isDevelopment) {
-        console.log('Would report error to external services:', errorReport);
-      } else {
-        // Example: await fetch('/api/errors', { method: 'POST', body: JSON.stringify(errorReport) });
-        console.warn('Error reporting not configured for production');
+        console.log('Error reported to error tracking service:', {
+          message: error.message,
+          stack: error.stack,
+          componentStack: errorInfo.componentStack,
+          context,
+        });
       }
     } catch (reportingError) {
       console.error('Failed to report error:', reportingError);
@@ -504,6 +512,11 @@ export class ErrorBoundary extends Component<
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     const { context, onError } = this.props;
+
+    // Log to security logger
+    import('@/lib/security-logger').then(({ logErrorBoundary }) => {
+      logErrorBoundary(error, errorInfo);
+    });
 
     // Log and report error
     const errorId = this.errorReportingService.logError(

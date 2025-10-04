@@ -7,6 +7,12 @@ import {
   AccountDTO,
   UserState,
 } from '@/components/features/profile/types/account';
+import { setUserContext, clearUserContext } from '@/lib/error-tracking';
+import {
+  logAuthFailure,
+  logAuthSuccess,
+  logTokenRefresh,
+} from '@/lib/security-logger';
 
 // Override NextAuth types to completely replace AdapterUser requirements
 declare module 'next-auth' {
@@ -91,16 +97,20 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials?.phone || !credentials?.password) {
+          logAuthFailure('unknown', 'Missing credentials');
           return null;
         }
 
+        const phone = credentials.phone as string;
+
         try {
           const response = await AuthService.signIn(
-            credentials.phone as string,
+            phone,
             credentials.password as string
           );
 
           if (Array.isArray(response.errors) && response.errors.length > 0) {
+            logAuthFailure(phone, response.errors[0]?.message || 'Login failed');
             return null;
           }
 
@@ -110,8 +120,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             !jwtToken?.refreshToken ||
             !jwtToken?.user
           ) {
+            logAuthFailure(phone, 'Invalid token response');
             return null;
           }
+
+          // Log successful authentication
+          logAuthSuccess(jwtToken.user.id.toString(), phone);
+
+          // Set user context for error tracking
+          setUserContext(
+            jwtToken.user.id.toString(),
+            undefined, // Email not available in current schema
+            {
+              phone: jwtToken.user.phone,
+              roles: jwtToken.user.roles?.map((r) => r.name).join(','),
+              state: jwtToken.user.state,
+            }
+          );
 
           return {
             id: jwtToken.user.id.toString(),
@@ -127,6 +152,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           };
         } catch (e) {
           console.error('NextAuth authorize error:', e);
+          logAuthFailure(
+            phone,
+            e instanceof Error ? e.message : 'Authentication error'
+          );
           return null;
         }
       },
@@ -195,8 +224,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
 
   events: {
-    async signOut() {
-      // Clean up any additional logout logic if needed
+    async signOut(message) {
+      // Log user logout
+      const token = 'token' in message ? message.token : null;
+      if (token?.user?.id) {
+        const { logLogout } = await import('@/lib/security-logger');
+        logLogout(token.user.id.toString());
+        
+        // Clear user context from error tracking
+        clearUserContext();
+      }
     },
   },
 });
@@ -205,6 +242,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
  * Refresh the access token using the refresh token
  */
 async function refreshAccessToken(token: JWT): Promise<JWT> {
+  const userId = token.user?.id?.toString();
+
   try {
     const refreshedTokens = await AuthService.refreshToken(token.refreshToken);
     const newAccess = refreshedTokens?.data?.accessToken;
@@ -214,6 +253,12 @@ async function refreshAccessToken(token: JWT): Promise<JWT> {
     }
     const computedExp =
       getJwtExpirationMs(newAccess) ?? Date.now() + 15 * 60 * 1000; // fallback 15 minutes
+
+    // Log successful token refresh
+    if (userId) {
+      logTokenRefresh(userId, true);
+    }
+
     return {
       ...token,
       accessToken: newAccess,
@@ -222,6 +267,12 @@ async function refreshAccessToken(token: JWT): Promise<JWT> {
     } as JWT;
   } catch (error) {
     console.error('Error refreshing access token:', error);
+
+    // Log failed token refresh
+    if (userId) {
+      logTokenRefresh(userId, false);
+    }
+
     return {
       ...token,
       error: 'RefreshAccessTokenError',

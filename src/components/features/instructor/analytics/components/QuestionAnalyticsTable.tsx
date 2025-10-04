@@ -1,6 +1,7 @@
 'use client';
 
 import { BarChart3 } from 'lucide-react';
+
 import { useTranslations } from 'next-intl';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,6 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { sanitizeHtml } from '@/lib/sanitize';
 
 import { QuestionAnalytics } from '../types/analytics';
 
@@ -57,13 +59,17 @@ export function QuestionAnalyticsTable({
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[40%]">
-                    {t('instructor.analytics.question', { fallback: 'Question' })}
+                    {t('instructor.analytics.question', {
+                      fallback: 'Question',
+                    })}
                   </TableHead>
                   <TableHead>
                     {t('instructor.analytics.type', { fallback: 'Type' })}
                   </TableHead>
                   <TableHead className="text-right">
-                    {t('instructor.analytics.attempts', { fallback: 'Attempts' })}
+                    {t('instructor.analytics.attempts', {
+                      fallback: 'Attempts',
+                    })}
                   </TableHead>
                   <TableHead className="text-right">
                     {t('instructor.analytics.correctRate', {
@@ -91,7 +97,7 @@ export function QuestionAnalyticsTable({
                         <div
                           className="line-clamp-2 text-sm text-muted-foreground"
                           dangerouslySetInnerHTML={{
-                            __html: question.questionText || '',
+                            __html: sanitizeHtml(question.questionText || ''),
                           }}
                         />
                       </div>
