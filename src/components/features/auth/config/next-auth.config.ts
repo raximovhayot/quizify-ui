@@ -7,6 +7,7 @@ import {
   AccountDTO,
   UserState,
 } from '@/components/features/profile/types/account';
+import { setUserContext, clearUserContext } from '@/lib/error-tracking';
 import {
   logAuthFailure,
   logAuthSuccess,
@@ -126,6 +127,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           // Log successful authentication
           logAuthSuccess(jwtToken.user.id.toString(), phone);
 
+          // Set user context for error tracking
+          setUserContext(
+            jwtToken.user.id.toString(),
+            undefined, // Email not available in current schema
+            {
+              phone: jwtToken.user.phone,
+              roles: jwtToken.user.roles?.map((r) => r.name).join(','),
+              state: jwtToken.user.state,
+            }
+          );
+
           return {
             id: jwtToken.user.id.toString(),
             phone: jwtToken.user.phone,
@@ -212,11 +224,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
 
   events: {
-    async signOut({ token }) {
+    async signOut(message) {
       // Log user logout
+      const token = 'token' in message ? message.token : null;
       if (token?.user?.id) {
         const { logLogout } = await import('@/lib/security-logger');
         logLogout(token.user.id.toString());
+        
+        // Clear user context from error tracking
+        clearUserContext();
       }
     },
   },
