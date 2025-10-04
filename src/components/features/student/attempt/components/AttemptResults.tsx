@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
+import { sanitizeHtml } from '@/lib/sanitize';
 
 import { useAttemptResults } from '../hooks/useAttempt';
 
@@ -171,7 +172,7 @@ export function AttemptResults({
                     <div
                       className="text-sm text-muted-foreground mt-1"
                       dangerouslySetInnerHTML={{
-                        __html: q.question.content,
+                        __html: sanitizeHtml(q.question.content),
                       }}
                     />
                   </div>

@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
-
 import { Flag } from 'lucide-react';
+
+import { useState } from 'react';
 
 import { useTranslations } from 'next-intl';
 
+import { QuestionType } from '@/components/features/instructor/quiz/types/question';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -13,7 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
-import { QuestionType } from '@/components/features/instructor/quiz/types/question';
+import { sanitizeHtml } from '@/lib/sanitize';
 
 import { AttemptQuestion } from '../types/attempt';
 
@@ -70,7 +71,7 @@ export function QuestionDisplay({
             {question.options?.map((option, index) => {
               const selectedIndexes = (currentAnswer as number[]) || [];
               const isChecked = selectedIndexes.includes(index);
-              
+
               return (
                 <div key={index} className="flex items-center space-x-2">
                   <Checkbox
@@ -124,7 +125,8 @@ export function QuestionDisplay({
           <div className="p-4 border rounded-lg bg-muted/50">
             <p className="text-sm text-muted-foreground">
               {t('student.attempt.questionTypeNotSupported', {
-                fallback: 'This question type is not yet supported in the interface. Please contact your instructor.',
+                fallback:
+                  'This question type is not yet supported in the interface. Please contact your instructor.',
               })}
             </p>
           </div>
@@ -169,7 +171,7 @@ export function QuestionDisplay({
         {/* Question text */}
         <div
           className="prose prose-sm max-w-none dark:prose-invert"
-          dangerouslySetInnerHTML={{ __html: question.content }}
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(question.content) }}
         />
 
         {/* Answer input */}

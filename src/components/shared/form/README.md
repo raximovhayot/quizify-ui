@@ -308,6 +308,12 @@ function QuestionPreview({ content }) {
 - Question previews
 - Display formatted content anywhere in the app
 
+**Security Note:**
+
+The `RichTextDisplay` component automatically sanitizes HTML content using **DOMPurify** to prevent XSS (Cross-Site Scripting) attacks. All user-generated HTML content is sanitized before rendering, removing potentially dangerous scripts and malicious HTML while preserving safe formatting tags like `<p>`, `<strong>`, `<em>`, `<ul>`, `<ol>`, `<li>`, etc.
+
+This ensures that even if malicious HTML is stored in the database or received from the API, it will be sanitized before being displayed to users.
+
 ---
 
 ### stripHtml

@@ -17,6 +17,7 @@ import { useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { sanitizeHtml } from '@/lib/sanitize';
 import { cn } from '@/lib/utils';
 
 import { useIsHydrated } from '../hooks/useIsHydrated';
@@ -255,6 +256,10 @@ export function stripHtml(html: string): string {
 
 /**
  * Component to render rich text content (read-only)
+ *
+ * This component sanitizes HTML content before rendering to prevent XSS attacks.
+ * It uses DOMPurify to remove potentially dangerous HTML/JS while preserving
+ * safe formatting tags.
  */
 export function RichTextDisplay({
   content,
@@ -263,10 +268,13 @@ export function RichTextDisplay({
   content: string;
   className?: string;
 }) {
+  // Sanitize HTML content to prevent XSS attacks
+  const sanitizedContent = sanitizeHtml(content);
+
   return (
     <div
       className={cn('prose prose-sm max-w-none', className)}
-      dangerouslySetInnerHTML={{ __html: content }}
+      dangerouslySetInnerHTML={{ __html: sanitizedContent }}
     />
   );
 }
