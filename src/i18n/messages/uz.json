@@ -73,7 +73,9 @@
     },
     "question": {
       "points": "Ball",
-      "content": "Savol",
+      "content": {
+        "placeholder": "Savolingizni shu yerga kiriting..."
+      },
       "explanation": {
         "label": "Izoh",
         "placeholder": "Javobdan keyin ko'rsatiladigan ixtiyoriy izoh yoki fikr-mulohaza"
@@ -126,7 +128,14 @@
     "attempts": "{count} urinish",
     "attemptsUnlimited": "Cheklanmagan",
     "timeLabel": "Vaqt",
-    "attemptsLabel": "Urinishlar"
+    "attemptsLabel": "Urinishlar",
+    "show": "Ko'rsatish",
+    "hide": "Yashirish",
+    "pleaseWait": "Iltimos kuting...",
+    "unexpectedError": "Kutilmagan xatolik yuz berdi",
+    "submitting": "Topshirilmoqda...",
+    "checking": "Tekshirilmoqda...",
+    "joining": "Qo'shilmoqda..."
   },
   "auth": {
     "signIn": {
@@ -149,7 +158,8 @@
         "description": "Telefoningizga tasdiqlash kodi yubordik"
       },
       "sendCode": "Tasdiqlash kodini yuborish",
-      "sendingCode": "Kod yuborilmoqda..."
+      "sendingCode": "Kod yuborilmoqda...",
+      "codeSent": "Tasdiqlash kodi yuborildi"
     },
     "phone": {
       "label": "Telefon raqami",
@@ -190,7 +200,8 @@
       "success": "Telefon muvaffaqiyatli tasdiqlandi! Profil sozlashga yo'naltirilmoqda...",
       "resendSuccess": "Yangi tasdiqlash kodi yuborildi",
       "changePhone": "Telefon raqamini o'zgartirish",
-      "phoneRequired": "Telefon raqamni kiritish majburiy"
+      "phoneRequired": "Telefon raqamni kiritish majburiy",
+      "expired": "Tasdiqlash kodi muddati tugagan"
     },
     "forgotPassword": {
       "link": "Parolni unutdingizmi?",
@@ -245,7 +256,11 @@
       "passwordPattern": "Parol kamida bitta katta harf, bitta kichik harf va bitta raqamdan iborat bo'lishi kerak",
       "firstNameRequired": "Ism kiritish shart",
       "lastNameRequired": "Familiya kiritish shart",
-      "dashboardTypeRequired": "Iltimos, rolingizni tanlang"
+      "dashboardTypeRequired": "Iltimos, rolingizni tanlang",
+      "firstNameMinLength": "Ism kamida 2 ta belgidan iborat bo'lishi kerak",
+      "firstNameMaxLength": "Ism 50 ta belgidan oshmasligi kerak",
+      "lastNameMinLength": "Familiya kamida 2 ta belgidan iborat bo'lishi kerak",
+      "lastNameMaxLength": "Familiya 50 ta belgidan oshmasligi kerak"
     }
   },
   "navigation": {
@@ -397,7 +412,18 @@
         "error": {
           "title": "Test topilmadi",
           "description": "Siz qidirayotgan test mavjud emas yoki o'chirilgan."
-        }
+        },
+        "actions": {
+          "title": "Harakatlar",
+          "description": "Viktorinangizni boshqaring"
+        },
+        "configuration": {
+          "title": "Konfiguratsiya"
+        },
+        "details": {
+          "title": "Tafsilotlar"
+        },
+        "monitorQuiz": "Viktorinani kuzatish"
       },
       "edit": {
         "dialogTitle": "Testni tahrirlash",
@@ -419,7 +445,7 @@
           "description": "Ushbu testni o'chirishni xohlaysizmi? Bu amalni bekor qilib bo'lmaydi."
         }
       },
-      "created": "Yaratilgan",
+      "created": "{date} yaratilgan",
       "question": {},
       "no": {
         "quizzes": "Hali testlar yaratilmagan."
@@ -446,13 +472,13 @@
       },
       "create": {
         "dialogTitle": "Test yaratish",
-        "button": "Test yaratish",
+        "button": "Viktorina yaratish",
         "first": "Birinchi testingizni yarating",
-        "success": "Test muvaffaqiyatli yaratildi",
+        "success": "Viktorina muvaffaqiyatli yaratildi",
         "error": "Testni yaratib bo'lmadi"
       },
       "update": {
-        "success": "Test muvaffaqiyatli yangilandi",
+        "success": "Viktorina muvaffaqiyatli yangilandi",
         "error": "Testni yangilab bo'lmadi"
       },
       "form": {
@@ -522,7 +548,9 @@
       },
       "row": {
         "aria": "{title} uchun test qatori"
-      }
+      },
+      "questions": "Savollar",
+      "startQuiz": "Viktorinani boshlash"
     },
     "userMenu": {
       "title": "Foydalanuvchi menyusi",
@@ -555,7 +583,108 @@
           "title": "Topshiriqlarni yuklab bo‘lmadi",
           "description": "Iltimos, qayta urinib ko‘ring."
         }
+      },
+      "assignment": {
+        "created": "Yaratilgan",
+        "due": "Muddat",
+        "students": "Talabalar",
+        "view": "Ko'rish"
+      },
+      "list": {
+        "empty": {
+          "title": "Hali topshiriqlar yo'q",
+          "description": "Birinchi viktorinani yaratish bilan boshlang"
+        },
+        "filtered": {
+          "empty": {
+            "description": "Filtrlarni o'zgartirib ko'ring"
+          }
+        }
+      },
+      "results": {
+        "count": "{count} natija"
+      },
+      "table": {
+        "title": "Sarlavha",
+        "created": "Yaratilgan",
+        "due": "Muddat"
+      },
+      "totalRegistrations": "Jami ro'yxatdan o'tganlar",
+      "completedAttempts": "Tugatilgan urinishlar",
+      "averageScore": "O'rtacha ball",
+      "inProgress": "Jarayonda",
+      "quiz": "Test",
+      "export": "CSV eksport qilish",
+      "export.success": "Analitika muvaffaqiyatli eksport qilindi",
+      "export.error": "Analitikani eksport qilishda xatolik",
+      "scoreRange": "Ball oralig'i",
+      "lowest": "Eng past",
+      "highest": "Eng yuqori",
+      "studentAttempts": "Talabalar urinishlari",
+      "searchStudents": "Talabalarni qidirish...",
+      "noResults": "Talabalar topilmadi",
+      "noAttempts": "Hali urinishlar yo'q",
+      "student": "Talaba",
+      "attempt": "Urinish",
+      "status": "Holat",
+      "status.inProgress": "Jarayonda",
+      "status.submitted": "Yuborildi",
+      "status.graded": "Baholandi",
+      "score": "Ball",
+      "timeSpent": "Sarflangan vaqt",
+      "submittedAt": "Yuborilgan vaqt",
+      "questionPerformance": "Savollar bo'yicha natijalar",
+      "noQuestionData": "Savollar ma'lumotlari mavjud emas",
+      "question": "Savol",
+      "type": "Tur",
+      "attempts": "Urinishlar",
+      "correctRate": "To'g'ri %",
+      "distribution": "Taqsimot",
+      "questionNumber": "S{{number}}"
+    },
+    "assignment": {
+      "create": {
+        "title": "Viktorinani boshlash",
+        "description": "Talabalaringiz uchun viktorinani boshlash uchun topshiriq yarating.",
+        "titleLabel": "Topshiriq nomi",
+        "titlePlaceholder": "Topshiriq nomini kiriting",
+        "descriptionLabel": "Tavsif (ixtiyoriy)",
+        "descriptionPlaceholder": "Topshiriq tavsifini kiriting",
+        "startTimeLabel": "Boshlanish vaqti",
+        "endTimeLabel": "Tugash vaqti",
+        "submit": "Topshiriq yaratish"
       }
+    },
+    "grading": {
+      "title": "Insho baholash",
+      "gradeEssay": "Inshoni baholash",
+      "gradeEssays": "Insholarni baholash",
+      "student": "Talaba",
+      "question": "Savol",
+      "gradingCriteria": "Baholash mezonlari",
+      "studentAnswer": "Talaba javobi",
+      "noAnswer": "Javob berilmagan",
+      "score": "Ball",
+      "feedback": "Fikr-mulohaza (ixtiyoriy)",
+      "feedbackPlaceholder": "Talabaga fikr-mulohaza bering...",
+      "submitGrade": "Baholashni yuborish",
+      "grading": "Baholanmoqda...",
+      "success": "Muvaffaqiyatli baholandi",
+      "successDescription": "Insho baholandi.",
+      "error": "Inshoni baholashda xatolik",
+      "error.title": "Baholash ma'lumotlarini yuklashda xatolik",
+      "error.description": "Insho javoblarini yuklashda xatolik yuz berdi.",
+      "essayAnswers": "Insho javoblari",
+      "searchStudents": "Talabalarni qidirish...",
+      "noResults": "Insholar topilmadi",
+      "noEssays": "Baholash uchun insho javoblari yo'q",
+      "status": "Holat",
+      "pending": "Kutilmoqda",
+      "graded": "Baholandi",
+      "grade": "Baholash",
+      "regrade": "Qayta baholash",
+      "totalEssayQuestions": "Insho savollari",
+      "totalAnswers": "Jami javoblar"
     }
   },
   "student": {
@@ -572,7 +701,8 @@
       "title": "Talaba paneli",
       "toggleMenu": "Menyuni almashtirish",
       "home": "Bosh sahifa",
-      "history": "Tarix"
+      "history": "Tarix",
+      "assignments": "Topshiriqlar"
     },
     "userMenu": {
       "title": "Foydalanuvchi menyusi",
@@ -637,12 +767,123 @@
         "passed": "O'tgan",
         "failed": "Muvaffaqiyatsiz"
       }
+    },
+    "attempt": {
+      "timeRunningOut": "Vaqt tugamoqda!",
+      "progress": "Jarayon",
+      "answered": "javob berildi",
+      "previous": "Oldingi",
+      "next": "Keyingi",
+      "questionNumber": "Savol {{current}} dan {{total}}",
+      "questionLabel": "Savol {{number}}",
+      "point": "ball",
+      "points": "ball",
+      "yourAnswer": "Sizning javobingiz",
+      "typeAnswer": "Javobingizni bu yerga kiriting...",
+      "typeEssay": "Inshoyingizni bu yerga yozing...",
+      "questionTypeNotSupported": "Bu savol turi hali interfeysda qo'llab-quvvatlanmaydi. Iltimos, o'qituvchingiz bilan bog'laning.",
+      "saveAnswer": "Javobni saqlash",
+      "updateAnswer": "Javobni yangilash",
+      "takingQuiz": "Viktorina topshirish",
+      "attemptNumber": "Urinish #{{number}}",
+      "error": "Viktorinani yuklashda xato",
+      "errorMessage": "Viktorinani yuklab bo'lmadi. Iltimos, keyinroq urinib ko'ring.",
+      "submitQuiz": "Viktorinani topshirish",
+      "confirmSubmit": "Viktorinani topshirilsinmi?",
+      "confirmSubmitMessage": "Siz {{answered}} ta savolga {{total}} tadan javob berdingiz. Topshirishni xohlaysizmi? Topshirgandan keyin javoblaringizni o'zgartira olmaysiz.",
+      "confirmSubmitButton": "Ha, topshirish"
+    },
+    "assignment": {
+      "upcoming": "Tez orada boshlanadi",
+      "active": "Hozir faol",
+      "expired": "Muddati o'tgan",
+      "startTime": "Boshlanish vaqti",
+      "endTime": "Tugash vaqti",
+      "timeLimit": "Vaqt cheklovi",
+      "minutes": "daqiqa",
+      "attempts": "Urinishlar",
+      "unlimited": "Cheklanmagan",
+      "notStarted": "Hali boshlanmagan",
+      "ended": "Topshiriq tugadi",
+      "noAttemptsLeft": "Urinishlar tugadi",
+      "startAttempt": "Urinishni boshlash",
+      "confirmStart": "Urinishni boshlash?",
+      "confirmStartMessage": "Boshlasangiz, taymer ishga tushadi. Viktorinani yakunlash uchun yetarli vaqtingiz borligiga ishonch hosil qiling.",
+      "confirmStartButton": "Ha, hozir boshlash",
+      "joinTitle": "Topshiriqqa qo'shilish",
+      "joinCodeLabel": "Topshiriq kodi",
+      "joinCodePlaceholder": "Kodni kiriting",
+      "checkCode": "Tekshirish",
+      "joinHint": "Topshiriqqa qo'shilish uchun o'qituvchi tomonidan berilgan kodni kiriting.",
+      "alreadyRegistered": "Allaqachon ro'yxatdan o'tgan",
+      "confirmJoin": "Topshiriqqa qo'shilsinmi?",
+      "startsAt": "Boshlanadi:",
+      "endsAt": "Tugaydi:",
+      "alreadyRegisteredMessage": "Siz bu topshiriqqa allaqachon ro'yxatdan o'tgansiz.",
+      "cannotJoin": "Hozirda bu topshiriqqa qo'shila olmaysiz.",
+      "viewAssignment": "Topshiriqni ko'rish",
+      "confirmJoinButton": "Ha, qo'shilish",
+      "errorLoading": "Topshiriqlarni yuklashda xato",
+      "errorMessage": "Topshiriqlaringizni yuklab bo'lmadi. Iltimos, keyinroq urinib ko'ring.",
+      "noRegistrations": "Hali topshiriqlar yo'q",
+      "noRegistrationsMessage": "Boshlash uchun kod yordamida topshiriqqa qo'shiling.",
+      "myAssignments": "Mening topshiriqlarim",
+      "statusCompleted": "Tugallangan",
+      "statusCancelled": "Bekor qilingan",
+      "statusUpcoming": "Yaqinlashib kelayotgan",
+      "statusActive": "Faol",
+      "statusExpired": "Muddati o'tgan",
+      "starts": "Boshlanadi",
+      "ends": "Tugaydi",
+      "viewDetails": "Tafsilotlar"
+    },
+    "results": {
+      "title": "Viktorina natijalari",
+      "error": "Natijalarni yuklashda xato",
+      "errorMessage": "Natijalaringizni yuklab bo'lmadi. Iltimos, keyinroq urinib ko'ring.",
+      "scoreLabel": "Sizning natijangiz",
+      "correct": "To'g'ri",
+      "incorrect": "Noto'g'ri",
+      "unanswered": "Javobsiz",
+      "timeSpent": "Sarflangan vaqt",
+      "detailedResults": "Batafsil natijalar",
+      "questionNumber": "Savol {{number}}",
+      "viewHistory": "Tarixni ko'rish"
     }
   },
   "notFound": {
     "title": "Sahifa topilmadi",
     "description": "Siz izlayotgan sahifa mavjud emas yoki ko'chirilgan.",
     "goHome": "Bosh sahifaga o'tish",
-    "goToDashboard": "Panelga o'tish"
+    "goToDashboard": "Panelga o'tish",
+    "403": {
+      "title": "Kirish rad etildi",
+      "message": "Sizda ushbu resursga kirish huquqi yo'q"
+    },
+    "404": {
+      "title": "Sahifa topilmadi",
+      "message": "Siz qidirayotgan sahifa mavjud emas"
+    },
+    "500": {
+      "title": "Server xatosi",
+      "message": "Serverda xatolik yuz berdi"
+    },
+    "generic": {
+      "title": "Xatolik",
+      "message": "Xatolik yuz berdi"
+    }
+  },
+  "actions": {
+    "goBack": "Orqaga",
+    "goHome": "Bosh sahifaga"
+  },
+  "attachment": {
+    "delete": "Ilova o'chirish",
+    "deleteConfirm": {
+      "title": "Ilova o'chirilsinmi?",
+      "description": "Bu amalni bekor qilib bo'lmaydi."
+    },
+    "download": "Yuklab olish",
+    "uploadedOn": "{date} da yuklangan"
   }
 }

@@ -82,7 +82,9 @@
     },
     "question": {
       "points": "Points",
-      "content": "Question",
+      "content": {
+        "placeholder": "Enter your question here..."
+      },
       "explanation": {
         "label": "Explanation",
         "placeholder": "Optional explanation or feedback shown after answering"
@@ -128,7 +130,14 @@
       "description": "Start building your quiz by creating engaging questions that will challenge and educate your students."
     },
     "timeLabel": "Time",
-    "attemptsLabel": "Attempts"
+    "attemptsLabel": "Attempts",
+    "show": "Show",
+    "hide": "Hide",
+    "pleaseWait": "Please wait...",
+    "unexpectedError": "An unexpected error occurred",
+    "submitting": "Submitting...",
+    "checking": "Checking...",
+    "joining": "Joining..."
   },
   "auth": {
     "signIn": {
@@ -151,7 +160,8 @@
         "description": "We sent a verification code to your phone"
       },
       "sendCode": "Send Verification Code",
-      "sendingCode": "Sending Code..."
+      "sendingCode": "Sending Code...",
+      "codeSent": "Verification code sent"
     },
     "phone": {
       "label": "Phone Number",
@@ -191,7 +201,8 @@
       "resendIn": "Resend in {seconds}s",
       "success": "Phone verified successfully! Redirecting to profile setup...",
       "resendSuccess": "New verification code sent",
-      "changePhone": "Change phone number"
+      "changePhone": "Change phone number",
+      "expired": "Verification code expired"
     },
     "forgotPassword": {
       "link": "Forgot your password?",
@@ -244,7 +255,11 @@
       "passwordPattern": "Password must contain at least one uppercase letter, one lowercase letter, and one number",
       "firstNameRequired": "First name is required",
       "lastNameRequired": "Last name is required",
-      "dashboardTypeRequired": "Please select your role"
+      "dashboardTypeRequired": "Please select your role",
+      "firstNameMinLength": "First name must be at least 2 characters",
+      "firstNameMaxLength": "First name must not exceed 50 characters",
+      "lastNameMinLength": "Last name must be at least 2 characters",
+      "lastNameMaxLength": "Last name must not exceed 50 characters"
     },
     "backToSignIn": "Back to Sign In",
     "signOut": "Sign Out"
@@ -398,7 +413,18 @@
         "error": {
           "title": "Quiz not found",
           "description": "The quiz you are looking for does not exist or has been deleted."
-        }
+        },
+        "actions": {
+          "title": "Actions",
+          "description": "Manage your quiz"
+        },
+        "configuration": {
+          "title": "Configuration"
+        },
+        "details": {
+          "title": "Details"
+        },
+        "monitorQuiz": "Monitor Quiz"
       },
       "edit": {
         "dialogTitle": "Edit Quiz",
@@ -493,7 +519,21 @@
       },
       "row": {
         "aria": "Quiz row for {title}"
-      }
+      },
+      "create": {
+        "button": "Create Quiz",
+        "success": "Quiz created successfully"
+      },
+      "created": "Created {date}",
+      "questions": "Questions",
+      "shuffle": {
+        "answers": "Shuffle answers",
+        "questions": "Shuffle questions"
+      },
+      "update": {
+        "success": "Quiz updated successfully"
+      },
+      "startQuiz": "Start Quiz"
     },
     "userMenu": {
       "title": "User menu",
@@ -526,7 +566,108 @@
           "title": "Failed to load assignments",
           "description": "Please try again."
         }
+      },
+      "assignment": {
+        "created": "Created",
+        "due": "Due",
+        "students": "Students",
+        "view": "View"
+      },
+      "list": {
+        "empty": {
+          "title": "No assignments yet",
+          "description": "Get started by creating your first quiz assignment"
+        },
+        "filtered": {
+          "empty": {
+            "description": "Try adjusting your filters"
+          }
+        }
+      },
+      "results": {
+        "count": "{count} results"
+      },
+      "table": {
+        "title": "Title",
+        "created": "Created",
+        "due": "Due"
+      },
+      "totalRegistrations": "Total Registrations",
+      "completedAttempts": "Completed Attempts",
+      "averageScore": "Average Score",
+      "inProgress": "In Progress",
+      "quiz": "Quiz",
+      "export": "Export CSV",
+      "export.success": "Analytics exported successfully",
+      "export.error": "Failed to export analytics",
+      "scoreRange": "Score Range",
+      "lowest": "Lowest",
+      "highest": "Highest",
+      "studentAttempts": "Student Attempts",
+      "searchStudents": "Search students...",
+      "noResults": "No students found",
+      "noAttempts": "No attempts yet",
+      "student": "Student",
+      "attempt": "Attempt",
+      "status": "Status",
+      "status.inProgress": "In Progress",
+      "status.submitted": "Submitted",
+      "status.graded": "Graded",
+      "score": "Score",
+      "timeSpent": "Time Spent",
+      "submittedAt": "Submitted At",
+      "questionPerformance": "Question Performance",
+      "noQuestionData": "No question data available",
+      "question": "Question",
+      "type": "Type",
+      "attempts": "Attempts",
+      "correctRate": "Correct %",
+      "distribution": "Distribution",
+      "questionNumber": "Q{{number}}"
+    },
+    "assignment": {
+      "create": {
+        "title": "Start Quiz",
+        "description": "Create an assignment to start the quiz for your students.",
+        "titleLabel": "Assignment Title",
+        "titlePlaceholder": "Enter assignment title",
+        "descriptionLabel": "Description (optional)",
+        "descriptionPlaceholder": "Enter assignment description",
+        "startTimeLabel": "Start Time",
+        "endTimeLabel": "End Time",
+        "submit": "Create Assignment"
       }
+    },
+    "grading": {
+      "title": "Essay Grading",
+      "gradeEssay": "Grade Essay",
+      "gradeEssays": "Grade Essays",
+      "student": "Student",
+      "question": "Question",
+      "gradingCriteria": "Grading Criteria",
+      "studentAnswer": "Student Answer",
+      "noAnswer": "No answer provided",
+      "score": "Score",
+      "feedback": "Feedback (Optional)",
+      "feedbackPlaceholder": "Provide feedback to the student...",
+      "submitGrade": "Submit Grade",
+      "grading": "Grading...",
+      "success": "Graded successfully",
+      "successDescription": "The essay has been graded.",
+      "error": "Failed to grade essay",
+      "error.title": "Failed to load grading data",
+      "error.description": "There was an error loading the essay answers.",
+      "essayAnswers": "Essay Answers",
+      "searchStudents": "Search students...",
+      "noResults": "No essays found",
+      "noEssays": "No essay answers to grade",
+      "status": "Status",
+      "pending": "Pending",
+      "graded": "Graded",
+      "grade": "Grade",
+      "regrade": "Regrade",
+      "totalEssayQuestions": "Essay Questions",
+      "totalAnswers": "Total Answers"
     }
   },
   "student": {
@@ -543,7 +684,8 @@
       "title": "Student Panel",
       "toggleMenu": "Toggle menu",
       "home": "Home",
-      "history": "History"
+      "history": "History",
+      "assignments": "Assignments"
     },
     "userMenu": {
       "title": "User menu",
@@ -608,12 +750,123 @@
         "passed": "Passed",
         "failed": "Failed"
       }
+    },
+    "attempt": {
+      "timeRunningOut": "Time running out!",
+      "progress": "Progress",
+      "answered": "answered",
+      "previous": "Previous",
+      "next": "Next",
+      "questionNumber": "Question {{current}} of {{total}}",
+      "questionLabel": "Question {{number}}",
+      "point": "point",
+      "points": "points",
+      "yourAnswer": "Your Answer",
+      "typeAnswer": "Type your answer here...",
+      "typeEssay": "Type your essay here...",
+      "questionTypeNotSupported": "This question type is not yet supported in the interface. Please contact your instructor.",
+      "saveAnswer": "Save Answer",
+      "updateAnswer": "Update Answer",
+      "takingQuiz": "Taking Quiz",
+      "attemptNumber": "Attempt #{{number}}",
+      "error": "Error Loading Quiz",
+      "errorMessage": "Unable to load the quiz. Please try again later.",
+      "submitQuiz": "Submit Quiz",
+      "confirmSubmit": "Submit Quiz?",
+      "confirmSubmitMessage": "You have answered {{answered}} out of {{total}} questions. Are you sure you want to submit? You cannot change your answers after submission.",
+      "confirmSubmitButton": "Yes, Submit"
+    },
+    "assignment": {
+      "upcoming": "Starts soon",
+      "active": "Active now",
+      "expired": "Expired",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "timeLimit": "Time Limit",
+      "minutes": "minutes",
+      "attempts": "Attempts",
+      "unlimited": "Unlimited",
+      "notStarted": "Not Started Yet",
+      "ended": "Assignment Ended",
+      "noAttemptsLeft": "No Attempts Left",
+      "startAttempt": "Start Attempt",
+      "confirmStart": "Start Attempt?",
+      "confirmStartMessage": "Once you start, the timer will begin. Make sure you have enough time to complete the quiz.",
+      "confirmStartButton": "Yes, Start Now",
+      "joinTitle": "Join Assignment",
+      "joinCodeLabel": "Assignment Code",
+      "joinCodePlaceholder": "Enter code",
+      "checkCode": "Check",
+      "joinHint": "Enter the code provided by your instructor to join an assignment.",
+      "alreadyRegistered": "Already Registered",
+      "confirmJoin": "Join Assignment?",
+      "startsAt": "Starts:",
+      "endsAt": "Ends:",
+      "alreadyRegisteredMessage": "You are already registered for this assignment.",
+      "cannotJoin": "You cannot join this assignment at this time.",
+      "viewAssignment": "View Assignment",
+      "confirmJoinButton": "Yes, Join",
+      "errorLoading": "Error Loading Assignments",
+      "errorMessage": "Unable to load your assignments. Please try again later.",
+      "noRegistrations": "No Assignments Yet",
+      "noRegistrationsMessage": "Join an assignment using a code to get started.",
+      "myAssignments": "My Assignments",
+      "statusCompleted": "Completed",
+      "statusCancelled": "Cancelled",
+      "statusUpcoming": "Upcoming",
+      "statusActive": "Active",
+      "statusExpired": "Expired",
+      "starts": "Starts",
+      "ends": "Ends",
+      "viewDetails": "View Details"
+    },
+    "results": {
+      "title": "Quiz Results",
+      "error": "Error Loading Results",
+      "errorMessage": "Unable to load your results. Please try again later.",
+      "scoreLabel": "Your Score",
+      "correct": "Correct",
+      "incorrect": "Incorrect",
+      "unanswered": "Unanswered",
+      "timeSpent": "Time Spent",
+      "detailedResults": "Detailed Results",
+      "questionNumber": "Question {{number}}",
+      "viewHistory": "View History"
     }
   },
   "notFound": {
     "title": "Page not found",
     "description": "The page you’re looking for doesn’t exist or has been moved.",
     "goHome": "Go to Home",
-    "goToDashboard": "Go to Dashboard"
+    "goToDashboard": "Go to Dashboard",
+    "403": {
+      "title": "Access Denied",
+      "message": "You don't have permission to access this resource"
+    },
+    "404": {
+      "title": "Page Not Found",
+      "message": "The page you're looking for doesn't exist"
+    },
+    "500": {
+      "title": "Server Error",
+      "message": "Something went wrong on our end"
+    },
+    "generic": {
+      "title": "Error",
+      "message": "An error occurred"
+    }
+  },
+  "actions": {
+    "goBack": "Go Back",
+    "goHome": "Go Home"
+  },
+  "attachment": {
+    "delete": "Delete Attachment",
+    "deleteConfirm": {
+      "title": "Delete Attachment?",
+      "description": "This action cannot be undone."
+    },
+    "download": "Download",
+    "uploadedOn": "Uploaded on {date}"
   }
 }

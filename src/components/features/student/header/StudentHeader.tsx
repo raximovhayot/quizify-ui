@@ -1,6 +1,6 @@
 'use client';
 
-import { History, Home } from 'lucide-react';
+import { BookCheck, History, Home } from 'lucide-react';
 
 import { useTranslations } from 'next-intl';
 
@@ -22,6 +22,11 @@ export function StudentHeader({ title: _title }: Readonly<StudentHeaderProps>) {
       href: '/student',
       icon: Home,
       label: t('student.navigation.home', { fallback: 'Home' }),
+    },
+    {
+      href: '/student/assignments',
+      icon: BookCheck,
+      label: t('student.navigation.assignments', { fallback: 'Assignments' }),
     },
     {
       href: '/student/history',

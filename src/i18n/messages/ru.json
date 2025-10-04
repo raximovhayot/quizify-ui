@@ -72,7 +72,9 @@
     },
     "question": {
       "points": "Баллы",
-      "content": "Вопрос",
+      "content": {
+        "placeholder": "Введите ваш вопрос здесь..."
+      },
       "explanation": {
         "label": "Пояснение",
         "placeholder": "Необязательное пояснение или обратная связь после ответа"
@@ -125,7 +127,14 @@
     "attempts": "{count, plural, one {{count} попытка} few {{count} попытки} many {{count} попыток} other {{count} попытки}}",
     "attemptsUnlimited": "Неограничено",
     "timeLabel": "Время",
-    "attemptsLabel": "Попытки"
+    "attemptsLabel": "Попытки",
+    "show": "Показать",
+    "hide": "Скрыть",
+    "pleaseWait": "Пожалуйста, подождите...",
+    "unexpectedError": "Произошла непредвиденная ошибка",
+    "submitting": "Отправка...",
+    "checking": "Проверка...",
+    "joining": "Присоединение..."
   },
   "auth": {
     "signIn": {
@@ -148,7 +157,8 @@
         "description": "Мы отправили код подтверждения на ваш телефон"
       },
       "sendCode": "Отправить код подтверждения",
-      "sendingCode": "Отправка кода..."
+      "sendingCode": "Отправка кода...",
+      "codeSent": "Код подтверждения отправлен"
     },
     "phone": {
       "label": "Номер телефона",
@@ -188,7 +198,8 @@
       "resendIn": "Повторить через {seconds}с",
       "success": "Телефон успешно подтвержден! Перенаправление к настройке профиля...",
       "resendSuccess": "Новый код подтверждения отправлен",
-      "changePhone": "Изменить номер телефона"
+      "changePhone": "Изменить номер телефона",
+      "expired": "Код подтверждения истек"
     },
     "forgotPassword": {
       "link": "Забыли пароль?",
@@ -243,7 +254,11 @@
       "passwordPattern": "Пароль должен содержать хотя бы одну заглавную букву, одну строчную букву и одну цифру",
       "firstNameRequired": "Имя обязательно",
       "lastNameRequired": "Фамилия обязательна",
-      "dashboardTypeRequired": "Пожалуйста, выберите вашу роль"
+      "dashboardTypeRequired": "Пожалуйста, выберите вашу роль",
+      "firstNameMinLength": "Имя должно содержать не менее 2 символов",
+      "firstNameMaxLength": "Имя не должно превышать 50 символов",
+      "lastNameMinLength": "Фамилия должна содержать не менее 2 символов",
+      "lastNameMaxLength": "Фамилия не должна превышать 50 символов"
     }
   },
   "navigation": {
@@ -359,7 +374,19 @@
       "filter": {
         "all": "Все статусы"
       },
-      "view": "Просмотр",
+      "view": {
+        "actions": {
+          "title": "Действия",
+          "description": "Управление вашей викториной"
+        },
+        "configuration": {
+          "title": "Конфигурация"
+        },
+        "details": {
+          "title": "Детали"
+        },
+        "monitorQuiz": "Мониторинг викторины"
+      },
       "edit": {
         "dialogTitle": "Редактировать тест",
         "title": "Редактирование теста",
@@ -379,7 +406,7 @@
           "description": "Вы уверены, что хотите удалить этот тест? Это действие нельзя отменить."
         }
       },
-      "created": "Создано",
+      "created": "Создано {date}",
       "question": {},
       "no": {
         "quizzes": "Тесты еще не созданы."
@@ -389,7 +416,20 @@
           "success": "Статус теста успешно обновлен",
           "error": "Не удалось обновить статус теста"
         }
-      }
+      },
+      "create": {
+        "button": "Создать викторину",
+        "success": "Викторина успешно создана"
+      },
+      "questions": "Вопросы",
+      "shuffle": {
+        "answers": "Перемешать ответы",
+        "questions": "Перемешать вопросы"
+      },
+      "update": {
+        "success": "Викторина успешно обновлена"
+      },
+      "startQuiz": "Начать викторину"
     },
     "userMenu": {
       "title": "Меню пользователя",
@@ -422,7 +462,108 @@
           "title": "Не удалось загрузить задания",
           "description": "Пожалуйста, попробуйте снова."
         }
+      },
+      "assignment": {
+        "created": "Создано",
+        "due": "Срок",
+        "students": "Студенты",
+        "view": "Просмотр"
+      },
+      "list": {
+        "empty": {
+          "title": "Нет заданий",
+          "description": "Начните с создания первого викторины"
+        },
+        "filtered": {
+          "empty": {
+            "description": "Попробуйте изменить фильтры"
+          }
+        }
+      },
+      "results": {
+        "count": "{count} результатов"
+      },
+      "table": {
+        "title": "Название",
+        "created": "Создано",
+        "due": "Срок"
+      },
+      "totalRegistrations": "Всего регистраций",
+      "completedAttempts": "Завершенные попытки",
+      "averageScore": "Средний балл",
+      "inProgress": "В процессе",
+      "quiz": "Тест",
+      "export": "Экспорт CSV",
+      "export.success": "Аналитика экспортирована успешно",
+      "export.error": "Не удалось экспортировать аналитику",
+      "scoreRange": "Диапазон баллов",
+      "lowest": "Минимум",
+      "highest": "Максимум",
+      "studentAttempts": "Попытки студентов",
+      "searchStudents": "Поиск студентов...",
+      "noResults": "Студенты не найдены",
+      "noAttempts": "Пока нет попыток",
+      "student": "Студент",
+      "attempt": "Попытка",
+      "status": "Статус",
+      "status.inProgress": "В процессе",
+      "status.submitted": "Отправлено",
+      "status.graded": "Оценено",
+      "score": "Балл",
+      "timeSpent": "Затрачено времени",
+      "submittedAt": "Отправлено в",
+      "questionPerformance": "Результаты по вопросам",
+      "noQuestionData": "Данные по вопросам недоступны",
+      "question": "Вопрос",
+      "type": "Тип",
+      "attempts": "Попытки",
+      "correctRate": "Правильно %",
+      "distribution": "Распределение",
+      "questionNumber": "В{{number}}"
+    },
+    "assignment": {
+      "create": {
+        "title": "Начать викторину",
+        "description": "Создайте задание, чтобы начать викторину для ваших студентов.",
+        "titleLabel": "Название задания",
+        "titlePlaceholder": "Введите название задания",
+        "descriptionLabel": "Описание (необязательно)",
+        "descriptionPlaceholder": "Введите описание задания",
+        "startTimeLabel": "Время начала",
+        "endTimeLabel": "Время окончания",
+        "submit": "Создать задание"
       }
+    },
+    "grading": {
+      "title": "Оценка эссе",
+      "gradeEssay": "Оценить эссе",
+      "gradeEssays": "Оценить эссе",
+      "student": "Студент",
+      "question": "Вопрос",
+      "gradingCriteria": "Критерии оценки",
+      "studentAnswer": "Ответ студента",
+      "noAnswer": "Ответ не предоставлен",
+      "score": "Балл",
+      "feedback": "Отзыв (необязательно)",
+      "feedbackPlaceholder": "Предоставьте отзыв студенту...",
+      "submitGrade": "Отправить оценку",
+      "grading": "Оценивание...",
+      "success": "Успешно оценено",
+      "successDescription": "Эссе было оценено.",
+      "error": "Не удалось оценить эссе",
+      "error.title": "Не удалось загрузить данные оценки",
+      "error.description": "Произошла ошибка при загрузке ответов на эссе.",
+      "essayAnswers": "Ответы на эссе",
+      "searchStudents": "Поиск студентов...",
+      "noResults": "Эссе не найдены",
+      "noEssays": "Нет ответов на эссе для оценки",
+      "status": "Статус",
+      "pending": "Ожидание",
+      "graded": "Оценено",
+      "grade": "Оценить",
+      "regrade": "Переоценить",
+      "totalEssayQuestions": "Вопросы эссе",
+      "totalAnswers": "Всего ответов"
     }
   },
   "student": {
@@ -439,7 +580,8 @@
       "title": "Панель студента",
       "toggleMenu": "Переключить меню",
       "home": "Главная",
-      "history": "История"
+      "history": "История",
+      "assignments": "Задания"
     },
     "userMenu": {
       "title": "Меню пользователя",
@@ -504,12 +646,123 @@
         "passed": "Сдано",
         "failed": "Провалено"
       }
+    },
+    "attempt": {
+      "timeRunningOut": "Время заканчивается!",
+      "progress": "Прогресс",
+      "answered": "отвечено",
+      "previous": "Предыдущий",
+      "next": "Следующий",
+      "questionNumber": "Вопрос {{current}} из {{total}}",
+      "questionLabel": "Вопрос {{number}}",
+      "point": "балл",
+      "points": "баллов",
+      "yourAnswer": "Ваш ответ",
+      "typeAnswer": "Введите ваш ответ здесь...",
+      "typeEssay": "Напишите ваше эссе здесь...",
+      "questionTypeNotSupported": "Этот тип вопроса еще не поддерживается в интерфейсе. Пожалуйста, свяжитесь с вашим преподавателем.",
+      "saveAnswer": "Сохранить ответ",
+      "updateAnswer": "Обновить ответ",
+      "takingQuiz": "Прохождение викторины",
+      "attemptNumber": "Попытка #{{number}}",
+      "error": "Ошибка загрузки викторины",
+      "errorMessage": "Не удалось загрузить викторину. Пожалуйста, попробуйте позже.",
+      "submitQuiz": "Отправить викторину",
+      "confirmSubmit": "Отправить викторину?",
+      "confirmSubmitMessage": "Вы ответили на {{answered}} из {{total}} вопросов. Вы уверены, что хотите отправить? Вы не сможете изменить свои ответы после отправки.",
+      "confirmSubmitButton": "Да, отправить"
+    },
+    "assignment": {
+      "upcoming": "Скоро начнется",
+      "active": "Активно сейчас",
+      "expired": "Истекло",
+      "startTime": "Время начала",
+      "endTime": "Время окончания",
+      "timeLimit": "Ограничение по времени",
+      "minutes": "минут",
+      "attempts": "Попытки",
+      "unlimited": "Неограниченно",
+      "notStarted": "Еще не начато",
+      "ended": "Задание завершено",
+      "noAttemptsLeft": "Попытки закончились",
+      "startAttempt": "Начать попытку",
+      "confirmStart": "Начать попытку?",
+      "confirmStartMessage": "Как только вы начнете, таймер запустится. Убедитесь, что у вас достаточно времени для прохождения викторины.",
+      "confirmStartButton": "Да, начать сейчас",
+      "joinTitle": "Присоединиться к заданию",
+      "joinCodeLabel": "Код задания",
+      "joinCodePlaceholder": "Введите код",
+      "checkCode": "Проверить",
+      "joinHint": "Введите код, предоставленный вашим преподавателем, чтобы присоединиться к заданию.",
+      "alreadyRegistered": "Уже зарегистрирован",
+      "confirmJoin": "Присоединиться к заданию?",
+      "startsAt": "Начинается:",
+      "endsAt": "Заканчивается:",
+      "alreadyRegisteredMessage": "Вы уже зарегистрированы для этого задания.",
+      "cannotJoin": "Вы не можете присоединиться к этому заданию в данный момент.",
+      "viewAssignment": "Посмотреть задание",
+      "confirmJoinButton": "Да, присоединиться",
+      "errorLoading": "Ошибка загрузки заданий",
+      "errorMessage": "Не удалось загрузить ваши задания. Пожалуйста, попробуйте позже.",
+      "noRegistrations": "Пока нет заданий",
+      "noRegistrationsMessage": "Присоединитесь к заданию, используя код, чтобы начать.",
+      "myAssignments": "Мои задания",
+      "statusCompleted": "Завершено",
+      "statusCancelled": "Отменено",
+      "statusUpcoming": "Предстоящее",
+      "statusActive": "Активно",
+      "statusExpired": "Истекло",
+      "starts": "Начинается",
+      "ends": "Заканчивается",
+      "viewDetails": "Подробности"
+    },
+    "results": {
+      "title": "Результаты викторины",
+      "error": "Ошибка загрузки результатов",
+      "errorMessage": "Не удалось загрузить ваши результаты. Пожалуйста, попробуйте позже.",
+      "scoreLabel": "Ваш результат",
+      "correct": "Правильно",
+      "incorrect": "Неправильно",
+      "unanswered": "Без ответа",
+      "timeSpent": "Затрачено времени",
+      "detailedResults": "Подробные результаты",
+      "questionNumber": "Вопрос {{number}}",
+      "viewHistory": "Посмотреть историю"
     }
   },
   "notFound": {
     "title": "Страница не найдена",
     "description": "Страница, которую вы ищете, не существует или была перемещена.",
     "goHome": "На главную",
-    "goToDashboard": "Перейти в панель"
+    "goToDashboard": "Перейти в панель",
+    "403": {
+      "title": "Доступ запрещен",
+      "message": "У вас нет разрешения на доступ к этому ресурсу"
+    },
+    "404": {
+      "title": "Страница не найдена",
+      "message": "Страница, которую вы ищете, не существует"
+    },
+    "500": {
+      "title": "Ошибка сервера",
+      "message": "Что-то пошло не так"
+    },
+    "generic": {
+      "title": "Ошибка",
+      "message": "Произошла ошибка"
+    }
+  },
+  "actions": {
+    "goBack": "Назад",
+    "goHome": "На главную"
+  },
+  "attachment": {
+    "delete": "Удалить вложение",
+    "deleteConfirm": {
+      "title": "Удалить вложение?",
+      "description": "Это действие нельзя отменить."
+    },
+    "download": "Скачать",
+    "uploadedOn": "Загружено {date}"
   }
 }

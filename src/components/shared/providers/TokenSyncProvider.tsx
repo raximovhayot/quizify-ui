@@ -52,7 +52,7 @@ export function TokenSyncProvider() {
           try {
             // Ensure we fully sign the user out so middleware doesn't bounce them back
             await signOut({ redirect: true, callbackUrl: ROUTES_AUTH.login() });
-          } catch (e) {
+          } catch {
             // Fallback: hard redirect to sign-in if signOut throws
             const loginPath = ROUTES_AUTH.login();
             const isAlreadyAtLogin =

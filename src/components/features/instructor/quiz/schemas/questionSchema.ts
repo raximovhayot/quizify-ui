@@ -1,11 +1,7 @@
 import { z } from 'zod';
 
 import { buildQuestionSaveRequest } from '../components/factories/questionRequestRegistry';
-import {
-  InstructionAnswerSaveRequest,
-  InstructorQuestionSaveRequest,
-  QuestionType,
-} from '../types/question';
+import { InstructorQuestionSaveRequest, QuestionType } from '../types/question';
 
 // Shared answer schema used by MCQ and Short Answer forms
 export const answerFormSchema = z.object({
@@ -115,18 +111,16 @@ export type TInstructorQuestionForm = z.input<
   typeof instructorQuestionFormSchema
 >;
 
-// Narrowed input types per variant for type-safe normalization
-type TMCQInput = z.input<typeof mcqFormSchema>;
-type TTFInput = z.input<typeof trueFalseFormSchema>;
-type TSAInput = z.input<typeof shortAnswerFormSchema>;
-type TFIBInput = z.input<typeof fillInBlankFormSchema>;
-type TEssayInput = z.input<typeof essayFormSchema>;
-type TMatchingInput = z.input<typeof matchingFormSchema> & {
-  matchingPairs: { left: string; right: string }[];
-};
-type TRankingInput = z.input<typeof rankingFormSchema> & {
-  rankingItems: string[];
-};
+/**
+ * Narrowed input types per variant for type-safe normalization:
+ * - TMCQInput: z.input<typeof mcqFormSchema>
+ * - TTFInput: z.input<typeof trueFalseFormSchema>
+ * - TSAInput: z.input<typeof shortAnswerFormSchema>
+ * - TFIBInput: z.input<typeof fillInBlankFormSchema>
+ * - TEssayInput: z.input<typeof essayFormSchema>
+ * - TMatchingInput: z.input<typeof matchingFormSchema> & { matchingPairs: { left: string; right: string }[] }
+ * - TRankingInput: z.input<typeof rankingFormSchema> & { rankingItems: string[] }
+ */
 
 // Helper to normalize payload for API (polymorphic dispatch via registry)
 export function toInstructorQuestionSaveRequest(
