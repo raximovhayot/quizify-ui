@@ -32,7 +32,6 @@ export class StudentAssignmentService {
       request,
       {
         token: accessToken,
-        signal,
       }
     );
     const data = extractApiData(response);
@@ -52,7 +51,6 @@ export class StudentAssignmentService {
       request,
       {
         token: accessToken,
-        signal,
       }
     );
     const data = extractApiData(response);
@@ -75,19 +73,19 @@ export class StudentAssignmentService {
           size: params?.size,
           status: params?.status,
         },
-        signal,
       });
     const data = extractApiData(response);
 
     // Validate pageable structure
     return {
-      content: data.content?.map((item: unknown) =>
-        assignmentRegistrationSchema.parse(item)
-      ) || [],
-      totalElements: data.totalElements || 0,
-      totalPages: data.totalPages || 0,
-      size: data.size || 10,
-      number: data.number || 0,
+      content:
+        data.content?.map((item: unknown) =>
+          assignmentRegistrationSchema.parse(item)
+        ) || [],
+      totalElements: data.totalElements ?? 0,
+      totalPages: data.totalPages ?? 0,
+      size: data.size ?? 10,
+      page: data.page ?? (data as { number?: number }).number ?? 0,
     };
   }
 
@@ -105,7 +103,6 @@ export class StudentAssignmentService {
       {
         token: accessToken,
         params: { id: assignmentId },
-        signal,
       }
     );
   }
@@ -121,7 +118,6 @@ export class StudentAssignmentService {
     await apiClient.delete('/student/assignments/:id/register', {
       token: accessToken,
       params: { id: assignmentId },
-      signal,
     });
   }
 }

@@ -1,10 +1,8 @@
 import { z } from 'zod';
 
-export const registrationStatusSchema = z.enum([
-  'ACTIVE',
-  'COMPLETED',
-  'CANCELLED',
-]);
+import { RegistrationStatus } from '../types/registration';
+
+export const registrationStatusSchema = z.nativeEnum(RegistrationStatus);
 
 export const assignmentRegistrationSchema = z.object({
   id: z.number(),

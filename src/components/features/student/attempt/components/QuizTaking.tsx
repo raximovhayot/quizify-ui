@@ -136,14 +136,16 @@ export function QuizTaking({ assignmentId, attemptId }: QuizTakingProps) {
       />
 
       {/* Question display */}
-      <QuestionDisplay
-        question={currentQuestion}
-        questionNumber={currentQuestionIndex + 1}
-        onAnswerChange={setPendingAnswer}
-        onSaveAnswer={handleSaveAnswer}
-        onFlag={handleFlag}
-        isSaving={submitAnswer.isPending}
-      />
+      {currentQuestion && (
+        <QuestionDisplay
+          question={currentQuestion}
+          questionNumber={currentQuestionIndex + 1}
+          onAnswerChange={setPendingAnswer}
+          onSaveAnswer={handleSaveAnswer}
+          onFlag={handleFlag}
+          isSaving={submitAnswer.isPending}
+        />
+      )}
 
       {/* Navigation */}
       <QuestionNavigation

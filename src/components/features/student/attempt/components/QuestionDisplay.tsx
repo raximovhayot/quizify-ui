@@ -46,7 +46,7 @@ export function QuestionDisplay({
   };
 
   const renderAnswerInput = () => {
-    switch (question.type) {
+    switch (question.questionType) {
       case QuestionType.MULTIPLE_CHOICE:
       case QuestionType.TRUE_FALSE:
         return (
@@ -54,47 +54,19 @@ export function QuestionDisplay({
             value={currentAnswer as string}
             onValueChange={handleAnswerChange}
           >
-            {question.options?.map((option, index) => (
+            {question.answers?.map((option, index) => (
               <div key={index} className="flex items-center space-x-2">
                 <RadioGroupItem value={String(index)} id={`option-${index}`} />
                 <Label htmlFor={`option-${index}`} className="cursor-pointer">
-                  {option.text}
+                  {option.content}
                 </Label>
               </div>
             ))}
           </RadioGroup>
         );
 
-      case QuestionType.MULTIPLE_RESPONSE:
-        return (
-          <div className="space-y-2">
-            {question.options?.map((option, index) => {
-              const selectedIndexes = (currentAnswer as number[]) || [];
-              const isChecked = selectedIndexes.includes(index);
-
-              return (
-                <div key={index} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`option-${index}`}
-                    checked={isChecked}
-                    onCheckedChange={(checked) => {
-                      const newSelected = checked
-                        ? [...selectedIndexes, index]
-                        : selectedIndexes.filter((i) => i !== index);
-                      handleAnswerChange(newSelected);
-                    }}
-                  />
-                  <Label htmlFor={`option-${index}`} className="cursor-pointer">
-                    {option.text}
-                  </Label>
-                </div>
-              );
-            })}
-          </div>
-        );
-
       case QuestionType.SHORT_ANSWER:
-      case QuestionType.FILL_IN_THE_BLANK:
+      case QuestionType.FILL_IN_BLANK:
         return (
           <Input
             value={(currentAnswer as string) || ''}
@@ -120,7 +92,7 @@ export function QuestionDisplay({
         );
 
       case QuestionType.MATCHING:
-      case QuestionType.ORDERING:
+      case QuestionType.RANKING:
         return (
           <div className="p-4 border rounded-lg bg-muted/50">
             <p className="text-sm text-muted-foreground">

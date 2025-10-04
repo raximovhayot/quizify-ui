@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import { pageableSchema } from '@/components/shared/schemas/pageable.schema';
 import { apiClient } from '@/lib/api';
 import { IApiResponse, extractApiData } from '@/types/api';
@@ -40,7 +42,7 @@ export class AssignmentService {
       });
     const data = extractApiData(response);
     // validate pageable list generically (content left as unknown here)
-    const parsed = pageableSchema().passthrough().parse(data);
+    const parsed = pageableSchema(z.unknown()).passthrough().parse(data);
     return parsed as unknown as IPageableList<AssignmentDTO>;
   }
 
@@ -58,10 +60,7 @@ export class AssignmentService {
   ): Promise<AssignmentDTO> {
     const response: IApiResponse<AssignmentDTO> = await apiClient.post(
       '/instructor/assignments',
-      request,
-      {
-        signal,
-      }
+      request
     );
     return extractApiData(response);
   }

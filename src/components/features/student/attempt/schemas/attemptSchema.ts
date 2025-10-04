@@ -2,7 +2,9 @@ import { z } from 'zod';
 
 import { questionDataDtoSchema } from '@/components/features/instructor/quiz/schemas/questionSchema';
 
-export const attemptStatusSchema = z.enum(['CREATED', 'STARTED', 'FINISHED']);
+import { AttemptStatus } from '../types/attempt';
+
+export const attemptStatusSchema = z.nativeEnum(AttemptStatus);
 
 export const attemptDataSchema = z.object({
   id: z.number(),

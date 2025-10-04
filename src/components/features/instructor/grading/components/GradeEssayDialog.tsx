@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CheckCircle2, X } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 import { useState } from 'react';
 
@@ -27,7 +28,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/components/ui/use-toast';
 import { sanitizeHtml } from '@/lib/sanitize';
 
 import { useGradeEssay } from '../hooks/useGrading';
@@ -46,7 +46,6 @@ export function GradeEssayDialog({
   onOpenChange,
 }: GradeEssayDialogProps) {
   const t = useTranslations();
-  const { toast } = useToast();
   const gradeEssay = useGradeEssay();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -66,23 +65,24 @@ export function GradeEssayDialog({
         grading: data,
       });
 
-      toast({
-        title: t('instructor.grading.success', {
+      toast.success(
+        t('instructor.grading.success', {
           fallback: 'Graded successfully',
         }),
-        description: t('instructor.grading.successDescription', {
-          fallback: 'The essay has been graded.',
-        }),
-      });
+        {
+          description: t('instructor.grading.successDescription', {
+            fallback: 'The essay has been graded.',
+          }),
+        }
+      );
 
       onOpenChange(false);
     } catch {
-      toast({
-        title: t('instructor.grading.error', {
+      toast.error(
+        t('instructor.grading.error', {
           fallback: 'Failed to grade essay',
-        }),
-        variant: 'destructive',
-      });
+        })
+      );
     } finally {
       setIsSubmitting(false);
     }

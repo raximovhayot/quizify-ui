@@ -33,7 +33,6 @@ export class StudentAttemptService {
       {
         token: accessToken,
         params: { id: assignmentId },
-        signal,
       }
     );
     const data = extractApiData(response);
@@ -64,7 +63,7 @@ export class StudentAttemptService {
       }
     );
     const data = extractApiData(response);
-    
+
     // Validate the response
     const attempt = attemptDataSchema.parse(data.attempt);
     const questions = data.questions.map((q: unknown) =>
@@ -90,7 +89,6 @@ export class StudentAttemptService {
       {
         token: accessToken,
         params: { assignmentId, attemptId },
-        signal,
       }
     );
   }
@@ -110,7 +108,6 @@ export class StudentAttemptService {
       {
         token: accessToken,
         params: { assignmentId, attemptId },
-        signal,
       }
     );
     const data = extractApiData(response);

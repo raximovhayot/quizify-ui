@@ -1,12 +1,13 @@
 'use client';
 
 import { ArrowLeft, FileEdit } from 'lucide-react';
+
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
 
+import { ContentPlaceholder } from '@/components/shared/ui/ContentPlaceholder';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ContentPlaceholder } from '@/components/shared/ui/ContentPlaceholder';
 
 import { useAssignmentGrading } from '../hooks/useGrading';
 import { EssayGradingTable } from './EssayGradingTable';
@@ -15,7 +16,7 @@ export function AssignmentGradingPage() {
   const t = useTranslations();
   const params = useParams();
   const router = useRouter();
-  const assignmentId = Number(params.id);
+  const assignmentId = Number(params?.id);
 
   const {
     data: grading,
