@@ -885,5 +885,24 @@
     },
     "download": "Yuklab olish",
     "uploadedOn": "{date} da yuklangan"
+  },
+  "errors": {
+    "title": "Nimadir xato ketdi",
+    "description": {
+      "default": "Kutilmagan xatolik yuz berdi.",
+      "feature": "{feature} bo'limida xatolik yuz berdi."
+    },
+    "details": {
+      "label": "Xatolik tafsilotlari:"
+    },
+    "inline": {
+      "title": "Kontentni yuklashda xato"
+    },
+    "actions": {
+      "retry": "Qayta urinib ko'rish",
+      "retryCount": "Qayta urinish ({count}/{max})",
+      "reload": "Sahifani yangilash",
+      "home": "Bosh sahifaga"
+    }
   }
 }

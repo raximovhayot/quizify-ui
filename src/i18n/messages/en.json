@@ -870,5 +870,24 @@
     },
     "download": "Download",
     "uploadedOn": "Uploaded on {date}"
+  },
+  "errors": {
+    "title": "Something went wrong",
+    "description": {
+      "default": "An unexpected error occurred.",
+      "feature": "An error occurred in the {feature} feature."
+    },
+    "details": {
+      "label": "Error Details:"
+    },
+    "inline": {
+      "title": "Error loading content"
+    },
+    "actions": {
+      "retry": "Try Again",
+      "retryCount": "Retry ({count}/{max})",
+      "reload": "Reload Page",
+      "home": "Go Home"
+    }
   }
 }

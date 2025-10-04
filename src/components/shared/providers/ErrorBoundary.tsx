@@ -15,6 +15,8 @@ import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 
+import { useTranslations } from 'next-intl';
+
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -37,166 +39,6 @@ import {
  */
 
 /**
- * Enhanced Error Boundary with comprehensive error handling
- *
- * Provides feature-specific error boundaries with error reporting, logging,
- * and user-friendly fallback components for better error handling throughout
- * the application.
- *
- * @fileoverview Enhanced error boundary components and utilities
- * @version 1.0.0
- * @since 2025-01-01
- */
-
-/**
- * Enhanced Error Boundary with comprehensive error handling
- *
- * Provides feature-specific error boundaries with error reporting, logging,
- * and user-friendly fallback components for better error handling throughout
- * the application.
- *
- * @fileoverview Enhanced error boundary components and utilities
- * @version 1.0.0
- * @since 2025-01-01
- */
-
-/**
- * Enhanced Error Boundary with comprehensive error handling
- *
- * Provides feature-specific error boundaries with error reporting, logging,
- * and user-friendly fallback components for better error handling throughout
- * the application.
- *
- * @fileoverview Enhanced error boundary components and utilities
- * @version 1.0.0
- * @since 2025-01-01
- */
-
-/**
- * Enhanced Error Boundary with comprehensive error handling
- *
- * Provides feature-specific error boundaries with error reporting, logging,
- * and user-friendly fallback components for better error handling throughout
- * the application.
- *
- * @fileoverview Enhanced error boundary components and utilities
- * @version 1.0.0
- * @since 2025-01-01
- */
-
-/**
- * Enhanced Error Boundary with comprehensive error handling
- *
- * Provides feature-specific error boundaries with error reporting, logging,
- * and user-friendly fallback components for better error handling throughout
- * the application.
- *
- * @fileoverview Enhanced error boundary components and utilities
- * @version 1.0.0
- * @since 2025-01-01
- */
-
-/**
- * Enhanced Error Boundary with comprehensive error handling
- *
- * Provides feature-specific error boundaries with error reporting, logging,
- * and user-friendly fallback components for better error handling throughout
- * the application.
- *
- * @fileoverview Enhanced error boundary components and utilities
- * @version 1.0.0
- * @since 2025-01-01
- */
-
-/**
- * Enhanced Error Boundary with comprehensive error handling
- *
- * Provides feature-specific error boundaries with error reporting, logging,
- * and user-friendly fallback components for better error handling throughout
- * the application.
- *
- * @fileoverview Enhanced error boundary components and utilities
- * @version 1.0.0
- * @since 2025-01-01
- */
-
-/**
- * Enhanced Error Boundary with comprehensive error handling
- *
- * Provides feature-specific error boundaries with error reporting, logging,
- * and user-friendly fallback components for better error handling throughout
- * the application.
- *
- * @fileoverview Enhanced error boundary components and utilities
- * @version 1.0.0
- * @since 2025-01-01
- */
-
-/**
- * Enhanced Error Boundary with comprehensive error handling
- *
- * Provides feature-specific error boundaries with error reporting, logging,
- * and user-friendly fallback components for better error handling throughout
- * the application.
- *
- * @fileoverview Enhanced error boundary components and utilities
- * @version 1.0.0
- * @since 2025-01-01
- */
-
-/**
- * Enhanced Error Boundary with comprehensive error handling
- *
- * Provides feature-specific error boundaries with error reporting, logging,
- * and user-friendly fallback components for better error handling throughout
- * the application.
- *
- * @fileoverview Enhanced error boundary components and utilities
- * @version 1.0.0
- * @since 2025-01-01
- */
-
-/**
- * Enhanced Error Boundary with comprehensive error handling
- *
- * Provides feature-specific error boundaries with error reporting, logging,
- * and user-friendly fallback components for better error handling throughout
- * the application.
- *
- * @fileoverview Enhanced error boundary components and utilities
- * @version 1.0.0
- * @since 2025-01-01
- */
-
-/**
- * Enhanced Error Boundary with comprehensive error handling
- *
- * Provides feature-specific error boundaries with error reporting, logging,
- * and user-friendly fallback components for better error handling throughout
- * the application.
- *
- * @fileoverview Enhanced error boundary components and utilities
- * @version 1.0.0
- * @since 2025-01-01
- */
-
-/**
- * Enhanced Error Boundary with comprehensive error handling
- *
- * Provides feature-specific error boundaries with error reporting, logging,
- * and user-friendly fallback components for better error handling throughout
- * the application.
- *
- * @fileoverview Enhanced error boundary components and utilities
- * @version 1.0.0
- * @since 2025-01-01
- */
-
-// =============================================================================
-// ERROR TYPES AND INTERFACES
-// =============================================================================
-
-/**
  * Error severity levels for categorizing different types of errors
  */
 export type ErrorSeverity = 'low' | 'medium' | 'high' | 'critical';
@@ -217,7 +59,8 @@ export interface ErrorContext {
   metadata?: Record<string, unknown>;
   /** Error severity level */
   severity?: ErrorSeverity;
-  /** Whether error should be reported to external services */
+  /** Legacy flag retained for backward compatibility.
+   *  No external reporting occurs; may be used internally for categorization only. */
   reportable?: boolean;
 }
 
@@ -266,6 +109,7 @@ export interface ErrorFallbackProps {
   retry: () => void;
   canRetry: boolean;
   retryCount: number;
+  maxRetries?: number;
 }
 
 // =============================================================================
@@ -275,53 +119,6 @@ export interface ErrorFallbackProps {
 /**
  * Error reporting services for logging and external reporting
  */
-class ErrorReportingService {
-  private static instance: ErrorReportingService;
-  private isDevelopment: boolean;
-
-  private constructor() {
-    this.isDevelopment =
-      typeof window !== 'undefined' && window.location.hostname === 'localhost';
-  }
-
-  static getInstance(): ErrorReportingService {
-    if (!ErrorReportingService.instance) {
-      ErrorReportingService.instance = new ErrorReportingService();
-    }
-    return ErrorReportingService.instance;
-  }
-
-  /**
-   * Log error to console with structured information
-   */
-  logError(
-    _error: Error,
-    _errorInfo: ErrorInfo,
-    _context?: ErrorContext
-  ): string {
-    const errorId = this.generateErrorId();
-    // Monitoring/logging removed intentionally. No console output.
-    return errorId;
-  }
-
-  /**
-   * Report error to external services (Sentry integration)
-   */
-  async reportError(
-    _error: Error,
-    _errorInfo: ErrorInfo,
-    _context?: ErrorContext
-  ): Promise<void> {
-    // Monitoring/reporting removed. Intentionally left blank.
-  }
-
-  /**
-   * Generate unique error ID for tracking
-   */
-  private generateErrorId(): string {
-    return `err_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  }
-}
 
 // =============================================================================
 // ERROR FALLBACK COMPONENTS
@@ -336,7 +133,10 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
   retry,
   canRetry,
   retryCount,
+  maxRetries,
 }) => {
+  const t = useTranslations();
+  const effectiveMax = typeof maxRetries === 'number' ? maxRetries : 3;
   const isDevelopment =
     typeof window !== 'undefined' && window.location.hostname === 'localhost';
 
@@ -346,18 +146,18 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
         <div className="mx-auto mb-4 w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
           <AlertTriangle className="w-6 h-6 text-red-600" />
         </div>
-        <CardTitle className="text-red-900">Something went wrong</CardTitle>
+        <CardTitle className="text-red-900">{t('errors.title')}</CardTitle>
         <CardDescription>
           {context?.feature
-            ? `An error occurred in the ${context.feature} feature.`
-            : 'An unexpected error occurred.'}
+            ? t('errors.description.feature', { feature: context.feature })
+            : t('errors.description.default')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {isDevelopment && (
           <div className="p-3 bg-gray-100 rounded-md">
             <p className="text-sm font-medium text-gray-900 mb-1">
-              Error Details:
+              {t('errors.details.label')}
             </p>
             <p className="text-xs text-gray-600 font-mono">{error.message}</p>
           </div>
@@ -369,10 +169,15 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
               onClick={retry}
               variant="default"
               className="flex-1"
-              disabled={retryCount >= 3}
+              disabled={retryCount >= effectiveMax}
             >
               <RefreshCw className="w-4 h-4 mr-2" />
-              {retryCount > 0 ? `Retry (${retryCount}/3)` : 'Try Again'}
+              {retryCount > 0
+                ? t('errors.actions.retryCount', {
+                    count: retryCount,
+                    max: effectiveMax,
+                  })
+                : t('errors.actions.retry')}
             </Button>
           )}
 
@@ -382,7 +187,7 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
             className="flex-1"
           >
             <RefreshCw className="w-4 h-4 mr-2" />
-            Reload Page
+            {t('errors.actions.reload')}
           </Button>
 
           <Button
@@ -391,7 +196,7 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
             className="flex-1"
           >
             <Home className="w-4 h-4 mr-2" />
-            Go Home
+            {t('errors.actions.home')}
           </Button>
         </div>
       </CardContent>
@@ -406,22 +211,27 @@ export const MinimalErrorFallback: React.FC<ErrorFallbackProps> = ({
   error: _error,
   retry,
   canRetry,
-}) => (
-  <div className="p-4 border border-red-200 rounded-md bg-red-50">
-    <div className="flex items-center justify-between">
-      <div className="flex items-center">
-        <AlertTriangle className="w-4 h-4 text-red-500 mr-2" />
-        <span className="text-sm text-red-700">Error loading content</span>
+}) => {
+  const t = useTranslations();
+  return (
+    <div className="p-4 border border-red-200 rounded-md bg-red-50">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <AlertTriangle className="w-4 h-4 text-red-500 mr-2" />
+          <span className="text-sm text-red-700">
+            {t('errors.inline.title')}
+          </span>
+        </div>
+        {canRetry && (
+          <Button onClick={retry} size="sm" variant="outline">
+            <RefreshCw className="w-3 h-3 mr-1" />
+            {t('errors.actions.retry')}
+          </Button>
+        )}
       </div>
-      {canRetry && (
-        <Button onClick={retry} size="sm" variant="outline">
-          <RefreshCw className="w-3 h-3 mr-1" />
-          Retry
-        </Button>
-      )}
     </div>
-  </div>
-);
+  );
+};
 
 // =============================================================================
 // ENHANCED ERROR BOUNDARY COMPONENT
@@ -434,7 +244,6 @@ export class ErrorBoundary extends Component<
   ErrorBoundaryProps,
   ErrorBoundaryState
 > {
-  private errorReportingService: ErrorReportingService;
   private retryTimeoutId: NodeJS.Timeout | null = null;
 
   constructor(props: ErrorBoundaryProps) {
@@ -447,8 +256,6 @@ export class ErrorBoundary extends Component<
       errorId: null,
       retryCount: 0,
     };
-
-    this.errorReportingService = ErrorReportingService.getInstance();
   }
 
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
@@ -461,13 +268,8 @@ export class ErrorBoundary extends Component<
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     const { context, onError } = this.props;
 
-    // Log and report error
-    const errorId = this.errorReportingService.logError(
-      error,
-      errorInfo,
-      context
-    );
-    this.errorReportingService.reportError(error, errorInfo, context);
+    // Monitoring removed: no logging/reporting
+    const errorId: string | null = null;
 
     // Update state with error information
     this.setState({
@@ -539,6 +341,7 @@ export class ErrorBoundary extends Component<
           retry={this.handleRetry}
           canRetry={enableRetry && retryCount < maxRetries}
           retryCount={retryCount}
+          maxRetries={maxRetries}
         />
       );
     }
@@ -634,19 +437,9 @@ export const FormErrorBoundary: React.FC<{
  * Hook to manually trigger error boundary
  */
 export const useErrorHandler = () => {
-  return (error: Error, context?: ErrorContext) => {
-    const errorReportingService = ErrorReportingService.getInstance();
-
-    // Create mock error info for manual errors
-    const errorInfo: ErrorInfo = {
-      componentStack: 'Manual error trigger',
-    };
-
-    errorReportingService.logError(error, errorInfo, context);
-    errorReportingService.reportError(error, errorInfo, context);
-
-    // Re-throw to trigger error boundary
-    throw error;
+  return (_error: Error, _context?: ErrorContext) => {
+    // Monitoring removed: simply re-throw to trigger the nearest ErrorBoundary
+    throw _error;
   };
 };
 
