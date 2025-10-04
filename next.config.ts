@@ -82,6 +82,83 @@ const nextConfig: NextConfig = {
   },
   // Power optimizations
   poweredByHeader: false,
+  // Security headers
+  async headers() {
+    return [
+      {
+        // Apply security headers to all routes
+        source: '/:path*',
+        headers: [
+          // Prevent MIME type sniffing
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          // Prevent clickjacking attacks
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          // Enable XSS protection in legacy browsers
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+          // Control referrer information
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          // Disable unnecessary browser features
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+          },
+          // Enforce HTTPS in production
+          ...(process.env.NODE_ENV === 'production'
+            ? [
+                {
+                  key: 'Strict-Transport-Security',
+                  value: 'max-age=31536000; includeSubDomains; preload',
+                },
+              ]
+            : []),
+          // Content Security Policy
+          {
+            key: 'Content-Security-Policy',
+            value: [
+              // Default source - only same origin
+              "default-src 'self'",
+              // Scripts - allow self, unsafe-eval for Next.js, unsafe-inline for inline scripts
+              // Note: unsafe-inline and unsafe-eval should be removed in future iterations
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js-agent.newrelic.com",
+              // Styles - allow self, unsafe-inline for styled-jsx and Tailwind
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              // Images - allow self, data URIs, and HTTPS images
+              "img-src 'self' blob: data: https:",
+              // Fonts - allow self, data URIs, and Google Fonts
+              "font-src 'self' data: https://fonts.gstatic.com",
+              // Connect to API and monitoring services
+              `connect-src 'self' ${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'} https://bam.nr-data.net`,
+              // Prevent framing from other origins
+              "frame-ancestors 'none'",
+              // Base URI restriction
+              "base-uri 'self'",
+              // Form action restriction
+              "form-action 'self'",
+              // Upgrade insecure requests in production
+              ...(process.env.NODE_ENV === 'production'
+                ? ['upgrade-insecure-requests']
+                : []),
+            ]
+              .join('; ')
+              .replace(/\s+/g, ' ')
+              .trim(),
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default withBundleAnalyzer(withNextIntl(nextConfig));
