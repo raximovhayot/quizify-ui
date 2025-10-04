@@ -15,7 +15,6 @@ const withBundleAnalyzer = (config: NextConfig): NextConfig => {
       });
       return bundleAnalyzer(config);
     } catch {
-      console.warn('Bundle analyzer not installed, skipping analysis');
       return config;
     }
   }
@@ -112,7 +111,8 @@ const nextConfig: NextConfig = {
           // Disable unnecessary browser features
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+            value:
+              'camera=(), microphone=(), geolocation=(), interest-cohort=()',
           },
           // Enforce HTTPS in production
           ...(process.env.NODE_ENV === 'production'
@@ -131,15 +131,15 @@ const nextConfig: NextConfig = {
               "default-src 'self'",
               // Scripts - allow self, unsafe-eval for Next.js, unsafe-inline for inline scripts
               // Note: unsafe-inline and unsafe-eval should be removed in future iterations
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js-agent.newrelic.com",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
               // Styles - allow self, unsafe-inline for styled-jsx and Tailwind
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               // Images - allow self, data URIs, and HTTPS images
               "img-src 'self' blob: data: https:",
               // Fonts - allow self, data URIs, and Google Fonts
               "font-src 'self' data: https://fonts.gstatic.com",
-              // Connect to API and monitoring services
-              `connect-src 'self' ${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'} https://bam.nr-data.net`,
+              // Connect to API only
+              `connect-src 'self' ${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'}`,
               // Prevent framing from other origins
               "frame-ancestors 'none'",
               // Base URI restriction

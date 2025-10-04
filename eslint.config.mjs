@@ -44,8 +44,10 @@ const eslintConfig = [
   },
   {
     files: ['./src/**/*.*'],
+    ignores: ['**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts', '**/*.spec.tsx'],
     rules: {
       'no-process-env': 'error',
+      'no-console': 'error',
     },
   },
   {

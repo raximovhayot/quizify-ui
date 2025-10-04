@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+
+import { useState } from 'react';
 
 import { useTranslations } from 'next-intl';
 
@@ -21,11 +21,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 
+import { useCreateAssignment } from '../../analytics/hooks/useCreateAssignment';
 import {
   AssignmentResultShowType,
   AssignmentResultType,
 } from '../../analytics/types/assignment';
-import { useCreateAssignment } from '../../analytics/hooks/useCreateAssignment';
 
 // Simplified schema for quick assignment creation
 const quickAssignmentSchema = z.object({
@@ -93,8 +93,7 @@ export function StartQuizDialog({
       });
       reset();
       onOpenChange(false);
-    } catch (error) {
-      console.error('Failed to create assignment:', error);
+    } catch (_error) {
     } finally {
       setIsSubmitting(false);
     }

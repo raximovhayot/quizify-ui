@@ -1,6 +1,12 @@
+import { env } from '@/env.mjs';
 import { apiClient } from '@/lib/api';
 import { IApiResponse, extractApiData } from '@/types/api';
 
+import {
+  assignmentAnalyticsSchema,
+  questionAnalyticsSchema,
+  studentRegistrationSchema,
+} from '../schemas/analyticsSchema';
 import {
   AssignmentAnalytics,
   QuestionAnalytics,
@@ -25,7 +31,8 @@ export class AnalyticsService {
         params: { id: assignmentId },
       }
     );
-    return extractApiData(response);
+    const data = extractApiData(response);
+    return assignmentAnalyticsSchema.parse(data);
   }
 
   /**
@@ -42,7 +49,8 @@ export class AnalyticsService {
         params: { id: assignmentId },
       }
     );
-    return extractApiData(response);
+    const data = extractApiData(response);
+    return questionAnalyticsSchema.array().parse(data);
   }
 
   /**
@@ -59,7 +67,8 @@ export class AnalyticsService {
         params: { id: assignmentId },
       }
     );
-    return extractApiData(response);
+    const data = extractApiData(response);
+    return studentRegistrationSchema.array().parse(data);
   }
 
   /**
@@ -69,21 +78,27 @@ export class AnalyticsService {
     assignmentId: number,
     signal?: AbortSignal
   ): Promise<Blob> {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/instructor/assignments/${assignmentId}/analytics/export`,
+    // Use apiClient to ensure auth headers and consistent error handling.
+    // Expect Excel output from backend.
+    const excelMime =
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    const res = await apiClient.request<Blob>(
+      `/instructor/assignments/:id/analytics/export`,
       {
         method: 'GET',
+        parseAs: 'blob',
+        params: { id: assignmentId },
         signal,
         headers: {
-          Accept: 'text/csv',
+          Accept: excelMime,
         },
       }
     );
 
-    if (!response.ok) {
-      throw new Error('Failed to export analytics');
+    if (res.errors?.length) {
+      throw new Error(res.errors[0]?.message || 'Failed to export analytics');
     }
 
-    return await response.blob();
+    return res.data;
   }
 }

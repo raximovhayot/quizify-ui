@@ -62,9 +62,7 @@ export function QuestionsList({ quizId, onAddQuestion }: QuestionsListProps) {
         data: payload,
       });
       setEditingQuestion(null);
-    } catch (e) {
-      console.error(e);
-    }
+    } catch (_e) {}
   };
 
   const handleDeleteQuestion = async () => {
@@ -73,9 +71,7 @@ export function QuestionsList({ quizId, onAddQuestion }: QuestionsListProps) {
     try {
       await deleteQuestionMutation.mutateAsync(deletingQuestion.id);
       setDeletingQuestion(null);
-    } catch (e) {
-      console.error(e);
-    }
+    } catch (_e) {}
   };
 
   if (isLoading) {

@@ -4,7 +4,7 @@
  * This module provides utilities for sanitizing HTML content to prevent XSS attacks.
  * It uses DOMPurify with isomorphic-dompurify for both client and server-side support.
  */
-import * as DOMPurify from 'isomorphic-dompurify';
+import DOMPurify from 'isomorphic-dompurify';
 
 /**
  * Configuration for DOMPurify
@@ -83,13 +83,6 @@ export function sanitizeHtml(html: string): string {
 
   const sanitized = DOMPurify.sanitize(html, PURIFY_CONFIG);
 
-  // Log if content was modified (potential XSS attempt)
-  if (sanitized !== html && typeof window !== 'undefined') {
-    import('./security-logger').then(({ logXssAttempt }) => {
-      logXssAttempt(html, sanitized);
-    });
-  }
-
   return sanitized;
 }
 
@@ -104,7 +97,10 @@ export function sanitizeHtml(html: string): string {
  */
 export function sanitizeHtmlWithConfig(
   html: string,
-  config: DOMPurify.Config & { RETURN_DOM_FRAGMENT?: false; RETURN_DOM?: false }
+  config: Record<string, unknown> & {
+    RETURN_DOM_FRAGMENT?: false;
+    RETURN_DOM?: false;
+  }
 ): string {
   if (!html || typeof html !== 'string') {
     return '';

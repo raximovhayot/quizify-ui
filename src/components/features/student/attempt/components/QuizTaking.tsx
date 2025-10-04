@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-
 import { AlertCircle } from 'lucide-react';
+
+import { useState } from 'react';
 
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
@@ -88,7 +88,7 @@ export function QuizTaking({ assignmentId, attemptId }: QuizTakingProps) {
   };
 
   const handleSubmitAttempt = async () => {
-    const result = await submitAttempt.mutateAsync();
+    await submitAttempt.mutateAsync();
     setShowSubmitDialog(false);
     // Navigate to results page
     router.push(
@@ -122,7 +122,10 @@ export function QuizTaking({ assignmentId, attemptId }: QuizTakingProps) {
           </p>
         </div>
         {attempt.timeRemaining && attempt.timeRemaining > 0 && (
-          <Timer timeRemaining={attempt.timeRemaining} onTimeUp={handleTimeUp} />
+          <Timer
+            timeRemaining={attempt.timeRemaining}
+            onTimeUp={handleTimeUp}
+          />
         )}
       </div>
 
@@ -147,9 +150,13 @@ export function QuizTaking({ assignmentId, attemptId }: QuizTakingProps) {
         questions={questions}
         currentQuestionIndex={currentQuestionIndex}
         onNavigate={setCurrentQuestionIndex}
-        onPrevious={() => setCurrentQuestionIndex((prev) => Math.max(0, prev - 1))}
+        onPrevious={() =>
+          setCurrentQuestionIndex((prev) => Math.max(0, prev - 1))
+        }
         onNext={() =>
-          setCurrentQuestionIndex((prev) => Math.min(questions.length - 1, prev + 1))
+          setCurrentQuestionIndex((prev) =>
+            Math.min(questions.length - 1, prev + 1)
+          )
         }
         canGoPrevious={currentQuestionIndex > 0}
         canGoNext={currentQuestionIndex < questions.length - 1}

@@ -44,7 +44,6 @@ export function LanguageSwitcher({
       // Reload the page to apply the new language
       window.location.reload();
     } catch (error) {
-      console.error('Error changing language:', error);
       setIsChanging(false);
     }
   };

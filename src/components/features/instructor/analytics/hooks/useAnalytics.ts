@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { analyticsKeys } from '../keys';
 import { AnalyticsService } from '../services/analyticsService';
 
 /**
@@ -7,10 +8,14 @@ import { AnalyticsService } from '../services/analyticsService';
  */
 export function useAssignmentAnalytics(assignmentId: number) {
   return useQuery({
-    queryKey: ['assignment-analytics', assignmentId],
+    queryKey: analyticsKeys.assignment(assignmentId),
     queryFn: ({ signal }) =>
       AnalyticsService.getAssignmentAnalytics(assignmentId, signal),
     enabled: !!assignmentId,
+    staleTime: 60 * 1000, // 1 minute
+    gcTime: 15 * 60 * 1000, // 15 minutes
+    structuralSharing: true,
+    placeholderData: (previousData) => previousData,
   });
 }
 
@@ -19,10 +24,14 @@ export function useAssignmentAnalytics(assignmentId: number) {
  */
 export function useQuestionAnalytics(assignmentId: number) {
   return useQuery({
-    queryKey: ['question-analytics', assignmentId],
+    queryKey: analyticsKeys.questions(assignmentId),
     queryFn: ({ signal }) =>
       AnalyticsService.getQuestionAnalytics(assignmentId, signal),
     enabled: !!assignmentId,
+    staleTime: 60 * 1000, // 1 minute
+    gcTime: 15 * 60 * 1000, // 15 minutes
+    structuralSharing: true,
+    placeholderData: (previousData) => previousData,
   });
 }
 
@@ -31,9 +40,13 @@ export function useQuestionAnalytics(assignmentId: number) {
  */
 export function useStudentRegistrations(assignmentId: number) {
   return useQuery({
-    queryKey: ['student-registrations', assignmentId],
+    queryKey: analyticsKeys.registrations(assignmentId),
     queryFn: ({ signal }) =>
       AnalyticsService.getStudentRegistrations(assignmentId, signal),
     enabled: !!assignmentId,
+    staleTime: 60 * 1000, // 1 minute
+    gcTime: 15 * 60 * 1000, // 15 minutes
+    structuralSharing: true,
+    placeholderData: (previousData) => previousData,
   });
 }

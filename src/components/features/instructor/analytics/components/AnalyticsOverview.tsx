@@ -1,13 +1,14 @@
 'use client';
 
 import { ArrowLeft, Download, FileEdit, TrendingUp, Users } from 'lucide-react';
+import { toast } from 'sonner';
+
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useToast } from '@/components/ui/use-toast';
 
 import { AnalyticsService } from '../services/analyticsService';
 import { AssignmentAnalytics } from '../types/analytics';
@@ -17,35 +18,38 @@ interface AnalyticsOverviewProps {
   loading?: boolean;
 }
 
-export function AnalyticsOverview({ analytics, loading }: AnalyticsOverviewProps) {
+export function AnalyticsOverview({
+  analytics,
+  loading,
+}: AnalyticsOverviewProps) {
   const t = useTranslations();
   const router = useRouter();
-  const { toast } = useToast();
 
   const handleExport = async () => {
     try {
-      const blob = await AnalyticsService.exportAnalytics(analytics.assignmentId);
+      const blob = await AnalyticsService.exportAnalytics(
+        analytics.assignmentId
+      );
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `assignment-${analytics.assignmentId}-analytics.csv`;
+      a.download = `assignment-${analytics.assignmentId}-analytics.xlsx`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
 
-      toast({
-        title: t('instructor.analytics.export.success', {
+      toast.success(
+        t('instructor.analytics.export.success', {
           fallback: 'Analytics exported successfully',
-        }),
-      });
-    } catch  {
-      toast({
-        title: t('instructor.analytics.export.error', {
+        })
+      );
+    } catch {
+      toast.error(
+        t('instructor.analytics.export.error', {
           fallback: 'Failed to export analytics',
-        }),
-        variant: 'destructive',
-      });
+        })
+      );
     }
   };
 
@@ -74,9 +78,10 @@ export function AnalyticsOverview({ analytics, loading }: AnalyticsOverviewProps
       title: t('instructor.analytics.averageScore', {
         fallback: 'Average Score',
       }),
-      value: analytics.averageScore !== null
-        ? `${analytics.averageScore.toFixed(1)}%`
-        : '-',
+      value:
+        analytics.averageScore !== null
+          ? `${analytics.averageScore.toFixed(1)}%`
+          : '-',
       icon: TrendingUp,
       color: 'text-purple-600',
     },
@@ -96,24 +101,21 @@ export function AnalyticsOverview({ analytics, loading }: AnalyticsOverviewProps
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => router.back()}
-            >
+            <Button variant="ghost" size="sm" onClick={() => router.back()}>
               <ArrowLeft className="h-4 w-4" />
             </Button>
-            <h2 className="text-2xl font-bold">
-              {analytics.assignmentTitle}
-            </h2>
+            <h2 className="text-2xl font-bold">{analytics.assignmentTitle}</h2>
           </div>
           <p className="text-sm text-muted-foreground">
-            {t('instructor.analytics.quiz', { fallback: 'Quiz' })}: {analytics.quizTitle}
+            {t('instructor.analytics.quiz', { fallback: 'Quiz' })}:{' '}
+            {analytics.quizTitle}
           </p>
         </div>
         <div className="flex gap-2">
           <Button
-            onClick={() => router.push(`/instructor/grading/${analytics.assignmentId}`)}
+            onClick={() =>
+              router.push(`/instructor/grading/${analytics.assignmentId}`)
+            }
             variant="outline"
           >
             <FileEdit className="mr-2 h-4 w-4" />
@@ -151,7 +153,9 @@ export function AnalyticsOverview({ analytics, loading }: AnalyticsOverviewProps
         <Card>
           <CardHeader>
             <CardTitle>
-              {t('instructor.analytics.scoreRange', { fallback: 'Score Range' })}
+              {t('instructor.analytics.scoreRange', {
+                fallback: 'Score Range',
+              })}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -160,14 +164,18 @@ export function AnalyticsOverview({ analytics, loading }: AnalyticsOverviewProps
                 <p className="text-sm text-muted-foreground">
                   {t('instructor.analytics.lowest', { fallback: 'Lowest' })}
                 </p>
-                <p className="text-2xl font-bold">{analytics.lowestScore.toFixed(1)}%</p>
+                <p className="text-2xl font-bold">
+                  {analytics.lowestScore.toFixed(1)}%
+                </p>
               </div>
               <div className="h-px flex-1 bg-border mx-4" />
               <div className="text-right">
                 <p className="text-sm text-muted-foreground">
                   {t('instructor.analytics.highest', { fallback: 'Highest' })}
                 </p>
-                <p className="text-2xl font-bold">{analytics.highestScore.toFixed(1)}%</p>
+                <p className="text-2xl font-bold">
+                  {analytics.highestScore.toFixed(1)}%
+                </p>
               </div>
             </div>
           </CardContent>

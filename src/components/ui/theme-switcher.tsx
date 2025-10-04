@@ -69,7 +69,6 @@ export function ThemeSwitcher({
       // Small delay to show the changing state
       setTimeout(() => setIsChanging(false), 100);
     } catch (error) {
-      console.error('Error changing theme:', error);
       setIsChanging(false);
     }
   };

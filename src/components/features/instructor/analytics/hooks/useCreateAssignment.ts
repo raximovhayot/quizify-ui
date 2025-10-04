@@ -1,33 +1,40 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-
 import { toast } from 'sonner';
+
+import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 
 import { ROUTES_APP } from '@/components/features/instructor/routes';
 
-import { AssignmentCreateRequest } from '../types/assignment';
+import { assignmentKeys } from '../keys';
 import { AssignmentService } from '../services/assignmentService';
-import { assignmentKeys } from './useAssignments';
+import { AssignmentCreateRequest } from '../types/assignment';
 
 export function useCreateAssignment() {
-  const { data: session } = useSession();
   const queryClient = useQueryClient();
   const router = useRouter();
+  const t = useTranslations();
 
   return useMutation({
     mutationFn: async (request: AssignmentCreateRequest) => {
-      if (!session?.accessToken) throw new Error('No access token available');
-      return AssignmentService.createAssignment(request, session.accessToken);
+      return AssignmentService.createAssignment(request);
     },
-    onSuccess: (data) => {
+    onSuccess: (_data) => {
       queryClient.invalidateQueries({ queryKey: assignmentKeys.all });
-      toast.success('Assignment created successfully');
+      toast.success(
+        t('instructor.assignment.create.success', {
+          fallback: 'Assignment created successfully',
+        })
+      );
       router.push(ROUTES_APP.analytics.root());
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to create assignment');
+      toast.error(
+        error.message ||
+          t('instructor.assignment.create.error', {
+            fallback: 'Failed to create assignment',
+          })
+      );
     },
   });
 }

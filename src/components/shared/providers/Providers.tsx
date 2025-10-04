@@ -96,18 +96,8 @@ export function Providers({ children, messages, locale }: ProvidersProps) {
           },
         },
         mutationCache: new MutationCache({
-          onError: (error) => {
-            // Log errors in development
-            if (env.NEXT_PUBLIC_NODE_ENV !== 'production') {
-              console.error('Mutation error:', error);
-            }
-          },
-          onSuccess: (data, variables, context, mutation) => {
-            // Log successful mutations in development
-            if (env.NEXT_PUBLIC_NODE_ENV !== 'production') {
-              console.log('Mutation success:', mutation.options.mutationKey);
-            }
-          },
+          onError: (_error) => {},
+          onSuccess: (_data, _variables, _context, _mutation) => {},
         }),
         // Note: Query cache configuration is handled by QueryClient constructor
       })

@@ -11,7 +11,7 @@
  */
 'use client';
 
-import { AlertTriangle, Bug, Home, RefreshCw } from 'lucide-react';
+import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 
@@ -23,7 +23,18 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { captureException } from '@/lib/error-tracking';
+
+/**
+ * Enhanced Error Boundary with comprehensive error handling
+ *
+ * Provides feature-specific error boundaries with error reporting, logging,
+ * and user-friendly fallback components for better error handling throughout
+ * the application.
+ *
+ * @fileoverview Enhanced error boundary components and utilities
+ * @version 1.0.0
+ * @since 2025-01-01
+ */
 
 /**
  * Enhanced Error Boundary with comprehensive error handling
@@ -283,33 +294,13 @@ class ErrorReportingService {
   /**
    * Log error to console with structured information
    */
-  logError(error: Error, errorInfo: ErrorInfo, context?: ErrorContext): string {
+  logError(
+    _error: Error,
+    _errorInfo: ErrorInfo,
+    _context?: ErrorContext
+  ): string {
     const errorId = this.generateErrorId();
-    const timestamp = new Date().toISOString();
-
-    const errorReport = {
-      errorId,
-      timestamp,
-      message: error.message,
-      stack: error.stack,
-      componentStack: errorInfo.componentStack,
-      context,
-      userAgent:
-        typeof window !== 'undefined' ? window.navigator.userAgent : 'unknown',
-      url: typeof window !== 'undefined' ? window.location.href : 'unknown',
-    };
-
-    if (this.isDevelopment) {
-      console.group(`🚨 Error Report [${errorId}]`);
-      console.error('Error:', error);
-      console.error('Error Info:', errorInfo);
-      console.error('Context:', context);
-      console.error('Full Report:', errorReport);
-      console.groupEnd();
-    } else {
-      console.error(`Error [${errorId}]:`, error.message);
-    }
-
+    // Monitoring/logging removed intentionally. No console output.
     return errorId;
   }
 
@@ -317,39 +308,11 @@ class ErrorReportingService {
    * Report error to external services (Sentry integration)
    */
   async reportError(
-    error: Error,
-    errorInfo: ErrorInfo,
-    context?: ErrorContext
+    _error: Error,
+    _errorInfo: ErrorInfo,
+    _context?: ErrorContext
   ): Promise<void> {
-    if (!context?.reportable) return;
-
-    try {
-      // Send to centralized error tracking (Sentry)
-      captureException(error, {
-        componentName: context.feature,
-        actionName: context.action,
-        additionalData: {
-          componentStack: errorInfo.componentStack,
-          retryCount: this.retryCount,
-          context,
-        },
-        tags: {
-          feature: context.feature || 'unknown',
-          severity: context.severity || 'error',
-        },
-      });
-
-      if (this.isDevelopment) {
-        console.log('Error reported to error tracking service:', {
-          message: error.message,
-          stack: error.stack,
-          componentStack: errorInfo.componentStack,
-          context,
-        });
-      }
-    } catch (reportingError) {
-      console.error('Failed to report error:', reportingError);
-    }
+    // Monitoring/reporting removed. Intentionally left blank.
   }
 
   /**
@@ -431,21 +394,6 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
             Go Home
           </Button>
         </div>
-
-        {isDevelopment && (
-          <Button
-            onClick={() => {
-              console.error('Error details:', { error, context });
-              alert('Error details logged to console');
-            }}
-            variant="ghost"
-            size="sm"
-            className="w-full"
-          >
-            <Bug className="w-4 h-4 mr-2" />
-            Debug Info
-          </Button>
-        )}
       </CardContent>
     </Card>
   );
@@ -512,11 +460,6 @@ export class ErrorBoundary extends Component<
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     const { context, onError } = this.props;
-
-    // Log to security logger
-    import('@/lib/security-logger').then(({ logErrorBoundary }) => {
-      logErrorBoundary(error, errorInfo);
-    });
 
     // Log and report error
     const errorId = this.errorReportingService.logError(

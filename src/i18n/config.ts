@@ -30,11 +30,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
         validLocale = preferredLanguage;
       }
     } catch (error) {
-      // This is expected during static generation, just use the default
-      console.warn(
-        'Error processing locale from cookies, using default:',
-        error
-      );
+      // This is expected during static generation; use the default locale.
     }
   }
 

@@ -87,15 +87,6 @@ export async function middleware(request: NextRequest) {
   );
 
   if (!hasRequiredRole) {
-    // Log authorization failure
-    import('@/lib/security-logger').then(({ logRoleMismatch }) => {
-      logRoleMismatch(
-        user.id,
-        userRoles.map((r) => r.name),
-        requiredRoles
-      );
-    });
-
     // Redirect based on user's roles
     const hasStudentRole = userRoles.some((role) => role.name === 'STUDENT');
     const hasInstructorRole = userRoles.some(

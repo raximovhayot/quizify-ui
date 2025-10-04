@@ -48,6 +48,7 @@ export const env = createEnv({
           value ??
           (process.env.NODE_ENV === 'development' ? 'warning' : 'success')
       ),
+    NEXT_PUBLIC_APP_VERSION: z.string().optional(),
   },
 
   /**
@@ -64,6 +65,7 @@ export const env = createEnv({
     NEXT_PUBLIC_ENV_NAME: process.env.NEXT_PUBLIC_ENV_NAME,
     NEXT_PUBLIC_ENV_EMOJI: process.env.NEXT_PUBLIC_ENV_EMOJI,
     NEXT_PUBLIC_ENV_COLOR_SCHEME: process.env.NEXT_PUBLIC_ENV_COLOR_SCHEME,
+    NEXT_PUBLIC_APP_VERSION: process.env.NEXT_PUBLIC_APP_VERSION,
   },
 
   /**

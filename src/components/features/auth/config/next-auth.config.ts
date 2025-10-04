@@ -7,12 +7,6 @@ import {
   AccountDTO,
   UserState,
 } from '@/components/features/profile/types/account';
-import { setUserContext, clearUserContext } from '@/lib/error-tracking';
-import {
-  logAuthFailure,
-  logAuthSuccess,
-  logTokenRefresh,
-} from '@/lib/security-logger';
 
 // Override NextAuth types to completely replace AdapterUser requirements
 declare module 'next-auth' {
@@ -97,7 +91,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials?.phone || !credentials?.password) {
-          logAuthFailure('unknown', 'Missing credentials');
           return null;
         }
 
@@ -110,7 +103,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           );
 
           if (Array.isArray(response.errors) && response.errors.length > 0) {
-            logAuthFailure(phone, response.errors[0]?.message || 'Login failed');
             return null;
           }
 
@@ -120,23 +112,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             !jwtToken?.refreshToken ||
             !jwtToken?.user
           ) {
-            logAuthFailure(phone, 'Invalid token response');
             return null;
           }
-
-          // Log successful authentication
-          logAuthSuccess(jwtToken.user.id.toString(), phone);
-
-          // Set user context for error tracking
-          setUserContext(
-            jwtToken.user.id.toString(),
-            undefined, // Email not available in current schema
-            {
-              phone: jwtToken.user.phone,
-              roles: jwtToken.user.roles?.map((r) => r.name).join(','),
-              state: jwtToken.user.state,
-            }
-          );
 
           return {
             id: jwtToken.user.id.toString(),
@@ -150,12 +127,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             accessToken: jwtToken.accessToken,
             refreshToken: jwtToken.refreshToken,
           };
-        } catch (e) {
-          console.error('NextAuth authorize error:', e);
-          logAuthFailure(
-            phone,
-            e instanceof Error ? e.message : 'Authentication error'
-          );
+        } catch (_e) {
           return null;
         }
       },
@@ -224,16 +196,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
 
   events: {
-    async signOut(message) {
-      // Log user logout
-      const token = 'token' in message ? message.token : null;
-      if (token?.user?.id) {
-        const { logLogout } = await import('@/lib/security-logger');
-        logLogout(token.user.id.toString());
-        
-        // Clear user context from error tracking
-        clearUserContext();
-      }
+    async signOut(_message) {
+      // Monitoring/logging removed: no external side effects on sign-out.
     },
   },
 });
@@ -242,8 +206,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
  * Refresh the access token using the refresh token
  */
 async function refreshAccessToken(token: JWT): Promise<JWT> {
-  const userId = token.user?.id?.toString();
-
   try {
     const refreshedTokens = await AuthService.refreshToken(token.refreshToken);
     const newAccess = refreshedTokens?.data?.accessToken;
@@ -254,10 +216,7 @@ async function refreshAccessToken(token: JWT): Promise<JWT> {
     const computedExp =
       getJwtExpirationMs(newAccess) ?? Date.now() + 15 * 60 * 1000; // fallback 15 minutes
 
-    // Log successful token refresh
-    if (userId) {
-      logTokenRefresh(userId, true);
-    }
+    // Token refresh successful
 
     return {
       ...token,
@@ -265,14 +224,7 @@ async function refreshAccessToken(token: JWT): Promise<JWT> {
       refreshToken: newRefresh,
       accessTokenExpires: computedExp,
     } as JWT;
-  } catch (error) {
-    console.error('Error refreshing access token:', error);
-
-    // Log failed token refresh
-    if (userId) {
-      logTokenRefresh(userId, false);
-    }
-
+  } catch (_error) {
     return {
       ...token,
       error: 'RefreshAccessTokenError',

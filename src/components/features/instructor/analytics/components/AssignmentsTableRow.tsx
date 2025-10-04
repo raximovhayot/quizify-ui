@@ -1,22 +1,31 @@
 'use client';
 
 import { format } from 'date-fns';
-import { Eye } from 'lucide-react';
 
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
 
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { TableCell, TableRow } from '@/components/ui/table';
 
+import { ROUTES_APP } from '../../routes';
 import { AssignmentDTO, AssignmentStatus } from '../types/assignment';
+import { AssignmentsTableActions } from './AssignmentsTableActions';
 
 export interface AssignmentsTableRowProps {
   assignment: AssignmentDTO;
+  onDelete?: (id: number) => void;
+  onPublish?: (id: number) => void;
+  onUnpublish?: (id: number) => void;
+  disabled?: boolean;
 }
 
-export function AssignmentsTableRow({ assignment }: AssignmentsTableRowProps) {
+export function AssignmentsTableRow({
+  assignment,
+  onDelete,
+  onPublish,
+  onUnpublish,
+  disabled = false,
+}: Readonly<AssignmentsTableRowProps>) {
   const t = useTranslations();
 
   const formatDate = (dateString: string | undefined | null) => {
@@ -65,12 +74,16 @@ export function AssignmentsTableRow({ assignment }: AssignmentsTableRowProps) {
         {formatDate(assignment.dueDate)}
       </TableCell>
       <TableCell className="text-right">
-        <Button variant="ghost" size="sm" asChild>
-          <Link href={`/instructor/analytics/${assignment.id}`}>
-            <Eye className="h-4 w-4 mr-2" />
-            {t('common.view', { fallback: 'View' })}
-          </Link>
-        </Button>
+        <AssignmentsTableActions
+          id={assignment.id}
+          viewHref={ROUTES_APP.analytics.root() + `/${assignment.id}`}
+          onDelete={onDelete ? () => onDelete(assignment.id) : undefined}
+          onPublish={onPublish ? () => onPublish(assignment.id) : undefined}
+          onUnpublish={
+            onUnpublish ? () => onUnpublish(assignment.id) : undefined
+          }
+          disabled={disabled}
+        />
       </TableCell>
     </TableRow>
   );

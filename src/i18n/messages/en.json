@@ -635,7 +635,9 @@
         "descriptionPlaceholder": "Enter assignment description",
         "startTimeLabel": "Start Time",
         "endTimeLabel": "End Time",
-        "submit": "Create Assignment"
+        "submit": "Create Assignment",
+        "success": "Assignment created successfully",
+        "error": "Failed to create assignment"
       }
     },
     "grading": {

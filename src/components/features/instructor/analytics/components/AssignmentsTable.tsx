@@ -17,12 +17,20 @@ export interface AssignmentsTableProps {
   assignments: AssignmentDTO[];
   searchQuery?: string;
   className?: string;
+  onDelete?: (id: number) => void;
+  onPublish?: (id: number) => void;
+  onUnpublish?: (id: number) => void;
+  isMutating?: boolean;
 }
 
 function AssignmentsTableComponent({
   assignments,
   searchQuery = '',
   className,
+  onDelete,
+  onPublish,
+  onUnpublish,
+  isMutating = false,
 }: Readonly<AssignmentsTableProps>) {
   const t = useTranslations();
 
@@ -68,6 +76,10 @@ function AssignmentsTableComponent({
               <AssignmentsTableRow
                 key={assignment.id}
                 assignment={assignment}
+                onDelete={onDelete}
+                onPublish={onPublish}
+                onUnpublish={onUnpublish}
+                disabled={isMutating}
               />
             ))}
           </TableBody>

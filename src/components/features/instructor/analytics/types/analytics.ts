@@ -1,5 +1,3 @@
-import { z } from 'zod';
-
 /**
  * Student attempt for analytics
  */

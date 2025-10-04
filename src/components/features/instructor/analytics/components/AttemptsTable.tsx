@@ -1,8 +1,10 @@
 'use client';
 
-import { CheckCircle2, Circle, Clock, XCircle } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { CheckCircle2, Circle, Clock } from 'lucide-react';
+
 import { useState } from 'react';
+
+import { useTranslations } from 'next-intl';
 
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

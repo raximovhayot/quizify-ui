@@ -73,7 +73,6 @@ export function useDeleteQuiz() {
         );
       }
 
-      console.error('Failed to delete quiz:', error);
       toast.error(
         t('instructor.quiz.delete.error', {
           fallback: 'Failed to delete quiz',

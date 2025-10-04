@@ -72,7 +72,6 @@ export function TokenSyncProvider() {
         }
       } catch (e) {
         // Swallow errors; caller will handle 401 failure
-        console.error('Token refresh failed', e);
       }
       return null;
     });

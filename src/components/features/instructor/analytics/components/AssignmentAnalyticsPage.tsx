@@ -14,7 +14,7 @@ import { QuestionAnalyticsTable } from './QuestionAnalyticsTable';
 
 export function AssignmentAnalyticsPage() {
   const params = useParams();
-  const assignmentId = Number(params.id);
+  const assignmentId = Number(params?.id);
 
   const {
     data: analytics,
@@ -22,10 +22,8 @@ export function AssignmentAnalyticsPage() {
     error: analyticsError,
   } = useAssignmentAnalytics(assignmentId);
 
-  const {
-    data: questionAnalytics,
-    isLoading: questionLoading,
-  } = useQuestionAnalytics(assignmentId);
+  const { data: questionAnalytics, isLoading: questionLoading } =
+    useQuestionAnalytics(assignmentId);
 
   if (analyticsError) {
     return (
@@ -39,10 +37,7 @@ export function AssignmentAnalyticsPage() {
   return (
     <div className="space-y-6">
       {analytics && (
-        <AnalyticsOverview
-          analytics={analytics}
-          loading={analyticsLoading}
-        />
+        <AnalyticsOverview analytics={analytics} loading={analyticsLoading} />
       )}
 
       {analytics && (

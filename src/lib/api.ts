@@ -735,16 +735,6 @@ class ApiClient {
         errorMessage || `HTTP ${response.status}: ${response.statusText}`,
     };
 
-    // Log API error
-    import('@/lib/security-logger').then(({ logApiError }) => {
-      logApiError(
-        response.url,
-        response.status,
-        error.message,
-        undefined // userId can be added if available in context
-      );
-    });
-
     return { data: null as T, errors: [error] };
   }
 
@@ -838,13 +828,6 @@ class ApiClient {
       code: errorDetails.code,
       message: errorDetails.message,
     };
-
-    // Log network error
-    if (errorDetails.code === 'NETWORK_ERROR') {
-      import('@/lib/security-logger').then(({ logNetworkError }) => {
-        logNetworkError('unknown', errorDetails.message);
-      });
-    }
 
     return { data: null as T, errors: [apiError] };
   }

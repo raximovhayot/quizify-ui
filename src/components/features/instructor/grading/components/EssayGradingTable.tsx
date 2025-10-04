@@ -1,6 +1,6 @@
 'use client';
 
-import { CheckCircle2, ClipboardCheck, FileEdit, XCircle } from 'lucide-react';
+import { CheckCircle2, ClipboardCheck, FileEdit } from 'lucide-react';
 
 import { useState } from 'react';
 
