@@ -1,0 +1,604 @@
+# Security Improvements Implementation Guide
+
+This guide provides step-by-step instructions to implement the critical security improvements identified in the OWASP Top 10 analysis.
+
+## Priority 1: Add Security Headers (CRITICAL)
+
+### Implementation
+
+Add security headers in `next.config.ts`:
+
+```typescript
+const nextConfig: NextConfig = {
+  // ... existing config
+
+  async headers() {
+    return [
+      {
+        // Apply security headers to all routes
+        source: '/:path*',
+        headers: [
+          // Prevent MIME type sniffing
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          // Prevent clickjacking
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          // Enable XSS protection (legacy browsers)
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+          // Control referrer information
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          // Disable unnecessary browser features
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
+          },
+          // Enforce HTTPS (only in production)
+          ...(process.env.NODE_ENV === 'production'
+            ? [
+                {
+                  key: 'Strict-Transport-Security',
+                  value: 'max-age=31536000; includeSubDomains; preload',
+                },
+              ]
+            : []),
+        ],
+      },
+    ];
+  },
+};
+```
+
+### Testing
+
+```bash
+# After deployment, verify headers with:
+curl -I https://your-domain.com
+
+# Or use online tool:
+# https://securityheaders.com/
+```
+
+---
+
+## Priority 2: Implement Content Security Policy (CRITICAL)
+
+### Implementation
+
+Add CSP headers in `next.config.ts`:
+
+```typescript
+const cspHeader = `
+  default-src 'self';
+  script-src 'self' 'unsafe-eval' 'unsafe-inline';
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  img-src 'self' blob: data: https:;
+  font-src 'self' data: https://fonts.gstatic.com;
+  connect-src 'self' ${process.env.NEXT_PUBLIC_API_BASE_URL};
+  frame-ancestors 'none';
+  base-uri 'self';
+  form-action 'self';
+`;
+
+async headers() {
+  return [
+    {
+      source: '/:path*',
+      headers: [
+        {
+          key: 'Content-Security-Policy',
+          value: cspHeader.replace(/\s{2,}/g, ' ').trim(),
+        },
+        // ... other headers
+      ],
+    },
+  ];
+}
+```
+
+### Notes
+
+- Start with a permissive policy and gradually tighten
+- Use CSP report-only mode initially to identify issues
+- Remove `'unsafe-inline'` and `'unsafe-eval'` when possible
+
+---
+
+## Priority 3: Implement Security Logging (CRITICAL)
+
+### Step 1: Create Security Logger Utility
+
+Create `src/lib/security-logger.ts`:
+
+```typescript
+/**
+ * Security Event Logger
+ * 
+ * Logs security-relevant events for monitoring and audit purposes
+ */
+
+export enum SecurityEventType {
+  AUTH_SUCCESS = 'AUTH_SUCCESS',
+  AUTH_FAILURE = 'AUTH_FAILURE',
+  AUTHZ_FAILURE = 'AUTHZ_FAILURE',
+  TOKEN_REFRESH = 'TOKEN_REFRESH',
+  SUSPICIOUS_ACTIVITY = 'SUSPICIOUS_ACTIVITY',
+  SESSION_EXPIRED = 'SESSION_EXPIRED',
+  LOGOUT = 'LOGOUT',
+}
+
+export interface SecurityEvent {
+  type: SecurityEventType;
+  userId?: string;
+  phone?: string;
+  timestamp: string;
+  userAgent?: string;
+  ip?: string;
+  details?: Record<string, unknown>;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+}
+
+class SecurityLogger {
+  private events: SecurityEvent[] = [];
+
+  /**
+   * Log a security event
+   */
+  log(
+    type: SecurityEventType,
+    severity: 'low' | 'medium' | 'high' | 'critical',
+    details?: Record<string, unknown>
+  ): void {
+    const event: SecurityEvent = {
+      type,
+      severity,
+      timestamp: new Date().toISOString(),
+      userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : undefined,
+      details,
+    };
+
+    // Store in memory (can be sent to backend/monitoring service)
+    this.events.push(event);
+
+    // Send to backend API for persistence
+    this.sendToBackend(event);
+
+    // Log to console in development
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('[SECURITY]', event);
+    }
+
+    // Alert on critical events
+    if (severity === 'critical') {
+      this.alertCriticalEvent(event);
+    }
+  }
+
+  /**
+   * Send event to backend for persistence
+   */
+  private async sendToBackend(event: SecurityEvent): Promise<void> {
+    try {
+      // TODO: Implement backend endpoint for security events
+      // await fetch('/api/security/events', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(event),
+      // });
+    } catch (error) {
+      console.error('[SECURITY] Failed to send event to backend:', error);
+    }
+  }
+
+  /**
+   * Alert on critical security events
+   */
+  private alertCriticalEvent(event: SecurityEvent): void {
+    // TODO: Implement alerting mechanism (email, Slack, PagerDuty, etc.)
+    console.error('[SECURITY ALERT]', event);
+  }
+
+  /**
+   * Get recent security events
+   */
+  getRecentEvents(limit = 100): SecurityEvent[] {
+    return this.events.slice(-limit);
+  }
+
+  /**
+   * Clear events (for cleanup)
+   */
+  clear(): void {
+    this.events = [];
+  }
+}
+
+export const securityLogger = new SecurityLogger();
+
+// Helper functions for common security events
+export const logAuthSuccess = (userId: string, phone: string) => {
+  securityLogger.log(SecurityEventType.AUTH_SUCCESS, 'low', {
+    userId,
+    phone,
+  });
+};
+
+export const logAuthFailure = (phone: string, reason: string) => {
+  securityLogger.log(SecurityEventType.AUTH_FAILURE, 'medium', {
+    phone,
+    reason,
+  });
+};
+
+export const logAuthzFailure = (userId: string, resource: string, action: string) => {
+  securityLogger.log(SecurityEventType.AUTHZ_FAILURE, 'high', {
+    userId,
+    resource,
+    action,
+  });
+};
+
+export const logSuspiciousActivity = (
+  userId: string | undefined,
+  activity: string,
+  details?: Record<string, unknown>
+) => {
+  securityLogger.log(SecurityEventType.SUSPICIOUS_ACTIVITY, 'critical', {
+    userId,
+    activity,
+    ...details,
+  });
+};
+```
+
+### Step 2: Integrate with Authentication
+
+Update `src/components/features/auth/config/next-auth.config.ts`:
+
+```typescript
+import { logAuthSuccess, logAuthFailure } from '@/lib/security-logger';
+
+// In the authorize callback:
+authorize: async (credentials) => {
+  try {
+    const result = await AuthService.login(phone, password);
+    
+    // Log successful authentication
+    logAuthSuccess(result.user.id, result.user.phone);
+    
+    return { ...result.user, ... };
+  } catch (error) {
+    // Log failed authentication
+    logAuthFailure(phone, error.message);
+    
+    throw error;
+  }
+}
+```
+
+### Step 3: Integrate Error Tracking Service (Sentry)
+
+```bash
+npm install @sentry/nextjs
+```
+
+Create `sentry.client.config.ts`:
+
+```typescript
+import * as Sentry from '@sentry/nextjs';
+
+Sentry.init({
+  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  tracesSampleRate: 1.0,
+  debug: false,
+  environment: process.env.NODE_ENV,
+  beforeSend(event, hint) {
+    // Filter sensitive data
+    if (event.request) {
+      delete event.request.cookies;
+      delete event.request.headers;
+    }
+    return event;
+  },
+});
+```
+
+---
+
+## Priority 4: Improve Token Storage (HIGH)
+
+### Current Issue
+
+JWT tokens are stored in `sessionStorage`, which is accessible to JavaScript and vulnerable to XSS attacks.
+
+### Recommended Solution
+
+**Option 1: HTTP-Only Cookies (RECOMMENDED)**
+
+This requires backend support. The backend should set HTTP-only cookies for tokens instead of sending them in the response body.
+
+Backend changes needed:
+```typescript
+// Backend (example)
+res.cookie('accessToken', token, {
+  httpOnly: true,
+  secure: true,
+  sameSite: 'strict',
+  maxAge: 15 * 60 * 1000, // 15 minutes
+});
+```
+
+Frontend changes:
+```typescript
+// Remove sessionStorage usage
+// Cookies are automatically sent with requests
+```
+
+**Option 2: Short-Lived Tokens (INTERIM SOLUTION)**
+
+If HTTP-only cookies can't be implemented immediately:
+
+```typescript
+// Reduce token lifetime to 5 minutes
+// Implement automatic refresh
+// Clear sessionStorage on tab close
+
+useEffect(() => {
+  const handleTabClose = () => {
+    sessionStorage.removeItem('signupToken');
+  };
+  
+  window.addEventListener('beforeunload', handleTabClose);
+  return () => window.removeEventListener('beforeunload', handleTabClose);
+}, []);
+```
+
+---
+
+## Priority 5: Implement Rate Limiting (MEDIUM)
+
+### Client-Side Rate Limiting
+
+Create `src/lib/rate-limiter.ts`:
+
+```typescript
+/**
+ * Client-side rate limiter to prevent abuse
+ */
+class RateLimiter {
+  private attempts: Map<string, number[]> = new Map();
+
+  /**
+   * Check if an action is allowed
+   * @param key - Unique identifier for the action
+   * @param maxAttempts - Maximum number of attempts
+   * @param windowMs - Time window in milliseconds
+   */
+  isAllowed(key: string, maxAttempts: number, windowMs: number): boolean {
+    const now = Date.now();
+    const attempts = this.attempts.get(key) || [];
+    
+    // Filter out old attempts outside the time window
+    const recentAttempts = attempts.filter(
+      (timestamp) => now - timestamp < windowMs
+    );
+    
+    if (recentAttempts.length >= maxAttempts) {
+      return false;
+    }
+    
+    // Record this attempt
+    recentAttempts.push(now);
+    this.attempts.set(key, recentAttempts);
+    
+    return true;
+  }
+
+  /**
+   * Reset rate limit for a key
+   */
+  reset(key: string): void {
+    this.attempts.delete(key);
+  }
+}
+
+export const rateLimiter = new RateLimiter();
+
+// Helper for login attempts
+export const checkLoginRateLimit = (phone: string): boolean => {
+  // Allow 5 login attempts per 15 minutes
+  return rateLimiter.isAllowed(`login:${phone}`, 5, 15 * 60 * 1000);
+};
+```
+
+Usage in login form:
+
+```typescript
+import { checkLoginRateLimit } from '@/lib/rate-limiter';
+import { logSuspiciousActivity } from '@/lib/security-logger';
+
+const handleLogin = async (data: LoginFormData) => {
+  if (!checkLoginRateLimit(data.phone)) {
+    logSuspiciousActivity(undefined, 'Rate limit exceeded for login', {
+      phone: data.phone,
+    });
+    toast.error('Too many login attempts. Please try again later.');
+    return;
+  }
+  
+  // Proceed with login
+  await signIn('credentials', data);
+};
+```
+
+---
+
+## Priority 6: Add CSRF Protection (MEDIUM)
+
+### Implementation
+
+NextAuth.js already provides CSRF protection for its endpoints. For custom API endpoints:
+
+Create `src/lib/csrf.ts`:
+
+```typescript
+/**
+ * CSRF Token Management
+ */
+
+/**
+ * Generate a CSRF token
+ */
+export function generateCsrfToken(): string {
+  const array = new Uint8Array(32);
+  crypto.getRandomValues(array);
+  return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
+/**
+ * Store CSRF token in sessionStorage
+ */
+export function setCsrfToken(token: string): void {
+  sessionStorage.setItem('csrf-token', token);
+}
+
+/**
+ * Get CSRF token from sessionStorage
+ */
+export function getCsrfToken(): string | null {
+  return sessionStorage.getItem('csrf-token');
+}
+
+/**
+ * Validate CSRF token
+ */
+export function validateCsrfToken(token: string): boolean {
+  const storedToken = getCsrfToken();
+  return storedToken === token;
+}
+```
+
+Usage in API client:
+
+```typescript
+// In src/lib/api.ts, add CSRF token to headers
+private buildHeaders(options?: ApiRequestOptions): HeadersInit {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...options?.headers,
+  };
+
+  // Add CSRF token for state-changing requests
+  if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(options?.method || '')) {
+    const csrfToken = getCsrfToken();
+    if (csrfToken) {
+      headers['X-CSRF-Token'] = csrfToken;
+    }
+  }
+
+  return headers;
+}
+```
+
+---
+
+## Testing Security Improvements
+
+### Automated Testing
+
+Add to `package.json`:
+
+```json
+{
+  "scripts": {
+    "security:headers": "curl -I http://localhost:3000 | grep -E 'X-|Content-Security'",
+    "security:audit": "npm audit --production",
+    "security:check": "npm run security:audit && npm run lint"
+  }
+}
+```
+
+### Manual Testing Checklist
+
+- [ ] Verify security headers in production
+- [ ] Test XSS payloads against sanitized inputs
+- [ ] Verify rate limiting works
+- [ ] Test CSRF protection
+- [ ] Verify tokens are stored securely
+- [ ] Test authentication flow end-to-end
+- [ ] Verify authorization for different roles
+- [ ] Test session timeout behavior
+
+---
+
+## Monitoring and Alerting
+
+### Set Up Monitoring Dashboard
+
+1. **Integrate Sentry for Error Tracking**
+2. **Set up security event dashboard**
+3. **Configure alerts for critical events:**
+   - Multiple failed login attempts
+   - Authorization failures
+   - Suspicious activity patterns
+   - Token manipulation attempts
+
+### Metrics to Track
+
+- Authentication success/failure rate
+- Authorization failures
+- XSS attempt detection (sanitization hits)
+- Rate limit hits
+- Session timeout events
+- Token refresh failures
+
+---
+
+## Maintenance Schedule
+
+### Weekly
+- [ ] Review security logs
+- [ ] Check for new npm vulnerabilities
+- [ ] Review rate limit statistics
+
+### Monthly
+- [ ] Run security audit
+- [ ] Review and update CSP policy
+- [ ] Update dependencies
+- [ ] Review access control rules
+
+### Quarterly
+- [ ] Full security assessment
+- [ ] Penetration testing (if applicable)
+- [ ] Review and update security documentation
+- [ ] Security training for team
+
+---
+
+## Additional Resources
+
+- [OWASP Top 10](https://owasp.org/Top10/)
+- [Next.js Security](https://nextjs.org/docs/app/building-your-application/configuring/security)
+- [Sentry Documentation](https://docs.sentry.io/platforms/javascript/guides/nextjs/)
+- [CSP Evaluator](https://csp-evaluator.withgoogle.com/)
+- [Security Headers](https://securityheaders.com/)
+
+---
+
+## Questions or Issues?
+
+If you encounter issues implementing these security improvements, please:
+1. Review the OWASP_TOP_10_ANALYSIS.md for context
+2. Check the SECURITY.md for general security guidelines
+3. Consult the Next.js security documentation
+4. Open an issue for discussion
