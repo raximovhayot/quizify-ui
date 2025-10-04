@@ -53,7 +53,7 @@ export function AttemptsTable({ attempts, loading }: AttemptsTableProps) {
         return (
           <Badge variant="outline" className="text-orange-600">
             <Clock className="mr-1 h-3 w-3" />
-            {t('instructor.analytics.status.inProgress', {
+            {t('instructor.analytics.statusInProgress', {
               fallback: 'In Progress',
             })}
           </Badge>
@@ -62,7 +62,7 @@ export function AttemptsTable({ attempts, loading }: AttemptsTableProps) {
         return (
           <Badge variant="outline" className="text-blue-600">
             <Circle className="mr-1 h-3 w-3" />
-            {t('instructor.analytics.status.submitted', {
+            {t('instructor.analytics.statusSubmitted', {
               fallback: 'Submitted',
             })}
           </Badge>
@@ -71,7 +71,7 @@ export function AttemptsTable({ attempts, loading }: AttemptsTableProps) {
         return (
           <Badge variant="outline" className="text-green-600">
             <CheckCircle2 className="mr-1 h-3 w-3" />
-            {t('instructor.analytics.status.graded', { fallback: 'Graded' })}
+            {t('instructor.analytics.statusGraded', { fallback: 'Graded' })}
           </Badge>
         );
     }

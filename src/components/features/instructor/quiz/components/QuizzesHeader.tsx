@@ -49,7 +49,7 @@ export function QuizzesHeader({
           </div>
         </form>
         <Button onClick={onCreate}>
-          {t('instructor.quiz.create.button', { fallback: 'Create Quiz' })}
+          {t('common.createTest', { fallback: 'Create Test' })}
         </Button>
       </div>
     </div>

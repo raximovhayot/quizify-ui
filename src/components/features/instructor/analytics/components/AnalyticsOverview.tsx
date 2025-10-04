@@ -40,13 +40,13 @@ export function AnalyticsOverview({
       document.body.removeChild(a);
 
       toast.success(
-        t('instructor.analytics.export.success', {
+        t('instructor.analytics.exportSuccess', {
           fallback: 'Analytics exported successfully',
         })
       );
     } catch {
       toast.error(
-        t('instructor.analytics.export.error', {
+        t('instructor.analytics.exportError', {
           fallback: 'Failed to export analytics',
         })
       );

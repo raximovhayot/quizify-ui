@@ -27,7 +27,7 @@ export function AssignmentGradingPage() {
   if (error) {
     return (
       <ContentPlaceholder
-        title={t('instructor.grading.error.title', {
+        title={t('instructor.grading.errorTitle', {
           fallback: 'Failed to load grading data',
         })}
         description={t('instructor.grading.error.description', {

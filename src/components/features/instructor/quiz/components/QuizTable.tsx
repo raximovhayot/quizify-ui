@@ -57,8 +57,8 @@ function QuizTableComponent({
         })}
         actions={[
           {
-            label: t('instructor.quiz.create.button', {
-              fallback: 'Create Quiz',
+            label: t('common.createTest', {
+              fallback: 'Create Test',
             }),
             onClick: () => router.push(ROUTES_APP.quizzes.new()),
             variant: 'default',
