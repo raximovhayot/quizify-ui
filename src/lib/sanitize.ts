@@ -81,7 +81,16 @@ export function sanitizeHtml(html: string): string {
     return '';
   }
 
-  return DOMPurify.sanitize(html, PURIFY_CONFIG);
+  const sanitized = DOMPurify.sanitize(html, PURIFY_CONFIG);
+
+  // Log if content was modified (potential XSS attempt)
+  if (sanitized !== html && typeof window !== 'undefined') {
+    import('./security-logger').then(({ logXssAttempt }) => {
+      logXssAttempt(html, sanitized);
+    });
+  }
+
+  return sanitized;
 }
 
 /**

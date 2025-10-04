@@ -505,6 +505,11 @@ export class ErrorBoundary extends Component<
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     const { context, onError } = this.props;
 
+    // Log to security logger
+    import('@/lib/security-logger').then(({ logErrorBoundary }) => {
+      logErrorBoundary(error, errorInfo);
+    });
+
     // Log and report error
     const errorId = this.errorReportingService.logError(
       error,
