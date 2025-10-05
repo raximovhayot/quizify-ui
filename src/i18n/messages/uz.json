@@ -76,6 +76,7 @@
     "question": {
       "points": "Ball",
       "content": {
+        "label": "Savol",
         "placeholder": "Savolingizni shu yerga kiriting..."
       },
       "explanation": {
@@ -561,6 +562,7 @@
       "logout": "Chiqish"
     },
     "analytics": {
+      "title": "Analitika",
       "assignments": {
         "title": "Topshiriqlar",
         "subtitle": "Biriktirilgan testlar umumiy ko‘rinishi",

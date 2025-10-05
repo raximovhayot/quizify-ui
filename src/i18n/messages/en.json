@@ -85,6 +85,7 @@
     "question": {
       "points": "Points",
       "content": {
+        "label": "Question",
         "placeholder": "Enter your question here..."
       },
       "explanation": {
@@ -362,6 +363,14 @@
       "quizzes": "Quizzes",
       "analytics": "Analytics",
       "toggleMenu": "Toggle navigation menu"
+    },
+    "analytics": {
+      "title": "Analytics",
+      "assignments": {
+        "search": {
+          "placeholder": "Search assignments..."
+        }
+      }
     },
     "notifications": {
       "title": "Notifications",
