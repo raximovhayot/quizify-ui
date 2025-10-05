@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-
 import { CheckCircle2, Edit, Play } from 'lucide-react';
+
+import { useState } from 'react';
 
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
@@ -19,13 +19,13 @@ import {
 
 import { useUpdateQuizStatus } from '../hooks/useUpdateQuizStatus';
 import { QuizDataDTO, QuizStatus } from '../types/quiz';
-import { StartQuizDialog } from './StartQuizDialog';
+import { AssignmentDialog } from './AssignmentDialog';
 
 export interface QuizViewActionsProps {
   quiz: QuizDataDTO;
 }
 
-export function QuizViewActions({ quiz }: QuizViewActionsProps) {
+export function QuizViewActions({ quiz }: Readonly<QuizViewActionsProps>) {
   const t = useTranslations();
   const router = useRouter();
   const updateStatus = useUpdateQuizStatus();
@@ -94,9 +94,8 @@ export function QuizViewActions({ quiz }: QuizViewActionsProps) {
         </CardContent>
       </Card>
 
-      <StartQuizDialog
-        quizId={quiz.id}
-        quizTitle={quiz.title}
+      <AssignmentDialog
+        quiz={quiz}
         open={startQuizDialogOpen}
         onOpenChange={setStartQuizDialogOpen}
       />

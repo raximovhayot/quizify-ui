@@ -76,7 +76,7 @@ export function AssignmentsTableRow({
       <TableCell className="text-right">
         <AssignmentsTableActions
           id={assignment.id}
-          viewHref={ROUTES_APP.analytics.root() + `/${assignment.id}`}
+          viewHref={ROUTES_APP.analytics.detail(assignment.id)}
           onDelete={onDelete ? () => onDelete(assignment.id) : undefined}
           onPublish={onPublish ? () => onPublish(assignment.id) : undefined}
           onUnpublish={

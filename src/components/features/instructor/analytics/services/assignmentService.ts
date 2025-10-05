@@ -1,10 +1,11 @@
-import { z } from 'zod';
-
-import { pageableSchema } from '@/components/shared/schemas/pageable.schema';
 import { apiClient } from '@/lib/api';
 import { IApiResponse, extractApiData } from '@/types/api';
 import { IPageableList } from '@/types/common';
 
+import {
+  assignmentDataDTOSchema,
+  assignmentListResponseSchema,
+} from '../schemas/assignmentSchema';
 import {
   AssignmentCreateRequest,
   AssignmentDTO,
@@ -18,6 +19,10 @@ import {
  * CRUD operations and filtering.
  */
 export class AssignmentService {
+  // ============================================================================
+  // ASSIGNMENT MANAGEMENT METHODS
+  // ============================================================================
+
   /**
    * Get paginated list of assignments with optional filtering
    *
@@ -41,27 +46,44 @@ export class AssignmentService {
         },
       });
     const data = extractApiData(response);
-    // validate pageable list generically (content left as unknown here)
-    const parsed = pageableSchema(z.unknown()).passthrough().parse(data);
-    return parsed as unknown as IPageableList<AssignmentDTO>;
+    return assignmentListResponseSchema.parse(data);
+  }
+
+  /**
+   * Get detailed assignment information by ID
+   *
+   * @param id - ID of the assignment to retrieve
+   * @param signal - AbortSignal for request cancellation
+   * @returns Promise resolving to detailed assignment information
+   * @throws BackendError if assignment not found
+   */
+  static async getAssignment(
+    id: number,
+    signal?: AbortSignal
+  ): Promise<AssignmentDTO> {
+    const response: IApiResponse<AssignmentDTO> = await apiClient.get(
+      `/instructor/assignments/:id`,
+      { signal, params: { id } }
+    );
+    const data = extractApiData(response);
+    return assignmentDataDTOSchema.parse(data);
   }
 
   /**
    * Create a new assignment
    *
    * @param request - Assignment creation data
-   * @param signal - AbortSignal for request cancellation
    * @returns Promise resolving to created assignment information
    * @throws BackendError if creation fails or validation errors occur
    */
   static async createAssignment(
-    request: AssignmentCreateRequest,
-    signal?: AbortSignal
+    request: AssignmentCreateRequest
   ): Promise<AssignmentDTO> {
     const response: IApiResponse<AssignmentDTO> = await apiClient.post(
       '/instructor/assignments',
       request
     );
-    return extractApiData(response);
+    const data = extractApiData(response);
+    return assignmentDataDTOSchema.parse(data);
   }
 }

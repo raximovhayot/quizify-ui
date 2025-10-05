@@ -30,7 +30,10 @@ export interface QuestionsListProps {
   onAddQuestion: () => void;
 }
 
-export function QuestionsList({ quizId, onAddQuestion }: QuestionsListProps) {
+export function QuestionsList({
+  quizId,
+  onAddQuestion,
+}: Readonly<QuestionsListProps>) {
   const t = useTranslations();
   const [editingQuestion, setEditingQuestion] =
     useState<QuestionDataDto | null>(null);
@@ -132,28 +135,26 @@ export function QuestionsList({ quizId, onAddQuestion }: QuestionsListProps) {
 
   return (
     <>
-      <Card>
+      <div className="space-y-4">
         <QuestionsListHeader
           count={questions.length}
           showAnswers={showAnswers}
           onToggleShowAnswers={() => setShowAnswers((v) => !v)}
           onAddQuestion={onAddQuestion}
         />
-        <CardContent>
-          <div className="space-y-4">
-            {questions.map((question, index) => (
-              <QuestionListItem
-                key={question.id}
-                question={question}
-                index={index}
-                showAnswers={showAnswers}
-                onEdit={(q) => setEditingQuestion(q)}
-                onDelete={(q) => setDeletingQuestion(q)}
-              />
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+        <div className="space-y-4">
+          {questions.map((question, index) => (
+            <QuestionListItem
+              key={question.id}
+              question={question}
+              index={index}
+              showAnswers={showAnswers}
+              onEdit={(q) => setEditingQuestion(q)}
+              onDelete={(q) => setDeletingQuestion(q)}
+            />
+          ))}
+        </div>
+      </div>
 
       {/* Edit Question Modal */}
       <EditQuestionDialog

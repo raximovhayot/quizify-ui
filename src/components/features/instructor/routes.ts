@@ -21,6 +21,8 @@ export const ROUTES_APP = {
 
   analytics: {
     root: () => `${ROUTES_APP.baseUrl()}/analytics` as const,
+    detail: (assignmentId: number | string) =>
+      `${ROUTES_APP.baseUrl()}/analytics/${assignmentId}` as const,
   },
 
   profile: {
