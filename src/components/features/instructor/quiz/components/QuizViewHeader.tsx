@@ -72,6 +72,11 @@ export function QuizViewHeader({ quiz }: QuizViewHeaderProps) {
               fallback: 'Untitled Quiz',
             })}
         </h1>
+        {quiz.description ? (
+          <p className="mt-2 text-base text-muted-foreground leading-relaxed whitespace-pre-wrap">
+            {quiz.description}
+          </p>
+        ) : null}
       </div>
     </div>
   );

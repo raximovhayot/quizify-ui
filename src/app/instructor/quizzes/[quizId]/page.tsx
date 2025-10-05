@@ -6,9 +6,9 @@ import { QuizViewPage } from '@/components/features/instructor/quiz/components/Q
 
 export default function QuizDetailsPage() {
   const params = useParams<{ quizId: string }>();
-  const quizId = Number(params?.quizId ?? NaN);
+  const quizId = Number(params?.quizId ?? Number.NaN);
 
-  if (isNaN(quizId)) {
+  if (Number.isNaN(quizId)) {
     return (
       <div className="container mx-auto p-4">
         <h1 className="text-2xl font-bold text-destructive">Invalid Quiz ID</h1>

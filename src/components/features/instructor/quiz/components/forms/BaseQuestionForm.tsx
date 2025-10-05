@@ -109,7 +109,7 @@ export function BaseQuestionForm({
           <RichTextField
             control={form.control}
             name="content"
-            label={t('common.question.content', { fallback: 'Question' })}
+            label={t('common.question.content.label', { fallback: 'Question' })}
             placeholder={t('common.question.content.placeholder', {
               fallback: 'Enter your question here. You can use formatting...',
             })}

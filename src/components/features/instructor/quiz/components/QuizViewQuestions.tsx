@@ -10,7 +10,7 @@ export interface QuizViewQuestionsProps {
   quiz: QuizDataDTO;
 }
 
-export function QuizViewQuestions({ quiz }: QuizViewQuestionsProps) {
+export function QuizViewQuestions({ quiz }: Readonly<QuizViewQuestionsProps>) {
   const [openCreate, setOpenCreate] = useState(false);
 
   return (

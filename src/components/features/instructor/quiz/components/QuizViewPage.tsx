@@ -11,7 +11,6 @@ import { ContentPlaceholder } from '@/components/shared/ui/ContentPlaceholder';
 import { useQuiz } from '../hooks/useQuiz';
 import { QuizViewActions } from './QuizViewActions';
 import { QuizViewConfiguration } from './QuizViewConfiguration';
-import { QuizViewDetails } from './QuizViewDetails';
 import { QuizViewHeader } from './QuizViewHeader';
 import { QuizViewQuestions } from './QuizViewQuestions';
 import { QuizViewSkeleton } from './QuizViewSkeleton';
@@ -20,7 +19,7 @@ export interface QuizViewPageProps {
   quizId: number;
 }
 
-export function QuizViewPage({ quizId }: QuizViewPageProps) {
+export function QuizViewPage({ quizId }: Readonly<QuizViewPageProps>) {
   const t = useTranslations();
   const router = useRouter();
   const { data: quiz, isLoading, error } = useQuiz(quizId);
@@ -55,23 +54,22 @@ export function QuizViewPage({ quizId }: QuizViewPageProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 max-w-7xl">
+      <div className="container mx-auto ">
         <div className="space-y-6 sm:space-y-8">
           {/* Header with back button and status */}
           <QuizViewHeader quiz={quiz} />
 
           {/* Main content grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
-            {/* Main column - Details and Questions */}
-            <div className="lg:col-span-2 space-y-6">
-              <QuizViewDetails quiz={quiz} />
-              <QuizViewQuestions quiz={quiz} />
+            {/* Sidebar (Settings + Actions) - first on mobile, right column on desktop */}
+            <div className="order-1 lg:order-2 lg:col-span-1 space-y-6">
+              <QuizViewConfiguration quiz={quiz} />
+              <QuizViewActions quiz={quiz} />
             </div>
 
-            {/* Sidebar column - Configuration and Actions */}
-            <div className="lg:col-span-1 space-y-6">
-              <QuizViewActions quiz={quiz} />
-              <QuizViewConfiguration quiz={quiz} />
+            {/* Questions - main content on desktop, last on mobile */}
+            <div className="order-2 lg:order-1 lg:col-span-2 space-y-6">
+              <QuizViewQuestions quiz={quiz} />
             </div>
           </div>
         </div>
