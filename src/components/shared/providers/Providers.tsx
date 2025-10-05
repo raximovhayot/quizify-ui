@@ -113,7 +113,11 @@ export function Providers({ children, messages, locale }: ProvidersProps) {
           enableSystem
           disableTransitionOnChange
         >
-          <NextIntlClientProvider messages={messages} locale={locale}>
+          <NextIntlClientProvider
+            messages={messages}
+            locale={locale}
+            timeZone={env.NEXT_PUBLIC_DEFAULT_TIME_ZONE || 'UTC'}
+          >
             <ErrorBoundary>
               <TopLoader />
               {children}

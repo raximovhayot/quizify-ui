@@ -417,7 +417,7 @@
         },
         "actions": {
           "title": "Harakatlar",
-          "description": "Viktorinangizni boshqaring"
+          "description": "Testingizni boshqaring"
         },
         "configuration": {
           "title": "Konfiguratsiya"
@@ -425,7 +425,7 @@
         "details": {
           "title": "Tafsilotlar"
         },
-        "monitorQuiz": "Viktorinani kuzatish"
+        "monitorQuiz": "Testni kuzatish"
       },
       "edit": {
         "dialogTitle": "Testni tahrirlash",
@@ -476,11 +476,11 @@
         "dialogTitle": "Test yaratish",
         "button": "Test yaratish",
         "first": "Birinchi testingizni yarating",
-        "success": "Viktorina muvaffaqiyatli yaratildi",
+        "success": "Test muvaffaqiyatli yaratildi",
         "error": "Testni yaratib bo'lmadi"
       },
       "update": {
-        "success": "Viktorina muvaffaqiyatli yangilandi",
+        "success": "Test muvaffaqiyatli yangilandi",
         "error": "Testni yangilab bo'lmadi"
       },
       "form": {
@@ -552,7 +552,7 @@
         "aria": "{title} uchun test qatori"
       },
       "questions": "Savollar",
-      "startQuiz": "Viktorinani boshlash"
+      "startQuiz": "Testni boshlash"
     },
     "userMenu": {
       "title": "Foydalanuvchi menyusi",
@@ -595,7 +595,7 @@
       "list": {
         "empty": {
           "title": "Hali topshiriqlar yo'q",
-          "description": "Birinchi viktorinani yaratish bilan boshlang"
+          "description": "Birinchi testni yaratish bilan boshlang"
         },
         "filtered": {
           "empty": {
@@ -646,8 +646,8 @@
     },
     "assignment": {
       "create": {
-        "title": "Viktorinani boshlash",
-        "description": "Talabalaringiz uchun viktorinani boshlash uchun topshiriq yarating.",
+        "title": "Testni boshlash",
+        "description": "Talabalaringiz uchun testni boshlash uchun topshiriq yarating.",
         "titleLabel": "Topshiriq nomi",
         "titlePlaceholder": "Topshiriq nomini kiriting",
         "descriptionLabel": "Tavsif (ixtiyoriy)",
@@ -786,12 +786,12 @@
       "questionTypeNotSupported": "Bu savol turi hali interfeysda qo'llab-quvvatlanmaydi. Iltimos, o'qituvchingiz bilan bog'laning.",
       "saveAnswer": "Javobni saqlash",
       "updateAnswer": "Javobni yangilash",
-      "takingQuiz": "Viktorina topshirish",
+      "takingQuiz": "Test topshirish",
       "attemptNumber": "Urinish #{{number}}",
-      "error": "Viktorinani yuklashda xato",
-      "errorMessage": "Viktorinani yuklab bo'lmadi. Iltimos, keyinroq urinib ko'ring.",
-      "submitQuiz": "Viktorinani topshirish",
-      "confirmSubmit": "Viktorinani topshirilsinmi?",
+      "error": "Testni yuklashda xato",
+      "errorMessage": "Testni yuklab bo'lmadi. Iltimos, keyinroq urinib ko'ring.",
+      "submitQuiz": "Testni topshirish",
+      "confirmSubmit": "Test topshirilsinmi?",
       "confirmSubmitMessage": "Siz {{answered}} ta savolga {{total}} tadan javob berdingiz. Topshirishni xohlaysizmi? Topshirgandan keyin javoblaringizni o'zgartira olmaysiz.",
       "confirmSubmitButton": "Ha, topshirish"
     },
@@ -810,7 +810,7 @@
       "noAttemptsLeft": "Urinishlar tugadi",
       "startAttempt": "Urinishni boshlash",
       "confirmStart": "Urinishni boshlash?",
-      "confirmStartMessage": "Boshlasangiz, taymer ishga tushadi. Viktorinani yakunlash uchun yetarli vaqtingiz borligiga ishonch hosil qiling.",
+      "confirmStartMessage": "Boshlasangiz, taymer ishga tushadi. Testni yakunlash uchun yetarli vaqtingiz borligiga ishonch hosil qiling.",
       "confirmStartButton": "Ha, hozir boshlash",
       "joinTitle": "Topshiriqqa qo'shilish",
       "joinCodeLabel": "Topshiriq kodi",
@@ -840,7 +840,7 @@
       "viewDetails": "Tafsilotlar"
     },
     "results": {
-      "title": "Viktorina natijalari",
+      "title": "Test natijalari",
       "error": "Natijalarni yuklashda xato",
       "errorMessage": "Natijalaringizni yuklab bo'lmadi. Iltimos, keyinroq urinib ko'ring.",
       "scoreLabel": "Sizning natijangiz",

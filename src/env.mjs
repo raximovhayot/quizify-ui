@@ -49,6 +49,9 @@ export const env = createEnv({
           (process.env.NODE_ENV === 'development' ? 'warning' : 'success')
       ),
     NEXT_PUBLIC_APP_VERSION: z.string().optional(),
+    // Optional IANA time zone identifier used by next-intl to avoid SSR/CSR mismatches
+    // Example: "UTC", "America/New_York", "Europe/Berlin"
+    NEXT_PUBLIC_DEFAULT_TIME_ZONE: z.string().optional(),
   },
 
   /**
@@ -66,6 +69,7 @@ export const env = createEnv({
     NEXT_PUBLIC_ENV_EMOJI: process.env.NEXT_PUBLIC_ENV_EMOJI,
     NEXT_PUBLIC_ENV_COLOR_SCHEME: process.env.NEXT_PUBLIC_ENV_COLOR_SCHEME,
     NEXT_PUBLIC_APP_VERSION: process.env.NEXT_PUBLIC_APP_VERSION,
+    NEXT_PUBLIC_DEFAULT_TIME_ZONE: process.env.NEXT_PUBLIC_DEFAULT_TIME_ZONE, 
   },
 
   /**
