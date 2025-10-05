@@ -12,12 +12,29 @@ const customJestConfig = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
-  testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
+  testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/', '<rootDir>/tests/e2e/'],
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
+    'middleware.ts',
     '!src/**/*.d.ts',
     '!src/**/*.stories.{js,jsx,ts,tsx}',
   ],
+  coverageThreshold: {
+    // Critical auth helpers (initial baseline)
+    './src/lib/auth/**/*.{ts,tsx}': {
+      branches: 70,
+      functions: 80,
+      lines: 80,
+      statements: 80,
+    },
+    // Middleware (current coverage ~58% lines, ~33% functions)
+    './middleware.ts': {
+      branches: 50,
+      functions: 30,
+      lines: 50,
+      statements: 50,
+    },
+  },
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

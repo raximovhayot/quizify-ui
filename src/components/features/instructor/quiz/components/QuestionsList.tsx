@@ -65,7 +65,7 @@ export function QuestionsList({
         data: payload,
       });
       setEditingQuestion(null);
-    } catch (_e) {}
+    } catch {}
   };
 
   const handleDeleteQuestion = async () => {
@@ -74,7 +74,7 @@ export function QuestionsList({
     try {
       await deleteQuestionMutation.mutateAsync(deletingQuestion.id);
       setDeletingQuestion(null);
-    } catch (_e) {}
+    } catch {}
   };
 
   if (isLoading) {

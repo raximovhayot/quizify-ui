@@ -29,7 +29,6 @@ interface AssignmentsTableActionsProps {
 }
 
 export function AssignmentsTableActions({
-  id,
   viewHref,
   onDelete,
   onPublish,

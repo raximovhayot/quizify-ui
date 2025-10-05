@@ -1,5 +1,11 @@
 'use client';
 
+/**
+ * DEPRECATED FILE — src/components/shared/providers/Providers.tsx
+ * Do not import this file. Mounting a client provider at the root turns the entire app into a client subtree, blocking RSC streaming and built-in caching.
+ * Use route-group-scoped ClientProviders (authed areas) or PublicClientProviders (public-only routes) instead.
+ */
+
 import {
   MutationCache,
   QueryClient,
@@ -7,7 +13,7 @@ import {
 } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useState, useEffect } from 'react';
 
 import { AbstractIntlMessages, NextIntlClientProvider } from 'next-intl';
 import { ThemeProvider } from 'next-themes';
@@ -39,7 +45,18 @@ interface ProvidersProps {
  * 5. NextIntlClientProvider - Internationalization with messages
  * 6. Toaster - Global toast notifications (rendered as sibling to children)
  */
+/**
+ * DEPRECATED: Do not import this root-level Providers component. It creates a client boundary at the app root and disables RSC streaming.
+ * @deprecated Use ClientProviders (authed) or PublicClientProviders (public) inside route-group layouts.
+ */
 export function Providers({ children, messages, locale }: ProvidersProps) {
+  // Development guard: loudly warn when this component is ever mounted.
+  useEffect(() => {
+    if (env.NEXT_PUBLIC_NODE_ENV !== 'production') {
+      // eslint-disable-next-line no-console
+      console.error('[DEPRECATED] Providers.tsx is deprecated. Use route-group-scoped ClientProviders/PublicClientProviders.');
+    }
+  }, []);
   const networkMode =
     env.NEXT_PUBLIC_NODE_ENV !== 'production' ? 'always' : undefined;
 

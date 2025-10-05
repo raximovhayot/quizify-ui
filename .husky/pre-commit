@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npx lint-staged
+# Lint only staged files and run related unit tests quickly
+pnpm exec lint-staged

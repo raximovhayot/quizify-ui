@@ -29,7 +29,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
       if (preferredLanguage && locales.includes(preferredLanguage as Locale)) {
         validLocale = preferredLanguage;
       }
-    } catch (error) {
+    } catch {
       // This is expected during static generation; use the default locale.
     }
   }

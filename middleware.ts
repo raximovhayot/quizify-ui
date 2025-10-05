@@ -4,12 +4,26 @@ import type { NextRequest } from 'next/server';
 import { auth } from '@/components/features/auth/config/next-auth.config';
 import { UserState } from '@/components/features/profile/types/account';
 
+import { normalizeDashboard, pickDashboard } from '@/lib/auth/dashboardUtils';
+import { sanitizeRedirect } from '@/lib/auth/redirectUtils';
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Get session from NextAuth
   const session = await auth();
   const user = session?.user || null;
+
+  // Redirect signed-in users away from public entry points
+  if (pathname === '/sign-in' || pathname === '/join') {
+    if (session && user) {
+      const dash = pickDashboard(user);
+      if (dash) {
+        return NextResponse.redirect(new URL(dash, request.url));
+      }
+    }
+    return NextResponse.next();
+  }
 
   // Handle root path redirection
   if (pathname === '/') {
@@ -18,31 +32,18 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/sign-in', request.url));
     }
 
-    // User is authenticated, redirect based on roles
-    const userRoles = user.roles || [];
-    const hasStudentRole = userRoles.some((role) => role.name === 'STUDENT');
-    const hasInstructorRole = userRoles.some(
-      (role) => role.name === 'INSTRUCTOR'
-    );
-
-    if (hasStudentRole && hasInstructorRole) {
-      // User has both roles, redirect to student dashboard as default
-      return NextResponse.redirect(new URL('/student', request.url));
-    } else if (hasStudentRole) {
-      return NextResponse.redirect(new URL('/student', request.url));
-    } else if (hasInstructorRole) {
-      return NextResponse.redirect(new URL('/instructor', request.url));
-    } else {
-      // No valid roles, redirect to sign-in
-      return NextResponse.redirect(new URL('/sign-in', request.url));
+    const dash = pickDashboard(user);
+    if (dash) {
+      return NextResponse.redirect(new URL(dash, request.url));
     }
+    // Fallback when user has no valid roles
+    return NextResponse.redirect(new URL('/sign-in', request.url));
   }
 
   // Define route patterns and their required roles
   const routeConfig = {
     '/student': ['STUDENT'],
     '/instructor': ['INSTRUCTOR'],
-    '/join': [], // Join page accessible to all
     '/sign-in': [], // Sign-in page accessible to all
   };
 
@@ -66,7 +67,10 @@ export async function middleware(request: NextRequest) {
   // If roles required but user not authenticated, redirect to sign-in
   if (!user || !session) {
     const signInUrl = new URL('/sign-in', request.url);
-    signInUrl.searchParams.set('redirect', pathname);
+    const safe = sanitizeRedirect(pathname);
+    if (safe) {
+      signInUrl.searchParams.set('redirect', safe);
+    }
     return NextResponse.redirect(signInUrl);
   }
 
@@ -111,13 +115,10 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    '/student/:path*',
+    '/instructor/:path*',
+    '/profile/:path*',
+    '/sign-in',
+    '/',
   ],
 };

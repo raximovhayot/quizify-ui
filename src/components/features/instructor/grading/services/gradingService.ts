@@ -17,6 +17,7 @@ export class GradingService {
     const response: IApiResponse<AssignmentGrading> = await apiClient.get(
       `/instructor/assignments/:id/grading`,
       {
+        signal,
         params: { id: assignmentId },
       }
     );
@@ -35,6 +36,7 @@ export class GradingService {
       `/instructor/answers/:id/grade`,
       grading,
       {
+        signal,
         params: { id: answerId },
       }
     );
@@ -51,7 +53,7 @@ export class GradingService {
     const response: IApiResponse<void> = await apiClient.post(
       `/instructor/answers/bulk-grade`,
       { answerIds },
-      undefined
+      { signal }
     );
     extractApiData(response);
   }

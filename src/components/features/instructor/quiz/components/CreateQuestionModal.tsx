@@ -62,7 +62,7 @@ export function CreateQuestionModal({
       const payload = toInstructorQuestionSaveRequest(formData);
       await createQuestion.mutateAsync(payload);
       onOpenChange(false);
-    } catch (_e) {}
+    } catch {}
   };
 
   const formContent = (

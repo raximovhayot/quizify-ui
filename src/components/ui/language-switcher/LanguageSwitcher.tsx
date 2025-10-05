@@ -43,7 +43,7 @@ export function LanguageSwitcher({
 
       // Reload the page to apply the new language
       window.location.reload();
-    } catch (error) {
+    } catch {
       setIsChanging(false);
     }
   };

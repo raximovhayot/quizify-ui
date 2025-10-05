@@ -127,7 +127,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             accessToken: jwtToken.accessToken,
             refreshToken: jwtToken.refreshToken,
           };
-        } catch (_e) {
+        } catch {
           return null;
         }
       },
@@ -224,7 +224,7 @@ async function refreshAccessToken(token: JWT): Promise<JWT> {
       refreshToken: newRefresh,
       accessTokenExpires: computedExp,
     } as JWT;
-  } catch (_error) {
+  } catch {
     return {
       ...token,
       error: 'RefreshAccessTokenError',

@@ -68,7 +68,7 @@ export function ThemeSwitcher({
       setTheme(newTheme);
       // Small delay to show the changing state
       setTimeout(() => setIsChanging(false), 100);
-    } catch (error) {
+    } catch {
       setIsChanging(false);
     }
   };

@@ -70,7 +70,7 @@ export function TokenSyncProvider() {
           apiClient.setAuthToken(newAccess);
           return newAccess;
         }
-      } catch (e) {
+      } catch {
         // Swallow errors; caller will handle 401 failure
       }
       return null;

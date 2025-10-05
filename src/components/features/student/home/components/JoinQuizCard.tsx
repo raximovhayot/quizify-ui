@@ -39,7 +39,7 @@ export function JoinQuizCard() {
     if (!code) return;
     try {
       await joinQuiz.mutateAsync({ code });
-    } catch (_e) {
+    } catch {
       form.setError('code', {
         type: 'server',
         message: t('student.join.error', {

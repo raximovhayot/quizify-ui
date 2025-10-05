@@ -1,4 +1,3 @@
-import { env } from '@/env.mjs';
 import { apiClient } from '@/lib/api';
 import { IApiResponse, extractApiData } from '@/types/api';
 

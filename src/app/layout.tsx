@@ -26,6 +26,7 @@ export const viewport: Viewport = {
   maximumScale: 5,
 };
 
+// IMPORTANT: Keep this root layout server-only. Do not import client providers here; they belong in route-group layouts (e.g., (public-only), /student, /instructor) to preserve RSC streaming and caching.
 export default async function RootLayout({
   children,
 }: Readonly<{

@@ -37,7 +37,7 @@ export function Header({
     try {
       await logout();
       router.push('/sign-in');
-    } catch (error) {}
+    } catch {}
   };
 
   return (
