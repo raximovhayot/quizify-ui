@@ -2,8 +2,6 @@ import type { Metadata, Viewport } from 'next';
 import { getLocale, getMessages } from 'next-intl/server';
 import { Geist, Geist_Mono } from 'next/font/google';
 
-import { Providers } from '@/components/shared/providers/Providers';
-
 import './globals.css';
 
 const geistSans = Geist({
@@ -28,10 +26,6 @@ export const viewport: Viewport = {
   maximumScale: 5,
 };
 
-// Force dynamic rendering so next-intl's server APIs (getLocale/getMessages)
-// have a valid request context during 404 and other prerendered pages.
-export const dynamic = 'force-dynamic';
-
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -39,7 +33,7 @@ export default async function RootLayout({
 }>) {
   // Get both locale and messages from next-intl
   const locale = await getLocale();
-  const messages = await getMessages();
+  await getMessages();
 
   return (
     <>
@@ -47,9 +41,7 @@ export default async function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <Providers messages={messages} locale={locale}>
-            {children}
-          </Providers>
+          {children}
         </body>
       </html>
     </>
