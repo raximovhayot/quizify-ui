@@ -32,10 +32,11 @@ export class GradingService {
     grading: GradeEssayRequest,
     signal?: AbortSignal
   ): Promise<void> {
-    const response: IApiResponse<void> = await apiClient.post(
+    const response: IApiResponse<void> = await apiClient.request(
       `/instructor/answers/:id/grade`,
-      grading,
       {
+        method: 'POST',
+        body: grading,
         signal,
         params: { id: answerId },
       }
@@ -50,10 +51,9 @@ export class GradingService {
     answerIds: number[],
     signal?: AbortSignal
   ): Promise<void> {
-    const response: IApiResponse<void> = await apiClient.post(
+    const response: IApiResponse<void> = await apiClient.request(
       `/instructor/answers/bulk-grade`,
-      { answerIds },
-      { signal }
+      { method: 'POST', body: { answerIds }, signal }
     );
     extractApiData(response);
   }
