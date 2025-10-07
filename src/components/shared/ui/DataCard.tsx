@@ -41,7 +41,7 @@ export function DataCard({
   actions,
   children,
   headerClassName,
-}: DataCardProps) {
+}: Readonly<DataCardProps>) {
   return (
     <Card>
       <CardHeader

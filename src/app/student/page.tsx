@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
 
-import { StudentHomeContainer } from '@/components/features/student/home/StudentHomeContainer';
+import { StudentHomePage } from '@/components/features/student/home/StudentHomePage';
 
 export default function StudentHomePage() {
   return (
     <Suspense>
-      <StudentHomeContainer />
+      <StudentHomePage />
     </Suspense>
   );
 }

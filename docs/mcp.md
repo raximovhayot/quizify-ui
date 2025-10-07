@@ -29,3 +29,9 @@ Troubleshooting
 
 - If the swagger server fails to fetch the spec, ensure the backend is reachable and the URL returns a valid OpenAPI JSON document.
 - If types drift from backend changes, re-run the openapi-typescript command above and adapt services/schemas accordingly.
+
+---
+
+## Related docs
+
+- See `docs/domain-naming.md` for the student-facing terminology policy: in the UI we say “quiz”, while services call Assignment/Attempt endpoints.

@@ -43,6 +43,7 @@ export class StudentQuizService {
 
   /**
    * Get student's registered upcoming quizzes
+   * @deprecated Backend no longer exposes /student/quizzes/upcoming. Use StudentAssignmentService.getRegistrations(...) and StudentAttemptService.getAttempts(...) instead.
    */
   static async getUpcomingQuizzes(
     signal?: AbortSignal
@@ -57,6 +58,7 @@ export class StudentQuizService {
 
   /**
    * Get student's in-progress quizzes
+   * @deprecated Backend no longer exposes /student/quizzes/in-progress. Use StudentAttemptService.getAttempts({ status: 'IN_PROGRESS' }) instead.
    */
   static async getInProgressQuizzes(
     signal?: AbortSignal
@@ -71,6 +73,7 @@ export class StudentQuizService {
 
   /**
    * Join a quiz by join code
+   * @deprecated Backend uses assignment-based joining. Use StudentAssignmentService.join(code) instead and navigate to the returned attemptId.
    */
   static async joinWithCode(
     code: string
