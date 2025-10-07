@@ -86,4 +86,34 @@ export class AssignmentService {
     const data = extractApiData(response);
     return assignmentDataDTOSchema.parse(data);
   }
+
+  /**
+   * Update an existing assignment
+   *
+   * @param id - Assignment ID
+   * @param request - Partial assignment fields to update
+   */
+  static async updateAssignment(
+    id: number,
+    request: Partial<AssignmentDTO>
+  ): Promise<AssignmentDTO> {
+    const response: IApiResponse<AssignmentDTO> = await apiClient.put(
+      '/instructor/assignments/:id',
+      request,
+      { params: { id } }
+    );
+    const data = extractApiData(response);
+    return assignmentDataDTOSchema.parse(data);
+  }
+
+  /**
+   * Delete an assignment by ID
+   */
+  static async deleteAssignment(id: number): Promise<void> {
+    const response: IApiResponse<void> = await apiClient.delete(
+      '/instructor/assignments/:id',
+      { params: { id } }
+    );
+    extractApiData(response);
+  }
 }

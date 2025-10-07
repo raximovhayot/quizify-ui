@@ -51,10 +51,9 @@ export class StudentAttemptService {
   ): Promise<number> {
     // Validate outgoing payload
     const body = attemptSaveStateRequestSchema.parse(request);
-    const response: IApiResponse<number> = await apiClient.post(
+    const response: IApiResponse<number> = await apiClient.request(
       '/student/assignments/attempts/save-state',
-      body,
-      { signal }
+      { method: 'POST', body, signal }
     );
     const data = extractApiData(response);
     return Number(data);

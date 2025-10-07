@@ -1,105 +1,128 @@
+import { z } from 'zod';
+
 import { AttachmentDTO } from '@/components/features/attachment/attachment';
+export type { AttachmentDTO } from '@/components/features/attachment/attachment';
 import { apiClient } from '@/lib/api';
 import { IApiResponse, extractApiData } from '@/types/api';
-
-// Re-export AttachmentDTO for convenience imports
-export type { AttachmentDTO } from '@/components/features/attachment/attachment';
 
 /**
  * AttachmentService - Handles file attachment operations
  *
- * This services provides methods for uploading, downloading, and managing
- * file attachments for quizzes and questions.
+ * Realigned to backend endpoints under /api/file (AttachmentController).
+ * - POST /api/file/upload (multipart)
+ * - GET  /api/file/attachment-url/:attachmentId
+ *
+ * Notes:
+ * - No per-call token parameter; auth is handled by apiClient + TokenSyncProvider.
+ * - Returns strictly-typed objects (no `any`).
  */
 export class AttachmentService {
+  // ============================================================================
+  // TYPES & SCHEMAS
+  // ============================================================================
+  private static backendDetailsSchema = z
+    .object({
+      id: z.number().int().positive(),
+      // Possible URL field names from backend mappers
+      url: z.string().url().optional(),
+      fileUrl: z.string().url().optional(),
+      downloadUrl: z.string().url().optional(),
+      // Metadata (forward-compatible)
+      fileName: z.string().optional(),
+      originalFileName: z.string().optional(),
+      contentType: z.string().optional(),
+      size: z.number().int().nonnegative().optional(),
+      fileSize: z.number().int().nonnegative().optional(),
+      uploadDate: z.string().optional(),
+    })
+    .passthrough();
+
+  // Normalize backend details to the existing AttachmentDTO shape
+  private static toAttachmentDTO(raw: unknown): AttachmentDTO {
+    const parsed = this.backendDetailsSchema.parse(raw);
+
+    const downloadUrl = parsed.downloadUrl ?? parsed.url ?? parsed.fileUrl ?? '';
+    if (!downloadUrl) {
+      throw new Error('Attachment URL is missing in server response');
+    }
+
+    return {
+      id: parsed.id,
+      fileName: parsed.fileName ?? parsed.originalFileName ?? 'file',
+      originalFileName: parsed.originalFileName ?? parsed.fileName ?? 'file',
+      fileSize: parsed.fileSize ?? parsed.size ?? 0,
+      contentType: parsed.contentType ?? 'application/octet-stream',
+      uploadDate: parsed.uploadDate ?? new Date().toISOString(),
+      downloadUrl,
+    } satisfies AttachmentDTO;
+  }
+
   // ============================================================================
   // ATTACHMENT MANAGEMENT METHODS
   // ============================================================================
 
   /**
-   * Upload a file attachment
+   * Upload a file attachment (multipart)
    *
    * @param file - File to upload
-   * @param accessToken - JWT access token for authentication
-   * @returns Promise resolving to attachment information
-   * @throws BackendError if upload fails or file is invalid
+   * @returns AttachmentDTO with signed URL and metadata (when provided)
    */
-  static async uploadAttachment(
-    file: File,
-    accessToken: string
-  ): Promise<AttachmentDTO> {
+  static async upload(file: File): Promise<AttachmentDTO> {
     const formData = new FormData();
     formData.append('file', file);
 
-    const response: IApiResponse<AttachmentDTO> = await apiClient.post(
-      '/instructor/attachments',
-      formData,
-      { token: accessToken }
+    const response: IApiResponse<unknown> = await apiClient.post(
+      '/api/file/upload',
+      formData
     );
-    return extractApiData(response);
+    const data = extractApiData(response);
+    return this.toAttachmentDTO(data);
   }
 
   /**
-   * Get attachment information by ID
-   *
-   * @param attachmentId - ID of the attachment
-   * @param accessToken - JWT access token for authentication
-   * @returns Promise resolving to attachment information
-   * @throws BackendError if attachment not found
+   * Get attachment details (includes a signed URL)
    */
-  static async getAttachment(
+  static async getDetails(
     attachmentId: number,
-    accessToken: string
+    signal?: AbortSignal
   ): Promise<AttachmentDTO> {
-    const response: IApiResponse<AttachmentDTO> = await apiClient.get(
-      `/instructor/attachments/:id`,
-      { token: accessToken, params: { id: attachmentId } }
+    const response: IApiResponse<unknown> = await apiClient.get(
+      '/api/file/attachment-url/:attachmentId',
+      { params: { attachmentId }, signal }
     );
-    return extractApiData(response);
+    const data = extractApiData(response);
+    return this.toAttachmentDTO(data);
   }
 
   /**
-   * Delete an attachment
-   *
-   * @param attachmentId - ID of the attachment to delete
-   * @param accessToken - JWT access token for authentication
-   * @returns Promise resolving when deletion is complete
-   * @throws BackendError if attachment not found or deletion fails
+   * Convenience: get only the signed download URL
    */
-  static async deleteAttachment(
+  static async getUrl(
     attachmentId: number,
-    accessToken: string
-  ): Promise<IApiResponse<void>> {
-    const response: IApiResponse<void> = await apiClient.delete(
-      `/instructor/attachments/:id`,
-      { token: accessToken, params: { id: attachmentId } }
-    );
-    return response;
-  }
-
-  /**
-   * Get download URL for an attachment
-   *
-   * @param attachmentId - ID of the attachment
-   * @param accessToken - JWT access token for authentication
-   * @returns Promise resolving to download URL
-   * @throws BackendError if attachment not found
-   */
-  static async getDownloadUrl(
-    attachmentId: number,
-    accessToken: string
+    signal?: AbortSignal
   ): Promise<string> {
-    const attachment = await this.getAttachment(attachmentId, accessToken);
-    return attachment.downloadUrl;
+    const details = await this.getDetails(attachmentId, signal);
+    return details.downloadUrl;
+  }
+
+  // ============================================================================
+  // BACKWARD-COMPATIBILITY SHIMS (deprecated)
+  // ============================================================================
+  /** @deprecated Use `upload(file)` — token is handled globally */
+  static async uploadAttachment(file: File, _accessToken?: string) {
+    return this.upload(file);
+  }
+  /** @deprecated Use `getDetails(id)` — token is handled globally */
+  static async getAttachment(attachmentId: number, _accessToken?: string) {
+    return this.getDetails(attachmentId);
+  }
+  /** @deprecated Use `getUrl(id)` — token is handled globally */
+  static async getDownloadUrl(attachmentId: number, _accessToken?: string) {
+    return this.getUrl(attachmentId);
   }
 
   /**
    * Validate file before upload
-   *
-   * @param file - File to validate
-   * @param maxSizeInMB - Maximum file size in MB (default: 10MB)
-   * @param allowedTypes - Array of allowed MIME types (default: common document/image types)
-   * @returns Validation result with error message if invalid
    */
   static validateFile(
     file: File,
@@ -118,7 +141,6 @@ export class AttachmentService {
       'text/csv',
     ]
   ): { isValid: boolean; error?: string } {
-    // Check file size
     const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
     if (file.size > maxSizeInBytes) {
       return {
@@ -127,7 +149,6 @@ export class AttachmentService {
       };
     }
 
-    // Check file type
     if (!allowedTypes.includes(file.type)) {
       return {
         isValid: false,

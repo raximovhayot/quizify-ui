@@ -35,3 +35,4 @@ Troubleshooting
 ## Related docs
 
 - See `docs/domain-naming.md` for the student-facing terminology policy: in the UI we say “quiz”, while services call Assignment/Attempt endpoints.
+- See `docs/attachments.md` for the attachment pipeline aligned to `/api/file` endpoints.

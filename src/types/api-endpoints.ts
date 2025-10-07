@@ -138,9 +138,10 @@ export const API_PATHS = {
     DELETE: '/instructor/quizzes/:id',
   },
   ATTACHMENT: {
-    UPLOAD: '/instructor/attachments',
-    GET: '/instructor/attachments/:id',
-    DELETE: '/instructor/attachments/:id',
+    UPLOAD: '/api/file/upload',
+    GET: '/api/file/attachment-url/:id',
+    // Note: Backend does not expose a DELETE endpoint for attachments; kept for typing completeness (unused)
+    DELETE: '/api/file/attachment-url/:id',
   },
 } as const;
 
