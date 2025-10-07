@@ -31,7 +31,16 @@ export default function CreateQuizModalPage() {
 
   const handleOpenChange = (nextOpen: boolean) => {
     setOpen(nextOpen);
-    if (!nextOpen) router.push(ROUTES_APP.quizzes.list());
+    if (!nextOpen) {
+      const isOnNew = pathname?.endsWith('/quizzes/new');
+      if (isOnNew) {
+        const canGoBack =
+          typeof window !== 'undefined' &&
+          ((window.history?.state?.idx ?? 0) > 0 || window.history.length > 1);
+        if (canGoBack) router.back();
+        else router.push(ROUTES_APP.quizzes.list());
+      }
+    }
   };
 
   const content = (

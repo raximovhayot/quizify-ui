@@ -26,7 +26,7 @@ export default function Page() {
   const t = useTranslations();
   const { isMobile } = useResponsive();
   const params = useParams<{ quizId: string }>();
-  const quizId = Number(params?.quizId ?? NaN);
+  const quizId = Number(params?.quizId ?? Number.NaN);
   const pathname = usePathname();
   const [open, setOpen] = useState(() => Boolean(pathname?.endsWith('/edit')));
 
@@ -50,14 +50,10 @@ export default function Page() {
   };
 
   const handleCancel = () => {
-    if (quiz) {
-      router.push(ROUTES_APP.quizzes.detail(quiz.id));
-    } else {
-      router.push(ROUTES_APP.quizzes.list());
-    }
+    router.back();
   };
 
-  if (isNaN(quizId)) {
+  if (Number.isNaN(quizId)) {
     const errorContent = (
       <ContentPlaceholder
         title={t('instructor.quiz.edit.error.invalidId', {
@@ -182,10 +178,13 @@ export default function Page() {
         open={open}
         onOpenChange={(nextOpen) => {
           if (!nextOpen) {
-            if (quiz) {
-              router.push(ROUTES_APP.quizzes.detail(quiz.id));
-            } else {
-              router.push(ROUTES_APP.quizzes.list());
+            const isOnEdit = pathname?.endsWith('/edit');
+            if (isOnEdit) {
+              const canGoBack =
+                typeof window !== 'undefined' &&
+                ((window.history?.state?.idx ?? 0) > 0 || window.history.length > 1);
+              if (canGoBack) router.back();
+              else router.push(ROUTES_APP.quizzes.list());
             }
           }
         }}
@@ -213,10 +212,13 @@ export default function Page() {
       open={open}
       onOpenChange={(nextOpen) => {
         if (!nextOpen) {
-          if (quiz) {
-            router.push(ROUTES_APP.quizzes.detail(quiz.id));
-          } else {
-            router.push(ROUTES_APP.quizzes.list());
+          const isOnEdit = pathname?.endsWith('/edit');
+          if (isOnEdit) {
+            const canGoBack =
+              typeof window !== 'undefined' &&
+              ((window.history?.state?.idx ?? 0) > 0 || window.history.length > 1);
+            if (canGoBack) router.back();
+            else router.push(ROUTES_APP.quizzes.list());
           }
         }
       }}
