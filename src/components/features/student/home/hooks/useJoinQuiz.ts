@@ -20,7 +20,6 @@ export function useJoinQuiz() {
       studentHomeKeys.upcoming(),
       studentHomeKeys.inProgress(),
     ],
-    // TODO: switch to attempt player route once confirmed (e.g., `/student/attempts/${data.attemptId}`)
-    redirectTo: (data) => `/student`,
+    redirectTo: (data) => `/student/attempts/${data.attemptId}`,
   })();
 }

@@ -1,0 +1,211 @@
+'use client';
+
+import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslations } from 'next-intl';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { useAttemptContent } from '@/components/features/student/attempt/hooks/useAttemptContent';
+import { useSaveAttemptState } from '@/components/features/student/attempt/hooks/useSaveAttemptState';
+import { useCompleteAttempt } from '@/components/features/student/attempt/hooks/useCompleteAttempt';
+import { QuestionType } from '@/components/features/instructor/quiz/types/question';
+import { AttemptFullData } from '@/components/features/student/history/schemas/attemptSchema';
+
+type AnswerValue = number[] | string; // number[] for selection-based; string for text/boolean
+
+interface AttemptPlayerClientProps {
+  attemptId: number;
+}
+
+function buildSavePayload(
+  content: AttemptFullData,
+  values: Record<number, AnswerValue>
+) {
+  const answers = Object.entries(values).map(([questionId, v]) => {
+    const qid = Number(questionId);
+    if (Array.isArray(v)) {
+      return { questionId: qid, answerIds: v } as const;
+    }
+    return { questionId: qid, textAnswer: v } as const;
+  });
+  return { attemptId: content.attemptId, answers };
+}
+
+export default function AttemptPlayerClient({ attemptId }: AttemptPlayerClientProps) {
+  const t = useTranslations();
+  const { data: content, isLoading, isError } = useAttemptContent(attemptId);
+  const saveMutation = useSaveAttemptState();
+  const completeMutation = useCompleteAttempt();
+
+  const [values, setValues] = useState<Record<number, AnswerValue>>({});
+
+  // Initialize local state from content when first loaded
+  useEffect(() => {
+    if (!content) return;
+    // If backend provides current state, we could hydrate here. For now, keep empty.
+  }, [content]);
+
+  // Debounced autosave
+  useEffect(() => {
+    if (!content) return;
+    const timer = setTimeout(() => {
+      const payload = buildSavePayload(content, values);
+      if (payload.answers.length > 0) {
+        saveMutation.mutate(payload);
+      }
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [content, values]);
+
+  const onToggleChoice = (questionId: number, answerId: number) => {
+    setValues((prev) => {
+      const prevVal = prev[questionId];
+      const next = Array.isArray(prevVal) ? [...prevVal] : [];
+      const idx = next.indexOf(answerId);
+      if (idx >= 0) next.splice(idx, 1);
+      else next.push(answerId);
+      return { ...prev, [questionId]: next };
+    });
+  };
+
+  const onSetSingleChoice = (questionId: number, answerId: number) => {
+    setValues((prev) => ({ ...prev, [questionId]: [answerId] }));
+  };
+
+  const onSetBoolean = (questionId: number, val: boolean) => {
+    setValues((prev) => ({ ...prev, [questionId]: String(val) }));
+  };
+
+  const onSetText = (questionId: number, text: string) => {
+    setValues((prev) => ({ ...prev, [questionId]: text }));
+  };
+
+  const handleSaveNow = () => {
+    if (content) {
+      const payload = buildSavePayload(content, values);
+      if (payload.answers.length > 0) {
+        saveMutation.mutate(payload);
+      }
+    }
+  };
+
+  const handleComplete = () => {
+    completeMutation.mutate({ attemptId });
+  };
+
+  const header = useMemo(() => {
+    return (
+      <div className="flex items-center justify-between">
+        <div className="text-lg font-semibold truncate">
+          {content?.title || t('student.attempt.title', { fallback: 'Attempt' })}
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="secondary" onClick={handleSaveNow} disabled={saveMutation.isPending || !content}>
+            {t('common.save', { fallback: 'Save' })}
+          </Button>
+          <Button onClick={handleComplete} disabled={completeMutation.isPending}>
+            {t('student.attempt.complete', { fallback: 'Complete' })}
+          </Button>
+        </div>
+      </div>
+    );
+  }, [content?.title, saveMutation.isPending, completeMutation.isPending]);
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardHeader>{t('common.loading', { fallback: 'Loading…' })}</CardHeader>
+      </Card>
+    );
+  }
+
+  if (isError || !content) {
+    return (
+      <Card>
+        <CardHeader>{t('common.error', { fallback: 'Error loading attempt' })}</CardHeader>
+      </Card>
+    );
+  }
+
+  return (
+    <Card>
+      <CardHeader>{header}</CardHeader>
+      <CardContent>
+        <ol className="space-y-6">
+          {content.questions.map((q, idx) => (
+            <li key={q.id} className="border rounded-md p-4">
+              <div className="font-medium mb-3">
+                <span className="text-muted-foreground mr-2">{idx + 1}.</span>
+                {q.content}
+              </div>
+              {q.questionType === QuestionType.MULTIPLE_CHOICE && (
+                <ul className="space-y-2">
+                  {q.answers?.map((ans) => {
+                    const selected = Array.isArray(values[q.id])
+                      ? (values[q.id] as number[]).includes(ans.id)
+                      : false;
+                    return (
+                      <li key={ans.id}>
+                        <label className="inline-flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            checked={selected}
+                            onChange={() => onToggleChoice(q.id, ans.id)}
+                          />
+                          <span>{ans.content}</span>
+                        </label>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+
+              {q.questionType === QuestionType.TRUE_FALSE && (
+                <div className="flex gap-6">
+                  <label className="inline-flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name={`tf-${q.id}`}
+                      checked={values[q.id] === 'true'}
+                      onChange={() => onSetBoolean(q.id, true)}
+                    />
+                    <span>{t('common.true', { fallback: 'True' })}</span>
+                  </label>
+                  <label className="inline-flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name={`tf-${q.id}`}
+                      checked={values[q.id] === 'false'}
+                      onChange={() => onSetBoolean(q.id, false)}
+                    />
+                    <span>{t('common.false', { fallback: 'False' })}</span>
+                  </label>
+                </div>
+              )}
+
+              {q.questionType === QuestionType.SHORT_ANSWER && (
+                <div>
+                  <input
+                    className="w-full border rounded-md p-2"
+                    type="text"
+                    value={typeof values[q.id] === 'string' ? (values[q.id] as string) : ''}
+                    onChange={(e) => onSetText(q.id, e.target.value)}
+                    placeholder={t('student.attempt.type.answer', { fallback: 'Type your answer…' })}
+                  />
+                </div>
+              )}
+
+              {q.questionType !== QuestionType.MULTIPLE_CHOICE &&
+                q.questionType !== QuestionType.TRUE_FALSE &&
+                q.questionType !== QuestionType.SHORT_ANSWER && (
+                  <div className="text-sm text-muted-foreground">
+                    {t('student.attempt.unsupported', { fallback: 'This question type is not yet supported in the player.' })}
+                  </div>
+                )}
+            </li>
+          ))}
+        </ol>
+      </CardContent>
+    </Card>
+  );
+}
