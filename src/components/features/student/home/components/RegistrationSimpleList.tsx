@@ -13,7 +13,7 @@ interface RegistrationSimpleListProps {
  * RegistrationSimpleList — renders a simple list of upcoming/scheduled registrations for students.
  * Mirrors the structure and styling of `AttemptSimpleList` but for registration items.
  */
-export function RegistrationSimpleList({ items, emptyLabel, icon }: RegistrationSimpleListProps) {
+export function RegistrationSimpleList({ items, emptyLabel, icon }: Readonly<RegistrationSimpleListProps>) {
   if (!items || items.length === 0) {
     return <EmptyState icon={icon} message={emptyLabel} />;
   }
@@ -22,7 +22,7 @@ export function RegistrationSimpleList({ items, emptyLabel, icon }: Registration
     <ul className="space-y-2">
       {items.map((it, idx) => {
         const key = (it.assignmentId ?? it.id ?? idx) as number | string;
-        const title = it.title ?? `Assignment ${(it.assignmentId ?? it.id ?? idx) as number}`;
+        const title = it.title ?? `Assignment ${(it.assignmentId ?? it.id ?? idx)}`;
         return (
           <li
             key={key}
