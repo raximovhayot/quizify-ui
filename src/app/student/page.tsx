@@ -1,11 +1,5 @@
-import { Suspense } from 'react';
-
-import { StudentHomePage } from '@/components/features/student/home/StudentHomePage';
+import { StudentHomePageLoader } from '@/app/student/StudentHomePageLoader';
 
 export default function Page() {
-  return (
-    <Suspense>
-      <StudentHomePage />
-    </Suspense>
-  );
+  return <StudentHomePageLoader />;
 }
