@@ -1,7 +1,3 @@
 #!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-# Block pushes with failing types, tests, or build
-pnpm run typecheck || exit 1
-pnpm run test:cov || exit 1
-pnpm run build || exit 1
+# Husky pre-push hook disabled on 2025-10-08 by request
+exit 0

@@ -1,5 +1,3 @@
 #!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-# Lint only staged files and run related unit tests quickly
-pnpm exec lint-staged
+# Husky pre-commit hook disabled on 2025-10-08 by request
+exit 0
