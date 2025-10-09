@@ -48,7 +48,7 @@ const eslintConfig = [
               name: '@/components/shared/providers/Providers',
               message:
                 'Deprecated: use ClientProviders or PublicClientProviders in route-group layouts. Do not import Providers.tsx at the root.',
-            },
+            }
           ],
         },
       ],
@@ -56,7 +56,7 @@ const eslintConfig = [
   },
   {
     files: ['./src/**/*.*'],
-    ignores: ['**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts', '**/*.spec.tsx'],
+    ignores: ['**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts', '**/*.spec.tsx', 'src/components/ui/**'],
     rules: {
       'no-process-env': 'error',
       'no-console': 'error',

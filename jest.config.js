@@ -27,6 +27,13 @@ const customJestConfig = {
       lines: 80,
       statements: 80,
     },
+    // Atomic components baseline
+    './src/components/atomic/**/*.{ts,tsx}': {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80,
+    },
     // Middleware (current coverage ~58% lines, ~33% functions)
     './middleware.ts': {
       branches: 50,

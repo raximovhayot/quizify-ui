@@ -3,7 +3,7 @@ import React, { JSX } from 'react';
 import { QuizDataDTO } from '@/components/features/instructor/quiz/types/quiz';
 import { DataCard } from '@/components/shared/ui/DataCard';
 
-import { ListSkeleton } from './ListSkeleton';
+import { ListSkeleton } from '@/components/atomic/molecules';
 import { QuizSimpleList } from './QuizSimpleList';
 
 interface QuizListCardProps {
