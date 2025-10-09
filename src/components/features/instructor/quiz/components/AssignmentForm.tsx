@@ -64,7 +64,7 @@ export function AssignmentForm({
     ) as Resolver<TAssignmentStartUIForm>,
     defaultValues: {
       title: `${quiz.title} - ${t('instructor.assignment.defaultSuffix', {
-        fallback: 'Assignment',
+        default: 'Assignment',
       })}`,
       description: quiz.description || '',
       startTimeLocal: now.toISOString().slice(0, 16),
@@ -98,7 +98,7 @@ export function AssignmentForm({
               <CardHeader>
                 <CardTitle>
                   {t('instructor.assignment.create.details', {
-                    fallback: 'Details',
+                    default: 'Details',
                   })}
                 </CardTitle>
               </CardHeader>
@@ -110,14 +110,14 @@ export function AssignmentForm({
                     <FormItem>
                       <FormLabel>
                         {t('instructor.assignment.create.titleLabel', {
-                          fallback: 'Assignment Title',
+                          default: 'Assignment Title',
                         })}
                       </FormLabel>
                       <FormControl>
                         <Input
                           placeholder={t(
                             'instructor.assignment.create.titlePlaceholder',
-                            { fallback: 'Enter assignment title' }
+                            { default: 'Enter assignment title' }
                           )}
                           {...field}
                         />
@@ -134,7 +134,7 @@ export function AssignmentForm({
                     <FormItem>
                       <FormLabel>
                         {t('instructor.assignment.create.descriptionLabel', {
-                          fallback: 'Description (optional)',
+                          default: 'Description (optional)',
                         })}
                       </FormLabel>
                       <FormControl>
@@ -142,7 +142,7 @@ export function AssignmentForm({
                           rows={4}
                           placeholder={t(
                             'instructor.assignment.create.descriptionPlaceholder',
-                            { fallback: 'Enter assignment description' }
+                            { default: 'Enter assignment description' }
                           )}
                           {...field}
                         />
@@ -160,7 +160,7 @@ export function AssignmentForm({
                       <FormItem>
                         <FormLabel>
                           {t('instructor.assignment.create.startTimeLabel', {
-                            fallback: 'Start Time',
+                            default: 'Start Time',
                           })}
                         </FormLabel>
                         <FormControl>
@@ -178,7 +178,7 @@ export function AssignmentForm({
                       <FormItem>
                         <FormLabel>
                           {t('instructor.assignment.create.endTimeLabel', {
-                            fallback: 'End Time',
+                            default: 'End Time',
                           })}
                         </FormLabel>
                         <FormControl>
@@ -199,7 +199,7 @@ export function AssignmentForm({
               <CardHeader>
                 <CardTitle>
                   {t('instructor.assignment.create.settings', {
-                    fallback: 'Settings',
+                    default: 'Settings',
                   })}
                 </CardTitle>
               </CardHeader>
@@ -212,7 +212,7 @@ export function AssignmentForm({
                       <FormItem>
                         <FormLabel>
                           {t('instructor.assignment.settings.attempts', {
-                            fallback: 'Max attempts (0 = unlimited)',
+                            default: 'Max attempts (0 = unlimited)',
                           })}
                         </FormLabel>
                         <FormControl>
@@ -230,7 +230,7 @@ export function AssignmentForm({
                       <FormItem>
                         <FormLabel>
                           {t('instructor.assignment.settings.timeLimit', {
-                            fallback: 'Time limit (minutes, 0 = unlimited)',
+                            default: 'Time limit (minutes, 0 = unlimited)',
                           })}
                         </FormLabel>
                         <FormControl>
@@ -251,7 +251,7 @@ export function AssignmentForm({
                             <FormLabel>
                               {t(
                                 'instructor.assignment.settings.shuffleQuestions',
-                                { fallback: 'Shuffle questions' }
+                                { default: 'Shuffle questions' }
                               )}
                             </FormLabel>
                           </div>
@@ -275,7 +275,7 @@ export function AssignmentForm({
                             <FormLabel>
                               {t(
                                 'instructor.assignment.settings.shuffleAnswers',
-                                { fallback: 'Shuffle answers' }
+                                { default: 'Shuffle answers' }
                               )}
                             </FormLabel>
                           </div>
@@ -298,7 +298,7 @@ export function AssignmentForm({
                       <FormItem>
                         <FormLabel>
                           {t('instructor.assignment.settings.resultShowType', {
-                            fallback: 'When to show results',
+                            default: 'When to show results',
                           })}
                         </FormLabel>
                         <FormControl>
@@ -319,7 +319,7 @@ export function AssignmentForm({
                               >
                                 {t(
                                   'instructor.assignment.settings.resultShowType.afterAssignment',
-                                  { fallback: 'After assignment' }
+                                  { default: 'After assignment' }
                                 )}
                               </SelectItem>
                               <SelectItem
@@ -329,7 +329,7 @@ export function AssignmentForm({
                               >
                                 {t(
                                   'instructor.assignment.settings.resultShowType.afterEachAttempt',
-                                  { fallback: 'After each attempt' }
+                                  { default: 'After each attempt' }
                                 )}
                               </SelectItem>
                               <SelectItem
@@ -338,7 +338,7 @@ export function AssignmentForm({
                                 {t(
                                   'instructor.assignment.settings.resultShowType.never',
                                   {
-                                    fallback: 'Never',
+                                    default: 'Never',
                                   }
                                 )}
                               </SelectItem>
@@ -357,7 +357,7 @@ export function AssignmentForm({
                       <FormItem>
                         <FormLabel>
                           {t('instructor.assignment.settings.resultType', {
-                            fallback: 'Result details',
+                            default: 'Result details',
                           })}
                         </FormLabel>
                         <FormControl>
@@ -376,7 +376,7 @@ export function AssignmentForm({
                               >
                                 {t(
                                   'instructor.assignment.settings.resultType.onlyCorrect',
-                                  { fallback: 'Only correct answers' }
+                                  { default: 'Only correct answers' }
                                 )}
                               </SelectItem>
                               <SelectItem
@@ -384,7 +384,7 @@ export function AssignmentForm({
                               >
                                 {t(
                                   'instructor.assignment.settings.resultType.allAnswers',
-                                  { fallback: 'All answers' }
+                                  { default: 'All answers' }
                                 )}
                               </SelectItem>
                             </SelectContent>
@@ -398,9 +398,9 @@ export function AssignmentForm({
 
                 <SubmitButton
                   isSubmitting={isSubmitting}
-                  submitText={t('common.create', { fallback: 'Create' })}
+                  submitText={t('common.create', { default: 'Create' })}
                   loadingText={t('common.creating', {
-                    fallback: 'Creating...',
+                    default: 'Creating...',
                   })}
                   className="w-full"
                 />

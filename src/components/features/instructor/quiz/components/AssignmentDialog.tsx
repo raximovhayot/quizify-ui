@@ -46,7 +46,7 @@ export function AssignmentDialog({
           <ResizableSheetHeader className="pb-4" hasResizeHandle>
             <ResizableSheetTitle>
               {t('instructor.assignment.create.title', {
-                fallback: 'Start Quiz',
+                default: 'Start Quiz',
               })}
             </ResizableSheetTitle>
           </ResizableSheetHeader>
@@ -63,12 +63,12 @@ export function AssignmentDialog({
         <DialogHeader>
           <DialogTitle>
             {t('instructor.assignment.create.title', {
-              fallback: 'Start Quiz',
+              default: 'Start Quiz',
             })}
           </DialogTitle>
           <DialogDescription>
             {t('instructor.assignment.create.description', {
-              fallback:
+              default:
                 'Create an assignment to start the quiz for your students.',
             })}
           </DialogDescription>
