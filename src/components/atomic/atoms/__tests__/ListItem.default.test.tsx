@@ -1,4 +1,3 @@
-import React from 'react';
 import DefaultListItem, { ListItem } from '../ListItem';
 
 describe('ListItem default export', () => {
