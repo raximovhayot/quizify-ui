@@ -844,7 +844,7 @@
       "starts": "Boshlanadi",
       "ends": "Tugaydi",
       "viewDetails": "Tafsilotlar",
-      "titleFallback": "Vazifa {{id}}"
+      "titleFallback": "Topshiriq {{id}}"
     },
     "results": {
       "title": "Test natijalari",

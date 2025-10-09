@@ -785,7 +785,7 @@
       "confirmSubmitButton": "Да, отправить",
       "open": "Открыть попытку",
       "number": "Попытка #{{number}}",
-      "correctSummary": "{{correct}}/{{total}} верно"
+      "correctSummary": "{{correct}}/{{total}} правильных"
     },
     "assignment": {
       "upcoming": "Скоро начнется",
