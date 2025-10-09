@@ -27,7 +27,7 @@ export function AnalyticsHeader({
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">
-          {t(titleKey, { fallback: 'Analytics' })}
+          {t(titleKey, { default: 'Analytics' })}
         </h1>
       </div>
       <div className="flex w-full items-center gap-2 sm:w-auto">
@@ -38,13 +38,13 @@ export function AnalyticsHeader({
               placeholder={t(
                 'instructor.analytics.assignments.search.placeholder',
                 {
-                  fallback: 'Search assignments...',
+                  default: 'Search assignments...',
                 }
               )}
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
               className="pl-10"
-              aria-label={t('common.search', { fallback: 'Search' })}
+              aria-label={t('common.search', { default: 'Search' })}
             />
           </div>
         </form>

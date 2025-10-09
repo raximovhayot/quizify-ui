@@ -55,7 +55,7 @@ export function UserMenu({
               variant="ghost"
               className="relative h-10 w-10 rounded-full p-0 ml-2"
               aria-label={t(`${ns}.userMenu.title`, {
-                fallback: 'User menu',
+                default: 'User menu',
               })}
             >
               <Avatar className="h-9 w-9">
@@ -65,14 +65,14 @@ export function UserMenu({
                 </AvatarFallback>
               </Avatar>
               <span className="sr-only">
-                {t(`${ns}.userMenu.title`, { fallback: 'User menu' })}
+                {t(`${ns}.userMenu.title`, { default: 'User menu' })}
               </span>
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-full sm:max-w-sm p-0">
             <SheetHeader className="p-4">
               <SheetTitle>
-                {t(`${ns}.userMenu.title`, { fallback: 'User menu' })}
+                {t(`${ns}.userMenu.title`, { default: 'User menu' })}
               </SheetTitle>
             </SheetHeader>
 
@@ -96,7 +96,7 @@ export function UserMenu({
                   ) : null}
                   <p className="text-xs text-muted-foreground">
                     {t(`${ns}.role`, {
-                      fallback: ns === 'student' ? 'Student' : 'Instructor',
+                      default: ns === 'student' ? 'Student' : 'Instructor',
                     })}
                   </p>
                 </div>
@@ -117,10 +117,10 @@ export function UserMenu({
             {/* Menu items */}
             <div className="mt-2 flex flex-col gap-1 px-2 pb-4">
               <Button variant="ghost" className="h-12 justify-start text-base">
-                {t(`${ns}.userMenu.profile`, { fallback: 'Profile' })}
+                {t(`${ns}.userMenu.profile`, { default: 'Profile' })}
               </Button>
               <Button variant="ghost" className="h-12 justify-start text-base">
-                {t(`${ns}.userMenu.settings`, { fallback: 'Settings' })}
+                {t(`${ns}.userMenu.settings`, { default: 'Settings' })}
               </Button>
               <div className="my-2 h-px w-full bg-border" />
               <Button
@@ -128,7 +128,7 @@ export function UserMenu({
                 className="h-12 justify-start text-base text-red-600 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950"
                 onClick={onLogout}
               >
-                {t(`${ns}.userMenu.logout`, { fallback: 'Log out' })}
+                {t(`${ns}.userMenu.logout`, { default: 'Log out' })}
               </Button>
             </div>
           </SheetContent>
@@ -143,7 +143,7 @@ export function UserMenu({
               variant="ghost"
               className="relative h-10 w-10 rounded-full p-0 ml-2"
               aria-label={t(`${ns}.userMenu.title`, {
-                fallback: 'User menu',
+                default: 'User menu',
               })}
             >
               <Avatar className="h-9 w-9">
@@ -153,7 +153,7 @@ export function UserMenu({
                 </AvatarFallback>
               </Avatar>
               <span className="sr-only">
-                {t(`${ns}.userMenu.title`, { fallback: 'User menu' })}
+                {t(`${ns}.userMenu.title`, { default: 'User menu' })}
               </span>
             </Button>
           </DropdownMenuTrigger>
@@ -170,7 +170,7 @@ export function UserMenu({
                 ) : null}
                 <p className="text-xs leading-none text-muted-foreground">
                   {t(`${ns}.role`, {
-                    fallback: ns === 'student' ? 'Student' : 'Instructor',
+                    default: ns === 'student' ? 'Student' : 'Instructor',
                   })}
                 </p>
               </div>
@@ -178,12 +178,12 @@ export function UserMenu({
             <DropdownMenuSeparator />
             <DropdownMenuItem className="cursor-pointer">
               <span>
-                {t(`${ns}.userMenu.profile`, { fallback: 'Profile' })}
+                {t(`${ns}.userMenu.profile`, { default: 'Profile' })}
               </span>
             </DropdownMenuItem>
             <DropdownMenuItem className="cursor-pointer">
               <span>
-                {t(`${ns}.userMenu.settings`, { fallback: 'Settings' })}
+                {t(`${ns}.userMenu.settings`, { default: 'Settings' })}
               </span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
@@ -191,7 +191,7 @@ export function UserMenu({
               className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950"
               onClick={onLogout}
             >
-              <span>{t(`${ns}.userMenu.logout`, { fallback: 'Log out' })}</span>
+              <span>{t(`${ns}.userMenu.logout`, { default: 'Log out' })}</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -82,9 +82,9 @@ export function QuizForm({
         <CardHeader>
           <CardTitle>
             {quiz
-              ? t('instructor.quiz.form.editTitle', { fallback: 'Edit Quiz' })
+              ? t('instructor.quiz.form.editTitle', { default: 'Edit Quiz' })
               : t('instructor.quiz.form.createTitle', {
-                  fallback: 'Create New Quiz',
+                  default: 'Create New Quiz',
                 })}
           </CardTitle>
         </CardHeader>
@@ -98,7 +98,7 @@ export function QuizForm({
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="title">
-                {t('instructor.quiz.form.title', { fallback: 'Quiz Title' })}
+                {t('instructor.quiz.form.title', { default: 'Quiz Title' })}
               </Label>
               <Controller
                 name="title"

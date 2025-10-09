@@ -24,20 +24,20 @@ export function InstructorHeader({
     {
       href: ROUTES_APP.quizzes.list(),
       icon: BookOpen,
-      label: t('instructor.navigation.quizzes', { fallback: 'Quizzes' }),
+      label: t('instructor.navigation.quizzes', { default: 'Quizzes' }),
     },
     {
       href: ROUTES_APP.analytics.root(),
       icon: BarChart3,
-      label: t('instructor.navigation.analytics', { fallback: 'Analytics' }),
+      label: t('instructor.navigation.analytics', { default: 'Analytics' }),
     },
   ];
 
   const mobileTitle = t('instructor.navigation.title', {
-    fallback: 'Instructor Panel',
+    default: 'Instructor Panel',
   });
   const toggleMenuLabel = t('instructor.navigation.toggleMenu', {
-    fallback: 'Toggle menu',
+    default: 'Toggle menu',
   });
 
   return (
