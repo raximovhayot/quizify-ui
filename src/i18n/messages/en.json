@@ -58,9 +58,7 @@
       "last": "Go to last page",
       "current": "Page {page}, current page",
       "goto": "Go to page {page}",
-      "info": "Page {current} of {total}",
-      "showing": "Showing {total} results",
-      "perPage": "Per page"
+      "info": "Page {current} of {total}"
     },
     "close": "Close",
     "questions": "Questions",
@@ -365,14 +363,6 @@
       "analytics": "Analytics",
       "toggleMenu": "Toggle navigation menu"
     },
-    "analytics": {
-      "title": "Analytics",
-      "assignments": {
-        "search": {
-          "placeholder": "Search assignments..."
-        }
-      }
-    },
     "notifications": {
       "title": "Notifications",
       "newSubmission": "New quiz submission",
@@ -554,6 +544,7 @@
       "logout": "Log out"
     },
     "analytics": {
+      "title": "Analytics",
       "assignments": {
         "title": "Assignments",
         "subtitle": "Overview of assigned quizzes",
@@ -647,9 +638,7 @@
         "descriptionPlaceholder": "Enter assignment description",
         "startTimeLabel": "Start Time",
         "endTimeLabel": "End Time",
-        "submit": "Create Assignment",
-        "success": "Assignment created successfully",
-        "error": "Failed to create assignment"
+        "submit": "Create Assignment"
       }
     },
     "grading": {
