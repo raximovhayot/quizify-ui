@@ -72,7 +72,10 @@ export function QuestionsList({
     if (!deletingQuestion) return;
 
     try {
-      await deleteQuestionMutation.mutateAsync(deletingQuestion.id);
+      await deleteQuestionMutation.mutateAsync({
+        quizId,
+        questionId: deletingQuestion.id,
+      });
       setDeletingQuestion(null);
     } catch {}
   };

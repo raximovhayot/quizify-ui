@@ -72,9 +72,9 @@ export function useDeleteQuestion() {
   const t = useTranslations();
   const queryClient = useQueryClient();
 
-  return createMutation<void, number>({
-    mutationFn: async (questionId) => {
-      return await QuestionService.deleteQuestion(questionId);
+  return createMutation<void, { quizId: number; questionId: number }>({
+    mutationFn: async ({ quizId, questionId }) => {
+      return await QuestionService.deleteQuestion(quizId, questionId);
     },
     successMessage: t('common.entities.question.deleteSuccess', {
       fallback: 'Question deleted successfully',

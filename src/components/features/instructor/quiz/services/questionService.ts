@@ -13,8 +13,9 @@ export class QuestionService {
     data: InstructorQuestionSaveRequest
   ): Promise<IApiResponse<QuestionDataDto>> {
     const response: IApiResponse<QuestionDataDto> = await apiClient.post(
-      '/instructor/questions',
-      data
+      '/instructor/quizzes/:quizId/questions',
+      data,
+      { params: { quizId: data.quizId } }
     );
     return response;
   }
@@ -24,15 +25,20 @@ export class QuestionService {
     data: InstructorQuestionSaveRequest
   ): Promise<IApiResponse<QuestionDataDto>> {
     const response: IApiResponse<QuestionDataDto> = await apiClient.put(
-      `/instructor/questions/${questionId}`,
-      data
+      `/instructor/quizzes/:quizId/questions/:id`,
+      data,
+      { params: { quizId: data.quizId, id: questionId } }
     );
     return response;
   }
 
-  static async deleteQuestion(questionId: number): Promise<IApiResponse<void>> {
+  static async deleteQuestion(
+    quizId: number,
+    questionId: number
+  ): Promise<IApiResponse<void>> {
     const response: IApiResponse<void> = await apiClient.delete(
-      `/instructor/questions/${questionId}`
+      `/instructor/quizzes/:quizId/questions/:id`,
+      { params: { quizId, id: questionId } }
     );
     return response;
   }
@@ -42,7 +48,7 @@ export class QuestionService {
     signal?: AbortSignal
   ): Promise<IPageableList<QuestionDataDto>> {
     const response: IApiResponse<IPageableList<QuestionDataDto>> =
-      await apiClient.get(`/instructor/questions/:quizId/list`, {
+      await apiClient.get(`/instructor/quizzes/:quizId/questions`, {
         signal,
         params: { quizId: filter.quizId },
         query: {
