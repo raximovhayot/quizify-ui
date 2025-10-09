@@ -2,7 +2,7 @@ import React, { JSX } from 'react';
 
 import { DataCard } from '@/components/shared/ui/DataCard';
 import { RegistrationSimpleList } from '@/components/features/student/home/components/RegistrationSimpleList';
-import { ListSkeleton } from '@/components/features/student/home/components/ListSkeleton';
+import { ListSkeleton } from '@/components/atomic/molecules';
 import { AssignmentRegistrationItem } from '@/components/features/student/assignment/services/studentAssignmentService';
 
 interface RegistrationListCardProps {

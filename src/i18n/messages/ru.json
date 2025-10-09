@@ -20,6 +20,7 @@
     "retry": "Попробовать снова",
     "actions": "Действия",
     "view": "Просмотр",
+    "open": "Открыть",
     "edit": "Редактировать",
     "search": "Поиск",
     "true": "Истина",
@@ -781,7 +782,10 @@
       "submitQuiz": "Отправить викторину",
       "confirmSubmit": "Отправить викторину?",
       "confirmSubmitMessage": "Вы ответили на {{answered}} из {{total}} вопросов. Вы уверены, что хотите отправить? Вы не сможете изменить свои ответы после отправки.",
-      "confirmSubmitButton": "Да, отправить"
+      "confirmSubmitButton": "Да, отправить",
+      "open": "Открыть попытку",
+      "number": "Попытка #{{number}}",
+      "correctSummary": "{{correct}}/{{total}} правильных"
     },
     "assignment": {
       "upcoming": "Скоро начнется",
@@ -825,7 +829,8 @@
       "statusExpired": "Истекло",
       "starts": "Начинается",
       "ends": "Заканчивается",
-      "viewDetails": "Подробности"
+      "viewDetails": "Подробности",
+      "titleFallback": "Задание {{id}}"
     },
     "results": {
       "title": "Результаты викторины",

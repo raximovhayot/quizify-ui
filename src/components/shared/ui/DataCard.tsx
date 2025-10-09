@@ -3,6 +3,7 @@ import { Loader2 } from 'lucide-react';
 import React, { ReactNode } from 'react';
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { IconHeading } from '@/components/atomic/molecules/IconHeading';
 
 interface DataCardProps {
   title: string;
@@ -50,9 +51,8 @@ export function DataCard({
           headerClassName || 'flex flex-row items-center justify-between gap-4'
         }
       >
-        <div className="flex items-center gap-2 font-medium">
-          {icon}
-          <span>{title}</span>
+        <div className="flex items-center gap-2 font-medium min-w-0">
+          <IconHeading icon={icon} title={title} />
         </div>
         <div className="flex items-center gap-2">
           {actions}

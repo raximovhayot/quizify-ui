@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
@@ -55,7 +55,7 @@ export default function AttemptPlayerClient({ attemptId }: AttemptPlayerClientPr
       }
     }, 800);
     return () => clearTimeout(timer);
-  }, [content, values]);
+  }, [content, values, saveMutation]);
 
   const onToggleChoice = (questionId: number, answerId: number) => {
     setValues((prev) => {
@@ -68,9 +68,6 @@ export default function AttemptPlayerClient({ attemptId }: AttemptPlayerClientPr
     });
   };
 
-  const onSetSingleChoice = (questionId: number, answerId: number) => {
-    setValues((prev) => ({ ...prev, [questionId]: [answerId] }));
-  };
 
   const onSetBoolean = (questionId: number, val: boolean) => {
     setValues((prev) => ({ ...prev, [questionId]: String(val) }));
@@ -80,18 +77,18 @@ export default function AttemptPlayerClient({ attemptId }: AttemptPlayerClientPr
     setValues((prev) => ({ ...prev, [questionId]: text }));
   };
 
-  const handleSaveNow = () => {
+  const handleSaveNow = useCallback(() => {
     if (content) {
       const payload = buildSavePayload(content, values);
       if (payload.answers.length > 0) {
         saveMutation.mutate(payload);
       }
     }
-  };
+  }, [content, values, saveMutation]);
 
-  const handleComplete = () => {
+  const handleComplete = useCallback(() => {
     completeMutation.mutate({ attemptId });
-  };
+  }, [completeMutation, attemptId]);
 
   const header = useMemo(() => {
     return (
@@ -109,7 +106,7 @@ export default function AttemptPlayerClient({ attemptId }: AttemptPlayerClientPr
         </div>
       </div>
     );
-  }, [content?.title, saveMutation.isPending, completeMutation.isPending]);
+  }, [content, saveMutation.isPending, completeMutation.isPending, t, handleSaveNow, handleComplete]);
 
   if (isLoading) {
     return (

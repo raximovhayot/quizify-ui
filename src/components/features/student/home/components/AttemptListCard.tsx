@@ -3,7 +3,7 @@ import React, {JSX} from 'react';
 import {DataCard} from '@/components/shared/ui/DataCard';
 import {AttemptListingData} from '@/components/features/student/quiz/types/attempt';
 import {AttemptSimpleList} from './AttemptSimpleList';
-import {ListSkeleton} from './ListSkeleton';
+import { ListSkeleton } from '@/components/atomic/molecules';
 
 interface AttemptListCardProps {
     title: string;

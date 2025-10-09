@@ -20,6 +20,7 @@
     "retry": "Qayta urinish",
     "actions": "Harakatlar",
     "view": "Ko'rish",
+    "open": "Ochish",
     "edit": "Tahrirlash",
     "search": "Qidirish",
     "true": "To'g'ri",
@@ -795,7 +796,10 @@
       "submitQuiz": "Testni topshirish",
       "confirmSubmit": "Test topshirilsinmi?",
       "confirmSubmitMessage": "Siz {{answered}} ta savolga {{total}} tadan javob berdingiz. Topshirishni xohlaysizmi? Topshirgandan keyin javoblaringizni o'zgartira olmaysiz.",
-      "confirmSubmitButton": "Ha, topshirish"
+      "confirmSubmitButton": "Ha, topshirish",
+      "open": "Urinishni ochish",
+      "number": "Urinish #{{number}}",
+      "correctSummary": "{{correct}}/{{total}} to'g'ri"
     },
     "assignment": {
       "upcoming": "Tez orada boshlanadi",
@@ -839,7 +843,8 @@
       "statusExpired": "Muddati o'tgan",
       "starts": "Boshlanadi",
       "ends": "Tugaydi",
-      "viewDetails": "Tafsilotlar"
+      "viewDetails": "Tafsilotlar",
+      "titleFallback": "Topshiriq {{id}}"
     },
     "results": {
       "title": "Test natijalari",
