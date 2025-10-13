@@ -12,11 +12,11 @@ import {
 } from '@/components/shared/ui/ResizableSheet';
 import {
   Dialog,
-  DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { ScrollableDialogContent } from '@/components/shared/ui/ScrollableDialogContent';
 
 import { AssignmentForm } from './AssignmentForm';
 
@@ -59,7 +59,7 @@ export function AssignmentDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[95vw] md:max-w-3xl lg:max-w-5xl">
+      <ScrollableDialogContent className="max-w-[95vw] md:max-w-3xl lg:max-w-5xl">
         <DialogHeader>
           <DialogTitle>
             {t('instructor.assignment.create.title', {
@@ -75,7 +75,7 @@ export function AssignmentDialog({
         </DialogHeader>
 
         <AssignmentForm quiz={quiz} onSuccess={() => onOpenChange(false)} />
-      </DialogContent>
+      </ScrollableDialogContent>
     </Dialog>
   );
 }

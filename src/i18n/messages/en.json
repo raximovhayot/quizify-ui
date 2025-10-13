@@ -122,6 +122,9 @@
         "createSuccess": "Question created successfully",
         "updateSuccess": "Question updated successfully",
         "deleteSuccess": "Question deleted successfully"
+      },
+      "assignment": {
+        "createSuccess": "Assignment created successfully"
       }
     },
     "deleteConfirmation": {
@@ -629,6 +632,7 @@
       "questionNumber": "Q{{number}}"
     },
     "assignment": {
+      "defaultSuffix": "Assignment",
       "create": {
         "title": "Start Quiz",
         "description": "Create an assignment to start the quiz for your students.",
@@ -638,7 +642,28 @@
         "descriptionPlaceholder": "Enter assignment description",
         "startTimeLabel": "Start Time",
         "endTimeLabel": "End Time",
-        "submit": "Create Assignment"
+        "submit": "Create Assignment",
+        "details": "Details",
+        "settings": "Settings"
+      },
+      "settings": {
+        "attempts": "Max attempts (0 = unlimited)",
+        "timeLimit": "Time limit (minutes, 0 = unlimited)",
+        "shuffleQuestions": "Shuffle questions",
+        "shuffleQuestionsHelp": "Randomize the order of questions for each attempt",
+        "shuffleAnswers": "Shuffle answers",
+        "shuffleAnswersHelp": "Randomize the order of answer choices",
+        "resultShowType": {
+          "label": "When to show results",
+          "afterAssignment": "After assignment",
+          "afterEachAttempt": "After each attempt",
+          "never": "Never"
+        },
+        "resultType": {
+          "label": "Result details",
+          "onlyCorrect": "Only correct answers",
+          "allAnswers": "All answers"
+        }
       }
     },
     "grading": {
@@ -718,7 +743,8 @@
         "essay": "Essay",
         "matching": "Matching",
         "ranking": "Ranking"
-      }
+      },
+      "loadError": "Failed to load quiz"
     },
     "home": {
       "upcoming": "Upcoming quizzes",
@@ -755,6 +781,14 @@
       }
     },
     "attempt": {
+      "title": "Attempt",
+      "complete": "Complete",
+      "type": {
+        "answer": "Type your answer here..."
+      },
+      "unsupported": "This question type is not yet supported in the player. Please contact your instructor.",
+      "completed": "Attempt completed",
+      "saved": "Saved",
       "timeRunningOut": "Time running out!",
       "progress": "Progress",
       "answered": "answered",

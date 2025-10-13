@@ -18,7 +18,7 @@ export function QuizViewClient({ quizId }: { quizId: number }) {
     return (
       <div className="flex items-center gap-2 text-muted-foreground">
         <Loader2 className="h-4 w-4 animate-spin" />
-        {t('common.loading', { fallback: 'Loading...' })}
+        {t('common.loading', { default: 'Loading...' })}
       </div>
     );
   }
@@ -26,7 +26,7 @@ export function QuizViewClient({ quizId }: { quizId: number }) {
   if (isError || !quizQuery.data || !questionsQuery.data) {
     return (
       <div className="text-destructive">
-        {t('student.quiz.loadError', { fallback: 'Failed to load quiz' })}
+        {t('student.quiz.loadError', { default: 'Failed to load quiz' })}
       </div>
     );
   }

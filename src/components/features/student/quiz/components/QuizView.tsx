@@ -43,7 +43,7 @@ export function QuizView({ quiz: _quiz, questions, className }: QuizViewProps) {
             onCheckedChange={setShowAnswers}
           />
           <Label htmlFor="toggle-answers" className="cursor-pointer">
-            {t('student.quiz.showAnswers', { fallback: 'Show answers' })}
+            {t('student.quiz.showAnswers', { default: 'Show answers' })}
           </Label>
         </div>
         <div className="flex items-center gap-2">
@@ -54,7 +54,7 @@ export function QuizView({ quiz: _quiz, questions, className }: QuizViewProps) {
           />
           <Label htmlFor="toggle-explanations" className="cursor-pointer">
             {t('student.quiz.showExplanations', {
-              fallback: 'Show explanations',
+              default: 'Show explanations',
             })}
           </Label>
         </div>
@@ -68,7 +68,7 @@ export function QuizView({ quiz: _quiz, questions, className }: QuizViewProps) {
                 <div className="flex-1 min-w-0">
                   <div className="text-sm text-muted-foreground">
                     {t('student.quiz.questionNumber', {
-                      fallback: 'Question {n}',
+                      default: 'Question {n}',
                       n: idx + 1,
                     })}
                   </div>
@@ -89,7 +89,7 @@ export function QuizView({ quiz: _quiz, questions, className }: QuizViewProps) {
               {showExplanations && q.explanation && (
                 <div className="mt-2">
                   <div className="text-sm text-muted-foreground">
-                    {t('student.quiz.explanation', { fallback: 'Explanation' })}
+                    {t('student.quiz.explanation', { default: 'Explanation' })}
                   </div>
                   <div className="text-sm break-words">{q.explanation}</div>
                 </div>
@@ -109,22 +109,22 @@ function formatQuestionType(
   switch (type) {
     case QuestionType.MULTIPLE_CHOICE:
       return t('student.quiz.types.multipleChoice', {
-        fallback: 'Multiple choice',
+        default: 'Multiple choice',
       });
     case QuestionType.TRUE_FALSE:
-      return t('student.quiz.types.trueFalse', { fallback: 'True/False' });
+      return t('student.quiz.types.trueFalse', { default: 'True/False' });
     case QuestionType.SHORT_ANSWER:
-      return t('student.quiz.types.shortAnswer', { fallback: 'Short answer' });
+      return t('student.quiz.types.shortAnswer', { default: 'Short answer' });
     case QuestionType.FILL_IN_BLANK:
       return t('student.quiz.types.fillInBlank', {
-        fallback: 'Fill in the blank',
+        default: 'Fill in the blank',
       });
     case QuestionType.ESSAY:
-      return t('student.quiz.types.essay', { fallback: 'Essay' });
+      return t('student.quiz.types.essay', { default: 'Essay' });
     case QuestionType.MATCHING:
-      return t('student.quiz.types.matching', { fallback: 'Matching' });
+      return t('student.quiz.types.matching', { default: 'Matching' });
     case QuestionType.RANKING:
-      return t('student.quiz.types.ranking', { fallback: 'Ranking' });
+      return t('student.quiz.types.ranking', { default: 'Ranking' });
     default:
       return type;
   }
@@ -138,12 +138,12 @@ function renderAnswers(
     return (
       <div>
         <div className="text-sm text-muted-foreground">
-          {t('student.quiz.correctAnswer', { fallback: 'Correct answer' })}
+          {t('student.quiz.correctAnswer', { default: 'Correct answer' })}
         </div>
         <div className="text-sm font-medium">
           {q.trueFalseAnswer
-            ? t('common.true', { fallback: 'True' })
-            : t('common.false', { fallback: 'False' })}
+            ? t('common.true', { default: 'True' })
+            : t('common.false', { default: 'False' })}
         </div>
       </div>
     );
@@ -155,7 +155,7 @@ function renderAnswers(
   return (
     <div>
       <div className="text-sm text-muted-foreground mb-2">
-        {t('student.quiz.answers', { fallback: 'Answers' })}
+        {t('student.quiz.answers', { default: 'Answers' })}
       </div>
       <ul className="space-y-2">
         {sortedAnswers.map((a) => (

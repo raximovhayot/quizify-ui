@@ -63,11 +63,10 @@ function useDragResize(
       const keyboardOpen = heightDiff > 100; // threshold of 100px
       setIsKeyboardOpen(keyboardOpen);
 
-      // When keyboard opens, automatically adjust to the smallest snap point
-      // to ensure input fields are visible
-      if (keyboardOpen && currentSnapIndex !== 0) {
-        setCurrentSnapIndex(0);
-      }
+      // Do NOT auto-shrink the sheet when the keyboard opens; keep the current height
+      // and instead scroll the focused input into view from a separate effect.
+      // This avoids unexpected sheet size changes on mobile.
+      // (Intentionally left blank)
     };
 
     window.visualViewport.addEventListener('resize', handleResize);
@@ -113,7 +112,11 @@ function useDragResize(
   const handleDragMove = React.useCallback(
     (e: TouchEvent | MouseEvent) => {
       if (!isDragging || !enabled) return;
-      const clientY = 'touches' in e ? e.touches[0]?.clientY : e.clientY;
+      // Prevent background/page scroll while dragging on touch devices
+      if ('cancelable' in e && (e as Event).cancelable) {
+        e.preventDefault();
+      }
+      const clientY = 'touches' in e ? e.touches[0]?.clientY : (e as MouseEvent).clientY;
       if (!clientY) return;
       const deltaY = startY.current - clientY;
 
@@ -189,6 +192,34 @@ function ResizableSheetContent({
   const { currentHeight, handleDragStart, isDragging, isKeyboardOpen } =
     useDragResize(resizable && side === 'bottom', snapPoints);
   const contentRef = React.useRef<HTMLDivElement>(null);
+  // Capture a stable viewport height (ignores virtual keyboard)
+  const stableViewportHeightRef = React.useRef<number>(0);
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      stableViewportHeightRef.current = window.innerHeight;
+    }
+  }, []);
+
+  // Lock background scroll while the sheet is mounted
+  React.useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const html = document.documentElement;
+    const body = document.body;
+    const prevHtmlOverflow = html.style.overflow;
+    const prevBodyOverflow = body.style.overflow;
+    const bodyStyle = body.style as CSSStyleDeclaration;
+    const prevBodyOverscroll = bodyStyle.overscrollBehavior;
+
+    html.style.overflow = 'hidden';
+    body.style.overflow = 'hidden';
+    bodyStyle.overscrollBehavior = 'contain';
+
+    return () => {
+      html.style.overflow = prevHtmlOverflow;
+      body.style.overflow = prevBodyOverflow;
+      bodyStyle.overscrollBehavior = prevBodyOverscroll;
+    };
+  }, []);
 
   // Auto-scroll to focused element when keyboard opens
   React.useEffect(() => {
@@ -211,9 +242,16 @@ function ResizableSheetContent({
     }
   }, [isKeyboardOpen]);
 
+  const resolvedHeightPx = React.useMemo(() => {
+    if (!(resizable && side === 'bottom')) return undefined;
+    const base = stableViewportHeightRef.current || (typeof window !== 'undefined' ? window.innerHeight : 0);
+    if (!currentHeight || !base) return undefined;
+    return parseHeightToPixels(currentHeight, base);
+  }, [currentHeight, resizable, side]);
+
   const heightStyle =
-    resizable && side === 'bottom'
-      ? { height: currentHeight, maxHeight: currentHeight }
+    resizable && side === 'bottom' && resolvedHeightPx
+      ? { height: `${resolvedHeightPx}px`, maxHeight: `${resolvedHeightPx}px` }
       : {};
 
   return (
@@ -221,20 +259,24 @@ function ResizableSheetContent({
       ref={contentRef}
       side={side}
       className={cn(
+        'overscroll-contain [scrollbar-gutter:stable_both-edges]',
         resizable &&
           side === 'bottom' &&
           'transition-all duration-300 ease-in-out',
         isDragging && 'duration-0',
-        // Ensure close button is above drag handle
-        '[&>button]:z-50',
+        // Ensure close button is above drag handle; don't edit components/ui — override close button via descendant selector here
+        side === 'bottom' && '[&_[data-slot=sheet-close]]:top-[44px]',
+        side === 'bottom' && '[&_[data-slot=sheet-close]]:right-[max(env(safe-area-inset-right),0.75rem)]',
+        side === 'bottom' && 'md:[&_[data-slot=sheet-close]]:right-[max(env(safe-area-inset-right),1rem)]',
+        side === 'bottom' && '[&_[data-slot=sheet-close]]:z-50',
         className
       )}
       style={heightStyle}
       {...props}
     >
-      {resizable && side === 'bottom' && !isKeyboardOpen && (
+      {resizable && side === 'bottom' && (
         <div
-          className="absolute top-0 left-0 right-0 h-8 flex items-center justify-center cursor-grab active:cursor-grabbing z-10 touch-none"
+          className="absolute top-0 left-0 right-0 h-8 flex items-center justify-center cursor-grab active:cursor-grabbing z-50 touch-none"
           onMouseDown={handleDragStart}
           onTouchStart={handleDragStart}
           role="button"
@@ -262,7 +304,11 @@ function ResizableSheetHeader({
 }: ResizableSheetHeaderProps) {
   return (
     <SheetHeader
-      className={cn(hasResizeHandle && 'pt-10', className)}
+      className={cn(
+        'sticky top-0 z-40 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b',
+        hasResizeHandle && 'pt-10',
+        className
+      )}
       {...props}
     />
   );

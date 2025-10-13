@@ -657,7 +657,28 @@
         "descriptionPlaceholder": "Topshiriq tavsifini kiriting",
         "startTimeLabel": "Boshlanish vaqti",
         "endTimeLabel": "Tugash vaqti",
-        "submit": "Topshiriq yaratish"
+        "submit": "Topshiriq yaratish",
+        "details": "Tafsilotlar",
+        "settings": "Sozlamalar"
+      },
+      "settings": {
+        "attempts": "Maks. urinishlar (0 = cheklanmagan)",
+        "timeLimit": "Vaqt cheklovi (daqiqalar, 0 = cheklanmagan)",
+        "shuffleQuestions": "Savollarni aralashtirish",
+        "shuffleQuestionsHelp": "Har bir urinishda savollar tartibini aralashtirish",
+        "shuffleAnswers": "Javoblarni aralashtirish",
+        "shuffleAnswersHelp": "Javob variantlari tartibini aralashtirish",
+        "resultShowType": {
+          "label": "Natijalarni qachon ko‘rsatish",
+          "afterAssignment": "Topshiriq tugagach",
+          "afterEachAttempt": "Har bir urinishdan keyin",
+          "never": "Hech qachon"
+        },
+        "resultType": {
+          "label": "Natijalar tafsiloti",
+          "onlyCorrect": "Faqat to‘g‘ri javoblar",
+          "allAnswers": "Barcha javoblar"
+        }
       }
     },
     "grading": {
@@ -737,7 +758,8 @@
         "essay": "Insho",
         "matching": "Moslashtirish",
         "ranking": "Tartiblash"
-      }
+      },
+      "loadError": "Viktorinani yuklab bo‘lmadi"
     },
     "home": {
       "upcoming": "Yaqinlashayotgan testlar",
@@ -774,6 +796,14 @@
       }
     },
     "attempt": {
+      "title": "Urinish",
+      "complete": "Yakunlash",
+      "type": {
+        "answer": "Javobingizni bu yerga kiriting..."
+      },
+      "unsupported": "Bu savol turi hali pleerda qo'llab-quvvatlanmaydi. Iltimos, o'qituvchingiz bilan bog'laning.",
+      "completed": "Urinish yakunlandi",
+      "saved": "Saqlandi",
       "timeRunningOut": "Vaqt tugamoqda!",
       "progress": "Jarayon",
       "answered": "javob berildi",

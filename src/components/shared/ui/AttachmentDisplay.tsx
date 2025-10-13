@@ -18,7 +18,6 @@ import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
-  AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
@@ -26,6 +25,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
+import { ScrollableAlertDialogContent } from '@/components/shared/ui/ScrollableAlertDialogContent';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
@@ -189,7 +189,7 @@ export function AttachmentDisplay({
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </AlertDialogTrigger>
-                  <AlertDialogContent>
+                  <ScrollableAlertDialogContent>
                     <AlertDialogHeader>
                       <AlertDialogTitle>
                         {t('attachment.deleteConfirm.title', {
@@ -214,7 +214,7 @@ export function AttachmentDisplay({
                         {t('common.delete', { fallback: 'Delete' })}
                       </AlertDialogAction>
                     </AlertDialogFooter>
-                  </AlertDialogContent>
+                  </ScrollableAlertDialogContent>
                 </AlertDialog>
               )}
             </div>

@@ -15,11 +15,10 @@ import {
 } from '@/components/shared/ui/ResizableSheet';
 import {
   Dialog,
-  DialogClose,
-  DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { ScrollableDialogContent } from '@/components/shared/ui/ScrollableDialogContent';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -131,19 +130,9 @@ export function CreateQuestionModal({
   // Desktop: Use Dialog
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl"
-        showCloseButton={false}
+      <ScrollableDialogContent
+        className="w-full sm:max-w-2xl rounded-2xl"
       >
-        <DialogClose
-          type="button"
-          className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-full opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
-        >
-          <XIcon />
-          <span className="sr-only">
-            {t('common.close', { fallback: 'Close' })}
-          </span>
-        </DialogClose>
         <DialogHeader>
           <DialogTitle>
             {t('common.createQuestion', {
@@ -152,7 +141,7 @@ export function CreateQuestionModal({
           </DialogTitle>
         </DialogHeader>
         {formContent}
-      </DialogContent>
+      </ScrollableDialogContent>
     </Dialog>
   );
 }

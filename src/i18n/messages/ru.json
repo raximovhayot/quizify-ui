@@ -115,6 +115,9 @@
         "createSuccess": "Вопрос успешно создан",
         "updateSuccess": "Вопрос успешно обновлен",
         "deleteSuccess": "Вопрос успешно удален"
+      },
+      "assignment": {
+        "createSuccess": "Задание успешно создано"
       }
     },
     "deleteConfirmation": {
@@ -634,6 +637,7 @@
       "questionNumber": "В{{number}}"
     },
     "assignment": {
+      "defaultSuffix": "Задание",
       "create": {
         "title": "Начать викторину",
         "description": "Создайте задание, чтобы начать викторину для ваших студентов.",
@@ -643,7 +647,28 @@
         "descriptionPlaceholder": "Введите описание задания",
         "startTimeLabel": "Время начала",
         "endTimeLabel": "Время окончания",
-        "submit": "Создать задание"
+        "submit": "Создать задание",
+        "details": "Детали",
+        "settings": "Настройки"
+      },
+      "settings": {
+        "attempts": "Макс. попыток (0 = без ограничений)",
+        "timeLimit": "Лимит времени (минуты, 0 = без ограничений)",
+        "shuffleQuestions": "Перемешивать вопросы",
+        "shuffleQuestionsHelp": "Случайный порядок вопросов для каждой попытки",
+        "shuffleAnswers": "Перемешивать ответы",
+        "shuffleAnswersHelp": "Случайный порядок вариантов ответа",
+        "resultShowType": {
+          "label": "Когда показывать результаты",
+          "afterAssignment": "После завершения задания",
+          "afterEachAttempt": "После каждой попытки",
+          "never": "Никогда"
+        },
+        "resultType": {
+          "label": "Детали результата",
+          "onlyCorrect": "Только правильные ответы",
+          "allAnswers": "Все ответы"
+        }
       }
     },
     "grading": {
@@ -723,7 +748,8 @@
         "essay": "Эссе",
         "matching": "Сопоставление",
         "ranking": "Ранжирование"
-      }
+      },
+      "loadError": "Не удалось загрузить викторину"
     },
     "home": {
       "upcoming": "Предстоящие тесты",
@@ -760,6 +786,14 @@
       }
     },
     "attempt": {
+      "title": "Попытка",
+      "complete": "Завершить",
+      "type": {
+        "answer": "Введите ваш ответ здесь..."
+      },
+      "unsupported": "Этот тип вопроса пока не поддерживается в плеере. Пожалуйста, свяжитесь с вашим преподавателем.",
+      "completed": "Попытка завершена",
+      "saved": "Сохранено",
       "timeRunningOut": "Время заканчивается!",
       "progress": "Прогресс",
       "answered": "отвечено",

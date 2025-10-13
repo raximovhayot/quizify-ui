@@ -18,7 +18,8 @@ import {
   ResizableSheetHeader,
   ResizableSheetTitle,
 } from '@/components/shared/ui/ResizableSheet';
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogTitle } from '@/components/ui/dialog';
+import { ScrollableDialogContent } from '@/components/shared/ui/ScrollableDialogContent';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Page() {
@@ -108,12 +109,12 @@ export default function Page() {
           if (!nextOpen) router.push(ROUTES_APP.quizzes.list());
         }}
       >
-        <DialogContent className="rounded-2xl">
+        <ScrollableDialogContent className="rounded-2xl">
           <DialogTitle className="sr-only">
             {t('instructor.quiz.edit.dialogTitle', { fallback: 'Edit Quiz' })}
           </DialogTitle>
           {errorContent}
-        </DialogContent>
+        </ScrollableDialogContent>
       </Dialog>
     );
   }
@@ -223,12 +224,12 @@ export default function Page() {
         }
       }}
     >
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl">
+      <ScrollableDialogContent className="max-w-2xl rounded-2xl">
         <DialogTitle className="sr-only">
           {t('instructor.quiz.edit.dialogTitle', { fallback: 'Edit Quiz' })}
         </DialogTitle>
         {content}
-      </DialogContent>
+      </ScrollableDialogContent>
     </Dialog>
   );
 }

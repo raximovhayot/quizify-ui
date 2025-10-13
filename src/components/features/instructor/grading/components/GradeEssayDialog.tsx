@@ -12,12 +12,12 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
-  DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { ScrollableDialogContent } from '@/components/shared/ui/ScrollableDialogContent';
 import {
   Form,
   FormControl,
@@ -90,7 +90,7 @@ export function GradeEssayDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <ScrollableDialogContent className="max-w-3xl">
         <DialogHeader>
           <DialogTitle>
             {t('instructor.grading.gradeEssay', { fallback: 'Grade Essay' })}
@@ -229,7 +229,7 @@ export function GradeEssayDialog({
             </form>
           </Form>
         </div>
-      </DialogContent>
+      </ScrollableDialogContent>
     </Dialog>
   );
 }

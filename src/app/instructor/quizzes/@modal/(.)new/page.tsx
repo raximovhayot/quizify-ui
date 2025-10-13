@@ -14,7 +14,8 @@ import {
   ResizableSheetHeader,
   ResizableSheetTitle,
 } from '@/components/shared/ui/ResizableSheet';
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogTitle } from '@/components/ui/dialog';
+import { ScrollableDialogContent } from '@/components/shared/ui/ScrollableDialogContent';
 
 export default function CreateQuizModalPage() {
   const router = useRouter();
@@ -76,14 +77,14 @@ export default function CreateQuizModalPage() {
   // Desktop: Use Dialog
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl">
+      <ScrollableDialogContent className="sm:max-w-2xl rounded-2xl">
         <DialogTitle className="sr-only">
           {t('instructor.quiz.create.dialogTitle', {
             fallback: 'Create Quiz',
           })}
         </DialogTitle>
         {content}
-      </DialogContent>
+      </ScrollableDialogContent>
     </Dialog>
   );
 }
