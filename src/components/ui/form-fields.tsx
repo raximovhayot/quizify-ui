@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 
 import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from '@/components/ui/input-group';
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput, InputGroupText } from '@/components/ui/input-group';
 import { Eye, EyeOff } from 'lucide-react';
 
 interface BaseFormFieldProps<T extends FieldValues> {
@@ -31,17 +31,22 @@ export function PhoneField<T extends FieldValues>({
             {t('auth.phone.label', { default: 'Phone Number' })}
           </FieldLabel>
           <FieldContent>
-            <Input
-              id={String(name)}
-              type="tel"
-              placeholder={t('auth.phone.placeholder', {
-                default: '+1234567890',
-              })}
-              disabled={disabled}
-              aria-invalid={!!fieldState.error}
-              aria-describedby={fieldState.error ? `${String(name)}-error` : undefined}
-              {...field}
-            />
+            <InputGroup>
+              <InputGroupAddon align="inline-start">
+                <InputGroupText aria-hidden="true">+</InputGroupText>
+              </InputGroupAddon>
+              <InputGroupInput
+                id={String(name)}
+                type="tel"
+                placeholder={t('auth.phone.placeholder', {
+                  default: '+1234567890',
+                })}
+                disabled={disabled}
+                aria-invalid={!!fieldState.error}
+                aria-describedby={fieldState.error ? `${String(name)}-error` : undefined}
+                {...field}
+              />
+            </InputGroup>
             <FieldError id={`${String(name)}-error`}>{fieldState.error?.message}</FieldError>
           </FieldContent>
         </Field>

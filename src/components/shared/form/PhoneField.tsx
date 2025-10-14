@@ -2,7 +2,7 @@ import React from 'react';
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form';
 
 import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
+import { InputGroup, InputGroupText, InputGroupInput } from '@/components/ui/input-group';
 
 interface PhoneFieldProps<T extends FieldValues> {
   control: Control<T>;
@@ -32,15 +32,18 @@ export function PhoneField<T extends FieldValues>({
         <Field>
           <FieldLabel htmlFor={String(name)}>{label}</FieldLabel>
           <FieldContent>
-            <Input
-              id={String(name)}
-              type="tel"
-              placeholder={placeholder}
-              disabled={disabled}
-              aria-invalid={!!fieldState.error}
-              aria-describedby={fieldState.error ? `${String(name)}-error` : undefined}
-              {...field}
-            />
+            <InputGroup>
+              <InputGroupText aria-hidden="true">+</InputGroupText>
+              <InputGroupInput
+                id={String(name)}
+                type="tel"
+                placeholder={placeholder}
+                disabled={disabled}
+                aria-invalid={!!fieldState.error}
+                aria-describedby={fieldState.error ? `${String(name)}-error` : undefined}
+                {...field}
+              />
+            </InputGroup>
             <FieldError id={`${String(name)}-error`}>{fieldState.error?.message}</FieldError>
           </FieldContent>
         </Field>

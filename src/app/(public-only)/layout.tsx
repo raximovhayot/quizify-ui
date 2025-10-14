@@ -3,7 +3,7 @@ import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
 
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
-import { getLocale, getMessages } from 'next-intl/server';
+import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 
 import { GuardPublicOnly } from '@/components/features/auth/guards';
 import { AppPublicOnlyLayout } from '@/components/shared/layouts/AppLayout';
@@ -20,9 +20,10 @@ export default async function PublicOnlyLayout({
 }: Readonly<{ children: ReactNode }>) {
   const locale = await getLocale();
   const messages = await getMessages();
+  const t = await getTranslations('common');
 
   return (
-    <Suspense fallback={<FullPageLoading />}>
+    <Suspense fallback={<FullPageLoading text={t('loading', { default: 'Loading...' })} />}>
       <PublicClientProviders>
         <NextIntlClientProvider
           messages={messages}

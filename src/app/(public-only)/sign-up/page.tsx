@@ -1,11 +1,13 @@
 import { Suspense } from 'react';
+import { getTranslations } from 'next-intl/server';
 
 import { SignUpForm } from '@/components/features/auth/components/SignUpForm';
 import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
 
-export default function SignUpPage() {
+export default async function SignUpPage() {
+  const t = await getTranslations('common');
   return (
-    <Suspense fallback={<div className="py-16"><FullPageLoading /></div>}>
+    <Suspense fallback={<div className="py-16"><FullPageLoading text={t('loading', { default: 'Loading...' })} /></div>}>
       <SignUpForm />
     </Suspense>
   );
