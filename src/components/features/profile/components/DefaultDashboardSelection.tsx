@@ -1,5 +1,5 @@
 import { CheckCircle2, GraduationCap, Users } from 'lucide-react';
-import { Path, UseFormReturn } from 'react-hook-form';
+import { Controller, Path, UseFormReturn } from 'react-hook-form';
 
 import type { ReactNode } from 'react';
 
@@ -12,13 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
@@ -89,24 +83,24 @@ export function DefaultDashboardSelection<
 
   return (
     <div className="space-y-4">
-      <FormField
+      <Controller
         control={form.control}
         name={'dashboardType' as Path<TFormValues>}
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>
+        render={({ field, fieldState }) => (
+          <Field>
+            <FieldLabel>
               {t('auth.dashboardType.label', {
                 default: 'Default Dashboard Selection',
               })}
-            </FormLabel>
-            <FormControl>
+            </FieldLabel>
+            <FieldContent>
               <RadioGroup
-                onValueChange={(value) =>
-                  field.onChange(value as DashboardType)
-                }
+                onValueChange={(value) => field.onChange(value as DashboardType)}
                 value={String(field.value ?? '')}
                 className="grid grid-cols-1 md:grid-cols-2 gap-4"
                 disabled={isSubmitting}
+                aria-invalid={!!fieldState.error}
+                aria-describedby={fieldState.error ? 'dashboardType-error' : undefined}
               >
                 <OptionItem
                   id="student"
@@ -134,9 +128,9 @@ export function DefaultDashboardSelection<
                   disabled={isSubmitting}
                 />
               </RadioGroup>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
+              <FieldError id="dashboardType-error">{fieldState.error?.message}</FieldError>
+            </FieldContent>
+          </Field>
         )}
       />
     </div>

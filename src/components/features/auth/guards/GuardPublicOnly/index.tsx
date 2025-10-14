@@ -6,7 +6,8 @@ import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
-import { PageLoading } from '@/components/ui/loading-spinner';
+import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
+import { Spinner } from '@/components/ui/spinner';
 
 interface GuardPublicOnlyProps {
   children: ReactNode;
@@ -60,12 +61,21 @@ export default function GuardPublicOnly({
 
   // Show loading while checking authentication
   if (isLoading) {
-    return <PageLoading text={t('loading', { default: 'Loading...' })} />;
+    return (
+      <FullPageLoading text={t('loading', { default: 'Loading...' })} />
+    );
   }
 
   // Show loading while redirecting authenticated users
   if (isAuthenticated) {
-    return <PageLoading text={t('redirecting')} />;
+    return (
+      <div className="min-h-[40vh] flex items-center justify-center">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Spinner className="size-5" />
+          {t('redirecting')}
+        </div>
+      </div>
+    );
   }
 
   // User is not authenticated, show the protected content

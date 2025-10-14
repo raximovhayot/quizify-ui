@@ -4,8 +4,8 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import { useTranslations } from 'next-intl';
 
-import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Field, FieldContent, FieldLabel } from '@/components/ui/field';
 
 import type { TInstructorQuestionForm } from '../../schemas/questionSchema';
 import { QuestionType } from '../../types/question';
@@ -28,18 +28,20 @@ export function TrueFalseQuestionForm(props: TrueFalseQuestionFormProps) {
           name="trueFalseAnswer"
           control={control}
           render={({ field }) => (
-            <>
-              <Switch
-                id="trueFalseAnswer"
-                checked={!!field.value}
-                onCheckedChange={field.onChange}
-              />
-              <Label htmlFor="trueFalseAnswer">
+            <Field className="flex items-center justify-between rounded-lg border px-3 py-3 min-h-12 w-full">
+              <FieldLabel htmlFor="trueFalseAnswer" className="text-sm">
                 {t('common.question.trueFalse.correctIsTrue', {
                   fallback: 'Correct is True',
                 })}
-              </Label>
-            </>
+              </FieldLabel>
+              <FieldContent>
+                <Switch
+                  id="trueFalseAnswer"
+                  checked={!!field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FieldContent>
+            </Field>
           )}
         />
       </div>

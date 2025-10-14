@@ -8,7 +8,7 @@ import { useTranslations } from 'next-intl';
 import { RichTextField } from '@/components/shared/form/RichTextField';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -88,20 +88,22 @@ export function BaseQuestionForm({
         {/* Type is fixed; no selector here */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="sm:col-span-2">
-            <Label htmlFor="points">
-              {t('common.question.points', { fallback: 'Points' })}
-            </Label>
-            <Input
-              id="points"
-              type="number"
-              min={0}
-              {...form.register('points', { valueAsNumber: true })}
-            />
-            {form.formState.errors.points?.message && (
-              <p className="text-sm text-destructive mt-1">
-                {String(form.formState.errors.points?.message)}
-              </p>
-            )}
+            <Field>
+              <FieldLabel htmlFor="points">
+                {t('common.question.points', { fallback: 'Points' })}
+              </FieldLabel>
+              <FieldContent>
+                <Input
+                  id="points"
+                  type="number"
+                  min={0}
+                  aria-invalid={!!form.formState.errors.points}
+                  aria-describedby={form.formState.errors.points ? 'points-error' : undefined}
+                  {...form.register('points', { valueAsNumber: true })}
+                />
+                <FieldError id="points-error">{form.formState.errors.points?.message as unknown as string}</FieldError>
+              </FieldContent>
+            </Field>
           </div>
         </div>
 
@@ -119,25 +121,27 @@ export function BaseQuestionForm({
         </div>
 
         <div>
-          <Label htmlFor="explanation">
-            {t('common.question.explanation.label', {
-              fallback: 'Explanation (optional)',
-            })}
-          </Label>
-          <Textarea
-            id="explanation"
-            rows={3}
-            placeholder={t('common.question.explanation.placeholder', {
-              fallback:
-                'Add an explanation or feedback shown after answering (optional)',
-            })}
-            {...form.register('explanation')}
-          />
-          {form.formState.errors.explanation?.message && (
-            <p className="text-sm text-destructive mt-1">
-              {String(form.formState.errors.explanation?.message)}
-            </p>
-          )}
+          <Field>
+            <FieldLabel htmlFor="explanation">
+              {t('common.question.explanation.label', {
+                fallback: 'Explanation (optional)',
+              })}
+            </FieldLabel>
+            <FieldContent>
+              <Textarea
+                id="explanation"
+                rows={3}
+                placeholder={t('common.question.explanation.placeholder', {
+                  fallback:
+                    'Add an explanation or feedback shown after answering (optional)',
+                })}
+                aria-invalid={!!form.formState.errors.explanation}
+                aria-describedby={form.formState.errors.explanation ? 'explanation-error' : undefined}
+                {...form.register('explanation')}
+              />
+              <FieldError id="explanation-error">{form.formState.errors.explanation?.message as unknown as string}</FieldError>
+            </FieldContent>
+          </Field>
         </div>
 
         {/* Type-specific fields */}

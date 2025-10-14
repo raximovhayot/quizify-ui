@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 import React from 'react';
@@ -14,14 +14,8 @@ import { useUpdateProfile } from '@/components/features/profile/hooks/useUpdateP
 import { profileDetailsUpdateSchema } from '@/components/features/profile/schemas/profile';
 import { DashboardType } from '@/components/features/profile/types/account';
 import { FormCard } from '@/components/shared/form';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form } from '@/components/ui/form';
+import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -70,57 +64,63 @@ export function ProfileUpdateDetailsForm() {
     <FormCard title={t('profile.details.title', { fallback: 'Edit details' })}>
       <Form {...form}>
         <form onSubmit={onSubmit} className="space-y-4">
-          <FormField
+          <Controller
             control={form.control}
             name="firstName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
+            render={({ field, fieldState }) => (
+              <Field>
+                <FieldLabel htmlFor="firstName">
                   {t('auth.firstName.label', { fallback: 'First Name' })}
-                </FormLabel>
-                <FormControl>
+                </FieldLabel>
+                <FieldContent>
                   <Input
+                    id="firstName"
                     placeholder={t('auth.firstName.placeholder', {
                       fallback: 'John',
                     })}
+                    aria-invalid={!!fieldState.error}
+                    aria-describedby={fieldState.error ? 'firstName-error' : undefined}
                     {...field}
                   />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+                  <FieldError id="firstName-error">{fieldState.error?.message}</FieldError>
+                </FieldContent>
+              </Field>
             )}
           />
 
-          <FormField
+          <Controller
             control={form.control}
             name="lastName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
+            render={({ field, fieldState }) => (
+              <Field>
+                <FieldLabel htmlFor="lastName">
                   {t('auth.lastName.label', { fallback: 'Last Name' })}
-                </FormLabel>
-                <FormControl>
+                </FieldLabel>
+                <FieldContent>
                   <Input
+                    id="lastName"
                     placeholder={t('auth.lastName.placeholder', {
                       fallback: 'Doe',
                     })}
+                    aria-invalid={!!fieldState.error}
+                    aria-describedby={fieldState.error ? 'lastName-error' : undefined}
                     {...field}
                   />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+                  <FieldError id="lastName-error">{fieldState.error?.message}</FieldError>
+                </FieldContent>
+              </Field>
             )}
           />
 
-          <FormField
+          <Controller
             control={form.control}
             name="language"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
+            render={({ field, fieldState }) => (
+              <Field>
+                <FieldLabel htmlFor="language">
                   {t('language.label', { fallback: 'Default language' })}
-                </FormLabel>
-                <FormControl>
+                </FieldLabel>
+                <FieldContent>
                   <Select
                     value={String(field.value)}
                     onValueChange={(val) => field.onChange(val as Language)}
@@ -140,9 +140,9 @@ export function ProfileUpdateDetailsForm() {
                       </SelectItem>
                     </SelectContent>
                   </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+                  <FieldError id="language-error">{fieldState.error?.message}</FieldError>
+                </FieldContent>
+              </Field>
             )}
           />
 

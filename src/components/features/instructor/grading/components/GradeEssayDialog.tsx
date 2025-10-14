@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CheckCircle2, X } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 import { useState } from 'react';
@@ -18,14 +18,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { ScrollableDialogContent } from '@/components/shared/ui/ScrollableDialogContent';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form } from '@/components/ui/form';
+import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { sanitizeHtml } from '@/lib/sanitize';
@@ -152,44 +146,46 @@ export function GradeEssayDialog({
           {/* Grading Form */}
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
+              <Controller
                 control={form.control}
                 name="score"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel htmlFor="score">
                       {t('instructor.grading.score', { fallback: 'Score' })} (0-
                       {answer.questionPoints})
-                    </FormLabel>
-                    <FormControl>
+                    </FieldLabel>
+                    <FieldContent>
                       <Input
+                        id="score"
                         type="number"
                         min={0}
                         max={answer.questionPoints}
                         step={0.5}
                         {...field}
-                        onChange={(e) =>
-                          field.onChange(parseFloat(e.target.value))
-                        }
+                        onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                        aria-invalid={!!fieldState.error}
+                        aria-describedby={fieldState.error ? 'score-error' : undefined}
                       />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                      <FieldError id="score-error">{fieldState.error?.message}</FieldError>
+                    </FieldContent>
+                  </Field>
                 )}
               />
 
-              <FormField
+              <Controller
                 control={form.control}
                 name="feedback"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel htmlFor="feedback">
                       {t('instructor.grading.feedback', {
                         fallback: 'Feedback (Optional)',
                       })}
-                    </FormLabel>
-                    <FormControl>
+                    </FieldLabel>
+                    <FieldContent>
                       <Textarea
+                        id="feedback"
                         rows={4}
                         placeholder={t(
                           'instructor.grading.feedbackPlaceholder',
@@ -198,10 +194,12 @@ export function GradeEssayDialog({
                           }
                         )}
                         {...field}
+                        aria-invalid={!!fieldState.error}
+                        aria-describedby={fieldState.error ? 'feedback-error' : undefined}
                       />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                      <FieldError id="feedback-error">{fieldState.error?.message}</FieldError>
+                    </FieldContent>
+                  </Field>
                 )}
               />
 

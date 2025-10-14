@@ -11,7 +11,8 @@ import {
   UserState,
 } from '@/components/features/profile/types/account';
 import { ErrorPage } from '@/components/ui/error-page';
-import { PageLoading } from '@/components/ui/loading-spinner';
+import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
+import { Spinner } from '@/components/ui/spinner';
 
 interface GuardAuthenticatedProps {
   children: ReactNode;
@@ -109,12 +110,14 @@ function GuardAuthenticatedContent({
 
   // Show loading while checking authentication
   if (isLoading) {
-    return <PageLoading text={t('loading', { default: 'Loading...' })} />;
+    return (
+      <FullPageLoading text={t('loading', { default: 'Loading...' })} />
+    );
   }
 
   // Show loading while redirecting unauthenticated users
   if (!isAuthenticated) {
-    return <PageLoading text={t('redirecting')} />;
+    return <FullPageLoading text={t('redirecting')} />;
   }
 
   // Show loading while redirecting users with incomplete profiles
@@ -123,7 +126,7 @@ function GuardAuthenticatedContent({
     user.state === UserState.NEW &&
     !safePath.startsWith('/profile/complete')
   ) {
-    return <PageLoading text={t('redirecting')} />;
+    return <FullPageLoading text={t('redirecting')} />;
   }
 
   // Check role authorization
@@ -131,7 +134,14 @@ function GuardAuthenticatedContent({
     if (showUnauthorizedError) {
       return <ErrorPage errorCode={403} />;
     } else {
-      return <PageLoading text={t('redirecting')} />;
+      return (
+        <div className="min-h-[40vh] flex items-center justify-center">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Spinner className="size-5" />
+            {t('redirecting')}
+          </div>
+        </div>
+      );
     }
   }
 
@@ -141,7 +151,7 @@ function GuardAuthenticatedContent({
 
 function GuardAuthenticatedLoading() {
   const t = useTranslations('common');
-  return <PageLoading text={t('loading', { default: 'Loading...' })} />;
+  return <FullPageLoading text={t('loading', { default: 'Loading...' })} />;
 }
 
 /**

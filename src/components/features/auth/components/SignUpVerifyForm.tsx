@@ -22,7 +22,7 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from '@/components/ui/input-otp';
-import { InlineLoading } from '@/components/ui/loading-spinner';
+import { Spinner } from '@/components/ui/spinner';
 
 import { ROUTES_AUTH } from '../routes';
 
@@ -103,16 +103,15 @@ export function SignUpVerifyForm() {
 
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? (
-                <>
-                  <InlineLoading
-                    text={t('auth.verification.verifying', {
-                      default: 'Verifying...',
-                    })}
-                  />
-                </>
-              ) : (
-                t('auth.verification.verify', { default: 'Verify Code' })
-              )}
+              <>
+                <Spinner className="size-4 mr-2" />
+                {t('auth.verification.verifying', {
+                  default: 'Verifying...',
+                })}
+              </>
+            ) : (
+              t('auth.verification.verify', { default: 'Verify Code' })
+            )}
             </Button>
 
             <div className="text-center">

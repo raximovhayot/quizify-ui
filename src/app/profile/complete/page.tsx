@@ -14,7 +14,7 @@ import {
 } from '@/components/features/profile/types/account';
 import { AppPublicOnlyLayout } from '@/components/shared/layouts/AppLayout';
 import { Form } from '@/components/ui/form';
-import { InlineLoading } from '@/components/ui/loading-spinner';
+import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
 
 function ProfileCompleteContent() {
   const router = useRouter();
@@ -74,13 +74,7 @@ function ProfileCompleteLoading() {
 
   return (
     <AppPublicOnlyLayout>
-      <div className="container mx-auto px-4 py-8 max-w-md">
-        <div className="flex justify-center">
-          <InlineLoading
-            text={t('common.loading', { default: 'Loading...' })}
-          />
-        </div>
-      </div>
+      <FullPageLoading text={t('common.loading', { default: 'Loading...' })} />
     </AppPublicOnlyLayout>
   );
 }

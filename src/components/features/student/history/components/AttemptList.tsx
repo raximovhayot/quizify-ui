@@ -1,4 +1,7 @@
 import { AttemptListingData } from '@/components/features/student/quiz/types/attempt';
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import { ItemGroup } from '@/components/ui/item';
+import { FileQuestion } from 'lucide-react';
 
 import { AttemptListItem } from './AttemptListItem';
 
@@ -9,13 +12,22 @@ interface AttemptListProps {
 
 export function AttemptList({ items, emptyLabel }: Readonly<AttemptListProps>) {
   if (!items || items.length === 0) {
-    return <div className="text-sm text-muted-foreground">{emptyLabel}</div>;
+    return (
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <FileQuestion className="size-6" />
+          </EmptyMedia>
+          <EmptyTitle>{emptyLabel}</EmptyTitle>
+        </EmptyHeader>
+      </Empty>
+    );
   }
   return (
-    <ul className="divide-y rounded-md border">
+    <ItemGroup>
       {items.map((a) => (
         <AttemptListItem key={a.id} attempt={a} />
       ))}
-    </ul>
+    </ItemGroup>
   );
 }

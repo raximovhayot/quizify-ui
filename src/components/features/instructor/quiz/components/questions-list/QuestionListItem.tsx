@@ -16,6 +16,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Item } from '@/components/ui/item';
 
 import { QuestionDataDto } from '../../types/question';
 import { getQuestionTypeLabel } from '../factories/questionFormRegistry';
@@ -39,7 +40,7 @@ export function QuestionListItem({
   const t = useTranslations();
 
   return (
-    <div className="border rounded-lg p-4 sm:p-5 hover:bg-muted/50 transition-colors">
+    <Item variant="outline" className="sm:p-5">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 space-y-3 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
@@ -101,6 +102,6 @@ export function QuestionListItem({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-    </div>
+    </Item>
   );
 }

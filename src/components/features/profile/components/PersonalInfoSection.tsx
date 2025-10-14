@@ -1,15 +1,9 @@
-import { UseFormReturn } from 'react-hook-form';
+import { Controller, UseFormReturn } from 'react-hook-form';
 
 import { useTranslations } from 'next-intl';
 
 import { ProfileCompleteFormData } from '@/components/features/profile/hooks/useProfileComplete';
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 
 interface PersonalInfoSectionProps {
@@ -25,47 +19,53 @@ export function PersonalInfoSection({
 
   return (
     <div className="space-y-4">
-      <FormField
+      <Controller
         control={form.control}
         name="firstName"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>
+        render={({ field, fieldState }) => (
+          <Field>
+            <FieldLabel htmlFor="firstName">
               {t('auth.firstName.label', { default: 'First Name' })}
-            </FormLabel>
-            <FormControl>
+            </FieldLabel>
+            <FieldContent>
               <Input
+                id="firstName"
                 placeholder={t('auth.firstName.placeholder', {
                   default: 'Enter your first name',
                 })}
                 disabled={isSubmitting}
+                aria-invalid={!!fieldState.error}
+                aria-describedby={fieldState.error ? 'firstName-error' : undefined}
                 {...field}
               />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
+              <FieldError id="firstName-error">{fieldState.error?.message}</FieldError>
+            </FieldContent>
+          </Field>
         )}
       />
 
-      <FormField
+      <Controller
         control={form.control}
         name="lastName"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>
+        render={({ field, fieldState }) => (
+          <Field>
+            <FieldLabel htmlFor="lastName">
               {t('auth.lastName.label', { default: 'Last Name' })}
-            </FormLabel>
-            <FormControl>
+            </FieldLabel>
+            <FieldContent>
               <Input
+                id="lastName"
                 placeholder={t('auth.lastName.placeholder', {
                   default: 'Enter your last name',
                 })}
                 disabled={isSubmitting}
+                aria-invalid={!!fieldState.error}
+                aria-describedby={fieldState.error ? 'lastName-error' : undefined}
                 {...field}
               />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
+              <FieldError id="lastName-error">{fieldState.error?.message}</FieldError>
+            </FieldContent>
+          </Field>
         )}
       />
     </div>

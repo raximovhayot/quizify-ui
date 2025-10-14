@@ -1,15 +1,9 @@
-import { UseFormReturn } from 'react-hook-form';
+import { Controller, UseFormReturn } from 'react-hook-form';
 
 import { useTranslations } from 'next-intl';
 
 import { ProfileCompleteFormData } from '@/components/features/profile/hooks/useProfileComplete';
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 
 interface SecuritySectionProps {
@@ -29,25 +23,28 @@ export function SecuritySection({
         {t('auth.profileComplete.security', { default: 'Security' })}
       </h3>
 
-      <FormField
+      <Controller
         control={form.control}
         name="password"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>
+        render={({ field, fieldState }) => (
+          <Field>
+            <FieldLabel htmlFor="password">
               {t('auth.password.label', { default: 'Password' })}
-            </FormLabel>
-            <FormControl>
+            </FieldLabel>
+            <FieldContent>
               <Input
+                id="password"
                 type="password"
                 placeholder={t('auth.password.placeholder', {
                   default: 'Create a password',
                 })}
                 disabled={isSubmitting}
+                aria-invalid={!!fieldState.error}
+                aria-describedby={fieldState.error ? 'password-error' : undefined}
                 {...field}
               />
-            </FormControl>
-            <FormMessage />
+              <FieldError id="password-error">{fieldState.error?.message}</FieldError>
+            </FieldContent>
             <div className="text-sm text-muted-foreground mt-2">
               <p>
                 {t('auth.profileComplete.passwordRequirements', {
@@ -77,7 +74,7 @@ export function SecuritySection({
                 </li>
               </ul>
             </div>
-          </FormItem>
+          </Field>
         )}
       />
     </div>

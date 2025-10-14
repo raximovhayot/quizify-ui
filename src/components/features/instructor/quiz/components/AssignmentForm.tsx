@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Resolver, useForm } from 'react-hook-form';
+import { Controller, Resolver, useForm } from 'react-hook-form';
 
 import React from 'react';
 
@@ -9,14 +9,8 @@ import { useTranslations } from 'next-intl';
 
 import { QuizDataDTO } from '@/components/features/instructor/quiz/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form } from '@/components/ui/form';
+import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -104,53 +98,59 @@ export function AssignmentForm({
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <FormField
+                <Controller
                   control={form.control}
                   name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm">
+                  render={({ field, fieldState }) => (
+                    <Field>
+                      <FieldLabel htmlFor="title" className="text-sm">
                         {t('instructor.assignment.create.titleLabel', {
                           default: 'Assignment Title',
                         })}
-                      </FormLabel>
-                      <FormControl>
+                      </FieldLabel>
+                      <FieldContent>
                         <Input
+                          id="title"
                           className="h-10 w-full"
                           placeholder={t(
                             'instructor.assignment.create.titlePlaceholder',
                             { default: 'Enter assignment title' }
                           )}
+                          aria-invalid={!!fieldState.error}
+                          aria-describedby={fieldState.error ? 'title-error' : undefined}
                           {...field}
                         />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
+                        <FieldError id="title-error">{fieldState.error?.message}</FieldError>
+                      </FieldContent>
+                    </Field>
                   )}
                 />
 
-                <FormField
+                <Controller
                   control={form.control}
                   name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm">
+                  render={({ field, fieldState }) => (
+                    <Field>
+                      <FieldLabel htmlFor="description" className="text-sm">
                         {t('instructor.assignment.create.descriptionLabel', {
                           default: 'Description (optional)',
                         })}
-                      </FormLabel>
-                      <FormControl>
+                      </FieldLabel>
+                      <FieldContent>
                         <Textarea
+                          id="description"
                           rows={4}
                           placeholder={t(
                             'instructor.assignment.create.descriptionPlaceholder',
                             { default: 'Enter assignment description' }
                           )}
+                          aria-invalid={!!fieldState.error}
+                          aria-describedby={fieldState.error ? 'description-error' : undefined}
                           {...field}
                         />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
+                        <FieldError id="description-error">{fieldState.error?.message}</FieldError>
+                      </FieldContent>
+                    </Field>
                   )}
                 />
 
@@ -170,233 +170,212 @@ export function AssignmentForm({
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
+                  <Controller
                     control={form.control}
                     name="startTimeLocal"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm">
+                    render={({ field, fieldState }) => (
+                      <Field>
+                        <FieldLabel htmlFor="startTimeLocal" className="text-sm">
                           {t('instructor.assignment.create.startTimeLabel', {
                             default: 'Start Time',
                           })}
-                        </FormLabel>
-                        <FormControl>
-                          <Input type="datetime-local" className="h-10 w-full" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
+                        </FieldLabel>
+                        <FieldContent>
+                          <Input id="startTimeLocal" type="datetime-local" className="h-10 w-full" aria-invalid={!!fieldState.error} aria-describedby={fieldState.error ? 'startTimeLocal-error' : undefined} {...field} />
+                          <FieldError id="startTimeLocal-error">{fieldState.error?.message}</FieldError>
+                        </FieldContent>
+                      </Field>
                     )}
                   />
 
-                  <FormField
+                  <Controller
                     control={form.control}
                     name="endTimeLocal"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm">
+                    render={({ field, fieldState }) => (
+                      <Field>
+                        <FieldLabel htmlFor="endTimeLocal" className="text-sm">
                           {t('instructor.assignment.create.endTimeLabel', {
                             default: 'End Time',
                           })}
-                        </FormLabel>
-                        <FormControl>
-                          <Input type="datetime-local" className="h-10 w-full" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
+                        </FieldLabel>
+                        <FieldContent>
+                          <Input id="endTimeLocal" type="datetime-local" className="h-10 w-full" aria-invalid={!!fieldState.error} aria-describedby={fieldState.error ? 'endTimeLocal-error' : undefined} {...field} />
+                          <FieldError id="endTimeLocal-error">{fieldState.error?.message}</FieldError>
+                        </FieldContent>
+                      </Field>
                     )}
                   />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
+                  <Controller
                     control={form.control}
                     name="attempt"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm">
+                    render={({ field, fieldState }) => (
+                      <Field>
+                        <FieldLabel htmlFor="attempt" className="text-sm">
                           {t('instructor.assignment.settings.attempts', {
                             default: 'Max attempts (0 = unlimited)',
                           })}
-                        </FormLabel>
-                        <FormControl>
-                          <Input type="number" min={0} step={1} className="h-10 w-full" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
+                        </FieldLabel>
+                        <FieldContent>
+                          <Input id="attempt" type="number" min={0} step={1} className="h-10 w-full" aria-invalid={!!fieldState.error} aria-describedby={fieldState.error ? 'attempt-error' : undefined} {...field} />
+                          <FieldError id="attempt-error">{fieldState.error?.message}</FieldError>
+                        </FieldContent>
+                      </Field>
                     )}
                   />
 
-                  <FormField
+                  <Controller
                     control={form.control}
                     name="time"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm">
+                    render={({ field, fieldState }) => (
+                      <Field>
+                        <FieldLabel htmlFor="time" className="text-sm">
                           {t('instructor.assignment.settings.timeLimit', {
                             default: 'Time limit (minutes, 0 = unlimited)',
                           })}
-                        </FormLabel>
-                        <FormControl>
-                          <Input type="number" min={0} step={1} className="h-10 w-full" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
+                        </FieldLabel>
+                        <FieldContent>
+                          <Input id="time" type="number" min={0} step={1} className="h-10 w-full" aria-invalid={!!fieldState.error} aria-describedby={fieldState.error ? 'time-error' : undefined} {...field} />
+                          <FieldError id="time-error">{fieldState.error?.message}</FieldError>
+                        </FieldContent>
+                      </Field>
                     )}
                   />
 
                   <div className="space-y-3 md:col-span-2">
-                    <FormField
+                    <Controller
                       control={form.control}
                       name="shuffleQuestions"
-                      render={({ field }) => (
-                        <FormItem className="flex items-center justify-between rounded-lg border px-3 py-3 min-h-12">
+                      render={({ field, fieldState }) => (
+                        <Field className="flex items-center justify-between rounded-lg border px-3 py-3 min-h-12">
                           <div className="space-y-0.5 min-w-0">
-                            <Label htmlFor="shuffleQuestions" className="text-sm">
+                            <FieldLabel htmlFor="shuffleQuestions" className="text-sm">
                               {t(
                                 'instructor.assignment.settings.shuffleQuestions',
                                 { default: 'Shuffle questions' }
                               )}
-                            </Label>
+                            </FieldLabel>
                           </div>
-                          <FormControl>
+                          <FieldContent>
                             <Switch
                               id="shuffleQuestions"
                               checked={field.value}
                               onCheckedChange={field.onChange}
+                              aria-invalid={!!fieldState.error}
+                              aria-describedby={fieldState.error ? 'shuffleQuestions-error' : undefined}
                             />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
+                            <FieldError id="shuffleQuestions-error">{fieldState.error?.message}</FieldError>
+                          </FieldContent>
+                        </Field>
                       )}
                     />
 
-                    <FormField
+                    <Controller
                       control={form.control}
                       name="shuffleAnswers"
-                      render={({ field }) => (
-                        <FormItem className="flex items-center justify-between rounded-lg border px-3 py-3 min-h-12">
+                      render={({ field, fieldState }) => (
+                        <Field className="flex items-center justify-between rounded-lg border px-3 py-3 min-h-12">
                           <div className="space-y-0.5 min-w-0">
-                            <Label htmlFor="shuffleAnswers" className="text-sm">
+                            <FieldLabel htmlFor="shuffleAnswers" className="text-sm">
                               {t(
                                 'instructor.assignment.settings.shuffleAnswers',
                                 { default: 'Shuffle answers' }
                               )}
-                            </Label>
+                            </FieldLabel>
                           </div>
-                          <FormControl>
+                          <FieldContent>
                             <Switch
                               id="shuffleAnswers"
                               checked={field.value}
                               onCheckedChange={field.onChange}
+                              aria-invalid={!!fieldState.error}
+                              aria-describedby={fieldState.error ? 'shuffleAnswers-error' : undefined}
                             />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
+                            <FieldError id="shuffleAnswers-error">{fieldState.error?.message}</FieldError>
+                          </FieldContent>
+                        </Field>
                       )}
                     />
                   </div>
 
-                  <FormField
+                  <Controller
                     control={form.control}
                     name="resultShowType"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm">
+                    render={({ field, fieldState }) => (
+                      <Field>
+                        <FieldLabel htmlFor="resultShowType" className="text-sm">
                           {t('instructor.assignment.settings.resultShowType.label', {
                             default: 'When to show results',
                           })}
-                        </FormLabel>
-                        <FormControl>
+                        </FieldLabel>
+                        <FieldContent>
                           <Select
                             value={String(field.value)}
-                            onValueChange={(v) =>
-                              field.onChange(v as AssignmentResultShowType)
-                            }
+                            onValueChange={(v) => field.onChange(v as AssignmentResultShowType)}
                           >
                             <SelectTrigger className="w-full">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem
-                                value={
-                                  AssignmentResultShowType.AFTER_ASSIGNMENT
-                                }
-                              >
-                                {t(
-                                  'instructor.assignment.settings.resultShowType.afterAssignment',
-                                  { default: 'After assignment' }
-                                )}
+                              <SelectItem value={AssignmentResultShowType.AFTER_ASSIGNMENT}>
+                                {t('instructor.assignment.settings.resultShowType.afterAssignment', {
+                                  default: 'After assignment',
+                                })}
                               </SelectItem>
-                              <SelectItem
-                                value={
-                                  AssignmentResultShowType.AFTER_EACH_ATTEMPT
-                                }
-                              >
-                                {t(
-                                  'instructor.assignment.settings.resultShowType.afterEachAttempt',
-                                  { default: 'After each attempt' }
-                                )}
+                              <SelectItem value={AssignmentResultShowType.AFTER_EACH_ATTEMPT}>
+                                {t('instructor.assignment.settings.resultShowType.afterEachAttempt', {
+                                  default: 'After each attempt',
+                                })}
                               </SelectItem>
-                              <SelectItem
-                                value={AssignmentResultShowType.NEVER}
-                              >
-                                {t(
-                                  'instructor.assignment.settings.resultShowType.never',
-                                  {
-                                    default: 'Never',
-                                  }
-                                )}
+                              <SelectItem value={AssignmentResultShowType.NEVER}>
+                                {t('instructor.assignment.settings.resultShowType.never', {
+                                  default: 'Never',
+                                })}
                               </SelectItem>
                             </SelectContent>
                           </Select>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
+                          <FieldError id="resultShowType-error">{fieldState.error?.message}</FieldError>
+                        </FieldContent>
+                      </Field>
                     )}
                   />
 
-                  <FormField
+                  <Controller
                     control={form.control}
                     name="resultType"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm">
+                    render={({ field, fieldState }) => (
+                      <Field>
+                        <FieldLabel htmlFor="resultType" className="text-sm">
                           {t('instructor.assignment.settings.resultType.label', {
                             default: 'Result details',
                           })}
-                        </FormLabel>
-                        <FormControl>
+                        </FieldLabel>
+                        <FieldContent>
                           <Select
                             value={String(field.value)}
-                            onValueChange={(v) =>
-                              field.onChange(v as AssignmentResultType)
-                            }
+                            onValueChange={(v) => field.onChange(v as AssignmentResultType)}
                           >
                             <SelectTrigger className="w-full">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem
-                                value={AssignmentResultType.ONLY_CORRECT}
-                              >
-                                {t(
-                                  'instructor.assignment.settings.resultType.onlyCorrect',
-                                  { default: 'Only correct answers' }
-                                )}
+                              <SelectItem value={AssignmentResultType.ONLY_CORRECT}>
+                                {t('instructor.assignment.settings.resultType.onlyCorrect', {
+                                  default: 'Only correct answers',
+                                })}
                               </SelectItem>
-                              <SelectItem
-                                value={AssignmentResultType.ALL_ANSWERS}
-                              >
-                                {t(
-                                  'instructor.assignment.settings.resultType.allAnswers',
-                                  { default: 'All answers' }
-                                )}
+                              <SelectItem value={AssignmentResultType.ALL_ANSWERS}>
+                                {t('instructor.assignment.settings.resultType.allAnswers', {
+                                  default: 'All answers',
+                                })}
                               </SelectItem>
                             </SelectContent>
                           </Select>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
+                          <FieldError id="resultType-error">{fieldState.error?.message}</FieldError>
+                        </FieldContent>
+                      </Field>
                     )}
                   />
                 </div>

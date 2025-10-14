@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { InlineLoading } from '@/components/ui/loading-spinner';
+import { Spinner } from '@/components/ui/spinner';
 
 import { DefaultDashboardSelection } from './DefaultDashboardSelection';
 import { PersonalInfoSection } from './PersonalInfoSection';
@@ -62,11 +62,12 @@ export function ProfileCompleteForm({
               className="w-full"
             >
               {isSubmitting ? (
-                <InlineLoading
-                  text={t('auth.profileComplete.submitting', {
+                <>
+                  <Spinner className="size-4 mr-2" />
+                  {t('auth.profileComplete.submitting', {
                     default: 'Completing Profile...',
                   })}
-                />
+                </>
               ) : (
                 t('auth.profileComplete.submit', {
                   default: 'Complete Profile',

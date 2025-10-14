@@ -7,7 +7,7 @@ import { useNextAuthSignIn } from '@/components/features/auth/hooks/useNextAuthS
 import { FormCard, PasswordField, PhoneField } from '@/components/shared/form';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
-import { InlineLoading } from '@/components/ui/loading-spinner';
+import { Spinner } from '@/components/ui/spinner';
 
 import { ROUTES_AUTH } from '../routes';
 
@@ -48,11 +48,10 @@ export function SignInForm() {
           <Button type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? (
               <>
-                <InlineLoading
-                  text={t('auth.signIn.submitting', {
-                    default: 'Signing In...',
-                  })}
-                />
+                <Spinner className="size-4 mr-2" />
+                {t('auth.signIn.submitting', {
+                  default: 'Signing In...',
+                })}
               </>
             ) : (
               t('auth.signIn.submit', { default: 'Sign In' })

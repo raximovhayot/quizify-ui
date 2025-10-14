@@ -7,7 +7,7 @@ import { useForgotPasswordForm } from '@/components/features/auth/hooks/useForgo
 import { FormCard, PhoneField } from '@/components/shared/form';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
-import { InlineLoading } from '@/components/ui/loading-spinner';
+import { Spinner } from '@/components/ui/spinner';
 
 import { ROUTES_AUTH } from '../routes';
 
@@ -35,9 +35,10 @@ export function ForgotPasswordForm() {
           />
           <Button type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? (
-              <InlineLoading
-                text={t('common.sending', { default: 'Sending...' })}
-              />
+              <>
+                <Spinner className="size-4 mr-2" />
+                {t('common.sending', { default: 'Sending...' })}
+              </>
             ) : (
               t('auth.forgotPassword.sendCode', {
                 default: 'Send Verification Code',

@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { InlineLoading } from '@/components/ui/loading-spinner';
+import { Spinner } from '@/components/ui/spinner';
 
 interface SubmitButtonProps {
   isSubmitting: boolean;
@@ -27,7 +27,14 @@ export function SubmitButton({
       disabled={isSubmitting || disabled}
       className={className}
     >
-      {isSubmitting ? <InlineLoading text={loadingText} /> : submitText}
+      {isSubmitting ? (
+        <>
+          <Spinner className="size-4 mr-2" />
+          {loadingText}
+        </>
+      ) : (
+        submitText
+      )}
     </Button>
   );
 }

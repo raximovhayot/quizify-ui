@@ -7,7 +7,7 @@ import { useSignUpForms } from '@/components/features/auth/hooks/useSignUpForms'
 import { FormCard, PhoneField } from '@/components/shared/form';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
-import { InlineLoading } from '@/components/ui/loading-spinner';
+import { Spinner } from '@/components/ui/spinner';
 
 import { ROUTES_AUTH } from '../routes';
 
@@ -36,11 +36,12 @@ export function SignUpForm() {
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? (
-              <InlineLoading
-                text={t('auth.signUp.sendingCode', {
+              <>
+                <Spinner className="size-4 mr-2" />
+                {t('auth.signUp.sendingCode', {
                   default: 'Sending Code...',
                 })}
-              />
+              </>
             ) : (
               t('auth.signUp.sendCode', { default: 'Send Verification Code' })
             )}

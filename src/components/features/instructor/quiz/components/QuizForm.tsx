@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 
 import { TQuizFormData, quizFormSchema } from '../schemas/quizSchema';
 import {
@@ -96,46 +97,43 @@ export function QuizForm({
         >
           {/* Basic Information */}
           <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="title">
-                {t('instructor.quiz.form.title', { default: 'Quiz Title' })}
-              </Label>
-              <Controller
-                name="title"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <div>
+            <Controller
+              name="title"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field>
+                  <FieldLabel htmlFor="title">
+                    {t('instructor.quiz.form.title', { default: 'Quiz Title' })}
+                  </FieldLabel>
+                  <FieldContent>
                     <Input
-                      {...field}
                       id="title"
                       placeholder={t('instructor.quiz.form.titlePlaceholder', {
                         fallback: 'Enter quiz title...',
                       })}
                       disabled={isSubmitting}
-                    />
-                    {fieldState.error && (
-                      <p className="text-sm text-destructive mt-1">
-                        {fieldState.error.message}
-                      </p>
-                    )}
-                  </div>
-                )}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="description">
-                {t('instructor.quiz.form.description', {
-                  fallback: 'Description',
-                })}
-              </Label>
-              <Controller
-                name="description"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <div>
-                    <Textarea
+                      aria-invalid={!!fieldState.error}
+                      aria-describedby={fieldState.error ? 'title-error' : undefined}
                       {...field}
+                    />
+                    <FieldError id="title-error">{fieldState.error?.message}</FieldError>
+                  </FieldContent>
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="description"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field>
+                  <FieldLabel htmlFor="description">
+                    {t('instructor.quiz.form.description', {
+                      fallback: 'Description',
+                    })}
+                  </FieldLabel>
+                  <FieldContent>
+                    <Textarea
                       id="description"
                       placeholder={t(
                         'instructor.quiz.form.descriptionPlaceholder',
@@ -145,16 +143,15 @@ export function QuizForm({
                       )}
                       disabled={isSubmitting}
                       rows={3}
+                      aria-invalid={!!fieldState.error}
+                      aria-describedby={fieldState.error ? 'description-error' : undefined}
+                      {...field}
                     />
-                    {fieldState.error && (
-                      <p className="text-sm text-destructive mt-1">
-                        {fieldState.error.message}
-                      </p>
-                    )}
-                  </div>
-                )}
-              />
-            </div>
+                    <FieldError id="description-error">{fieldState.error?.message}</FieldError>
+                  </FieldContent>
+                </Field>
+              )}
+            />
           </div>
 
           <Separator />
@@ -168,136 +165,143 @@ export function QuizForm({
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="time">
-                  {t('instructor.quiz.form.timeLimit', {
-                    fallback: 'Time Limit (minutes)',
-                  })}
-                </Label>
-                <Controller
-                  name="settings.time"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <div>
+              <Controller
+                name="settings.time"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel htmlFor="time">
+                      {t('instructor.quiz.form.timeLimit', {
+                        fallback: 'Time Limit (minutes)',
+                      })}
+                    </FieldLabel>
+                    <FieldContent>
                       <Input
-                        {...field}
                         id="time"
                         type="number"
-                        min="0"
+                        min={0}
                         placeholder="0"
                         disabled={isSubmitting}
-                        onChange={(e) =>
-                          field.onChange(Number(e.target.value) || 0)
-                        }
+                        value={field.value as number | string}
+                        name={field.name}
+                        onBlur={field.onBlur}
+                        ref={field.ref}
+                        onChange={(e) => field.onChange(Number(e.target.value) || 0)}
+                        aria-invalid={!!fieldState.error}
+                        aria-describedby={fieldState.error ? 'time-error' : undefined}
                       />
-                      {fieldState.error && (
-                        <p className="text-sm text-destructive mt-1">
-                          {fieldState.error.message}
-                        </p>
-                      )}
                       <p className="text-xs text-muted-foreground mt-1">
                         {t('instructor.quiz.form.timeLimitHelp', {
                           fallback: '0 means unlimited time',
                         })}
                       </p>
-                    </div>
-                  )}
-                />
-              </div>
+                      <FieldError id="time-error">{fieldState.error?.message}</FieldError>
+                    </FieldContent>
+                  </Field>
+                )}
+              />
 
-              <div className="space-y-2">
-                <Label htmlFor="attempt">
-                  {t('instructor.quiz.form.maxAttempts', {
-                    fallback: 'Max Attempts',
-                  })}
-                </Label>
-                <Controller
-                  name="settings.attempt"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <div>
+              <Controller
+                name="settings.attempt"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel htmlFor="attempt">
+                      {t('instructor.quiz.form.maxAttempts', {
+                        fallback: 'Max Attempts',
+                      })}
+                    </FieldLabel>
+                    <FieldContent>
                       <Input
-                        {...field}
                         id="attempt"
                         type="number"
-                        min="0"
+                        min={0}
                         placeholder="0"
                         disabled={isSubmitting}
-                        onChange={(e) =>
-                          field.onChange(Number(e.target.value) || 0)
-                        }
+                        value={field.value as number | string}
+                        name={field.name}
+                        onBlur={field.onBlur}
+                        ref={field.ref}
+                        onChange={(e) => field.onChange(Number(e.target.value) || 0)}
+                        aria-invalid={!!fieldState.error}
+                        aria-describedby={fieldState.error ? 'attempt-error' : undefined}
                       />
-                      {fieldState.error && (
-                        <p className="text-sm text-destructive mt-1">
-                          {fieldState.error.message}
-                        </p>
-                      )}
                       <p className="text-xs text-muted-foreground mt-1">
                         {t('instructor.quiz.form.maxAttemptsHelp', {
                           fallback: '0 means unlimited attempts',
                         })}
                       </p>
-                    </div>
-                  )}
-                />
-              </div>
+                      <FieldError id="attempt-error">{fieldState.error?.message}</FieldError>
+                    </FieldContent>
+                  </Field>
+                )}
+              />
             </div>
 
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="shuffleQuestions">
-                    {t('instructor.quiz.form.shuffleQuestions', {
-                      fallback: 'Shuffle Questions',
-                    })}
-                  </Label>
-                  <p className="text-xs text-muted-foreground m-0">
-                    {t('instructor.quiz.form.shuffleQuestionsHelp', {
-                      fallback:
-                        'Randomize the order of questions for each attempt',
-                    })}
-                  </p>
-                </div>
-                <Controller
-                  name="settings.shuffleQuestions"
-                  control={form.control}
-                  render={({ field }) => (
-                    <Switch
-                      id="shuffleQuestions"
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      disabled={isSubmitting}
-                    />
-                  )}
-                />
-              </div>
+              <Controller
+                name="settings.shuffleQuestions"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field className="flex items-center justify-between rounded-lg border px-3 py-3 min-h-12">
+                    <div className="space-y-0.5 min-w-0">
+                      <FieldLabel htmlFor="shuffleQuestions" className="text-sm">
+                        {t('instructor.quiz.form.shuffleQuestions', {
+                          fallback: 'Shuffle Questions',
+                        })}
+                      </FieldLabel>
+                      <p className="text-xs text-muted-foreground m-0">
+                        {t('instructor.quiz.form.shuffleQuestionsHelp', {
+                          fallback: 'Randomize the order of questions for each attempt',
+                        })}
+                      </p>
+                    </div>
+                    <FieldContent>
+                      <Switch
+                        id="shuffleQuestions"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        disabled={isSubmitting}
+                        aria-invalid={!!fieldState.error}
+                        aria-describedby={fieldState.error ? 'shuffleQuestions-error' : undefined}
+                      />
+                      <FieldError id="shuffleQuestions-error">{fieldState.error?.message}</FieldError>
+                    </FieldContent>
+                  </Field>
+                )}
+              />
 
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="shuffleAnswers">
-                    {t('instructor.quiz.form.shuffleAnswers', {
-                      fallback: 'Shuffle Answers',
-                    })}
-                  </Label>
-                  <p className="text-xs text-muted-foreground m-0">
-                    {t('instructor.quiz.form.shuffleAnswersHelp', {
-                      fallback: 'Randomize the order of answer choices',
-                    })}
-                  </p>
-                </div>
-                <Controller
-                  name="settings.shuffleAnswers"
-                  control={form.control}
-                  render={({ field }) => (
-                    <Switch
-                      id="shuffleAnswers"
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      disabled={isSubmitting}
-                    />
-                  )}
-                />
-              </div>
+              <Controller
+                name="settings.shuffleAnswers"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field className="flex items-center justify-between rounded-lg border px-3 py-3 min-h-12">
+                    <div className="space-y-0.5 min-w-0">
+                      <FieldLabel htmlFor="shuffleAnswers" className="text-sm">
+                        {t('instructor.quiz.form.shuffleAnswers', {
+                          fallback: 'Shuffle Answers',
+                        })}
+                      </FieldLabel>
+                      <p className="text-xs text-muted-foreground m-0">
+                        {t('instructor.quiz.form.shuffleAnswersHelp', {
+                          fallback: 'Randomize the order of answer choices',
+                        })}
+                      </p>
+                    </div>
+                    <FieldContent>
+                      <Switch
+                        id="shuffleAnswers"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        disabled={isSubmitting}
+                        aria-invalid={!!fieldState.error}
+                        aria-describedby={fieldState.error ? 'shuffleAnswers-error' : undefined}
+                      />
+                      <FieldError id="shuffleAnswers-error">{fieldState.error?.message}</FieldError>
+                    </FieldContent>
+                  </Field>
+                )}
+              />
             </div>
           </div>
 

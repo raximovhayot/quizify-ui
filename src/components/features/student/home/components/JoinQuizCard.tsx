@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, LogIn } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useTranslations } from 'next-intl';
@@ -11,15 +11,8 @@ import { useJoinQuiz } from '@/components/features/student/home/hooks/useJoinQui
 import { createJoinSchema } from '@/components/features/student/home/schemas/joinSchema';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form } from '@/components/ui/form';
+import { Field, FieldContent, FieldDescription, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 
 export function JoinQuizCard() {
@@ -62,55 +55,58 @@ export function JoinQuizCard() {
             onSubmit={form.handleSubmit(onSubmit)}
             className="mx-auto w-full max-w-xl"
           >
-            <FormField
+            <Controller
               control={form.control}
               name="code"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base font-medium">
+              render={({ field, fieldState }) => (
+                <Field>
+                  <FieldLabel htmlFor="code" className="text-base font-medium">
                     {t('student.home.joinLabel', { fallback: 'Join code' })}
-                  </FormLabel>
-                  <div className="flex flex-col md:flex-row items-stretch gap-3">
-                    <FormControl>
+                  </FieldLabel>
+                  <FieldContent>
+                    <div className="flex flex-col md:flex-row items-stretch gap-3">
                       <Input
+                        id="code"
                         className="h-12 text-base flex-1"
                         placeholder={t('student.home.joinPlaceholder', {
                           fallback: 'Enter join code',
                         })}
+                        aria-invalid={!!fieldState.error}
+                        aria-describedby={fieldState.error ? 'code-error' : undefined}
                         {...field}
                       />
-                    </FormControl>
-                    <Button
-                      type="submit"
-                      size="lg"
-                      className="h-12 shrink-0"
-                      disabled={form.formState.isSubmitting}
-                      aria-label={t('student.home.joinButton', {
-                        fallback: 'Join',
+                      <Button
+                        type="submit"
+                        size="lg"
+                        className="h-12 shrink-0"
+                        disabled={form.formState.isSubmitting}
+                        aria-label={t('student.home.joinButton', {
+                          fallback: 'Join',
+                        })}
+                      >
+                        {form.formState.isSubmitting ? (
+                          <>
+                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                            {t('common.pleaseWait', {
+                              fallback: 'Please wait...',
+                            })}
+                          </>
+                        ) : (
+                          <>
+                            <LogIn className="mr-2 h-5 w-5" />
+                            {t('student.home.joinButton', { fallback: 'Join' })}
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                    <FieldDescription>
+                      {t('student.home.joinDescription', {
+                        fallback: 'Enter the code provided by your instructor.',
                       })}
-                    >
-                      {form.formState.isSubmitting ? (
-                        <>
-                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                          {t('common.pleaseWait', {
-                            fallback: 'Please wait...',
-                          })}
-                        </>
-                      ) : (
-                        <>
-                          <LogIn className="mr-2 h-5 w-5" />
-                          {t('student.home.joinButton', { fallback: 'Join' })}
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                  <FormDescription>
-                    {t('student.home.joinDescription', {
-                      fallback: 'Enter the code provided by your instructor.',
-                    })}
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
+                    </FieldDescription>
+                    <FieldError id="code-error">{fieldState.error?.message}</FieldError>
+                  </FieldContent>
+                </Field>
               )}
             />
           </form>

@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, FileQuestion } from 'lucide-react';
 
 import React, { JSX } from 'react';
 
@@ -8,8 +8,8 @@ import { useTranslations } from 'next-intl';
 import { QuizDataDTO } from '@/components/features/instructor/quiz/types/quiz';
 import { ROUTES_APP } from '@/components/features/student/routes';
 
-import { EmptyState } from '@/components/shared/ui/EmptyState';
-import { List, ListItem } from '@/components/atomic/atoms';
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import { Item, ItemActions, ItemContent, ItemGroup, ItemTitle } from '@/components/ui/item';
 
 interface QuizSimpleListProps {
   items: QuizDataDTO[];
@@ -24,14 +24,28 @@ export function QuizSimpleList({
 }: QuizSimpleListProps) {
   const t = useTranslations();
   if (!items || items.length === 0) {
-    return <EmptyState icon={icon} message={emptyLabel} />;
+    return (
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia variant="icon">{icon ?? <FileQuestion className="size-6" />}</EmptyMedia>
+          <EmptyTitle>{emptyLabel}</EmptyTitle>
+        </EmptyHeader>
+      </Empty>
+    );
   }
   return (
-    <List>
+    <ItemGroup>
       {items.map((q) => (
-        <ListItem
-          key={q.id}
-          end={
+        <Item key={q.id} variant="outline">
+          <ItemContent>
+            <ItemTitle className="font-medium line-clamp-1">{q.title}</ItemTitle>
+            {q.description && (
+              <div className="text-sm text-muted-foreground line-clamp-1">
+                {q.description}
+              </div>
+            )}
+          </ItemContent>
+          <ItemActions>
             <Link
               className="inline-flex items-center gap-1 text-primary text-sm hover:underline"
               href={`${ROUTES_APP.baseUrl()}/quizzes/${q.id}`}
@@ -40,17 +54,10 @@ export function QuizSimpleList({
               {t('common.view', { fallback: 'View' })}
               <ArrowRight className="h-4 w-4" />
             </Link>
-          }
-        >
-          <div className="font-medium line-clamp-1">{q.title}</div>
-          {q.description && (
-            <div className="text-sm text-muted-foreground line-clamp-1">
-              {q.description}
-            </div>
-          )}
-        </ListItem>
+          </ItemActions>
+        </Item>
       ))}
-    </List>
+    </ItemGroup>
   );
 }
 
