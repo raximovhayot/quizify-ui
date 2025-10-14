@@ -5,8 +5,9 @@ import { useTranslations } from 'next-intl';
 
 import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput, InputGroupText } from '@/components/ui/input-group';
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from '@/components/ui/input-group';
 import { Eye, EyeOff } from 'lucide-react';
+import { PhoneField as SharedPhoneField } from '@/components/shared/form/PhoneField';
 
 interface BaseFormFieldProps<T extends FieldValues> {
   control: Control<T>;
@@ -21,36 +22,14 @@ export function PhoneField<T extends FieldValues>({
 }: BaseFormFieldProps<T>) {
   const t = useTranslations();
 
+  // Delegate to the shared Uzbekistan-only PhoneField with formatting
   return (
-    <Controller
+    <SharedPhoneField
       control={control}
       name={name as FieldPath<T>}
-      render={({ field, fieldState }) => (
-        <Field>
-          <FieldLabel htmlFor={String(name)}>
-            {t('auth.phone.label', { default: 'Phone Number' })}
-          </FieldLabel>
-          <FieldContent>
-            <InputGroup>
-              <InputGroupAddon align="inline-start">
-                <InputGroupText aria-hidden="true">+</InputGroupText>
-              </InputGroupAddon>
-              <InputGroupInput
-                id={String(name)}
-                type="tel"
-                placeholder={t('auth.phone.placeholder', {
-                  default: '+1234567890',
-                })}
-                disabled={disabled}
-                aria-invalid={!!fieldState.error}
-                aria-describedby={fieldState.error ? `${String(name)}-error` : undefined}
-                {...field}
-              />
-            </InputGroup>
-            <FieldError id={`${String(name)}-error`}>{fieldState.error?.message}</FieldError>
-          </FieldContent>
-        </Field>
-      )}
+      label={t('auth.phone.label', { default: 'Phone Number' })}
+      placeholder={t('auth.phone.placeholderUz', { default: '+998 90 123 45 67' })}
+      disabled={disabled}
     />
   );
 }
