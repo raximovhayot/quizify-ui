@@ -1,7 +1,5 @@
 'use client';
 
-import { XIcon } from 'lucide-react';
-
 import { useTranslations } from 'next-intl';
 
 import { useResponsive } from '@/components/shared/hooks/useResponsive';

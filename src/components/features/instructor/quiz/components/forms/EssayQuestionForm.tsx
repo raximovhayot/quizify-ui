@@ -4,7 +4,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { useTranslations } from 'next-intl';
 
-import { Label } from '@/components/ui/label';
+import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 import { Textarea } from '@/components/ui/textarea';
 
 import type { TInstructorQuestionForm } from '../../schemas/questionSchema';
@@ -36,21 +36,23 @@ export function EssayQuestionForm(props: EssayQuestionFormProps) {
         .gradingCriteria
     );
     return (
-      <div>
-        <Label htmlFor="gradingCriteria">
+      <Field>
+        <FieldLabel htmlFor="gradingCriteria">
           {t('common.question.essay.criteria', {
             fallback: 'Grading criteria',
           })}
-        </Label>
-        <Textarea
-          id="gradingCriteria"
-          rows={3}
-          {...register('gradingCriteria')}
-        />
-        {criteriaErrorMsg && (
-          <p className="text-sm text-destructive mt-1">{criteriaErrorMsg}</p>
-        )}
-      </div>
+        </FieldLabel>
+        <FieldContent>
+          <Textarea
+            id="gradingCriteria"
+            rows={3}
+            aria-invalid={!!criteriaErrorMsg}
+            aria-describedby={criteriaErrorMsg ? 'gradingCriteria-error' : undefined}
+            {...register('gradingCriteria')}
+          />
+          <FieldError id="gradingCriteria-error">{criteriaErrorMsg}</FieldError>
+        </FieldContent>
+      </Field>
     );
   }
 

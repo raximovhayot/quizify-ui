@@ -1,7 +1,5 @@
 'use client';
 
-import { XIcon } from 'lucide-react';
-
 import { useState } from 'react';
 
 import { useTranslations } from 'next-intl';

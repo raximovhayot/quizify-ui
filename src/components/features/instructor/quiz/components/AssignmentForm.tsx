@@ -20,7 +20,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { SubmitButton } from '@/components/ui/submit-button';
-import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 

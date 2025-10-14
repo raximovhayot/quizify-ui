@@ -1,4 +1,5 @@
 import { ReactNode, Suspense } from 'react';
+import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
 
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
@@ -21,7 +22,7 @@ export default async function PublicOnlyLayout({
   const messages = await getMessages();
 
   return (
-    <Suspense>
+    <Suspense fallback={<FullPageLoading />}>
       <PublicClientProviders>
         <NextIntlClientProvider
           messages={messages}

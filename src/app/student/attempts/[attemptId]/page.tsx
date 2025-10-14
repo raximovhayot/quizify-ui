@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 
+import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
 import AttemptPlayerClient from './attempt-player-client';
 
 interface PageProps {
@@ -13,7 +14,7 @@ export default function AttemptPage({ params }: PageProps) {
     return null;
   }
   return (
-    <Suspense>
+    <Suspense fallback={<FullPageLoading />}>
       <AttemptPlayerClient attemptId={id} />
     </Suspense>
   );

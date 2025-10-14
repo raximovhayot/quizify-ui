@@ -1,6 +1,5 @@
 "use client";
 
-import { XIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";

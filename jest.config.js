@@ -1,4 +1,5 @@
 import nextJest from 'next/jest.js';
+import { VirtualConsole } from 'jsdom';
 
 const createJestConfig = nextJest({
   // Provide the path to your Next.js app to load next.config.js and .env files
@@ -8,7 +9,7 @@ const createJestConfig = nextJest({
 // Add any custom config to be passed to Jest
 const customJestConfig = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  testEnvironment: 'jsdom',
+  testEnvironment: '<rootDir>/jest.custom-environment.js',
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
