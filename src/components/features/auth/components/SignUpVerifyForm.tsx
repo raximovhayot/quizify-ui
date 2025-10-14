@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { Controller } from 'react-hook-form';
 
 import { useSignUpForms } from '@/components/features/auth/hooks/useSignUpForms';
 import { Button } from '@/components/ui/button';
@@ -13,14 +14,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form } from '@/components/ui/form';
+import { Field, FieldContent, FieldLabel, FieldError } from '@/components/ui/field';
 import {
   InputOTP,
   InputOTPGroup,
@@ -70,21 +65,24 @@ export function SignUpVerifyForm() {
               </p>
             </div>
 
-            <FormField
+            <Controller
               control={verificationForm.control}
               name="otp"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
+              render={({ field, fieldState }) => (
+                <Field>
+                  <FieldLabel htmlFor="otp">
                     {t('auth.verification.label', {
                       default: 'Verification Code',
                     })}
-                  </FormLabel>
-                  <FormControl>
+                  </FieldLabel>
+                  <FieldContent>
                     <InputOTP
+                      id="otp"
                       maxLength={6}
                       disabled={isSubmitting}
                       containerClassName="w-full"
+                      aria-invalid={!!fieldState.error}
+                      aria-describedby={fieldState.error ? 'otp-error' : undefined}
                       {...field}
                     >
                       <InputOTPGroup className="w-full justify-center">
@@ -97,9 +95,9 @@ export function SignUpVerifyForm() {
                         <InputOTPSlot index={5} className="flex-1 max-w-12" />
                       </InputOTPGroup>
                     </InputOTP>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+                    <FieldError id="otp-error">{fieldState.error?.message}</FieldError>
+                  </FieldContent>
+                </Field>
               )}
             />
 

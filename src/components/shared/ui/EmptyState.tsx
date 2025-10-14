@@ -1,6 +1,13 @@
 import { AlertCircle, FileQuestion, Inbox } from 'lucide-react';
-
 import React, { JSX, ReactNode } from 'react';
+import {
+  Empty as UIEmpty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+  EmptyDescription,
+  EmptyContent,
+} from '@/components/ui/empty';
 
 interface EmptyStateProps {
   icon?: JSX.Element;
@@ -11,25 +18,10 @@ interface EmptyStateProps {
 }
 
 /**
- * Enhanced EmptyState component for displaying empty states
+ * EmptyState wrapper built on top of shadcn/ui `empty` component.
  *
- * Provides a consistent empty state UI with icon, message, optional description,
- * and optional action button. Supports multiple variants for different contexts.
- *
- * @example
- * ```tsx
- * // Inline variant (original)
- * <EmptyState message="No quizzes found" />
- *
- * // Large variant with action
- * <EmptyState
- *   variant="large"
- *   icon={<Inbox />}
- *   message="No quizzes yet"
- *   description="Create your first quiz to get started"
- *   action={<Button>Create Quiz</Button>}
- * />
- * ```
+ * Keeps the existing API stable while rendering with shadcn primitives.
+ * Prefer migrating call sites to use `@/components/ui/empty` directly over time.
  */
 export function EmptyState({
   icon,
@@ -38,7 +30,7 @@ export function EmptyState({
   action,
   variant = 'default',
 }: EmptyStateProps) {
-  // Inline variant (original implementation)
+  // Inline variant: compact row layout (no card frame)
   if (variant === 'inline') {
     return (
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -50,36 +42,20 @@ export function EmptyState({
     );
   }
 
-  // Large variant for centered empty states
-  if (variant === 'large') {
-    return (
-      <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-        <div className="mb-4 rounded-full bg-muted p-4">
-          {icon ?? <Inbox className="h-8 w-8 text-muted-foreground" />}
-        </div>
-        <h3 className="text-lg font-semibold mb-1">{message}</h3>
-        {description && (
-          <p className="text-sm text-muted-foreground mb-4">{description}</p>
-        )}
-        {action && <div className="mt-2">{action}</div>}
-      </div>
-    );
-  }
+  // Use shadcn/ui Empty composition for default and large variants
+  const FallbackIcon = variant === 'large' ? Inbox : FileQuestion;
 
-  // Default variant
   return (
-    <div className="flex flex-col items-center gap-3 py-8 text-center">
-      <div className="flex items-center justify-center text-muted-foreground">
-        {icon ?? <FileQuestion className="h-6 w-6" />}
-      </div>
-      <div className="space-y-1">
-        <p className="text-sm font-medium">{message}</p>
-        {description && (
-          <p className="text-xs text-muted-foreground">{description}</p>
-        )}
-      </div>
-      {action && <div>{action}</div>}
-    </div>
+    <UIEmpty className={variant === 'large' ? 'p-12 md:p-16' : undefined}>
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          {icon ?? <FallbackIcon className={variant === 'large' ? 'size-8' : 'size-6'} />}
+        </EmptyMedia>
+        <EmptyTitle>{message}</EmptyTitle>
+        {description && <EmptyDescription>{description}</EmptyDescription>}
+      </EmptyHeader>
+      {action && <EmptyContent>{action}</EmptyContent>}
+    </UIEmpty>
   );
 }
 

@@ -1,17 +1,12 @@
 import React from 'react';
+import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form';
 
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 
-interface PhoneFieldProps {
-  control: any; // eslint-disable-line @typescript-eslint/no-explicit-any
-  name: string;
+interface PhoneFieldProps<T extends FieldValues> {
+  control: Control<T>;
+  name: FieldPath<T>;
   label: string;
   placeholder?: string;
   disabled?: boolean;
@@ -20,44 +15,35 @@ interface PhoneFieldProps {
 /**
  * Reusable PhoneField component for phone number inputs
  *
- * Wraps a phone input field with consistent FormField structure including
- * label, control, and validation message display.
- *
- * @example
- * ```tsx
- * <PhoneField
- *   control={form.control}
- *   name="phone"
- *   label="Phone Number"
- *   placeholder="+1234567890"
- *   disabled={isSubmitting}
- * />
- * ```
+ * Now implemented with shadcn `field` primitives and RHF `Controller`.
  */
-export function PhoneField({
+export function PhoneField<T extends FieldValues>({
   control,
   name,
   label,
   placeholder = '+1234567890',
   disabled = false,
-}: PhoneFieldProps) {
+}: PhoneFieldProps<T>) {
   return (
-    <FormField
+    <Controller
       control={control}
       name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
-          <FormControl>
+      render={({ field, fieldState }) => (
+        <Field>
+          <FieldLabel htmlFor={String(name)}>{label}</FieldLabel>
+          <FieldContent>
             <Input
+              id={String(name)}
               type="tel"
               placeholder={placeholder}
               disabled={disabled}
+              aria-invalid={!!fieldState.error}
+              aria-describedby={fieldState.error ? `${String(name)}-error` : undefined}
               {...field}
             />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
+            <FieldError id={`${String(name)}-error`}>{fieldState.error?.message}</FieldError>
+          </FieldContent>
+        </Field>
       )}
     />
   );

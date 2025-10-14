@@ -1,15 +1,12 @@
-import { Control, FieldPath, FieldValues } from 'react-hook-form';
+import React from 'react';
+import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form';
 
 import { useTranslations } from 'next-intl';
 
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from '@/components/ui/input-group';
+import { Eye, EyeOff } from 'lucide-react';
 
 interface BaseFormFieldProps<T extends FieldValues> {
   control: Control<T>;
@@ -25,26 +22,29 @@ export function PhoneField<T extends FieldValues>({
   const t = useTranslations();
 
   return (
-    <FormField
+    <Controller
       control={control}
-      name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>
+      name={name as FieldPath<T>}
+      render={({ field, fieldState }) => (
+        <Field>
+          <FieldLabel htmlFor={String(name)}>
             {t('auth.phone.label', { default: 'Phone Number' })}
-          </FormLabel>
-          <FormControl>
+          </FieldLabel>
+          <FieldContent>
             <Input
+              id={String(name)}
               type="tel"
               placeholder={t('auth.phone.placeholder', {
                 default: '+1234567890',
               })}
               disabled={disabled}
+              aria-invalid={!!fieldState.error}
+              aria-describedby={fieldState.error ? `${String(name)}-error` : undefined}
               {...field}
             />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
+            <FieldError id={`${String(name)}-error`}>{fieldState.error?.message}</FieldError>
+          </FieldContent>
+        </Field>
       )}
     />
   );
@@ -62,31 +62,46 @@ export function PasswordField<T extends FieldValues>({
   placeholder,
 }: PasswordFieldProps<T>) {
   const t = useTranslations();
+  const [show, setShow] = React.useState(false);
 
   return (
-    <FormField
+    <Controller
       control={control}
-      name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>
+      name={name as FieldPath<T>}
+      render={({ field, fieldState }) => (
+        <Field>
+          <FieldLabel htmlFor={String(name)}>
             {t('auth.password.label', { default: 'Password' })}
-          </FormLabel>
-          <FormControl>
-            <Input
-              type="password"
-              placeholder={
-                placeholder ||
-                t('auth.password.placeholder', {
-                  default: 'Enter your password',
-                })
-              }
-              disabled={disabled}
-              {...field}
-            />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
+          </FieldLabel>
+          <FieldContent>
+            <InputGroup>
+              <InputGroupInput
+                id={String(name)}
+                type={show ? 'text' : 'password'}
+                placeholder={
+                  placeholder ||
+                  t('auth.password.placeholder', {
+                    default: 'Enter your password',
+                  })
+                }
+                disabled={disabled}
+                aria-invalid={!!fieldState.error}
+                aria-describedby={fieldState.error ? `${String(name)}-error` : undefined}
+                {...field}
+              />
+              <InputGroupAddon align="inline-end">
+                <InputGroupButton
+                  type="button"
+                  onClick={() => setShow((s) => !s)}
+                  aria-label={show ? 'Hide password' : 'Show password'}
+                >
+                  {show ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                </InputGroupButton>
+              </InputGroupAddon>
+            </InputGroup>
+            <FieldError id={`${String(name)}-error`}>{fieldState.error?.message}</FieldError>
+          </FieldContent>
+        </Field>
       )}
     />
   );
@@ -107,22 +122,25 @@ export function TextField<T extends FieldValues>({
   type = 'text',
 }: TextFieldProps<T>) {
   return (
-    <FormField
+    <Controller
       control={control}
-      name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
-          <FormControl>
+      name={name as FieldPath<T>}
+      render={({ field, fieldState }) => (
+        <Field>
+          <FieldLabel htmlFor={String(name)}>{label}</FieldLabel>
+          <FieldContent>
             <Input
+              id={String(name)}
               type={type}
               placeholder={placeholder}
               disabled={disabled}
+              aria-invalid={!!fieldState.error}
+              aria-describedby={fieldState.error ? `${String(name)}-error` : undefined}
               {...field}
             />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
+            <FieldError id={`${String(name)}-error`}>{fieldState.error?.message}</FieldError>
+          </FieldContent>
+        </Field>
       )}
     />
   );
