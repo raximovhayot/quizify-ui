@@ -145,3 +145,124 @@ Accessibility tips:
 - Keep labels associated via `htmlFor` and matching `id` on the control.
 - If you render helper or error text, give it a stable `id` and reference it from the control via `aria-describedby`.
 - Mark purely decorative icons with `aria-hidden`.
+
+
+---
+
+### Matching and Ranking patterns with Field
+
+Use `Field`, `FieldLabel`, `FieldContent`, and `FieldError` to group dynamic collections for Matching and Ranking question types.
+
+```tsx
+import { Field, FieldLabel, FieldContent, FieldError } from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+
+export function MatchingPairsExample({ pairs, onAdd, onRemove, register, errorId, errorText }: any) {
+  return (
+    <Field>
+      <FieldLabel>Matching pairs</FieldLabel>
+      <FieldContent>
+        <div className="space-y-3">
+          {pairs.map((_: any, index: number) => (
+            <div key={index} className="grid grid-cols-1 sm:grid-cols-5 gap-2 items-end">
+              <div className="sm:col-span-2 space-y-1">
+                <span className="text-xs text-muted-foreground sm:hidden" aria-hidden>
+                  Left
+                </span>
+                <Input placeholder="Left" {...register(`matchingPairs.${index}.left` as const)} />
+              </div>
+              <div className="sm:col-span-2 space-y-1">
+                <span className="text-xs text-muted-foreground sm:hidden" aria-hidden>
+                  Right
+                </span>
+                <Input placeholder="Right" {...register(`matchingPairs.${index}.right` as const)} />
+              </div>
+              <Button type="button" variant="destructive" size="sm" onClick={() => onRemove(index)} className="w-full sm:w-auto">
+                Remove
+              </Button>
+            </div>
+          ))}
+          <Button type="button" variant="outline" onClick={onAdd} className="w-full sm:w-auto">
+            Add
+          </Button>
+          <FieldError id={errorId}>{errorText}</FieldError>
+        </div>
+      </FieldContent>
+    </Field>
+  )
+}
+
+export function RankingItemsExample({ items, onAdd, onMove, onRemove, register, errorId, errorText }: any) {
+  return (
+    <Field>
+      <FieldLabel>Ranking items</FieldLabel>
+      <FieldContent>
+        <div className="space-y-3">
+          {items.map((_: any, index: number) => (
+            <div key={index} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+              <Input className="flex-1" placeholder="Item" {...register(`rankingItems.${index}` as const)} />
+              <div className="flex gap-2">
+                <Button type="button" size="sm" variant="secondary" onClick={() => onMove(index, Math.max(0, index - 1))} className="flex-1 sm:flex-none">
+                  Up
+                </Button>
+                <Button type="button" size="sm" variant="secondary" onClick={() => onMove(index, Math.min(items.length - 1, index + 1))} className="flex-1 sm:flex-none">
+                  Down
+                </Button>
+                <Button type="button" size="sm" variant="destructive" onClick={() => onRemove(index)} className="flex-1 sm:flex-none">
+                  Remove
+                </Button>
+              </div>
+            </div>
+          ))}
+          <Button type="button" variant="outline" onClick={onAdd} className="w-full sm:w-auto">
+            Add
+          </Button>
+          <FieldError id={errorId}>{errorText}</FieldError>
+        </div>
+      </FieldContent>
+    </Field>
+  )
+}
+```
+
+Notes:
+- Keep per-row micro captions for small screens as spans with `aria-hidden` unless they truly label an input.
+- Group-level labeling and errors should be handled by `Field`/`FieldLabel`/`FieldError`.
+
+---
+
+### Uzbekistan-only PhoneField example
+
+The shared `PhoneField` component enforces Uzbekistan-only numbers and formats input while keeping normalized E.164 in form state.
+
+```tsx
+import { Form } from '@/components/ui/form'
+import { PhoneField } from '@/components/shared/form/PhoneField'
+
+export function UzbekistanPhoneFieldDemo({ form, disabled }: any) {
+  return (
+    <Form {...form}>
+      <form>
+        <PhoneField
+          control={form.control}
+          name="phone"
+          label="Phone Number"
+          placeholder="+998 90 123 45 67"
+          disabled={disabled}
+        />
+      </form>
+    </Form>
+  )
+}
+```
+
+Behavior:
+- Display mask: `+998 XX XXX XX XX` with non-interactive add-on `🇺🇿 +998`.
+- Form state holds normalized E.164: `+998XXXXXXXXX`.
+- Robust input handling: pastes with spaces/dashes are normalized; non-digits are ignored; capped to 9 national digits.
+
+Accessibility:
+- `FieldLabel`/`htmlFor` links to the input `id`.
+- Errors rendered via `FieldError` and referenced from the control with `aria-describedby`.
+- Decorative country flag/prefix uses `aria-hidden`.

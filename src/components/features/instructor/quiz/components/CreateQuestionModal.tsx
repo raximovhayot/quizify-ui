@@ -17,7 +17,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { ScrollableDialogContent } from '@/components/shared/ui/ScrollableDialogContent';
-import { Label } from '@/components/ui/label';
+import { Field, FieldContent, FieldLabel } from '@/components/ui/field';
 import {
   Select,
   SelectContent,
@@ -65,31 +65,35 @@ export function CreateQuestionModal({
   const formContent = (
     <div className="space-y-4">
       <div>
-        <Label htmlFor="create-question-type">
-          {t('common.question.type.label', {
-            fallback: 'Question type',
-          })}
-        </Label>
-        <Select
-          value={selectedType}
-          onValueChange={(val) => setSelectedType(val as QuestionType)}
-          disabled={createQuestion.isPending}
-        >
-          <SelectTrigger id="create-question-type">
-            <SelectValue
-              placeholder={t('common.question.type.placeholder', {
-                fallback: 'Select type',
-              })}
-            />
-          </SelectTrigger>
-          <SelectContent>
-            {getAllQuestionTypes().map((type) => (
-              <SelectItem key={type} value={type}>
-                {getQuestionTypeLabel(t, type)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Field>
+          <FieldLabel htmlFor="create-question-type">
+            {t('common.question.type.label', {
+              fallback: 'Question type',
+            })}
+          </FieldLabel>
+          <FieldContent>
+            <Select
+              value={selectedType}
+              onValueChange={(val) => setSelectedType(val as QuestionType)}
+              disabled={createQuestion.isPending}
+            >
+              <SelectTrigger id="create-question-type">
+                <SelectValue
+                  placeholder={t('common.question.type.placeholder', {
+                    fallback: 'Select type',
+                  })}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                {getAllQuestionTypes().map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {getQuestionTypeLabel(t, type)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </FieldContent>
+        </Field>
       </div>
 
       <QuestionFormRenderer

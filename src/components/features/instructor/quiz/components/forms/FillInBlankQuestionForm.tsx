@@ -4,7 +4,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { useTranslations } from 'next-intl';
 
-import { Label } from '@/components/ui/label';
+import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 import { Textarea } from '@/components/ui/textarea';
 
 import type { TInstructorQuestionForm } from '../../schemas/questionSchema';
@@ -37,17 +37,23 @@ export function FillInBlankQuestionForm(
       (formState.errors as unknown as { blankTemplate?: unknown }).blankTemplate
     );
     return (
-      <div>
-        <Label htmlFor="blankTemplate">
+      <Field>
+        <FieldLabel htmlFor="blankTemplate">
           {t('common.question.fillInBlank.template', {
             fallback: 'Template',
           })}
-        </Label>
-        <Textarea id="blankTemplate" rows={3} {...register('blankTemplate')} />
-        {templateErrorMsg && (
-          <p className="text-sm text-destructive mt-1">{templateErrorMsg}</p>
-        )}
-      </div>
+        </FieldLabel>
+        <FieldContent>
+          <Textarea
+            id="blankTemplate"
+            rows={3}
+            aria-invalid={!!templateErrorMsg}
+            aria-describedby={templateErrorMsg ? 'blankTemplate-error' : undefined}
+            {...register('blankTemplate')}
+          />
+          <FieldError id="blankTemplate-error">{templateErrorMsg}</FieldError>
+        </FieldContent>
+      </Field>
     );
   }
 
