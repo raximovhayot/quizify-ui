@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 
 import { QuestionType } from '../../types/question';
 import type { BaseQuestionFormProps } from './BaseQuestionForm';
@@ -55,69 +55,69 @@ export function RankingQuestionForm(props: RankingQuestionFormProps) {
     );
 
     return (
-      <div className="space-y-2">
-        <Label>
+      <Field>
+        <FieldLabel>
           {t('common.question.ranking.items', {
             fallback: 'Ranking items',
           })}
-        </Label>
-        <div className="space-y-3">
-          {items.map((_, index) => (
-            <div
-              key={index}
-              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2"
-            >
-              <Input
-                className="flex-1"
-                placeholder={t('common.item', { fallback: 'Item' })}
-                {...register(`rankingItems.${index}` as const)}
-              />
-              <div className="flex gap-2">
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="secondary"
-                  onClick={() => moveItem(index, Math.max(0, index - 1))}
-                  className="flex-1 sm:flex-none"
-                >
-                  {t('common.up', { fallback: 'Up' })}
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="secondary"
-                  onClick={() =>
-                    moveItem(index, Math.min(items.length - 1, index + 1))
-                  }
-                  className="flex-1 sm:flex-none"
-                >
-                  {t('common.down', { fallback: 'Down' })}
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="destructive"
-                  onClick={() => removeItem(index)}
-                  className="flex-1 sm:flex-none"
-                >
-                  {t('common.remove', { fallback: 'Remove' })}
-                </Button>
+        </FieldLabel>
+        <FieldContent>
+          <div className="space-y-3">
+            {items.map((_, index) => (
+              <div
+                key={index}
+                className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2"
+              >
+                <Input
+                  className="flex-1"
+                  placeholder={t('common.item', { fallback: 'Item' })}
+                  {...register(`rankingItems.${index}` as const)}
+                />
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => moveItem(index, Math.max(0, index - 1))}
+                    className="flex-1 sm:flex-none"
+                  >
+                    {t('common.up', { fallback: 'Up' })}
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="secondary"
+                    onClick={() =>
+                      moveItem(index, Math.min(items.length - 1, index + 1))
+                    }
+                    className="flex-1 sm:flex-none"
+                  >
+                    {t('common.down', { fallback: 'Down' })}
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => removeItem(index)}
+                    className="flex-1 sm:flex-none"
+                  >
+                    {t('common.remove', { fallback: 'Remove' })}
+                  </Button>
+                </div>
               </div>
-            </div>
-          ))}
-          <Button
-            type="button"
-            variant="outline"
-            onClick={addItem}
-            className="w-full sm:w-auto"
-          >
-            {t('common.add', { fallback: 'Add' })}
-          </Button>
-          {rankingErrorMsg && (
-            <p className="text-sm text-destructive mt-1">{rankingErrorMsg}</p>
-          )}
-        </div>
-      </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              onClick={addItem}
+              className="w-full sm:w-auto"
+            >
+              {t('common.add', { fallback: 'Add' })}
+            </Button>
+            <FieldError id="rankingItems-error">{rankingErrorMsg}</FieldError>
+          </div>
+        </FieldContent>
+      </Field>
     );
   }
 

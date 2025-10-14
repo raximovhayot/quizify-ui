@@ -4,7 +4,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { useTranslations } from 'next-intl';
 
-import { Label } from '@/components/ui/label';
+import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 
 import type { TInstructorQuestionForm } from '../../schemas/questionSchema';
 import { QuestionType } from '../../types/question';
@@ -37,13 +37,13 @@ export function ShortAnswerQuestionForm(props: ShortAnswerQuestionFormProps) {
       (formState.errors as unknown as { answers?: unknown }).answers
     );
     return (
-      <div className="space-y-2">
-        <Label>{t('common.answers', { fallback: 'Answers' })}</Label>
-        <AnswerListEditor enforceCorrect disabled={props.isSubmitting} />
-        {answersErrorMsg && (
-          <p className="text-sm text-destructive mt-1">{answersErrorMsg}</p>
-        )}
-      </div>
+      <Field>
+        <FieldLabel>{t('common.answers', { fallback: 'Answers' })}</FieldLabel>
+        <FieldContent>
+          <AnswerListEditor enforceCorrect disabled={props.isSubmitting} />
+          <FieldError id="answers-error">{answersErrorMsg}</FieldError>
+        </FieldContent>
+      </Field>
     );
   }
 

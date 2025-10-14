@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 
 import { QuestionType } from '../../types/question';
 import type { BaseQuestionFormProps } from './BaseQuestionForm';
@@ -54,60 +54,60 @@ export function MatchingQuestionForm(props: MatchingQuestionFormProps) {
     );
 
     return (
-      <div className="space-y-2">
-        <Label>
+      <Field>
+        <FieldLabel>
           {t('common.question.matching.pairs', {
             fallback: 'Matching pairs',
           })}
-        </Label>
-        <div className="space-y-3">
-          {pairs.map((_, index) => (
-            <div
-              key={index}
-              className="grid grid-cols-1 sm:grid-cols-5 gap-2 items-end"
-            >
-              <div className="sm:col-span-2 space-y-1">
-                <Label className="text-xs text-muted-foreground sm:hidden">
-                  {t('common.left', { fallback: 'Left' })}
-                </Label>
-                <Input
-                  placeholder={t('common.left', { fallback: 'Left' })}
-                  {...register(`matchingPairs.${index}.left` as const)}
-                />
-              </div>
-              <div className="sm:col-span-2 space-y-1">
-                <Label className="text-xs text-muted-foreground sm:hidden">
-                  {t('common.right', { fallback: 'Right' })}
-                </Label>
-                <Input
-                  placeholder={t('common.right', { fallback: 'Right' })}
-                  {...register(`matchingPairs.${index}.right` as const)}
-                />
-              </div>
-              <Button
-                type="button"
-                variant="destructive"
-                size="sm"
-                onClick={() => handleRemove(index)}
-                className="w-full sm:w-auto"
+        </FieldLabel>
+        <FieldContent>
+          <div className="space-y-3">
+            {pairs.map((_, index) => (
+              <div
+                key={index}
+                className="grid grid-cols-1 sm:grid-cols-5 gap-2 items-end"
               >
-                {t('common.remove', { fallback: 'Remove' })}
-              </Button>
-            </div>
-          ))}
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handleAdd}
-            className="w-full sm:w-auto"
-          >
-            {t('common.add', { fallback: 'Add' })}
-          </Button>
-          {matchingErrorMsg && (
-            <p className="text-sm text-destructive mt-1">{matchingErrorMsg}</p>
-          )}
-        </div>
-      </div>
+                <div className="sm:col-span-2 space-y-1">
+                  <span className="text-xs text-muted-foreground sm:hidden">
+                    {t('common.left', { fallback: 'Left' })}
+                  </span>
+                  <Input
+                    placeholder={t('common.left', { fallback: 'Left' })}
+                    {...register(`matchingPairs.${index}.left` as const)}
+                  />
+                </div>
+                <div className="sm:col-span-2 space-y-1">
+                  <span className="text-xs text-muted-foreground sm:hidden">
+                    {t('common.right', { fallback: 'Right' })}
+                  </span>
+                  <Input
+                    placeholder={t('common.right', { fallback: 'Right' })}
+                    {...register(`matchingPairs.${index}.right` as const)}
+                  />
+                </div>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => handleRemove(index)}
+                  className="w-full sm:w-auto"
+                >
+                  {t('common.remove', { fallback: 'Remove' })}
+                </Button>
+              </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleAdd}
+              className="w-full sm:w-auto"
+            >
+              {t('common.add', { fallback: 'Add' })}
+            </Button>
+            <FieldError id="matchingPairs-error">{matchingErrorMsg}</FieldError>
+          </div>
+        </FieldContent>
+      </Field>
     );
   }
 
