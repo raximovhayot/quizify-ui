@@ -266,3 +266,67 @@ Accessibility:
 - `FieldLabel`/`htmlFor` links to the input `id`.
 - Errors rendered via `FieldError` and referenced from the control with `aria-describedby`.
 - Decorative country flag/prefix uses `aria-hidden`.
+
+
+---
+
+### Loader standardization with FullPageLoading
+
+Use `FullPageLoading` for route-level and large-block loading states. Always source user-facing text from `next-intl` and provide safe fallbacks.
+
+```tsx
+import { Suspense } from 'react'
+import { getTranslations } from 'next-intl/server'
+import { FullPageLoading } from '@/components/shared/ui/FullPageLoading'
+
+export default async function SomePage() {
+  const t = await getTranslations('common')
+  return (
+    <Suspense fallback={
+      <div className="py-16">
+        <FullPageLoading text={t('loading', { default: 'Loading...' })} />
+      </div>
+    }>
+      {/* Page content here */}
+    </Suspense>
+  )
+}
+```
+
+Notes:
+- Prefer `FullPageLoading` over bespoke spinners for async route boundaries.
+- For inline button/loading indicators, use `Spinner` next to text instead of old wrappers.
+
+---
+
+### Field-wrapped Select pattern (consistency + a11y)
+
+Wrap `Select` with `Field` primitives to keep labeling and `aria-describedby` consistent. Ensure the `FieldLabel` `htmlFor` matches the `SelectTrigger` `id`.
+
+```tsx
+import { Field, FieldLabel, FieldContent } from '@/components/ui/field'
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select'
+
+export function LabeledSelect({ value, onChange, disabled }: any) {
+  return (
+    <Field>
+      <FieldLabel htmlFor="demo-select">Select an option</FieldLabel>
+      <FieldContent>
+        <Select value={value} onValueChange={onChange} disabled={disabled}>
+          <SelectTrigger id="demo-select">
+            <SelectValue placeholder="Choose…" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="a">Option A</SelectItem>
+            <SelectItem value="b">Option B</SelectItem>
+          </SelectContent>
+        </Select>
+      </FieldContent>
+    </Field>
+  )
+}
+```
+
+Why:
+- Keeps visual and semantic consistency across inputs.
+- Ensures assistive technology announces the label when the control is focused.
