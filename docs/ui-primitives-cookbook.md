@@ -330,3 +330,38 @@ export function LabeledSelect({ value, onChange, disabled }: any) {
 Why:
 - Keeps visual and semantic consistency across inputs.
 - Ensures assistive technology announces the label when the control is focused.
+
+
+---
+
+### i18n keys for Uzbekistan-only PhoneField
+
+Always source the masked placeholder from i18n so it’s localized and not hardcoded. Use the `auth.phone.placeholderUz` key defined in all locales.
+
+```tsx
+import { useTranslations } from 'next-intl'
+import { Form } from '@/components/ui/form'
+import { PhoneField } from '@/components/shared/form/PhoneField'
+
+export function UzbekistanPhoneFieldI18nDemo({ form, disabled }: any) {
+  const t = useTranslations()
+  return (
+    <Form {...form}>
+      <form>
+        <PhoneField
+          control={form.control}
+          name="phone"
+          label={t('auth.phone.label', { default: 'Phone Number' })}
+          placeholder={t('auth.phone.placeholderUz', { default: '+998 90 123 45 67' })}
+          disabled={disabled}
+        />
+      </form>
+    </Form>
+  )
+}
+```
+
+Checklist:
+- Use `auth.phone.placeholderUz` for the display mask placeholder.
+- Keep display format as `+998 XX XXX XX XX` and store E.164 `+998XXXXXXXXX` in state.
+- Ensure `FieldLabel`/`htmlFor` matches input `id` and error text is referenced via `aria-describedby`.
