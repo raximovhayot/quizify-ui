@@ -7,8 +7,8 @@ import { useTranslations } from 'next-intl';
 
 import { RichTextField } from '@/components/shared/form/RichTextField';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
+import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from '@/components/ui/input-group';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -93,14 +93,19 @@ export function BaseQuestionForm({
                 {t('common.question.points', { fallback: 'Points' })}
               </FieldLabel>
               <FieldContent>
-                <Input
-                  id="points"
-                  type="number"
-                  min={0}
-                  aria-invalid={!!form.formState.errors.points}
-                  aria-describedby={form.formState.errors.points ? 'points-error' : undefined}
-                  {...form.register('points', { valueAsNumber: true })}
-                />
+                <InputGroup>
+                  <InputGroupInput
+                    id="points"
+                    type="number"
+                    min={0}
+                    aria-invalid={!!form.formState.errors.points}
+                    aria-describedby={form.formState.errors.points ? 'points-error' : undefined}
+                    {...form.register('points', { valueAsNumber: true })}
+                  />
+                  <InputGroupAddon align="inline-end">
+                    <InputGroupText aria-hidden="true">pts</InputGroupText>
+                  </InputGroupAddon>
+                </InputGroup>
                 <FieldError id="points-error">{form.formState.errors.points?.message as unknown as string}</FieldError>
               </FieldContent>
             </Field>
