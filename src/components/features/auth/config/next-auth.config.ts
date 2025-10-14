@@ -82,7 +82,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         phone: {
           label: 'Phone Number',
           type: 'tel',
-          placeholder: '+998901234567',
+          placeholder: '90 123 45 67',
         },
         password: {
           label: 'Password',

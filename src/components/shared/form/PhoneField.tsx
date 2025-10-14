@@ -22,6 +22,8 @@ function digitsOnly(value: string): string {
 
 function formatUzbekDisplay(e164OrPartial: string): string {
   // Expect values like "", "+998", or "+998" + up to 9 digits
+  // Returns ONLY the national part formatted as "XX XXX XX XX" (no +998),
+  // because the "+998" prefix is rendered separately in the addon.
   const digits = digitsOnly(e164OrPartial);
   let national = '';
   if (digits.startsWith('998')) {
@@ -41,7 +43,7 @@ function formatUzbekDisplay(e164OrPartial: string): string {
     if (c) chunks.push(c);
     if (d) chunks.push(d);
   }
-  return '+998' + (chunks.length ? ' ' + chunks.join(' ') : '');
+  return chunks.join(' ');
 }
 
 function normalizeUzbekToE164(input: string): string {
@@ -67,7 +69,7 @@ export function PhoneField<T extends FieldValues>({
   control,
   name,
   label,
-  placeholder = '+998 90 123 45 67',
+  placeholder = '90 123 45 67',
   disabled = false,
   allowedCountries = ['UZ'],
   defaultCountry = 'UZ',

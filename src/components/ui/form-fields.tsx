@@ -28,7 +28,7 @@ export function PhoneField<T extends FieldValues>({
       control={control}
       name={name as FieldPath<T>}
       label={t('auth.phone.label', { default: 'Phone Number' })}
-      placeholder={t('auth.phone.placeholderUz', { default: '+998 90 123 45 67' })}
+      placeholder={t('auth.phone.placeholder', { default: '90 123 45 67' })}
       disabled={disabled}
     />
   );

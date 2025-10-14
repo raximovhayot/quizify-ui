@@ -37,9 +37,18 @@ export interface QuestionDataDto {
 export interface InstructionAnswerSaveRequest {
   id?: number;
   content: string;
-  correct: boolean;
+  /**
+   * For Multiple Choice / Fill-in-Blank / Short Answer, indicates correctness.
+   * For Matching/Ranking, this is ignored by backend; you may omit.
+   */
+  correct?: boolean;
   order: number;
   attachmentId?: number;
+  /**
+   * Required for Matching questions: items that belong to the same pair must share the same key.
+   * Example: "pair-1", "pair-2" or UUIDs/numbered strings. Must be non-empty when questionType = matching.
+   */
+  matchingKey?: string;
 }
 
 export interface InstructorQuestionSaveRequest {
@@ -64,4 +73,10 @@ export interface QuestionFilter {
   page?: number;
   size?: number;
   [key: string]: unknown;
+}
+
+// Reorder payload item for questions within a quiz
+export interface QuestionReorderItem {
+  id: number;
+  order: number;
 }

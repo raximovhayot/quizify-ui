@@ -30,7 +30,7 @@ export function SignInForm() {
             name="phone"
             label={t('auth.phone.label', { default: 'Phone Number' })}
             placeholder={t('auth.phone.placeholder', {
-              default: '+1234567890',
+              default: '90 123 45 67',
             })}
             disabled={isSubmitting}
           />

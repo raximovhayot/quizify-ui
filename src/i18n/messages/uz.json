@@ -167,8 +167,7 @@
     },
     "phone": {
       "label": "Telefon raqami",
-      "placeholder": "+998901234567",
-      "placeholderUz": "+998 90 123 45 67"
+      "placeholder": "90 123 45 67"
     },
     "password": {
       "label": "Parol",

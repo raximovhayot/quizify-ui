@@ -6,41 +6,54 @@ import {
   InstructorQuestionSaveRequest,
   QuestionDataDto,
   QuestionFilter,
+  QuestionReorderItem,
 } from '../types/question';
+import {
+  instructorQuestionSaveSchema,
+  questionDataDtoSchema,
+  questionListSchema,
+} from '../schemas/questionSchema';
 
 export class QuestionService {
   static async createQuestion(
     data: InstructorQuestionSaveRequest
-  ): Promise<IApiResponse<QuestionDataDto>> {
+  ): Promise<QuestionDataDto> {
+    // Validate request before sending
+    const valid = instructorQuestionSaveSchema.parse(data);
+
     const response: IApiResponse<QuestionDataDto> = await apiClient.post(
       '/instructor/quizzes/:quizId/questions',
-      data,
-      { params: { quizId: data.quizId } }
+      valid,
+      { params: { quizId: valid.quizId } }
     );
-    return response;
+    const dto = extractApiData(response);
+    return questionDataDtoSchema.parse(dto);
   }
 
   static async updateQuestion(
     questionId: number,
     data: InstructorQuestionSaveRequest
-  ): Promise<IApiResponse<QuestionDataDto>> {
+  ): Promise<QuestionDataDto> {
+    const valid = instructorQuestionSaveSchema.parse(data);
+
     const response: IApiResponse<QuestionDataDto> = await apiClient.put(
       `/instructor/quizzes/:quizId/questions/:id`,
-      data,
-      { params: { quizId: data.quizId, id: questionId } }
+      valid,
+      { params: { quizId: valid.quizId, id: questionId } }
     );
-    return response;
+    const dto = extractApiData(response);
+    return questionDataDtoSchema.parse(dto);
   }
 
   static async deleteQuestion(
     quizId: number,
     questionId: number
-  ): Promise<IApiResponse<void>> {
+  ): Promise<void> {
     const response: IApiResponse<void> = await apiClient.delete(
       `/instructor/quizzes/:quizId/questions/:id`,
       { params: { quizId, id: questionId } }
     );
-    return response;
+    extractApiData(response);
   }
 
   static async getQuestions(
@@ -56,6 +69,32 @@ export class QuestionService {
           size: filter.size,
         },
       });
-    return extractApiData(response);
+    const data = extractApiData(response);
+    return questionListSchema.parse(data);
+  }
+
+  static async getQuestion(
+    quizId: number,
+    questionId: number,
+    signal?: AbortSignal
+  ): Promise<QuestionDataDto> {
+    const response: IApiResponse<QuestionDataDto> = await apiClient.get(
+      `/instructor/quizzes/:quizId/questions/:id`,
+      { signal, params: { quizId, id: questionId } }
+    );
+    const dto = extractApiData(response);
+    return questionDataDtoSchema.parse(dto);
+  }
+
+  static async reorderQuestions(
+    quizId: number,
+    items: QuestionReorderItem[]
+  ): Promise<void> {
+    const response: IApiResponse<void> = await apiClient.put(
+      `/instructor/quizzes/:quizId/questions/reorder`,
+      items,
+      { params: { quizId } }
+    );
+    extractApiData(response);
   }
 }

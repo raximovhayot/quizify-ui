@@ -30,7 +30,7 @@ export function ForgotPasswordForm() {
             control={phoneForm.control}
             name="phone"
             label={t('auth.phone.label', { default: 'Phone Number' })}
-            placeholder="+998901234567"
+            placeholder={t('auth.phone.placeholder', { default: '90 123 45 67' })}
             disabled={isSubmitting}
           />
           <Button type="submit" className="w-full" disabled={isSubmitting}>
