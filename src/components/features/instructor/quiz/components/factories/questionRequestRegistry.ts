@@ -10,29 +10,34 @@ import {
 /**
  * Question Request Strategy/Factory (Polymorphic Request Builders)
  *
- * Mirrors backend polymorphic request classes by providing per-QuestionType
- * strategies that transform a typed form (discriminated union) into a
- * normalized InstructorQuestionSaveRequest payload.
+ * Transforms a typed form (discriminated union) into an
+ * `InstructorQuestionSaveRequest` payload.
  *
- * Benefits:
- * - Eliminates big switch statements in transformers.
- * - Encapsulates per-type request specifics (fields, serialization) behind a
- *   stable interface.
- * - Matches our existing design-pattern approach (registries) and improves
- *   maintainability.
+ * Design goals:
+ * - No `any` and no ad‑hoc casts inside builders.
+ * - Keep base field mapping small and consistent.
+ * - Variant builders operate on their exact form shape.
  */
 
-export interface QuestionRequestBuilder {
-  build(form: TInstructorQuestionForm): InstructorQuestionSaveRequest;
+// Variant helpers for stronger typing
+type TMCQ = Extract<TInstructorQuestionForm, { questionType: QuestionType.MULTIPLE_CHOICE }>;
+type TTF = Extract<TInstructorQuestionForm, { questionType: QuestionType.TRUE_FALSE }>;
+type TSA = Extract<TInstructorQuestionForm, { questionType: QuestionType.SHORT_ANSWER }>;
+type TFIB = Extract<TInstructorQuestionForm, { questionType: QuestionType.FILL_IN_BLANK }>;
+type TEssay = Extract<TInstructorQuestionForm, { questionType: QuestionType.ESSAY }>;
+type TMatching = Extract<TInstructorQuestionForm, { questionType: QuestionType.MATCHING }>;
+type TRanking = Extract<TInstructorQuestionForm, { questionType: QuestionType.RANKING }>;
+
+export interface QuestionRequestBuilder<TForm extends TInstructorQuestionForm> {
+  build(form: TForm): InstructorQuestionSaveRequest;
 }
 
-// Common mapper for answer arrays (MCQ and Short Answer)
+// Common mapper for answer arrays (MCQ, Short Answer, Fill in Blank, Ranking)
 function mapAnswers(
-  answers?: ReadonlyArray<{
+  answers: ReadonlyArray<{
     id?: number;
     content: string;
     correct?: boolean;
-    order?: number;
     attachmentId?: number;
   }>
 ): InstructionAnswerSaveRequest[] {
@@ -40,125 +45,82 @@ function mapAnswers(
   return answers.map((a, idx) => ({
     id: a.id,
     content: a.content,
-    correct: !!a.correct,
+    correct: a.correct === true,
     order: idx,
     attachmentId: a.attachmentId,
   }));
 }
 
-// Base fields shared by all types
+// Base fields shared by all types (minimal, no attachmentId from form)
 function baseFields(
   form: TInstructorQuestionForm
 ): Pick<
   InstructorQuestionSaveRequest,
-  | 'quizId'
-  | 'questionType'
-  | 'content'
-  | 'explanation'
-  | 'order'
-  | 'points'
-  | 'attachmentId'
+  'quizId' | 'questionType' | 'content' | 'explanation' | 'order' | 'points'
 > {
   return {
     quizId: form.quizId,
     questionType: form.questionType,
     content: form.content,
     explanation: form.explanation,
-    order: form.order ?? 0,
-    points: form.points ?? 0,
-    attachmentId: (form as { attachmentId?: number }).attachmentId,
+    order: form.order,
+    points: form.points,
   };
 }
 
-// Type-specific builders
-const mcqBuilder: QuestionRequestBuilder = {
+// Type-specific builders (no casts needed inside)
+const mcqBuilder: QuestionRequestBuilder<TMCQ> = {
   build(form) {
-    const f = form as typeof form & {
-      answers?: {
-        id?: number;
-        content: string;
-        correct?: boolean;
-        order?: number;
-        attachmentId?: number;
-      }[];
-    };
     return {
       ...baseFields(form),
-      answers: mapAnswers(f.answers),
+      answers: mapAnswers(form.answers),
     };
   },
 };
 
-const trueFalseBuilder: QuestionRequestBuilder = {
+const trueFalseBuilder: QuestionRequestBuilder<TTF> = {
   build(form) {
-    const f = form as typeof form & { trueFalseAnswer?: boolean };
     return {
       ...baseFields(form),
-      trueFalseAnswer: !!f.trueFalseAnswer,
+      trueFalseAnswer: form.trueFalseAnswer,
       answers: [],
     };
   },
 };
 
-const shortAnswerBuilder: QuestionRequestBuilder = {
+const shortAnswerBuilder: QuestionRequestBuilder<TSA> = {
   build(form) {
-    const f = form as typeof form & {
-      answers?: {
-        id?: number;
-        content: string;
-        correct?: boolean;
-        order?: number;
-        attachmentId?: number;
-      }[];
-    };
     return {
       ...baseFields(form),
-      answers: mapAnswers(f.answers),
+      answers: mapAnswers(form.answers),
     };
   },
 };
 
-const fillInBlankBuilder: QuestionRequestBuilder = {
+const fillInBlankBuilder: QuestionRequestBuilder<TFIB> = {
   build(form) {
-    const f = form as typeof form & {
-      blankTemplate?: string;
-      answers?: {
-        id?: number;
-        content: string;
-        correct?: boolean;
-        order?: number;
-        attachmentId?: number;
-      }[];
-    };
     return {
       ...baseFields(form),
-      blankTemplate: f.blankTemplate ?? '',
-      answers: mapAnswers(f.answers),
+      blankTemplate: form.blankTemplate,
+      answers: mapAnswers(form.answers),
     };
   },
 };
 
-const essayBuilder: QuestionRequestBuilder = {
+const essayBuilder: QuestionRequestBuilder<TEssay> = {
   build(form) {
-    const f = form as typeof form & { gradingCriteria?: string };
     return {
       ...baseFields(form),
-      gradingCriteria: f.gradingCriteria ?? '',
+      gradingCriteria: form.gradingCriteria,
       answers: [],
     };
   },
 };
 
-const matchingBuilder: QuestionRequestBuilder = {
+const matchingBuilder: QuestionRequestBuilder<TMatching> = {
   build(form) {
-    // Support either pre-transformed matchingConfig or editable matchingPairs
-    const f = form as typeof form & {
-      matchingConfig?: string;
-      matchingPairs?: { left: string; right: string }[];
-    };
-
     // Build answers: for each pair, emit two answers with the same matchingKey
-    const pairs = (f.matchingPairs ?? []).filter(
+    const pairs = (form.matchingPairs ?? []).filter(
       (p) => p && p.left?.trim().length && p.right?.trim().length
     );
 
@@ -166,22 +128,14 @@ const matchingBuilder: QuestionRequestBuilder = {
     pairs.forEach((pair, idx) => {
       const matchingKey = `pair-${idx + 1}`; // stable readable key; can be swapped for UUIDs if needed
       answers.push(
-        {
-          content: pair.left,
-          order: answers.length,
-          matchingKey,
-        },
-        {
-          content: pair.right,
-          order: answers.length + 1,
-          matchingKey,
-        }
+        { content: pair.left, order: answers.length, matchingKey },
+        { content: pair.right, order: answers.length + 1, matchingKey }
       );
     });
 
     const matchingConfig =
-      typeof f.matchingConfig === 'string' && f.matchingConfig.length > 0
-        ? f.matchingConfig
+      typeof form.matchingConfig === 'string' && form.matchingConfig.length > 0
+        ? form.matchingConfig
         : JSON.stringify(
             pairs.map((p, i) => ({ left: p.left, right: p.right, key: `pair-${i + 1}` }))
           );
@@ -194,23 +148,17 @@ const matchingBuilder: QuestionRequestBuilder = {
   },
 };
 
-const rankingBuilder: QuestionRequestBuilder = {
+const rankingBuilder: QuestionRequestBuilder<TRanking> = {
   build(form) {
-    // Support either pre-transformed correctOrder or editable rankingItems
-    const f = form as typeof form & {
-      correctOrder?: string;
-      rankingItems?: string[];
-    };
-
-    const items = (f.rankingItems ?? []).filter((it) => it && it.trim().length);
+    const items = (form.rankingItems ?? []).filter((it) => it && it.trim().length);
     const answers: InstructionAnswerSaveRequest[] = items.map((content, idx) => ({
       content,
       order: idx,
     }));
 
     const correctOrder =
-      typeof f.correctOrder === 'string' && f.correctOrder.length > 0
-        ? f.correctOrder
+      typeof form.correctOrder === 'string' && form.correctOrder.length > 0
+        ? form.correctOrder
         : JSON.stringify(items);
 
     return {
@@ -221,17 +169,18 @@ const rankingBuilder: QuestionRequestBuilder = {
   },
 };
 
-const builders: Record<QuestionType, QuestionRequestBuilder> = {
-  [QuestionType.MULTIPLE_CHOICE]: mcqBuilder,
-  [QuestionType.TRUE_FALSE]: trueFalseBuilder,
-  [QuestionType.SHORT_ANSWER]: shortAnswerBuilder,
-  [QuestionType.FILL_IN_BLANK]: fillInBlankBuilder,
-  [QuestionType.ESSAY]: essayBuilder,
-  [QuestionType.MATCHING]: matchingBuilder,
-  [QuestionType.RANKING]: rankingBuilder,
+// Registry
+const builders: Record<QuestionType, QuestionRequestBuilder<TInstructorQuestionForm>> = {
+  [QuestionType.MULTIPLE_CHOICE]: mcqBuilder as unknown as QuestionRequestBuilder<TInstructorQuestionForm>,
+  [QuestionType.TRUE_FALSE]: trueFalseBuilder as unknown as QuestionRequestBuilder<TInstructorQuestionForm>,
+  [QuestionType.SHORT_ANSWER]: shortAnswerBuilder as unknown as QuestionRequestBuilder<TInstructorQuestionForm>,
+  [QuestionType.FILL_IN_BLANK]: fillInBlankBuilder as unknown as QuestionRequestBuilder<TInstructorQuestionForm>,
+  [QuestionType.ESSAY]: essayBuilder as unknown as QuestionRequestBuilder<TInstructorQuestionForm>,
+  [QuestionType.MATCHING]: matchingBuilder as unknown as QuestionRequestBuilder<TInstructorQuestionForm>,
+  [QuestionType.RANKING]: rankingBuilder as unknown as QuestionRequestBuilder<TInstructorQuestionForm>,
 };
 
-export function getRequestBuilder(type: QuestionType): QuestionRequestBuilder {
+export function getRequestBuilder(type: QuestionType): QuestionRequestBuilder<TInstructorQuestionForm> {
   return builders[type];
 }
 

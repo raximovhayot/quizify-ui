@@ -29,7 +29,7 @@ export function useReorderQuestions(quizId: number, filter: Record<string, unkno
 
       // Optimistically update current page content order
       qc.setQueryData<IPageableList<QuestionDataDto>>(key, (old) => {
-        if (!old) return old as unknown as IPageableList<QuestionDataDto>;
+        if (!old) return old;
         return {
           ...old,
           content: next.map((q, index) => ({ ...q, order: index })),

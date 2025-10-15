@@ -10,6 +10,21 @@ import {
 } from '../types/question';
 import { questionDataDtoSchema, questionListSchema } from '../schemas/questionSchema';
 
+function normalizeQuestion(dto: QuestionDataDto): QuestionDataDto {
+  const answers = Array.isArray(dto.answers) ? dto.answers : [];
+  const normalized = answers
+    .map((a, idx) => ({
+      ...a,
+      // ensure boolean correctness shape
+      correct: !!a.correct,
+      // fill missing or invalid order with current index
+      order: typeof a.order === 'number' && a.order >= 0 ? a.order : idx,
+    }))
+    .sort((a, b) => a.order - b.order);
+
+  return { ...dto, answers: normalized };
+}
+
 export class QuestionService {
   static async createQuestion(
     data: InstructorQuestionSaveRequest
@@ -20,7 +35,8 @@ export class QuestionService {
       { params: { quizId: data.quizId } }
     );
     const dto = extractApiData(response);
-    return questionDataDtoSchema.parse(dto);
+    const parsed = questionDataDtoSchema.parse(dto);
+    return normalizeQuestion(parsed);
   }
 
   static async updateQuestion(
@@ -33,7 +49,8 @@ export class QuestionService {
       { params: { quizId: data.quizId, id: questionId } }
     );
     const dto = extractApiData(response);
-    return questionDataDtoSchema.parse(dto);
+    const parsed = questionDataDtoSchema.parse(dto);
+    return normalizeQuestion(parsed);
   }
 
   static async deleteQuestion(
@@ -61,7 +78,11 @@ export class QuestionService {
         },
       });
     const data = extractApiData(response);
-    return questionListSchema.parse(data);
+    const parsed = questionListSchema.parse(data);
+    return {
+      ...parsed,
+      content: (parsed.content ?? []).map(normalizeQuestion),
+    };
   }
 
   static async getQuestion(
@@ -74,7 +95,8 @@ export class QuestionService {
       { signal, params: { quizId, id: questionId } }
     );
     const dto = extractApiData(response);
-    return questionDataDtoSchema.parse(dto);
+    const parsed = questionDataDtoSchema.parse(dto);
+    return normalizeQuestion(parsed);
   }
 
   static async reorderQuestions(

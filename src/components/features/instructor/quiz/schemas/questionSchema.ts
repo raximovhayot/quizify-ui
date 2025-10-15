@@ -4,14 +4,35 @@ import type { InstructorQuestionSaveRequest } from '../types/question';
 import { buildQuestionSaveRequest } from '../components/factories/questionRequestRegistry';
 import { pageableSchema } from '@/components/shared/schemas/pageable.schema';
 
-// Basic DTO schemas
+// Helpers to normalize nullable and boolean-like fields from backend safely
+const nullToUndefined = <T,>() =>
+  z.preprocess((val) => (val === null ? undefined : val), z.any()) as unknown as z.ZodType<T>;
+
+const booleanLike = z.preprocess((val) => {
+  if (typeof val === 'boolean') return val;
+  if (typeof val === 'number') return val !== 0;
+  if (typeof val === 'string') {
+    const v = val.trim().toLowerCase();
+    if (v === 'true' || v === '1') return true;
+    if (v === 'false' || v === '0') return false;
+  }
+  return val;
+}, z.boolean());
+
+// Basic DTO schemas (tolerant to common backend variations)
 export const answerDataDtoSchema = z.object({
   id: z.coerce.number().optional(),
   content: z.string().min(1),
   // Some backend variants (matching/ranking) may omit `correct` in AnswerDataDto
-  correct: z.boolean().optional().default(false),
-  order: z.coerce.number().int().nonnegative(),
-  attachmentId: z.coerce.number().optional(),
+  correct: booleanLike.optional().default(false),
+  // Some backends omit order or send null; parse to a sentinel and normalize later
+  order: z
+    .coerce
+    .number()
+    .int()
+    .nullish()
+    .transform((v) => (typeof v === 'number' && v >= 0 ? v : -1)),
+  attachmentId: z.coerce.number().optional().nullable().transform((v) => (v == null ? undefined : v)),
 });
 
 export const questionDataDtoSchema = z.object({
@@ -21,20 +42,22 @@ export const questionDataDtoSchema = z.object({
     z.nativeEnum(QuestionType)
   ),
   content: z.string(),
-  explanation: z.string().optional(),
+  explanation: z.preprocess((v) => (v == null ? undefined : v), z.string().optional()),
   order: z.coerce.number().int(),
   points: z.coerce.number().int().min(0),
-  gradingCriteria: z.string().optional(),
-  trueFalseAnswer: z.coerce.boolean().optional(),
+  gradingCriteria: z.preprocess((v) => (v == null ? undefined : v), z.string().optional()),
+  trueFalseAnswer: booleanLike.optional(),
   // The backend response DTO we saw did not include these, but frontend type includes for edit prefill.
-  blankTemplate: z.string().optional(),
-  matchingConfig: z.string().optional(),
-  correctOrder: z.string().optional(),
-  answers: z.array(answerDataDtoSchema).optional().default([]),
+  blankTemplate: z.preprocess((v) => (v == null ? undefined : v), z.string().optional()),
+  matchingConfig: z.preprocess((v) => (v == null ? undefined : v), z.string().optional()),
+  correctOrder: z.preprocess((v) => (v == null ? undefined : v), z.string().optional()),
+  answers: z
+    .array(answerDataDtoSchema)
+    .nullish()
+    .transform((v) => v ?? []),
 });
 
 export type TQuestionDataDto = z.infer<typeof questionDataDtoSchema>;
-
 
 export const questionListSchema = pageableSchema(questionDataDtoSchema);
 
