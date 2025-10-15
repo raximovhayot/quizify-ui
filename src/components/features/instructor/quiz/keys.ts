@@ -1,3 +1,5 @@
+import {QuestionFilter} from "@/components/features/instructor/quiz/types";
+
 export const quizKeys = {
   all: ['quizzes'] as const,
   lists: () => [...quizKeys.all, 'list'] as const,
@@ -10,6 +12,6 @@ export const quizKeys = {
 export const questionKeys = {
   all: ['questions'] as const,
   lists: () => [...questionKeys.all, 'list'] as const,
-  list: (filter: Record<string, unknown>) =>
+  list: (filter: QuestionFilter) =>
     [...questionKeys.lists(), filter] as const,
 } as const;

@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { useSession } from 'next-auth/react';
 
 import { IPageableList } from '@/types/common';
 
@@ -17,8 +16,6 @@ import { AssignmentDTO, AssignmentFilter } from '../types/assignment';
  * Mirrors quiz hooks patterns: session-gated, sensible cache times, stable keys.
  */
 export function useAssignments(filter: AssignmentFilter = {}) {
-  const { status } = useSession();
-
   return useQuery<IPageableList<AssignmentDTO>>({
     queryKey: assignmentKeys.list(filter),
     queryFn: async ({ signal }) => {
@@ -26,7 +23,6 @@ export function useAssignments(filter: AssignmentFilter = {}) {
       // Validate defensively at hook boundary as well
       return assignmentListResponseSchema.parse(data);
     },
-    enabled: status === 'authenticated',
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
   });
@@ -37,15 +33,13 @@ export function useAssignments(filter: AssignmentFilter = {}) {
  * Follows the same pattern as `useQuiz`.
  */
 export function useAssignment(id: number) {
-  const { status } = useSession();
-
   return useQuery<AssignmentDTO>({
     queryKey: assignmentKeys.detail(id),
     queryFn: async ({ signal }) => {
       const data = await AssignmentService.getAssignment(id, signal);
       return assignmentDataDTOSchema.parse(data);
     },
-    enabled: status === 'authenticated' && !!id,
+    enabled: !!id,
     staleTime: 2 * 60 * 1000, // 2 minutes (details are relatively stable)
     gcTime: 20 * 60 * 1000, // 20 minutes
     placeholderData: (prev) => prev,

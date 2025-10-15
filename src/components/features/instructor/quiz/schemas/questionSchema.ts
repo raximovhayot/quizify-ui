@@ -2,137 +2,107 @@ import { z } from 'zod';
 import { QuestionType } from '../types/question';
 import type { InstructorQuestionSaveRequest } from '../types/question';
 import { buildQuestionSaveRequest } from '../components/factories/questionRequestRegistry';
-import { pageableSchema } from '@/components/shared/schemas/pageable.schema';
 
-// Helpers to normalize nullable and boolean-like fields from backend safely
-const nullToUndefined = <T,>() =>
-  z.preprocess((val) => (val === null ? undefined : val), z.any()) as unknown as z.ZodType<T>;
+// =====================
+// Simplified schemas for backend data validation
+// =====================
 
-const booleanLike = z.preprocess((val) => {
-  if (typeof val === 'boolean') return val;
-  if (typeof val === 'number') return val !== 0;
-  if (typeof val === 'string') {
-    const v = val.trim().toLowerCase();
-    if (v === 'true' || v === '1') return true;
-    if (v === 'false' || v === '0') return false;
-  }
-  return val;
-}, z.boolean());
-
-// Basic DTO schemas (tolerant to common backend variations)
 export const answerDataDtoSchema = z.object({
-  id: z.coerce.number().optional(),
-  content: z.string().min(1),
-  // Some backend variants (matching/ranking) may omit `correct` in AnswerDataDto
-  correct: booleanLike.optional().default(false),
-  // Some backends omit order or send null; parse to a sentinel and normalize later
-  order: z
-    .coerce
-    .number()
-    .int()
-    .nullish()
-    .transform((v) => (typeof v === 'number' && v >= 0 ? v : -1)),
-  attachmentId: z.coerce.number().optional().nullable().transform((v) => (v == null ? undefined : v)),
+  id: z.number().optional(),
+  content: z.string(),
+  correct: z.boolean().default(false),
+  order: z.number().int(),
+  attachmentId: z.number().optional(),
+  matchingKey: z.string().optional(),
 });
 
 export const questionDataDtoSchema = z.object({
-  id: z.coerce.number(),
-  questionType: z.preprocess(
-    (val) => (typeof val === 'string' ? val.toLowerCase() : val),
-    z.nativeEnum(QuestionType)
-  ),
+  id: z.number(),
+  questionType: z.nativeEnum(QuestionType),
   content: z.string(),
-  explanation: z.preprocess((v) => (v == null ? undefined : v), z.string().optional()),
-  order: z.coerce.number().int(),
-  points: z.coerce.number().int().min(0),
-  gradingCriteria: z.preprocess((v) => (v == null ? undefined : v), z.string().optional()),
-  trueFalseAnswer: booleanLike.optional(),
-  // The backend response DTO we saw did not include these, but frontend type includes for edit prefill.
-  blankTemplate: z.preprocess((v) => (v == null ? undefined : v), z.string().optional()),
-  matchingConfig: z.preprocess((v) => (v == null ? undefined : v), z.string().optional()),
-  correctOrder: z.preprocess((v) => (v == null ? undefined : v), z.string().optional()),
-  answers: z
-    .array(answerDataDtoSchema)
-    .nullish()
-    .transform((v) => v ?? []),
+  explanation: z.string().optional(),
+  order: z.number().int(),
+  points: z.number().int().min(0),
+  answers: z.array(answerDataDtoSchema).default([]),
+  // Optional fields for specific question types
+  trueFalseAnswer: z.boolean().optional(),
+  blankTemplate: z.string().optional(),
+  gradingCriteria: z.string().optional(),
+  matchingConfig: z.string().optional(),
+  correctOrder: z.string().optional(),
 });
 
-export type TQuestionDataDto = z.infer<typeof questionDataDtoSchema>;
-
-export const questionListSchema = pageableSchema(questionDataDtoSchema);
-
 // =====================
-// Form schema (UI layer)
+// Form schemas for UI
 // =====================
-// Reusable answer schema for form-level questions (MCQ, Short Answer, Fill in Blank)
-const formStandardAnswerSchema = z.object({
+
+const formAnswerSchema = z.object({
   id: z.number().optional(),
-  content: z.string().min(1),
+  content: z.string().min(1, 'Answer content is required'),
   correct: z.boolean(),
   attachmentId: z.number().optional(),
 });
 
-// Base question fields reused by all form variants
-const baseFormQuestionFields = z.object({
+const baseQuestionFields = z.object({
   quizId: z.number(),
-  content: z.string().min(1),
+  content: z.string().min(1, 'Question content is required'),
   explanation: z.string().optional(),
-  points: z.number().int().min(0),
+  points: z.number().int().min(0, 'Points must be non-negative'),
   order: z.number().int().nonnegative(),
 });
 
 export const instructorQuestionFormSchema = z.discriminatedUnion('questionType', [
   // Multiple choice
-  baseFormQuestionFields.extend({
+  baseQuestionFields.extend({
     questionType: z.literal(QuestionType.MULTIPLE_CHOICE),
-    answers: z.array(formStandardAnswerSchema).min(2),
+    answers: z.array(formAnswerSchema).min(2, 'At least 2 answers required'),
   }),
+
   // True/False
-  baseFormQuestionFields.extend({
+  baseQuestionFields.extend({
     questionType: z.literal(QuestionType.TRUE_FALSE),
     trueFalseAnswer: z.boolean(),
   }),
+
   // Short answer
-  baseFormQuestionFields.extend({
+  baseQuestionFields.extend({
     questionType: z.literal(QuestionType.SHORT_ANSWER),
-    answers: z.array(formStandardAnswerSchema).min(1),
+    answers: z.array(formAnswerSchema).min(1, 'At least 1 answer required'),
   }),
+
   // Essay
-  baseFormQuestionFields.extend({
+  baseQuestionFields.extend({
     questionType: z.literal(QuestionType.ESSAY),
-    gradingCriteria: z.string().min(1),
+    gradingCriteria: z.string().min(1, 'Grading criteria required'),
   }),
+
   // Fill in blank
-  baseFormQuestionFields.extend({
+  baseQuestionFields.extend({
     questionType: z.literal(QuestionType.FILL_IN_BLANK),
-    blankTemplate: z.string().min(1),
-    answers: z.array(formStandardAnswerSchema).min(1),
+    blankTemplate: z.string().min(1, 'Blank template required'),
+    answers: z.array(formAnswerSchema).min(1, 'At least 1 answer required'),
   }),
+
   // Matching
-  baseFormQuestionFields.extend({
+  baseQuestionFields.extend({
     questionType: z.literal(QuestionType.MATCHING),
-    // Editable UI pairs; will be transformed into answers with matchingKey
     matchingPairs: z
       .array(z.object({ left: z.string().min(1), right: z.string().min(1) }))
-      .min(2),
-    // If present, we will prefer this JSON string
+      .min(2, 'At least 2 pairs required'),
     matchingConfig: z.string().optional(),
   }),
+
   // Ranking
-  baseFormQuestionFields.extend({
+  baseQuestionFields.extend({
     questionType: z.literal(QuestionType.RANKING),
-    // User-entered items; will be transformed into ordered answers
-    rankingItems: z.array(z.string().min(1)).min(2),
-    // If present, we prefer this JSON string
+    rankingItems: z.array(z.string().min(1)).min(2, 'At least 2 items required'),
     correctOrder: z.string().optional(),
   }),
 ]);
 
 export type TInstructorQuestionForm = z.infer<typeof instructorQuestionFormSchema>;
 
-// ------------------------------------------------------------------
-// Bridge helper: transform form → API request using the builders
-// ------------------------------------------------------------------
+// Transform form data to API request
 export function toInstructorQuestionSaveRequest(
   form: TInstructorQuestionForm
 ): InstructorQuestionSaveRequest {

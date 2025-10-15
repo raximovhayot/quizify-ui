@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QuestionService } from '../services/questionService';
 import { questionKeys } from '../keys';
 import type { IPageableList } from '@/types/common';
-import type { QuestionDataDto, QuestionReorderItem } from '../types/question';
+import type { QuestionDataDto, QuestionReorderItem, QuestionFilter } from '../types/question';
 
 export interface QuestionsFilter {
   quizId: number;
@@ -14,7 +14,7 @@ export interface QuestionsFilter {
  * Reorder questions within a quiz using optimistic updates.
  * Accepts the filter used by useQuestions to ensure the cache key matches exactly.
  */
-export function useReorderQuestions(quizId: number, filter: Record<string, unknown>) {
+export function useReorderQuestions(quizId: number, filter: QuestionFilter) {
   const qc = useQueryClient();
 
   return useMutation({

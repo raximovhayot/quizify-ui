@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { useSession } from 'next-auth/react';
 
 import { attemptHistoryKeys } from '@/components/features/student/history';
 import { StudentAttemptService } from '@/components/features/student/history/services/studentAttemptService';
@@ -19,7 +18,6 @@ export interface AttemptHistoryFilter {
 }
 
 export function useAttemptHistory(filter: AttemptHistoryFilter = {}) {
-  const { status: authStatus } = useSession();
   const status =
     filter.status === '' || filter.status === undefined
       ? undefined
@@ -36,7 +34,6 @@ export function useAttemptHistory(filter: AttemptHistoryFilter = {}) {
         size,
       });
     },
-    enabled: authStatus === 'authenticated',
     staleTime: 60_000,
     gcTime: 5 * 60_000,
   });
