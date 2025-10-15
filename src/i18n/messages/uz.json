@@ -511,6 +511,7 @@
         "filtered": "{total} dan"
       },
       "table": {
+        "aria": "Testlar jadvali",
         "title": "Sarlavha",
         "status": "Holat",
         "questions": "Savollar",

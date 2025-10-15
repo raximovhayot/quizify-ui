@@ -14,6 +14,7 @@ import {
   useQuestions,
   useUpdateQuestion,
 } from '../hooks/useQuestions';
+import { useReorderQuestions } from '../hooks/useReorderQuestions';
 import {
   TInstructorQuestionForm,
   toInstructorQuestionSaveRequest,
@@ -41,16 +42,59 @@ export function QuestionsList({
     useState<QuestionDataDto | null>(null);
   const [showAnswers, setShowAnswers] = useState(false);
 
+  const filter = { quizId, page: 0, size: 100 } as const;
   const {
     data: questionsData,
     isLoading,
     error,
-  } = useQuestions({ quizId, page: 0, size: 100 });
+  } = useQuestions(filter);
 
   const updateQuestionMutation = useUpdateQuestion();
   const deleteQuestionMutation = useDeleteQuestion();
+  const reorderMutation = useReorderQuestions(quizId, filter);
 
   const questions = questionsData?.content || [];
+
+  const reorder = (fromIndex: number, toIndex: number) => {
+    if (
+      reorderMutation.isPending ||
+      fromIndex === toIndex ||
+      fromIndex < 0 ||
+      toIndex < 0 ||
+      fromIndex >= questions.length ||
+      toIndex >= questions.length
+    ) {
+      return;
+    }
+    const next = [...questions];
+    const [moved] = next.splice(fromIndex, 1);
+    if (!moved) return;
+    next.splice(toIndex, 0, moved);
+    const normalized = next.map((q, idx) => ({ ...q, order: idx }));
+    reorderMutation.mutate(normalized);
+  };
+
+  const onDragStart = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+    if (reorderMutation.isPending) return;
+    e.dataTransfer.setData('text/plain', String(index));
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    if (reorderMutation.isPending) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const onDrop = (e: React.DragEvent<HTMLDivElement>, toIndex: number) => {
+    if (reorderMutation.isPending) return;
+    e.preventDefault();
+    const fromStr = e.dataTransfer.getData('text/plain');
+    const fromIndex = Number(fromStr);
+    if (Number.isFinite(fromIndex)) {
+      reorder(fromIndex, toIndex);
+    }
+  };
 
   const handleEditQuestion = async (formData: TInstructorQuestionForm) => {
     if (!editingQuestion) return;
@@ -145,16 +189,26 @@ export function QuestionsList({
           onToggleShowAnswers={() => setShowAnswers((v) => !v)}
           onAddQuestion={onAddQuestion}
         />
-        <div className="space-y-4">
+        <div className="space-y-4" role="list" aria-label={t('common.reorderQuestions.ariaList', { fallback: 'Questions (drag to reorder)' })}>
           {questions.map((question, index) => (
-            <QuestionListItem
+            <div
               key={question.id}
-              question={question}
-              index={index}
-              showAnswers={showAnswers}
-              onEdit={(q) => setEditingQuestion(q)}
-              onDelete={(q) => setDeletingQuestion(q)}
-            />
+              role="listitem"
+              draggable={!reorderMutation.isPending}
+              aria-grabbed={false}
+              aria-label={t('common.dragToReorder', { fallback: 'Drag to reorder' })}
+              onDragStart={(e) => onDragStart(e, index)}
+              onDragOver={onDragOver}
+              onDrop={(e) => onDrop(e, index)}
+            >
+              <QuestionListItem
+                question={question}
+                index={index}
+                showAnswers={showAnswers}
+                onEdit={(q) => setEditingQuestion(q)}
+                onDelete={(q) => setDeletingQuestion(q)}
+              />
+            </div>
           ))}
         </div>
       </div>

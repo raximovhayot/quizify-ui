@@ -108,7 +108,11 @@ function QuizTableComponent({
       </div>
 
       {/* Table */}
-      <div className="rounded-md border">
+      <div
+        className="rounded-md border overflow-x-auto"
+        role="region"
+        aria-label={t('instructor.quiz.table.aria', { fallback: 'Quizzes table' })}
+      >
         <Table>
           <QuizTableHeader
             sortField={sortField}

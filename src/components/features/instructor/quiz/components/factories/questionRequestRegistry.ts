@@ -120,11 +120,20 @@ const shortAnswerBuilder: QuestionRequestBuilder = {
 
 const fillInBlankBuilder: QuestionRequestBuilder = {
   build(form) {
-    const f = form as typeof form & { blankTemplate?: string };
+    const f = form as typeof form & {
+      blankTemplate?: string;
+      answers?: {
+        id?: number;
+        content: string;
+        correct?: boolean;
+        order?: number;
+        attachmentId?: number;
+      }[];
+    };
     return {
       ...baseFields(form),
       blankTemplate: f.blankTemplate ?? '',
-      answers: [],
+      answers: mapAnswers(f.answers),
     };
   },
 };
@@ -147,19 +156,40 @@ const matchingBuilder: QuestionRequestBuilder = {
       matchingConfig?: string;
       matchingPairs?: { left: string; right: string }[];
     };
+
+    // Build answers: for each pair, emit two answers with the same matchingKey
+    const pairs = (f.matchingPairs ?? []).filter(
+      (p) => p && p.left?.trim().length && p.right?.trim().length
+    );
+
+    const answers: InstructionAnswerSaveRequest[] = [];
+    pairs.forEach((pair, idx) => {
+      const matchingKey = `pair-${idx + 1}`; // stable readable key; can be swapped for UUIDs if needed
+      answers.push(
+        {
+          content: pair.left,
+          order: answers.length,
+          matchingKey,
+        },
+        {
+          content: pair.right,
+          order: answers.length + 1,
+          matchingKey,
+        }
+      );
+    });
+
     const matchingConfig =
       typeof f.matchingConfig === 'string' && f.matchingConfig.length > 0
         ? f.matchingConfig
         : JSON.stringify(
-            (f.matchingPairs ?? []).map((p) => ({
-              left: p.left,
-              right: p.right,
-            }))
+            pairs.map((p, i) => ({ left: p.left, right: p.right, key: `pair-${i + 1}` }))
           );
+
     return {
       ...baseFields(form),
       matchingConfig,
-      answers: [],
+      answers,
     };
   },
 };
@@ -171,14 +201,22 @@ const rankingBuilder: QuestionRequestBuilder = {
       correctOrder?: string;
       rankingItems?: string[];
     };
+
+    const items = (f.rankingItems ?? []).filter((it) => it && it.trim().length);
+    const answers: InstructionAnswerSaveRequest[] = items.map((content, idx) => ({
+      content,
+      order: idx,
+    }));
+
     const correctOrder =
       typeof f.correctOrder === 'string' && f.correctOrder.length > 0
         ? f.correctOrder
-        : JSON.stringify(f.rankingItems ?? []);
+        : JSON.stringify(items);
+
     return {
       ...baseFields(form),
       correctOrder,
-      answers: [],
+      answers,
     };
   },
 };

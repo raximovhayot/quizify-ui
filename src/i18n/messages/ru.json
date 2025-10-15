@@ -502,6 +502,7 @@
         "filtered": "из {total}"
       },
       "table": {
+        "aria": "Таблица тестов",
         "title": "Название",
         "status": "Статус",
         "questions": "Вопросы",

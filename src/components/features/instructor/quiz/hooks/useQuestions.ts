@@ -33,7 +33,8 @@ export function useCreateQuestion() {
 
   return createMutation<QuestionDataDto, InstructorQuestionSaveRequest>({
     mutationFn: async (data) => {
-      return await QuestionService.createQuestion(data);
+      const dto = await QuestionService.createQuestion(data);
+      return { data: dto, errors: [] };
     },
     successMessage: t('common.entities.question.createSuccess', {
       fallback: 'Question created successfully',
@@ -56,7 +57,8 @@ export function useUpdateQuestion() {
     { questionId: number; data: InstructorQuestionSaveRequest }
   >({
     mutationFn: async ({ questionId, data }) => {
-      return await QuestionService.updateQuestion(questionId, data);
+      const dto = await QuestionService.updateQuestion(questionId, data);
+      return { data: dto, errors: [] };
     },
     successMessage: t('common.entities.question.updateSuccess', {
       fallback: 'Question updated successfully',
@@ -74,7 +76,8 @@ export function useDeleteQuestion() {
 
   return createMutation<void, { quizId: number; questionId: number }>({
     mutationFn: async ({ quizId, questionId }) => {
-      return await QuestionService.deleteQuestion(quizId, questionId);
+      await QuestionService.deleteQuestion(quizId, questionId);
+      return { data: undefined, errors: [] } as const;
     },
     successMessage: t('common.entities.question.deleteSuccess', {
       fallback: 'Question deleted successfully',

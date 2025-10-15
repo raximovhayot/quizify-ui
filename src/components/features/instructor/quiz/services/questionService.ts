@@ -8,23 +8,16 @@ import {
   QuestionFilter,
   QuestionReorderItem,
 } from '../types/question';
-import {
-  instructorQuestionSaveSchema,
-  questionDataDtoSchema,
-  questionListSchema,
-} from '../schemas/questionSchema';
+import { questionDataDtoSchema, questionListSchema } from '../schemas/questionSchema';
 
 export class QuestionService {
   static async createQuestion(
     data: InstructorQuestionSaveRequest
   ): Promise<QuestionDataDto> {
-    // Validate request before sending
-    const valid = instructorQuestionSaveSchema.parse(data);
-
     const response: IApiResponse<QuestionDataDto> = await apiClient.post(
       '/instructor/quizzes/:quizId/questions',
-      valid,
-      { params: { quizId: valid.quizId } }
+      data,
+      { params: { quizId: data.quizId } }
     );
     const dto = extractApiData(response);
     return questionDataDtoSchema.parse(dto);
@@ -34,12 +27,10 @@ export class QuestionService {
     questionId: number,
     data: InstructorQuestionSaveRequest
   ): Promise<QuestionDataDto> {
-    const valid = instructorQuestionSaveSchema.parse(data);
-
     const response: IApiResponse<QuestionDataDto> = await apiClient.put(
       `/instructor/quizzes/:quizId/questions/:id`,
-      valid,
-      { params: { quizId: valid.quizId, id: questionId } }
+      data,
+      { params: { quizId: data.quizId, id: questionId } }
     );
     const dto = extractApiData(response);
     return questionDataDtoSchema.parse(dto);

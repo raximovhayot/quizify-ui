@@ -170,7 +170,7 @@
     },
     "phone": {
       "label": "Phone Number",
-      "placeholder": "90 123 45 67",
+      "placeholder": "90 123 45 67"
     },
     "password": {
       "label": "Password",
@@ -483,6 +483,7 @@
         "filtered": "of {total}"
       },
       "table": {
+        "aria": "Quizzes table",
         "title": "Title",
         "status": "Status",
         "questions": "Questions",
@@ -526,6 +527,7 @@
         "aria": "Quiz row for {title}"
       },
       "create": {
+        "dialogTitle": "Create Quiz",
         "button": "Create Quiz",
         "success": "Quiz created successfully"
       },

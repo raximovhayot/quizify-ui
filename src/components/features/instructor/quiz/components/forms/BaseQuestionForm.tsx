@@ -33,28 +33,6 @@ export interface BaseQuestionFormProps {
   children?: React.ReactNode; // type-specific fields rendered inside form
 }
 
-/**
- * BaseQuestionForm
- *
- * What it is:
- * - A shared form wrapper used by every specific question type form
- *   (MultipleChoice, TrueFalse, ShortAnswer, FillInBlank, Essay, Matching, Ranking).
- * - It centralizes the common form setup (react-hook-form + Zod resolver),
- *   shared fields (points, content, explanation, submit/cancel), and submission flow.
- * - It enforces a fixed question type (fixedType) for the given form, so each
- *   type-specific form doesn’t need to render or manage a type selector.
- *
- * Why we need it:
- * - Removes duplication: previously each question-type form duplicated the same
- *   form provider, schema resolver, common inputs, and buttons.
- * - Ensures consistency: validation and UI for shared fields behave identically
- *   across all question types.
- * - Safer composition: children render only type-specific fields while the base
- *   guarantees the surrounding provider/context is valid (prevents useFormContext
- *   usage errors outside of a FormProvider).
- * - Plays well with the Strategy/Abstract Factory registry (QuestionFormRenderer):
- *   the registry picks the concrete type component; each of those composes this base.
- */
 export function BaseQuestionForm({
   quizId,
   fixedType,
@@ -66,10 +44,6 @@ export function BaseQuestionForm({
   children,
 }: Readonly<BaseQuestionFormProps>) {
   const t = useTranslations();
-
-  // Defaults are provided by the Question Defaults Strategy/Factory
-  // (see ../factories/questionDefaultsRegistry) to keep this base form lean
-  // and aligned with our design-pattern approach.
 
   const form = useForm<TInstructorQuestionForm>({
     resolver: zodResolver(instructorQuestionFormSchema),
@@ -106,7 +80,7 @@ export function BaseQuestionForm({
                     <InputGroupText aria-hidden="true">pts</InputGroupText>
                   </InputGroupAddon>
                 </InputGroup>
-                <FieldError id="points-error">{form.formState.errors.points?.message as unknown as string}</FieldError>
+                <FieldError id="points-error" errors={[form.formState.errors.points]} />
               </FieldContent>
             </Field>
           </div>
@@ -144,7 +118,7 @@ export function BaseQuestionForm({
                 aria-describedby={form.formState.errors.explanation ? 'explanation-error' : undefined}
                 {...form.register('explanation')}
               />
-              <FieldError id="explanation-error">{form.formState.errors.explanation?.message as unknown as string}</FieldError>
+              <FieldError id="explanation-error" errors={[form.formState.errors.explanation]} />
             </FieldContent>
           </Field>
         </div>

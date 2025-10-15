@@ -101,35 +101,35 @@ function QuizTableRowComponent({
   };
 
   return (
-    <TableRow
-      className="hover:bg-muted/50 transition-colors cursor-pointer focus:bg-muted/50"
-      onClick={handleRowClick}
-      onKeyDown={handleKeyDown}
-      tabIndex={0}
-      role="button"
-      aria-label={t('instructor.quiz.row.aria', {
-        fallback: 'Quiz row for {title}',
-        title:
-          quiz.title?.trim() ||
-          t('instructor.quiz.untitled', { fallback: 'Untitled' }),
-      })}
-    >
+    <TableRow className="hover:bg-muted/50 transition-colors">
       {/* Title Column with Search Highlighting */}
       <TableCell>
-        <div className="space-y-1">
-          <div className="font-medium leading-none">
-            {highlightText(
+        <button
+          type="button"
+          onClick={() => router.push(ROUTES_APP.quizzes.detail(quiz.id))}
+          className="w-full text-left rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          aria-label={t('instructor.quiz.row.aria', {
+            fallback: 'Open quiz {title}',
+            title:
               quiz.title?.trim() ||
-                t('instructor.quiz.untitled', { fallback: 'Untitled' }),
-              searchQuery
+              t('instructor.quiz.untitled', { fallback: 'Untitled' }),
+          })}
+        >
+          <div className="space-y-1">
+            <div className="font-medium leading-none">
+              {highlightText(
+                quiz.title?.trim() ||
+                  t('instructor.quiz.untitled', { fallback: 'Untitled' }),
+                searchQuery
+              )}
+            </div>
+            {quiz.description && (
+              <div className="text-sm text-muted-foreground line-clamp-2">
+                {highlightText(quiz.description, searchQuery)}
+              </div>
             )}
           </div>
-          {quiz.description && (
-            <div className="text-sm text-muted-foreground line-clamp-2">
-              {highlightText(quiz.description, searchQuery)}
-            </div>
-          )}
-        </div>
+        </button>
       </TableCell>
 
       {/* Status Column */}

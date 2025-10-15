@@ -1,24 +1,31 @@
 import { z } from 'zod';
 import { QuestionType } from '../types/question';
+import type { InstructorQuestionSaveRequest } from '../types/question';
+import { buildQuestionSaveRequest } from '../components/factories/questionRequestRegistry';
+import { pageableSchema } from '@/components/shared/schemas/pageable.schema';
 
 // Basic DTO schemas
 export const answerDataDtoSchema = z.object({
-  id: z.number().optional(),
+  id: z.coerce.number().optional(),
   content: z.string().min(1),
-  correct: z.boolean(),
-  order: z.number().int().nonnegative(),
-  attachmentId: z.number().optional(),
+  // Some backend variants (matching/ranking) may omit `correct` in AnswerDataDto
+  correct: z.boolean().optional().default(false),
+  order: z.coerce.number().int().nonnegative(),
+  attachmentId: z.coerce.number().optional(),
 });
 
 export const questionDataDtoSchema = z.object({
-  id: z.number(),
-  questionType: z.nativeEnum(QuestionType),
+  id: z.coerce.number(),
+  questionType: z.preprocess(
+    (val) => (typeof val === 'string' ? val.toLowerCase() : val),
+    z.nativeEnum(QuestionType)
+  ),
   content: z.string(),
   explanation: z.string().optional(),
-  order: z.number().int(),
-  points: z.number().int().min(0),
+  order: z.coerce.number().int(),
+  points: z.coerce.number().int().min(0),
   gradingCriteria: z.string().optional(),
-  trueFalseAnswer: z.boolean().optional(),
+  trueFalseAnswer: z.coerce.boolean().optional(),
   // The backend response DTO we saw did not include these, but frontend type includes for edit prefill.
   blankTemplate: z.string().optional(),
   matchingConfig: z.string().optional(),
@@ -28,111 +35,83 @@ export const questionDataDtoSchema = z.object({
 
 export type TQuestionDataDto = z.infer<typeof questionDataDtoSchema>;
 
-// Request schemas
-const baseQuestionSave = z.object({
-  id: z.number().optional(),
-  questionType: z.nativeEnum(QuestionType),
-  content: z.string().min(1),
-  explanation: z.string().optional(),
-  attachmentId: z.number().optional(),
-  quizId: z.number(),
-  order: z.number().int().nonnegative(),
-  points: z.number().int().min(0),
-});
-
-// Base answer (no type-specific fields)
-const baseAnswerSave = z.object({
-  id: z.number().optional(),
-  content: z.string().min(1),
-  order: z.number().int().nonnegative(),
-  attachmentId: z.number().optional(),
-});
-
-// Standard answers (MCQ/Short/Fill) include a required `correct` flag
-const standardAnswerSaveSchema = baseAnswerSave.extend({
-  correct: z.boolean(),
-});
-
-// Matching answers require `matchingKey`; `correct` is not used
-const matchingAnswerSaveSchema = baseAnswerSave.extend({
-  matchingKey: z.string().min(1),
-  // allow optional `correct` if present in UI; backend ignores it
-  correct: z.boolean().optional(),
-});
-
-// Ranking answers do not use `correct`; order defines the item sequence
-const rankingAnswerSaveSchema = baseAnswerSave.extend({
-  // explicitly do not require `correct`
-  correct: z.boolean().optional(),
-});
-
-const multipleChoiceSave = baseQuestionSave.extend({
-  questionType: z.literal(QuestionType.MULTIPLE_CHOICE),
-  answers: z
-    .array(standardAnswerSaveSchema)
-    .min(2)
-    .refine((arr) => arr.some((a) => a.correct), {
-      message: 'At least one answer must be marked correct',
-    }),
-});
-
-const trueFalseSave = baseQuestionSave.extend({
-  questionType: z.literal(QuestionType.TRUE_FALSE),
-  trueFalseAnswer: z.boolean(),
-  answers: z.array(standardAnswerSaveSchema).max(0).optional(),
-});
-
-const shortAnswerSave = baseQuestionSave.extend({
-  questionType: z.literal(QuestionType.SHORT_ANSWER),
-  answers: z.array(standardAnswerSaveSchema).min(1),
-});
-
-const essaySave = baseQuestionSave.extend({
-  questionType: z.literal(QuestionType.ESSAY),
-  gradingCriteria: z.string().min(1),
-  answers: z.array(standardAnswerSaveSchema).max(0).optional(),
-});
-
-const fillInBlankSave = baseQuestionSave.extend({
-  questionType: z.literal(QuestionType.FILL_IN_BLANK),
-  blankTemplate: z.string().min(1),
-  answers: z.array(standardAnswerSaveSchema).min(1),
-});
-
-const matchingSave = baseQuestionSave.extend({
-  questionType: z.literal(QuestionType.MATCHING),
-  matchingConfig: z.string().min(1),
-  answers: z.array(matchingAnswerSaveSchema).min(4),
-});
-
-const rankingSave = baseQuestionSave.extend({
-  questionType: z.literal(QuestionType.RANKING),
-  correctOrder: z.string().min(1),
-  answers: z.array(rankingAnswerSaveSchema).min(2),
-});
-
-export const instructorQuestionSaveSchema = z.discriminatedUnion('questionType', [
-  multipleChoiceSave,
-  trueFalseSave,
-  shortAnswerSave,
-  essaySave,
-  fillInBlankSave,
-  matchingSave,
-  rankingSave,
-]);
-
-export type TInstructorQuestionSave = z.infer<typeof instructorQuestionSaveSchema>;
-
-// Pageable schema helper
-export const pageableSchema = <T extends z.ZodTypeAny>(item: T) =>
-  z.object({
-    content: z.array(item),
-    page: z.number().int().nonnegative(),
-    size: z.number().int().positive(),
-    totalElements: z.number().int().nonnegative(),
-    totalPages: z.number().int().nonnegative(),
-    first: z.boolean().optional(),
-    last: z.boolean().optional(),
-  });
 
 export const questionListSchema = pageableSchema(questionDataDtoSchema);
+
+// =====================
+// Form schema (UI layer)
+// =====================
+// Reusable answer schema for form-level questions (MCQ, Short Answer, Fill in Blank)
+const formStandardAnswerSchema = z.object({
+  id: z.number().optional(),
+  content: z.string().min(1),
+  correct: z.boolean(),
+  attachmentId: z.number().optional(),
+});
+
+// Base question fields reused by all form variants
+const baseFormQuestionFields = z.object({
+  quizId: z.number(),
+  content: z.string().min(1),
+  explanation: z.string().optional(),
+  points: z.number().int().min(0),
+  order: z.number().int().nonnegative(),
+});
+
+export const instructorQuestionFormSchema = z.discriminatedUnion('questionType', [
+  // Multiple choice
+  baseFormQuestionFields.extend({
+    questionType: z.literal(QuestionType.MULTIPLE_CHOICE),
+    answers: z.array(formStandardAnswerSchema).min(2),
+  }),
+  // True/False
+  baseFormQuestionFields.extend({
+    questionType: z.literal(QuestionType.TRUE_FALSE),
+    trueFalseAnswer: z.boolean(),
+  }),
+  // Short answer
+  baseFormQuestionFields.extend({
+    questionType: z.literal(QuestionType.SHORT_ANSWER),
+    answers: z.array(formStandardAnswerSchema).min(1),
+  }),
+  // Essay
+  baseFormQuestionFields.extend({
+    questionType: z.literal(QuestionType.ESSAY),
+    gradingCriteria: z.string().min(1),
+  }),
+  // Fill in blank
+  baseFormQuestionFields.extend({
+    questionType: z.literal(QuestionType.FILL_IN_BLANK),
+    blankTemplate: z.string().min(1),
+    answers: z.array(formStandardAnswerSchema).min(1),
+  }),
+  // Matching
+  baseFormQuestionFields.extend({
+    questionType: z.literal(QuestionType.MATCHING),
+    // Editable UI pairs; will be transformed into answers with matchingKey
+    matchingPairs: z
+      .array(z.object({ left: z.string().min(1), right: z.string().min(1) }))
+      .min(2),
+    // If present, we will prefer this JSON string
+    matchingConfig: z.string().optional(),
+  }),
+  // Ranking
+  baseFormQuestionFields.extend({
+    questionType: z.literal(QuestionType.RANKING),
+    // User-entered items; will be transformed into ordered answers
+    rankingItems: z.array(z.string().min(1)).min(2),
+    // If present, we prefer this JSON string
+    correctOrder: z.string().optional(),
+  }),
+]);
+
+export type TInstructorQuestionForm = z.infer<typeof instructorQuestionFormSchema>;
+
+// ------------------------------------------------------------------
+// Bridge helper: transform form → API request using the builders
+// ------------------------------------------------------------------
+export function toInstructorQuestionSaveRequest(
+  form: TInstructorQuestionForm
+): InstructorQuestionSaveRequest {
+  return buildQuestionSaveRequest(form);
+}

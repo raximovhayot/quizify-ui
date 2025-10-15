@@ -33,8 +33,7 @@ export function AnswerListEditor({
   const handleAdd = () => {
     append({
       content: '',
-      correct: enforceCorrect ? true : false,
-      order: fields.length,
+      correct: !!enforceCorrect,
     });
   };
 
@@ -131,11 +130,6 @@ export function AnswerListEditor({
               />
             </div>
           )}
-          {/* Hidden order field to sync order by index */}
-          <input
-            type="hidden"
-            {...register(`${name}.${index}.order` as const, { value: index })}
-          />
         </div>
       ))}
 

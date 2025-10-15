@@ -1,211 +1,210 @@
 'use client';
 
-import { TInstructorQuestionForm } from '../../schemas/questionSchema';
+import {TInstructorQuestionForm} from '../../schemas/questionSchema';
 import {
-  AnswerDataDto,
-  QuestionDataDto,
-  QuestionType,
+    AnswerDataDto,
+    QuestionDataDto,
+    QuestionType,
 } from '../../types/question';
 
-/**
- * Question Defaults Strategy/Factory
- *
- * Why: Centralize per-QuestionType default value construction for react-hook-form
- * and align with the Strategy/Abstract Factory pattern used elsewhere (e.g., form registry).
- * This keeps BaseQuestionForm lean and removes switch/if chains from the component.
- *
- * Guarantees identical behavior to the previous implementation:
- * - Safe JSON parsing for MATCHING (matchingConfig) and RANKING (correctOrder)
- * - Stable shapes and sensible create-mode defaults per type
- * - Mapping of AnswerDataDto -> form answers for MCQ and Short Answer in edit mode
- */
+// Discriminated union variant helpers for cleaner typing
+type TMultipleChoiceForm = Extract<TInstructorQuestionForm, { questionType: QuestionType.MULTIPLE_CHOICE }>
+type TTrueFalseForm = Extract<TInstructorQuestionForm, { questionType: QuestionType.TRUE_FALSE }>
+type TShortAnswerForm = Extract<TInstructorQuestionForm, { questionType: QuestionType.SHORT_ANSWER }>
+type TFillInBlankForm = Extract<TInstructorQuestionForm, { questionType: QuestionType.FILL_IN_BLANK }>
+type TEssayForm = Extract<TInstructorQuestionForm, { questionType: QuestionType.ESSAY }>
+type TMatchingForm = Extract<TInstructorQuestionForm, { questionType: QuestionType.MATCHING }>
+type TRankingForm = Extract<TInstructorQuestionForm, { questionType: QuestionType.RANKING }>
 
-// Narrowed answer form shape used by the form state
-type TAnswerForm = Pick<AnswerDataDto, 'id' | 'content' | 'correct' | 'order'>;
+
+// Narrowed answer form shape used by the form state (no 'order' at form level)
+type TAnswerForm = Pick<AnswerDataDto, 'id' | 'content' | 'correct'>;
 
 // Helpers
 const mapAnswers = (answers?: AnswerDataDto[]): TAnswerForm[] =>
-  (answers ?? []).map((a) => ({
-    id: a.id,
-    content: a.content,
-    correct: a.correct,
-    order: a.order,
-  }));
+    (answers ?? []).map((a) => ({
+        id: a.id,
+        content: a.content,
+        correct: a.correct,
+    }));
 
 type TMatchingPair = { left: string; right: string };
 
 const parseMatchingPairs = (matchingConfig?: string): TMatchingPair[] => {
-  if (!matchingConfig) return [{ left: '', right: '' }];
-  try {
-    const parsed = JSON.parse(matchingConfig);
-    if (Array.isArray(parsed)) {
-      return parsed.map((p): TMatchingPair => {
-        const obj: Record<string, unknown> =
-          typeof p === 'object' && p !== null
-            ? (p as Record<string, unknown>)
-            : {};
-        const leftVal = obj.left;
-        const rightVal = obj.right;
-        return {
-          left: typeof leftVal === 'string' ? leftVal : String(leftVal ?? ''),
-          right:
-            typeof rightVal === 'string' ? rightVal : String(rightVal ?? ''),
-        };
-      });
+    if (!matchingConfig) return [{left: '', right: ''}];
+    try {
+        const parsed = JSON.parse(matchingConfig);
+        if (Array.isArray(parsed)) {
+            return parsed.map((p): TMatchingPair => {
+                const obj: Record<string, unknown> =
+                    typeof p === 'object' && p !== null
+                        ? (p as Record<string, unknown>)
+                        : {};
+                const leftVal = obj.left;
+                const rightVal = obj.right;
+                return {
+                    left: typeof leftVal === 'string' ? leftVal : String(leftVal ?? ''),
+                    right:
+                        typeof rightVal === 'string' ? rightVal : String(rightVal ?? ''),
+                };
+            });
+        }
+    } catch {
+        // noop – fall through to default
     }
-  } catch {
-    // noop – fall through to default
-  }
-  return [{ left: '', right: '' }];
+    return [{left: '', right: ''}];
 };
 
 const parseRankingItems = (correctOrder?: string): string[] => {
-  if (!correctOrder) return [];
-  try {
-    const parsed = JSON.parse(correctOrder);
-    return Array.isArray(parsed)
-      ? parsed.map((x) => (typeof x === 'string' ? x : String(x)))
-      : [];
-  } catch {
-    return [];
-  }
+    if (!correctOrder) return [];
+    try {
+        const parsed = JSON.parse(correctOrder);
+        return Array.isArray(parsed)
+            ? parsed.map((x) => (typeof x === 'string' ? x : String(x)))
+            : [];
+    } catch {
+        return [];
+    }
 };
 
 // Create-mode defaults per type
 function createDefaults(
-  type: QuestionType,
-  quizId: number
+    type: QuestionType,
+    quizId: number
 ): TInstructorQuestionForm {
-  const base = {
-    quizId,
-    questionType: type,
-    content: '',
-    explanation: '',
-    order: 0,
-    points: 1,
-  } as const;
+    const base = {
+        quizId,
+        questionType: type,
+        content: '',
+        explanation: '',
+        order: 0,
+        points: 1,
+    } as const;
 
-  switch (type) {
-    case QuestionType.MULTIPLE_CHOICE:
-      return {
-        ...base,
-        answers: [
-          { content: '', correct: true, order: 0 },
-          { content: '', correct: false, order: 1 },
-        ],
-      } as unknown as TInstructorQuestionForm;
-    case QuestionType.TRUE_FALSE:
-      return {
-        ...base,
-        trueFalseAnswer: false,
-        answers: [],
-      } as unknown as TInstructorQuestionForm;
-    case QuestionType.SHORT_ANSWER:
-      return {
-        ...base,
-        answers: [{ content: '', correct: true, order: 0 }],
-      } as unknown as TInstructorQuestionForm;
-    case QuestionType.FILL_IN_BLANK:
-      return {
-        ...base,
-        blankTemplate: '',
-        answers: [],
-      } as unknown as TInstructorQuestionForm;
-    case QuestionType.ESSAY:
-      return {
-        ...base,
-        gradingCriteria: '',
-        answers: [],
-      } as unknown as TInstructorQuestionForm;
-    case QuestionType.MATCHING:
-      return {
-        ...base,
-        matchingPairs: [{ left: '', right: '' }],
-        answers: [],
-      } as unknown as TInstructorQuestionForm;
-    case QuestionType.RANKING:
-      return {
-        ...base,
-        rankingItems: ['', ''],
-        answers: [],
-      } as unknown as TInstructorQuestionForm;
-    default:
-      return { ...base, answers: [] } as unknown as TInstructorQuestionForm;
-  }
+    switch (type) {
+        case QuestionType.MULTIPLE_CHOICE:
+            return {
+                ...base,
+                questionType: QuestionType.MULTIPLE_CHOICE,
+                answers: [
+                    {content: '', correct: true},
+                    {content: '', correct: false},
+                ],
+            } satisfies TMultipleChoiceForm;
+        case QuestionType.TRUE_FALSE:
+            return {
+                ...base,
+                questionType: QuestionType.TRUE_FALSE,
+                trueFalseAnswer: false,
+            } satisfies TTrueFalseForm;
+        case QuestionType.SHORT_ANSWER:
+            return {
+                ...base,
+                questionType: QuestionType.SHORT_ANSWER,
+                answers: [{content: '', correct: true}],
+            } satisfies TShortAnswerForm;
+        case QuestionType.FILL_IN_BLANK:
+            return {
+                ...base,
+                questionType: QuestionType.FILL_IN_BLANK,
+                blankTemplate: '',
+                answers: [],
+            } satisfies TFillInBlankForm;
+        case QuestionType.ESSAY:
+            return {
+                ...base,
+                questionType: QuestionType.ESSAY,
+                gradingCriteria: '',
+            } satisfies TEssayForm;
+        case QuestionType.MATCHING:
+            return {
+                ...base,
+                questionType: QuestionType.MATCHING,
+                matchingPairs: [{left: '', right: ''}],
+            } satisfies TMatchingForm;
+        case QuestionType.RANKING:
+            return {
+                ...base,
+                questionType: QuestionType.RANKING,
+                rankingItems: ['', ''],
+            } satisfies TRankingForm;
+    }
 }
 
 // Edit-mode defaults per type
 function editDefaults(
-  type: QuestionType,
-  quizId: number,
-  data: QuestionDataDto
+    type: QuestionType,
+    quizId: number,
+    data: QuestionDataDto
 ): TInstructorQuestionForm {
-  const base = {
-    quizId,
-    questionType: type,
-    content: data.content,
-    explanation: data.explanation || '',
-    order: data.order,
-    points: data.points,
-  } as const;
+    const base = {
+        quizId,
+        questionType: type,
+        content: data.content,
+        explanation: data.explanation || '',
+        order: data.order,
+        points: data.points,
+    } as const;
 
-  switch (type) {
-    case QuestionType.MULTIPLE_CHOICE:
-      return {
-        ...base,
-        answers: mapAnswers(data.answers),
-      } as unknown as TInstructorQuestionForm;
-    case QuestionType.SHORT_ANSWER:
-      return {
-        ...base,
-        answers: mapAnswers(data.answers),
-      } as unknown as TInstructorQuestionForm;
-    case QuestionType.TRUE_FALSE:
-      return {
-        ...base,
-        trueFalseAnswer: data.trueFalseAnswer ?? false,
-        answers: [],
-      } as unknown as TInstructorQuestionForm;
-    case QuestionType.FILL_IN_BLANK:
-      return {
-        ...base,
-        blankTemplate: data.blankTemplate ?? '',
-        answers: [],
-      } as unknown as TInstructorQuestionForm;
-    case QuestionType.ESSAY:
-      return {
-        ...base,
-        gradingCriteria: data.gradingCriteria ?? '',
-        answers: [],
-      } as unknown as TInstructorQuestionForm;
-    case QuestionType.MATCHING:
-      return {
-        ...base,
-        matchingPairs: parseMatchingPairs(data.matchingConfig),
-        answers: [],
-      } as unknown as TInstructorQuestionForm;
-    case QuestionType.RANKING:
-      return {
-        ...base,
-        rankingItems: parseRankingItems(data.correctOrder),
-        answers: [],
-      } as unknown as TInstructorQuestionForm;
-    default:
-      return { ...base, answers: [] } as unknown as TInstructorQuestionForm;
-  }
+    switch (type) {
+        case QuestionType.MULTIPLE_CHOICE:
+            return {
+                ...base,
+                questionType: QuestionType.MULTIPLE_CHOICE,
+                answers: mapAnswers(data.answers),
+            } satisfies TMultipleChoiceForm;
+        case QuestionType.SHORT_ANSWER:
+            return {
+                ...base,
+                questionType: QuestionType.SHORT_ANSWER,
+                answers: mapAnswers(data.answers),
+            } satisfies TShortAnswerForm;
+        case QuestionType.TRUE_FALSE:
+            return {
+                ...base,
+                questionType: QuestionType.TRUE_FALSE,
+                trueFalseAnswer: data.trueFalseAnswer ?? false,
+            } satisfies TTrueFalseForm;
+        case QuestionType.FILL_IN_BLANK:
+            return {
+                ...base,
+                questionType: QuestionType.FILL_IN_BLANK,
+                blankTemplate: data.blankTemplate ?? '',
+                answers: [],
+            } satisfies TFillInBlankForm;
+        case QuestionType.ESSAY:
+            return {
+                ...base,
+                questionType: QuestionType.ESSAY,
+                gradingCriteria: data.gradingCriteria ?? '',
+            } satisfies TEssayForm;
+        case QuestionType.MATCHING:
+            return {
+                ...base,
+                questionType: QuestionType.MATCHING,
+                matchingPairs: parseMatchingPairs(data.matchingConfig),
+            } satisfies TMatchingForm;
+        case QuestionType.RANKING:
+            return {
+                ...base,
+                questionType: QuestionType.RANKING,
+                rankingItems: parseRankingItems(data.correctOrder),
+            } satisfies TRankingForm;
+
+    }
 }
 
 export function buildCreateDefaultsFor(
-  type: QuestionType,
-  quizId: number
+    type: QuestionType,
+    quizId: number
 ): TInstructorQuestionForm {
-  return createDefaults(type, quizId);
+    return createDefaults(type, quizId);
 }
 
 export function buildEditDefaultsFor(
-  type: QuestionType,
-  quizId: number,
-  data: QuestionDataDto
+    type: QuestionType,
+    quizId: number,
+    data: QuestionDataDto
 ): TInstructorQuestionForm {
-  return editDefaults(type, quizId, data);
+    return editDefaults(type, quizId, data);
 }
