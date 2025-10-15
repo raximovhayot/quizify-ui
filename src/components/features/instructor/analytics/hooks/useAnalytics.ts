@@ -15,7 +15,6 @@ export function useAssignmentAnalytics(assignmentId: number) {
     staleTime: 60 * 1000, // 1 minute
     gcTime: 15 * 60 * 1000, // 15 minutes
     structuralSharing: true,
-    placeholderData: (previousData) => previousData,
   });
 }
 
@@ -31,7 +30,6 @@ export function useQuestionAnalytics(assignmentId: number) {
     staleTime: 60 * 1000, // 1 minute
     gcTime: 15 * 60 * 1000, // 15 minutes
     structuralSharing: true,
-    placeholderData: (previousData) => previousData,
   });
 }
 
@@ -47,6 +45,5 @@ export function useStudentRegistrations(assignmentId: number) {
     staleTime: 60 * 1000, // 1 minute
     gcTime: 15 * 60 * 1000, // 15 minutes
     structuralSharing: true,
-    placeholderData: (previousData) => previousData,
   });
 }

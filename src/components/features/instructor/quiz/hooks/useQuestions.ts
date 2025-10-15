@@ -1,4 +1,4 @@
-import {useQuery, useQueryClient} from '@tanstack/react-query';
+import {useQuery} from '@tanstack/react-query';
 
 import {useTranslations} from 'next-intl';
 
@@ -27,7 +27,6 @@ export function useQuestions(filter: QuestionFilter) {
 
 export function useCreateQuestion() {
     const t = useTranslations();
-    const queryClient = useQueryClient();
 
     return createMutation<QuestionDataDto, InstructorQuestionSaveRequest>({
         mutationFn: async (data) => {
@@ -38,17 +37,11 @@ export function useCreateQuestion() {
             fallback: 'Question created successfully',
         }),
         invalidateQueries: [questionKeys.lists()],
-        onSuccess: () => {
-            // Additional cache seeding can be added here if needed
-            // For now, invalidation handles refetch
-            queryClient.invalidateQueries({queryKey: questionKeys.lists()});
-        },
     })();
 }
 
 export function useUpdateQuestion() {
     const t = useTranslations();
-    const queryClient = useQueryClient();
 
     return createMutation<
         QuestionDataDto,
@@ -62,15 +55,11 @@ export function useUpdateQuestion() {
             fallback: 'Question updated successfully',
         }),
         invalidateQueries: [questionKeys.lists()],
-        onSuccess: () => {
-            queryClient.invalidateQueries({queryKey: questionKeys.lists()});
-        },
     })();
 }
 
 export function useDeleteQuestion() {
     const t = useTranslations();
-    const queryClient = useQueryClient();
 
     return createMutation<void, { quizId: number; questionId: number }>({
         mutationFn: async ({quizId, questionId}) => {
@@ -81,8 +70,5 @@ export function useDeleteQuestion() {
             fallback: 'Question deleted successfully',
         }),
         invalidateQueries: [questionKeys.lists()],
-        onSuccess: () => {
-            queryClient.invalidateQueries({queryKey: questionKeys.lists()});
-        },
     })();
 }

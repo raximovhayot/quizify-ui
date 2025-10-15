@@ -14,7 +14,5 @@ export function useQuizzes(filter: QuizFilter = {}) {
     staleTime: 60 * 1000, // 1 minute (more responsive)
     gcTime: 15 * 60 * 1000, // 15 minutes (keep longer in cache)
     structuralSharing: true,
-    // Keep showing previous data while refetching for better UX
-    placeholderData: (previousData) => previousData,
   });
 }

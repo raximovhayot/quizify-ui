@@ -19,12 +19,5 @@ export function useQuiz(quizId: number) {
         enabled: !!quizId,
         staleTime: 2 * 60 * 1000, // 2 minutes
         gcTime: 20 * 60 * 1000, // 20 minutes (quiz details are stable)
-        // Use previous data while refetching
-        placeholderData: (previousData) => previousData,
-        // Prefetch related data
-        select: (data) => {
-            // You can transform data here if needed
-            return data;
-        },
     });
 }

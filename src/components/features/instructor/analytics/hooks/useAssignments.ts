@@ -42,6 +42,5 @@ export function useAssignment(id: number) {
     enabled: !!id,
     staleTime: 2 * 60 * 1000, // 2 minutes (details are relatively stable)
     gcTime: 20 * 60 * 1000, // 20 minutes
-    placeholderData: (prev) => prev,
   });
 }
