@@ -47,7 +47,6 @@ function mapAnswers(
     content: a.content,
     correct: a.correct === true,
     order: idx,
-    attachmentId: a.attachmentId,
   }));
 }
 
@@ -101,7 +100,6 @@ const fillInBlankBuilder: QuestionRequestBuilder<TFIB> = {
   build(form) {
     return {
       ...baseFields(form),
-      blankTemplate: form.blankTemplate,
       answers: mapAnswers(form.answers),
     };
   },
@@ -133,16 +131,8 @@ const matchingBuilder: QuestionRequestBuilder<TMatching> = {
       );
     });
 
-    const matchingConfig =
-      typeof form.matchingConfig === 'string' && form.matchingConfig.length > 0
-        ? form.matchingConfig
-        : JSON.stringify(
-            pairs.map((p, i) => ({ left: p.left, right: p.right, key: `pair-${i + 1}` }))
-          );
-
     return {
       ...baseFields(form),
-      matchingConfig,
       answers,
     };
   },
@@ -154,16 +144,11 @@ const rankingBuilder: QuestionRequestBuilder<TRanking> = {
     const answers: InstructionAnswerSaveRequest[] = items.map((content, idx) => ({
       content,
       order: idx,
+      correctPosition: idx,
     }));
-
-    const correctOrder =
-      typeof form.correctOrder === 'string' && form.correctOrder.length > 0
-        ? form.correctOrder
-        : JSON.stringify(items);
 
     return {
       ...baseFields(form),
-      correctOrder,
       answers,
     };
   },

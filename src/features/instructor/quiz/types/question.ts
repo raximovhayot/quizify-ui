@@ -43,10 +43,7 @@ export interface InstructorQuestionSaveRequest {
   order: number;
   answers?: InstructionAnswerSaveRequest[];
   trueFalseAnswer?: boolean;
-  blankTemplate?: string;
   gradingCriteria?: string;
-  matchingConfig?: string;
-  correctOrder?: string;
 }
 
 export interface InstructionAnswerSaveRequest {
@@ -54,8 +51,8 @@ export interface InstructionAnswerSaveRequest {
   content: string;
   correct?: boolean;
   order: number;
-  attachmentId?: number;
   matchingKey?: string;
+  correctPosition?: number;
 }
 
 // Filter for question listing

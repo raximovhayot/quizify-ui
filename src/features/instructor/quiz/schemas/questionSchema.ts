@@ -73,26 +73,31 @@ export const instructorQuestionFormSchema = z.discriminatedUnion('questionType',
     gradingCriteria: z.string().min(1, 'Grading criteria required'),
   }),
 
-  // Fill in blank
+  // Fill in blank (blankTemplate is UI-only; not sent to backend)
   baseQuestionFields.extend({
     questionType: z.literal(QuestionType.FILL_IN_BLANK),
+    // UI-only: omitted in payload, kept for authoring experience
     blankTemplate: z.string().min(1, 'Blank template required'),
     answers: z.array(formAnswerSchema).min(1, 'At least 1 answer required'),
   }),
 
-  // Matching
+  // Matching (matchingPairs are UI-only inputs; mapped to answers with matchingKey)
   baseQuestionFields.extend({
     questionType: z.literal(QuestionType.MATCHING),
+    // UI-only: authoring convenience, mapped to answers in request builder
     matchingPairs: z
       .array(z.object({ left: z.string().min(1), right: z.string().min(1) }))
       .min(2, 'At least 2 pairs required'),
+    // Deprecated/UI-only: not sent to backend
     matchingConfig: z.string().optional(),
   }),
 
-  // Ranking
+  // Ranking (rankingItems are UI-only; mapped to answers with correctPosition)
   baseQuestionFields.extend({
     questionType: z.literal(QuestionType.RANKING),
+    // UI-only: list of items author composes; request builder maps to answers
     rankingItems: z.array(z.string().min(1)).min(2, 'At least 2 items required'),
+    // Deprecated/UI-only: not sent to backend
     correctOrder: z.string().optional(),
   }),
 ]);
