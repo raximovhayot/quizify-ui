@@ -1,6 +1,6 @@
 'use client';
 
-import { Edit, MoreVertical, Trash2 } from 'lucide-react';
+import { ArrowDown, ArrowUp, Edit, MoreVertical, Trash2 } from 'lucide-react';
 
 import { useTranslations } from 'next-intl';
 
@@ -28,6 +28,9 @@ export interface QuestionListItemProps {
   showAnswers: boolean;
   onEdit: (q: QuestionDataDto) => void;
   onDelete: (q: QuestionDataDto) => void;
+  onMoveUp?: () => void;
+  onMoveDown?: () => void;
+  disableReorder?: boolean;
 }
 
 export function QuestionListItem({
@@ -36,6 +39,9 @@ export function QuestionListItem({
   showAnswers,
   onEdit,
   onDelete,
+  onMoveUp,
+  onMoveDown,
+  disableReorder = false,
 }: Readonly<QuestionListItemProps>) {
   const t = useTranslations();
 
@@ -50,7 +56,7 @@ export function QuestionListItem({
             <Badge variant="outline" className="text-xs">
               {getQuestionTypeLabel(t, question.questionType)}
             </Badge>
-            <Badge variant="secondary" className="text-xs">
+            <Badge variant="secondary" className="text-xs" title={t('common.points.short', { count: question.points, fallback: '{count} pts' })}>
               {t('common.points.short', {
                 count: question.points,
                 fallback: '{count} pts',
@@ -81,26 +87,55 @@ export function QuestionListItem({
             t={t}
           />
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 shrink-0">
-              <MoreVertical className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => onEdit(question)}>
-              <Edit className="h-4 w-4 mr-2" />
-              {t('common.edit', { fallback: 'Edit' })}
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => onDelete(question)}
-              className="text-destructive"
+        <div className="flex items-start gap-1">
+          {/* Accessible reorder controls */}
+          <div className="flex flex-col gap-1 mr-1" aria-label={t('common.reorder', { fallback: 'Reorder' })}>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              title={t('common.up', { fallback: 'Up' })}
+              aria-label={t('common.up', { fallback: 'Up' })}
+              onClick={onMoveUp}
+              disabled={disableReorder || index === 0}
             >
-              <Trash2 className="h-4 w-4 mr-2" />
-              {t('common.delete', { fallback: 'Delete' })}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <ArrowUp className="h-4 w-4" />
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              title={t('common.down', { fallback: 'Down' })}
+              aria-label={t('common.down', { fallback: 'Down' })}
+              onClick={onMoveDown}
+              disabled={disableReorder}
+            >
+              <ArrowDown className="h-4 w-4" />
+            </Button>
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 shrink-0" aria-label={t('common.actions', { fallback: 'Actions' })}>
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => onEdit(question)}>
+                <Edit className="h-4 w-4 mr-2" />
+                {t('common.edit', { fallback: 'Edit' })}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => onDelete(question)}
+                className="text-destructive"
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                {t('common.delete', { fallback: 'Delete' })}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </Item>
   );

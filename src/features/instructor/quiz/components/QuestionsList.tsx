@@ -2,7 +2,7 @@
 
 import { AlertTriangle, Plus } from 'lucide-react';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { useTranslations } from 'next-intl';
 
@@ -41,6 +41,7 @@ export function QuestionsList({
   const [deletingQuestion, setDeletingQuestion] =
     useState<QuestionDataDto | null>(null);
   const [showAnswers, setShowAnswers] = useState(false);
+  const liveRef = useRef<HTMLDivElement | null>(null);
 
   const filter = { quizId, page: 0, size: 100 } as const;
   const {
@@ -54,6 +55,16 @@ export function QuestionsList({
   const reorderMutation = useReorderQuestions(quizId, filter);
 
   const questions = questionsData?.content || [];
+
+  const announce = (message: string) => {
+    if (liveRef.current) {
+      liveRef.current.textContent = message;
+      // Clear after a short delay to avoid reading duplicate content
+      setTimeout(() => {
+        if (liveRef.current) liveRef.current.textContent = '';
+      }, 1000);
+    }
+  };
 
   const reorder = (fromIndex: number, toIndex: number) => {
     if (
@@ -72,6 +83,12 @@ export function QuestionsList({
     next.splice(toIndex, 0, moved);
     const normalized = next.map((q, idx) => ({ ...q, order: idx }));
     reorderMutation.mutate(normalized);
+    announce(
+      t('common.movedToPosition', {
+        fallback: 'Moved to position {pos}',
+        pos: toIndex + 1,
+      })
+    );
   };
 
   const onDragStart = (e: React.DragEvent<HTMLDivElement>, index: number) => {
@@ -182,6 +199,9 @@ export function QuestionsList({
 
   return (
     <>
+      {/* Live region for announcements */}
+      <div ref={liveRef} aria-live="polite" className="sr-only" />
+
       <div className="space-y-4">
         <QuestionsListHeader
           count={questions.length}
@@ -207,6 +227,9 @@ export function QuestionsList({
                 showAnswers={showAnswers}
                 onEdit={(q) => setEditingQuestion(q)}
                 onDelete={(q) => setDeletingQuestion(q)}
+                onMoveUp={() => reorder(index, index - 1)}
+                onMoveDown={() => reorder(index, index + 1)}
+                disableReorder={reorderMutation.isPending}
               />
             </div>
           ))}

@@ -1,5 +1,6 @@
 'use client';
 
+import Mathematics from '@tiptap/extension-mathematics';
 import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -14,6 +15,7 @@ import {
 } from 'lucide-react';
 
 import { useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -42,6 +44,7 @@ export function RichTextEditor({
   id,
 }: RichTextEditorProps) {
   const isHydrated = useIsHydrated();
+  const t = useTranslations();
 
   const editor = useEditor({
     extensions: [
@@ -53,6 +56,7 @@ export function RichTextEditor({
       Placeholder.configure({
         placeholder,
       }),
+      Mathematics,
     ],
     content,
     editable: !disabled,
@@ -108,6 +112,17 @@ export function RichTextEditor({
     );
   }
 
+  const insertInlineFormula = () => {
+    const formula = prompt('LaTeX formula (inline):', 'a^2 + b^2 = c^2');
+    if (formula == null) return;
+    // Insert inline math using $...$
+    editor.chain().focus().insertContent(`$${formula}$`).run();
+  };
+
+  const insertSymbol = (symbol: string) => {
+    editor.chain().focus().insertContent(symbol).run();
+  };
+
   return (
     <div
       className={cn(
@@ -130,7 +145,8 @@ export function RichTextEditor({
             'h-8 w-8 p-0 rounded-lg',
             editor.isActive('bold') && 'bg-accent'
           )}
-          aria-label="Bold"
+          aria-label={t('editor.toolbar.bold', { fallback: 'Bold' })}
+          title={t('editor.toolbar.bold', { fallback: 'Bold' })}
         >
           <Bold className="h-4 w-4" />
         </Button>
@@ -147,7 +163,8 @@ export function RichTextEditor({
             'h-8 w-8 p-0 rounded-lg',
             editor.isActive('italic') && 'bg-accent'
           )}
-          aria-label="Italic"
+          aria-label={t('editor.toolbar.italic', { fallback: 'Italic' })}
+          title={t('editor.toolbar.italic', { fallback: 'Italic' })}
         >
           <Italic className="h-4 w-4" />
         </Button>
@@ -164,7 +181,8 @@ export function RichTextEditor({
             'h-8 w-8 p-0 rounded-lg',
             editor.isActive('code') && 'bg-accent'
           )}
-          aria-label="Code"
+          aria-label={t('editor.toolbar.code', { fallback: 'Code' })}
+          title={t('editor.toolbar.code', { fallback: 'Code' })}
         >
           <Code className="h-4 w-4" />
         </Button>
@@ -183,7 +201,8 @@ export function RichTextEditor({
             'h-8 w-8 p-0 rounded-lg',
             editor.isActive('bulletList') && 'bg-accent'
           )}
-          aria-label="Bullet List"
+          aria-label={t('editor.toolbar.bulletList', { fallback: 'Bullet List' })}
+          title={t('editor.toolbar.bulletList', { fallback: 'Bullet List' })}
         >
           <List className="h-4 w-4" />
         </Button>
@@ -200,10 +219,42 @@ export function RichTextEditor({
             'h-8 w-8 p-0 rounded-lg',
             editor.isActive('orderedList') && 'bg-accent'
           )}
-          aria-label="Ordered List"
+          aria-label={t('editor.toolbar.orderedList', { fallback: 'Ordered List' })}
+          title={t('editor.toolbar.orderedList', { fallback: 'Ordered List' })}
         >
           <ListOrdered className="h-4 w-4" />
         </Button>
+
+        <Separator orientation="vertical" className="h-6 mx-1" />
+
+        {/* Math & Symbols */}
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={insertInlineFormula}
+          className="h-8 px-2 rounded-lg"
+          aria-label={t('editor.toolbar.insertFormula', { fallback: 'Insert formula' })}
+          title={t('editor.toolbar.insertFormulaHint', { fallback: 'Insert formula (LaTeX)' })}
+        >
+          ∑
+        </Button>
+        <div className="flex items-center gap-1">
+          {['Ω','π','±','×','÷','≤','≥','≈','√','∑','∫','∞','→','↔','α','β','γ'].map((s) => (
+            <Button
+              key={s}
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => insertSymbol(s)}
+              className="h-8 w-8 p-0 rounded-lg"
+              aria-label={t('editor.toolbar.insertSymbol', { fallback: 'Insert {symbol}', symbol: s })}
+              title={t('editor.toolbar.insertSymbol', { fallback: 'Insert {symbol}', symbol: s })}
+            >
+              {s}
+            </Button>
+          ))}
+        </div>
 
         <Separator orientation="vertical" className="h-6 mx-1" />
 
@@ -214,7 +265,8 @@ export function RichTextEditor({
           onClick={() => editor.chain().focus().undo().run()}
           disabled={disabled || !editor.can().chain().focus().undo().run()}
           className="h-8 w-8 p-0 rounded-lg"
-          aria-label="Undo"
+          aria-label={t('editor.toolbar.undo', { fallback: 'Undo' })}
+          title={t('editor.toolbar.undo', { fallback: 'Undo' })}
         >
           <Undo className="h-4 w-4" />
         </Button>
@@ -226,7 +278,8 @@ export function RichTextEditor({
           onClick={() => editor.chain().focus().redo().run()}
           disabled={disabled || !editor.can().chain().focus().redo().run()}
           className="h-8 w-8 p-0 rounded-lg"
-          aria-label="Redo"
+          aria-label={t('editor.toolbar.redo', { fallback: 'Redo' })}
+          title={t('editor.toolbar.redo', { fallback: 'Redo' })}
         >
           <Redo className="h-4 w-4" />
         </Button>

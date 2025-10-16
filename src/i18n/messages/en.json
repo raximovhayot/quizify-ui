@@ -142,7 +142,13 @@
     "unexpectedError": "An unexpected error occurred",
     "submitting": "Submitting...",
     "checking": "Checking...",
-    "joining": "Joining..."
+    "joining": "Joining...",
+    "movedToPosition": "Moved to position {pos}",
+    "reorder": "Reorder",
+    "reorderQuestions": {
+      "ariaList": "Questions (drag to reorder)"
+    },
+    "dragToReorder": "Drag to reorder"
   },
   "auth": {
     "signIn": {
@@ -455,6 +461,10 @@
         "update": {
           "success": "Quiz status updated successfully",
           "error": "Failed to update quiz status"
+        },
+        "tooltip": {
+          "published": "This quiz is published; you can start it and it will be visible to students.",
+          "draft": "This quiz is a draft and hidden from students."
         }
       },
       "form": {
@@ -929,6 +939,20 @@
       "retryCount": "Retry ({count}/{max})",
       "reload": "Reload Page",
       "home": "Go Home"
+    }
+  },
+  "editor": {
+    "toolbar": {
+      "bold": "Bold",
+      "italic": "Italic",
+      "code": "Code",
+      "bulletList": "Bullet List",
+      "orderedList": "Ordered List",
+      "insertFormula": "Insert formula",
+      "insertFormulaHint": "Insert formula (LaTeX)",
+      "insertSymbol": "Insert {symbol}",
+      "undo": "Undo",
+      "redo": "Redo"
     }
   }
 }

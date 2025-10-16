@@ -73,7 +73,11 @@ export function QuizForm({
       (submitData as InstructorQuizUpdateRequest).id = quiz.id;
     }
 
-    await onSubmit(submitData);
+    try {
+      await onSubmit(submitData);
+    } catch {
+      // Error is handled by the mutation layer.
+    }
   };
 
   return (
@@ -82,9 +86,9 @@ export function QuizForm({
         <CardHeader>
           <CardTitle>
             {quiz
-              ? t('instructor.quiz.form.editTitle', { default: 'Edit Quiz' })
+              ? t('instructor.quiz.form.editTitle', { fallback: 'Edit Quiz' })
               : t('instructor.quiz.form.createTitle', {
-                  default: 'Create New Quiz',
+                  fallback: 'Create New Quiz',
                 })}
           </CardTitle>
         </CardHeader>
@@ -102,7 +106,7 @@ export function QuizForm({
               render={({ field, fieldState }) => (
                 <Field>
                   <FieldLabel htmlFor="title">
-                    {t('instructor.quiz.form.title', { default: 'Quiz Title' })}
+                    {t('instructor.quiz.form.title', { fallback: 'Quiz Title' })}
                   </FieldLabel>
                   <FieldContent>
                     <Input

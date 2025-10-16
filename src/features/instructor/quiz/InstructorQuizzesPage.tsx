@@ -47,6 +47,37 @@ export function InstructorQuizzesPage() {
     return () => clearTimeout(id);
   }, [searchQuery, filter.search, setSearch]);
 
+  // Global keyboard shortcuts: N (new), / (focus search), Esc (clear search)
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      // Ignore when typing in inputs or contenteditable
+      const target = e.target as HTMLElement | null;
+      const isTyping = !!target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+      if (isTyping) return;
+
+      if (e.key === 'n' || e.key === 'N') {
+        e.preventDefault();
+        router.push(ROUTES_APP.quizzes.new());
+      }
+      if (e.key === '/') {
+        e.preventDefault();
+        const el = document.getElementById('instructor-quizzes-search') as HTMLInputElement | null;
+        el?.focus();
+      }
+      if (e.key === 'Escape') {
+        const el = document.getElementById('instructor-quizzes-search') as HTMLInputElement | null;
+        if (el && el.value) {
+          el.value = '';
+          setSearchQuery('');
+          setSearch('');
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [router, setSearch]);
+
   const quizzesQuery = useQuizzes(filter);
   const deleteQuiz = useDeleteQuiz();
   const updateStatus = useUpdateQuizStatus();
@@ -99,5 +130,4 @@ export function InstructorQuizzesPage() {
     </div>
   );
 }
-
 export default InstructorQuizzesPage;

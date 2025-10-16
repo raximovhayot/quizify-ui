@@ -138,7 +138,19 @@ export function QuizCard({
                 {quiz.title?.trim() ||
                   t('instructor.quiz.untitled', { fallback: 'Untitled' })}
               </h3>
-              <Badge variant={getStatusColor(quiz.status)}>
+              <Badge
+                variant={getStatusColor(quiz.status)}
+                title={
+                  quiz.status === QuizStatus.PUBLISHED
+                    ? t('instructor.quiz.status.tooltip.published', {
+                        fallback:
+                          'This quiz is published; you can start it and it will be visible to students.',
+                      })
+                    : t('instructor.quiz.status.tooltip.draft', {
+                        fallback: 'This quiz is a draft and hidden from students.',
+                      })
+                }
+              >
                 {getStatusLabel(quiz.status)}
               </Badge>
             </div>

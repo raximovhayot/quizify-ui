@@ -80,25 +80,7 @@ function QuizTableRowComponent({
     );
   }, []);
 
-  const handleRowClick = (e: React.MouseEvent) => {
-    // Don't navigate if clicking on the actions dropdown or its children
-    const target = e.target as HTMLElement;
-    if (
-      target.closest('[data-radix-collection-item]') ||
-      target.closest('button')
-    ) {
-      return;
-    }
 
-    router.push(ROUTES_APP.quizzes.detail(quiz.id));
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      router.push(ROUTES_APP.quizzes.detail(quiz.id));
-    }
-  };
 
   return (
     <TableRow className="hover:bg-muted/50 transition-colors">
@@ -134,7 +116,19 @@ function QuizTableRowComponent({
 
       {/* Status Column */}
       <TableCell>
-        <Badge variant={getStatusColor(quiz.status)}>
+        <Badge
+          variant={getStatusColor(quiz.status)}
+          title={
+            quiz.status === QuizStatus.PUBLISHED
+              ? t('instructor.quiz.status.tooltip.published', {
+                  fallback:
+                    'This quiz is published; you can start it and it will be visible to students.',
+                })
+              : t('instructor.quiz.status.tooltip.draft', {
+                  fallback: 'This quiz is a draft and hidden from students.',
+                })
+          }
+        >
           {getStatusLabel(quiz.status)}
         </Badge>
       </TableCell>

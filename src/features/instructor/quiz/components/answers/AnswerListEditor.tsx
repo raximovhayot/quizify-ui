@@ -23,7 +23,7 @@ export function AnswerListEditor({
   disabled,
 }: AnswerListEditorProps) {
   const t = useTranslations();
-  const { control, register } = useFormContext<TInstructorQuestionForm>();
+  const { control } = useFormContext<TInstructorQuestionForm>();
 
   const { fields, append, remove, move } = useFieldArray<
     TInstructorQuestionForm,

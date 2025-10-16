@@ -115,6 +115,9 @@
         "createSuccess": "Savol muvaffaqiyatli yaratildi",
         "updateSuccess": "Savol muvaffaqiyatli yangilandi",
         "deleteSuccess": "Savol muvaffaqiyatli o'chirildi"
+      },
+      "assignment": {
+        "createSuccess": "Topshiriq muvaffaqiyatli yaratildi"
       }
     },
     "deleteConfirmation": {
@@ -139,7 +142,13 @@
     "unexpectedError": "Kutilmagan xatolik yuz berdi",
     "submitting": "Topshirilmoqda...",
     "checking": "Tekshirilmoqda...",
-    "joining": "Qo'shilmoqda..."
+    "joining": "Qo'shilmoqda...",
+    "movedToPosition": "{pos}-pozitsiyaga ko'chirildi",
+    "reorder": "Tartibni o'zgartirish",
+    "reorderQuestions": {
+      "ariaList": "Savollar (tartibni o'zgartirish uchun sudrang)"
+    },
+    "dragToReorder": "Tartibni o'zgartirish uchun sudrang"
   },
   "auth": {
     "signIn": {
@@ -460,6 +469,10 @@
         "update": {
           "success": "Test holati muvaffaqiyatli yangilandi",
           "error": "Test holatini yangilab bo'lmadi"
+        },
+        "tooltip": {
+          "published": "Bu test nashr etilgan; uni boshlashingiz mumkin va u talabalar uchun ko'rinadi.",
+          "draft": "Bu test qoralama holatida; talabalar uni ko'ra olmaydi."
         }
       },
       "action": {
@@ -649,6 +662,7 @@
       "questionNumber": "S{{number}}"
     },
     "assignment": {
+      "defaultSuffix": "Topshiriq",
       "create": {
         "title": "Testni boshlash",
         "description": "Talabalaringiz uchun testni boshlash uchun topshiriq yarating.",
@@ -943,6 +957,20 @@
       "retryCount": "Qayta urinish ({count}/{max})",
       "reload": "Sahifani yangilash",
       "home": "Bosh sahifaga"
+    }
+  },
+  "editor": {
+    "toolbar": {
+      "bold": "Qalin",
+      "italic": "Kursiv",
+      "code": "Kod",
+      "bulletList": "Belgilangan ro'yxat",
+      "orderedList": "Raqamlangan ro'yxat",
+      "insertFormula": "Formula qo'shish",
+      "insertFormulaHint": "Formula qo'shish (LaTeX)",
+      "insertSymbol": "{symbol} ni qo'shish",
+      "undo": "Bekor qilish",
+      "redo": "Qaytarish"
     }
   }
 }
