@@ -1,0 +1,166 @@
+'use client';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller, useForm } from 'react-hook-form';
+import * as z from 'zod';
+
+import React from 'react';
+
+import { useTranslations } from 'next-intl';
+
+import { DefaultDashboardSelection } from '@/features/profile/components/DefaultDashboardSelection';
+import { useProfile } from '@/features/profile/hooks/useProfile';
+import { useUpdateProfile } from '@/features/profile/hooks/useUpdateProfile';
+import { profileDetailsUpdateSchema } from '@/features/profile/schemas/profile';
+import { DashboardType } from '@/features/profile/types/account';
+import { FormCard } from '@/components/shared/form';
+import { Form } from '@/components/ui/form';
+import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { SubmitButton } from '@/components/ui/submit-button';
+import { Language } from '@/types/common';
+
+export function ProfileUpdateDetailsForm() {
+  const t = useTranslations();
+  const { data: profile, isLoading } = useProfile();
+  const updateProfile = useUpdateProfile();
+
+  const detailsSchema = React.useMemo(() => profileDetailsUpdateSchema(t), [t]);
+
+  const form = useForm<z.infer<typeof detailsSchema>>({
+    resolver: zodResolver(detailsSchema),
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      language: Language.EN,
+      dashboardType: DashboardType.STUDENT,
+    },
+  });
+
+  // Reset form when profile data becomes available
+  React.useEffect(() => {
+    if (profile) {
+      form.reset({
+        firstName: profile.firstName ?? '',
+        lastName: profile.lastName ?? '',
+        language: profile.language ?? Language.EN,
+        dashboardType: profile.dashboardType ?? DashboardType.STUDENT,
+      });
+    }
+  }, [profile, form]);
+
+  const onSubmit = form.handleSubmit(async (values) => {
+    await updateProfile.mutateAsync(values);
+  });
+
+  return (
+    <FormCard title={t('profile.details.title', { fallback: 'Edit details' })}>
+      <Form {...form}>
+        <form onSubmit={onSubmit} className="space-y-4">
+          <Controller
+            control={form.control}
+            name="firstName"
+            render={({ field, fieldState }) => (
+              <Field>
+                <FieldLabel htmlFor="firstName">
+                  {t('auth.firstName.label', { fallback: 'First Name' })}
+                </FieldLabel>
+                <FieldContent>
+                  <Input
+                    id="firstName"
+                    placeholder={t('auth.firstName.placeholder', {
+                      fallback: 'John',
+                    })}
+                    aria-invalid={!!fieldState.error}
+                    aria-describedby={fieldState.error ? 'firstName-error' : undefined}
+                    {...field}
+                  />
+                  <FieldError id="firstName-error">{fieldState.error?.message}</FieldError>
+                </FieldContent>
+              </Field>
+            )}
+          />
+
+          <Controller
+            control={form.control}
+            name="lastName"
+            render={({ field, fieldState }) => (
+              <Field>
+                <FieldLabel htmlFor="lastName">
+                  {t('auth.lastName.label', { fallback: 'Last Name' })}
+                </FieldLabel>
+                <FieldContent>
+                  <Input
+                    id="lastName"
+                    placeholder={t('auth.lastName.placeholder', {
+                      fallback: 'Doe',
+                    })}
+                    aria-invalid={!!fieldState.error}
+                    aria-describedby={fieldState.error ? 'lastName-error' : undefined}
+                    {...field}
+                  />
+                  <FieldError id="lastName-error">{fieldState.error?.message}</FieldError>
+                </FieldContent>
+              </Field>
+            )}
+          />
+
+          <Controller
+            control={form.control}
+            name="language"
+            render={({ field, fieldState }) => (
+              <Field>
+                <FieldLabel htmlFor="language">
+                  {t('language.label', { fallback: 'Default language' })}
+                </FieldLabel>
+                <FieldContent>
+                  <Select
+                    value={String(field.value)}
+                    onValueChange={(val) => field.onChange(val as Language)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="en">
+                        {t('language.en', { fallback: 'English' })}
+                      </SelectItem>
+                      <SelectItem value="ru">
+                        {t('language.ru', { fallback: 'Russian' })}
+                      </SelectItem>
+                      <SelectItem value="uz">
+                        {t('language.uz', { fallback: 'Uzbek' })}
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FieldError id="language-error">{fieldState.error?.message}</FieldError>
+                </FieldContent>
+              </Field>
+            )}
+          />
+
+          <DefaultDashboardSelection
+            form={form}
+            isSubmitting={updateProfile.isPending || isLoading}
+          />
+
+          <SubmitButton
+            isSubmitting={updateProfile.isPending || isLoading}
+            loadingText={t('common.saving', { fallback: 'Saving...' })}
+            submitText={t('common.save', { fallback: 'Save' })}
+            className="w-full md:w-auto"
+          />
+        </form>
+      </Form>
+    </FormCard>
+  );
+}
+
+export default ProfileUpdateDetailsForm;
