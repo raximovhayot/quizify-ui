@@ -70,7 +70,7 @@ function FormDrawerContent({
   useKeyboardScrollIntoView();
 
   // Compute default aria-describedby; allow override via props
-  const ariaDescribedByProp = (props as any)?.['aria-describedby'] as string | undefined;
+  const ariaDescribedByProp = (props as { ['aria-describedby']?: string })['aria-describedby'];
   const describedById = ariaDescribedByProp ?? `${contentDomId}-desc`;
 
   // Lock background scroll only while the drawer is OPEN (and if enabled)
@@ -117,9 +117,9 @@ function FormDrawerContent({
     >
       {children}
       {!ariaDescribedByProp && (
-        <span id={`${contentDomId}-desc`} className="sr-only">
+        <SheetDescription id={`${contentDomId}-desc`} className="sr-only">
           {t('description', { fallback: 'Form actions and fields' })}
-        </span>
+        </SheetDescription>
       )}
     </SheetContent>
   );
