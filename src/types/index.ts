@@ -7,7 +7,6 @@
  * Used for standardized communication with the backend
  */
 export * from './api';
-export * from './api-endpoints';
 
 // =============================================================================
 // COMMON TYPES
