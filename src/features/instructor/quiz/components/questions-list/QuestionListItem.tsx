@@ -69,7 +69,7 @@ export function QuestionListItem({
             {question.content?.includes('<') ? (
               <RichTextDisplay
                 content={question.content}
-                className="prose-sm"
+                className="prose-sm max-w-none"
               />
             ) : (
               <p>{question.content}</p>

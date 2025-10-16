@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import type { QuizDataDTO } from '../types/quiz';
 import { CreateQuestionModal } from './CreateQuestionModal';
-import { QuestionsList } from './QuestionsList';
+import { QuestionsListContainer } from './QuestionsListContainer';
 
 export interface QuizViewQuestionsProps {
   quiz: QuizDataDTO;
@@ -15,7 +15,7 @@ export function QuizViewQuestions({ quiz }: Readonly<QuizViewQuestionsProps>) {
 
   return (
     <>
-      <QuestionsList
+      <QuestionsListContainer
         quizId={quiz.id}
         onAddQuestion={() => setOpenCreate(true)}
       />

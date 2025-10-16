@@ -8,28 +8,25 @@ import { buildQuestionSaveRequest } from '../components/factories/questionReques
 // =====================
 
 export const answerDataDtoSchema = z.object({
-  id: z.number().optional(),
+  id: z.number(),
   content: z.string(),
-  correct: z.boolean().default(false),
+  correct: z.boolean().nullable().optional(),
   order: z.number().int(),
-  attachmentId: z.number().optional(),
-  matchingKey: z.string().optional(),
+  matchingKey: z.string().nullable().optional(),
+  correctPosition: z.number().int().nullable().optional(),
 });
 
 export const questionDataDtoSchema = z.object({
   id: z.number(),
   questionType: z.nativeEnum(QuestionType),
   content: z.string(),
-  explanation: z.string().optional(),
+  explanation: z.string().nullable().optional(),
   order: z.number().int(),
   points: z.number().int().min(0),
   answers: z.array(answerDataDtoSchema).default([]),
-  // Optional fields for specific question types
-  trueFalseAnswer: z.boolean().optional(),
-  blankTemplate: z.string().optional(),
-  gradingCriteria: z.string().optional(),
-  matchingConfig: z.string().optional(),
-  correctOrder: z.string().optional(),
+  // Optional fields for specific question types (per backend)
+  trueFalseAnswer: z.boolean().nullable().optional(),
+  gradingCriteria: z.string().nullable().optional(),
 });
 
 // =====================

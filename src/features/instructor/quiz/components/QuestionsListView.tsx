@@ -1,24 +1,13 @@
 'use client';
 
 import { AlertTriangle, Plus } from 'lucide-react';
-
-import { useRef, useState } from 'react';
-
+import React from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
-import {
-  useDeleteQuestion,
-  useQuestions,
-  useUpdateQuestion,
-} from '../hooks/useQuestions';
-import { useReorderQuestions } from '../hooks/useReorderQuestions';
-import {
-  TInstructorQuestionForm,
-  toInstructorQuestionSaveRequest,
-} from '../schemas/questionSchema';
+import type { TInstructorQuestionForm } from '../schemas/questionSchema';
 import { QuestionDataDto } from '../types/question';
 import { DeleteQuestionDialog } from './questions-list/DeleteQuestionDialog';
 import { EditQuestionDialog } from './questions-list/EditQuestionDialog';
@@ -26,119 +15,88 @@ import { QuestionListItem } from './questions-list/QuestionListItem';
 import { QuestionsListHeader } from './questions-list/QuestionsListHeader';
 import { QuestionsListSkeleton } from './questions-list/QuestionsListSkeleton';
 
-export interface QuestionsListProps {
+export interface QuestionsListViewProps {
   quizId: number;
+  questions: QuestionDataDto[];
+  isLoading: boolean;
+  error: unknown;
+  showAnswers: boolean;
+  onToggleShowAnswers: () => void;
   onAddQuestion: () => void;
+  onReorder: (fromIndex: number, toIndex: number) => void;
+  isReorderPending: boolean;
+  // Edit/Delete modal state and handlers
+  editingQuestion: QuestionDataDto | null;
+  deletingQuestion: QuestionDataDto | null;
+  onRequestEdit: (q: QuestionDataDto) => void;
+  onRequestDelete: (q: QuestionDataDto) => void;
+  onCloseEdit: () => void;
+  onCloseDelete: () => void;
+  onSubmitEdit: (data: TInstructorQuestionForm) => Promise<void>;
+  onConfirmDelete: () => Promise<void> | void;
+  isUpdatePending: boolean;
+  isDeletePending: boolean;
 }
 
-export function QuestionsList({
+export function QuestionsListView({
   quizId,
+  questions,
+  isLoading,
+  error,
+  showAnswers,
+  onToggleShowAnswers,
   onAddQuestion,
-}: Readonly<QuestionsListProps>) {
+  onReorder,
+  isReorderPending,
+  editingQuestion,
+  deletingQuestion,
+  onRequestEdit,
+  onRequestDelete,
+  onCloseEdit,
+  onCloseDelete,
+  onSubmitEdit,
+  onConfirmDelete,
+  isUpdatePending,
+  isDeletePending,
+}: Readonly<QuestionsListViewProps>) {
   const t = useTranslations();
-  const [editingQuestion, setEditingQuestion] =
-    useState<QuestionDataDto | null>(null);
-  const [deletingQuestion, setDeletingQuestion] =
-    useState<QuestionDataDto | null>(null);
-  const [showAnswers, setShowAnswers] = useState(false);
-  const liveRef = useRef<HTMLDivElement | null>(null);
-
-  const filter = { quizId, page: 0, size: 100 } as const;
-  const {
-    data: questionsData,
-    isLoading,
-    error,
-  } = useQuestions(filter);
-
-  const updateQuestionMutation = useUpdateQuestion();
-  const deleteQuestionMutation = useDeleteQuestion();
-  const reorderMutation = useReorderQuestions(quizId, filter);
-
-  const questions = questionsData?.content || [];
+  const [liveNode, setLiveNode] = React.useState<HTMLDivElement | null>(null);
 
   const announce = (message: string) => {
-    if (liveRef.current) {
-      liveRef.current.textContent = message;
-      // Clear after a short delay to avoid reading duplicate content
+    if (liveNode) {
+      liveNode.textContent = message;
       setTimeout(() => {
-        if (liveRef.current) liveRef.current.textContent = '';
+        if (liveNode) liveNode.textContent = '';
       }, 1000);
     }
   };
 
-  const reorder = (fromIndex: number, toIndex: number) => {
-    if (
-      reorderMutation.isPending ||
-      fromIndex === toIndex ||
-      fromIndex < 0 ||
-      toIndex < 0 ||
-      fromIndex >= questions.length ||
-      toIndex >= questions.length
-    ) {
-      return;
-    }
-    const next = [...questions];
-    const [moved] = next.splice(fromIndex, 1);
-    if (!moved) return;
-    next.splice(toIndex, 0, moved);
-    const normalized = next.map((q, idx) => ({ ...q, order: idx }));
-    reorderMutation.mutate(normalized);
-    announce(
-      t('common.movedToPosition', {
-        fallback: 'Moved to position {pos}',
-        pos: toIndex + 1,
-      })
-    );
-  };
-
   const onDragStart = (e: React.DragEvent<HTMLDivElement>, index: number) => {
-    if (reorderMutation.isPending) return;
+    if (isReorderPending) return;
     e.dataTransfer.setData('text/plain', String(index));
     e.dataTransfer.effectAllowed = 'move';
   };
 
   const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    if (reorderMutation.isPending) return;
+    if (isReorderPending) return;
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
   };
 
   const onDrop = (e: React.DragEvent<HTMLDivElement>, toIndex: number) => {
-    if (reorderMutation.isPending) return;
+    if (isReorderPending) return;
     e.preventDefault();
     const fromStr = e.dataTransfer.getData('text/plain');
     const fromIndex = Number(fromStr);
     if (Number.isFinite(fromIndex)) {
-      reorder(fromIndex, toIndex);
+      onReorder(fromIndex, toIndex);
+      announce(
+        t('common.movedToPosition', {
+          fallback: 'Moved to position {pos}',
+          pos: toIndex + 1,
+        })
+      );
     }
-  };
-
-  const handleEditQuestion = async (formData: TInstructorQuestionForm) => {
-    if (!editingQuestion) return;
-
-    try {
-      const payload = toInstructorQuestionSaveRequest({
-        ...formData,
-        quizId,
-      });
-      await updateQuestionMutation.mutateAsync({
-        questionId: editingQuestion.id,
-        data: payload,
-      });
-      setEditingQuestion(null);
-    } catch {}
-  };
-
-  const handleDeleteQuestion = async () => {
-    if (!deletingQuestion) return;
-
-    try {
-      await deleteQuestionMutation.mutateAsync({
-        quizId,
-        questionId: deletingQuestion.id,
-      });
-      setDeletingQuestion(null);
-    } catch {}
   };
 
   if (isLoading) {
@@ -168,7 +126,7 @@ export function QuestionsList({
     );
   }
 
-  if (questions.length === 0) {
+  if (!questions || questions.length === 0) {
     return (
       <Card>
         <CardContent className="pt-6">
@@ -200,21 +158,27 @@ export function QuestionsList({
   return (
     <>
       {/* Live region for announcements */}
-      <div ref={liveRef} aria-live="polite" className="sr-only" />
+      <div ref={setLiveNode} aria-live="polite" className="sr-only" />
 
       <div className="space-y-4">
         <QuestionsListHeader
           count={questions.length}
           showAnswers={showAnswers}
-          onToggleShowAnswers={() => setShowAnswers((v) => !v)}
+          onToggleShowAnswers={onToggleShowAnswers}
           onAddQuestion={onAddQuestion}
         />
-        <div className="space-y-4" role="list" aria-label={t('common.reorderQuestions.ariaList', { fallback: 'Questions (drag to reorder)' })}>
+        <div
+          className="space-y-4"
+          role="list"
+          aria-label={t('common.reorderQuestions.ariaList', {
+            fallback: 'Questions (drag to reorder)',
+          })}
+        >
           {questions.map((question, index) => (
             <div
               key={question.id}
               role="listitem"
-              draggable={!reorderMutation.isPending}
+              draggable={!isReorderPending}
               aria-grabbed={false}
               aria-label={t('common.dragToReorder', { fallback: 'Drag to reorder' })}
               onDragStart={(e) => onDragStart(e, index)}
@@ -225,11 +189,11 @@ export function QuestionsList({
                 question={question}
                 index={index}
                 showAnswers={showAnswers}
-                onEdit={(q) => setEditingQuestion(q)}
-                onDelete={(q) => setDeletingQuestion(q)}
-                onMoveUp={() => reorder(index, index - 1)}
-                onMoveDown={() => reorder(index, index + 1)}
-                disableReorder={reorderMutation.isPending}
+                onEdit={onRequestEdit}
+                onDelete={onRequestDelete}
+                onMoveUp={() => onReorder(index, index - 1)}
+                onMoveDown={() => onReorder(index, index + 1)}
+                disableReorder={isReorderPending}
               />
             </div>
           ))}
@@ -241,17 +205,17 @@ export function QuestionsList({
         open={!!editingQuestion}
         question={editingQuestion}
         quizId={quizId}
-        isSubmitting={updateQuestionMutation.isPending}
-        onClose={() => setEditingQuestion(null)}
-        onSubmit={handleEditQuestion}
+        isSubmitting={isUpdatePending}
+        onClose={onCloseEdit}
+        onSubmit={onSubmitEdit}
       />
 
       {/* Delete Question Modal */}
       <DeleteQuestionDialog
         open={!!deletingQuestion}
-        isSubmitting={deleteQuestionMutation.isPending}
-        onClose={() => setDeletingQuestion(null)}
-        onConfirm={handleDeleteQuestion}
+        isSubmitting={isDeletePending}
+        onClose={onCloseDelete}
+        onConfirm={onConfirmDelete}
       />
     </>
   );

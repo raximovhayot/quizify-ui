@@ -61,29 +61,18 @@ const trueFalsePreview: OptionsPreviewFn = ({ q, showCorrect, t }) => {
 
 const rankingPreview: OptionsPreviewFn = ({ q, showCorrect }) => {
   const rawAnswers = Array.isArray(q.answers) ? q.answers : [];
-  let items: string[] = rawAnswers.length
+  const items: string[] = rawAnswers.length
     ? rawAnswers
         .slice()
         .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
         .map((a) => a.content)
     : [];
-  let orderArr: string[] = [];
-  try {
-    if (
-      typeof q.correctOrder === 'string' &&
-      q.correctOrder.trim().length > 0
-    ) {
-      const parsed = JSON.parse(q.correctOrder);
-      if (Array.isArray(parsed)) {
-        orderArr = parsed.map(String);
-      }
-    }
-  } catch {}
-  if (items.length === 0 && orderArr.length > 0) {
-    items = orderArr.slice();
-  }
   const positionMap = new Map<string, number>();
-  orderArr.forEach((val, idx) => positionMap.set(String(val), idx));
+  rawAnswers.forEach((a) => {
+    if (typeof a.correctPosition === 'number') {
+      positionMap.set(a.content, a.correctPosition);
+    }
+  });
   if (items.length === 0) return null;
   return (
     <div className="mt-2">
@@ -117,36 +106,10 @@ const rankingPreview: OptionsPreviewFn = ({ q, showCorrect }) => {
 
 const matchingPreview: OptionsPreviewFn = ({ q, showCorrect }) => {
   const rawAnswers = Array.isArray(q.answers) ? q.answers : [];
-  let pairs: { left: string; right?: string }[] = [];
-  try {
-    if (
-      typeof q.matchingConfig === 'string' &&
-      q.matchingConfig.trim().length > 0
-    ) {
-      const parsed = JSON.parse(q.matchingConfig);
-      if (Array.isArray(parsed)) {
-        pairs = parsed.map((p: unknown) => {
-          if (Array.isArray(p) && p.length >= 2)
-            return { left: String(p[0]), right: String(p[1]) };
-          if (p && typeof p === 'object')
-            return {
-              left: String((p as Record<string, unknown>).left ?? ''),
-              right:
-                (p as Record<string, unknown>).right != null
-                  ? String((p as Record<string, unknown>).right)
-                  : undefined,
-            };
-          return { left: String(p) };
-        });
-      }
-    }
-  } catch {}
-  if (pairs.length === 0 && rawAnswers.length > 0) {
-    pairs = rawAnswers
-      .slice()
-      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-      .map((a) => ({ left: a.content }));
-  }
+  const pairs = rawAnswers
+    .slice()
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+    .map((a) => ({ left: a.content, right: a.matchingKey ?? undefined }));
   if (pairs.length === 0) return null;
   return (
     <div className="mt-2">
@@ -180,8 +143,8 @@ const matchingPreview: OptionsPreviewFn = ({ q, showCorrect }) => {
   );
 };
 
-const fillInBlankPreview: OptionsPreviewFn = ({ q }) => {
-  const tpl = q.blankTemplate || '';
+const fillInBlankPreview: OptionsPreviewFn = ({ q: _q }) => {
+  const tpl = '';
   if (!tpl) return null;
   return (
     <div className="mt-2">

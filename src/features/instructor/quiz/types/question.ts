@@ -11,12 +11,12 @@ export enum QuestionType {
 
 // Answer type from backend
 export interface AnswerDataDto {
-  id?: number;
+  id: number;
   content: string;
-  correct: boolean;
+  correct?: boolean | null;
   order: number;
-  attachmentId?: number;
-  matchingKey?: string; // For matching questions
+  matchingKey?: string | null; // For matching questions
+  correctPosition?: number | null;
 }
 
 // Question type from backend
@@ -24,16 +24,13 @@ export interface QuestionDataDto {
   id: number;
   questionType: QuestionType;
   content: string;
-  explanation?: string;
+  explanation?: string | null;
   order: number;
   points: number;
   answers: AnswerDataDto[];
   // Optional fields for specific question types
-  trueFalseAnswer?: boolean;
-  blankTemplate?: string;
-  gradingCriteria?: string;
-  matchingConfig?: string;
-  correctOrder?: string;
+  trueFalseAnswer?: boolean | null;
+  gradingCriteria?: string | null;
 }
 
 // Request types for creating/updating questions

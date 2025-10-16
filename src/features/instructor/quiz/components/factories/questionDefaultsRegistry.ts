@@ -18,14 +18,15 @@ type TRankingForm = Extract<TInstructorQuestionForm, { questionType: QuestionTyp
 
 
 // Narrowed answer form shape used by the form state (no 'order' at form level)
-type TAnswerForm = Pick<AnswerDataDto, 'id' | 'content' | 'correct'>;
+type TAnswerForm = { id?: number; content: string; correct: boolean; attachmentId?: number };
 
 // Helpers
 const mapAnswers = (answers?: AnswerDataDto[]): TAnswerForm[] =>
     (answers ?? []).map((a) => ({
         id: a.id,
         content: a.content,
-        correct: a.correct,
+        // Coerce nullable/optional backend boolean to strict boolean for form state
+        correct: !!a.correct,
     }));
 
 type TMatchingPair = { left: string; right: string };
@@ -169,7 +170,7 @@ function editDefaults(
             return {
                 ...base,
                 questionType: QuestionType.FILL_IN_BLANK,
-                blankTemplate: data.blankTemplate ?? '',
+                blankTemplate: '',
                 answers: [],
             } satisfies TFillInBlankForm;
         case QuestionType.ESSAY:
@@ -182,13 +183,13 @@ function editDefaults(
             return {
                 ...base,
                 questionType: QuestionType.MATCHING,
-                matchingPairs: parseMatchingPairs(data.matchingConfig),
+                matchingPairs: parseMatchingPairs(undefined),
             } satisfies TMatchingForm;
         case QuestionType.RANKING:
             return {
                 ...base,
                 questionType: QuestionType.RANKING,
-                rankingItems: parseRankingItems(data.correctOrder),
+                rankingItems: parseRankingItems(undefined),
             } satisfies TRankingForm;
 
     }
