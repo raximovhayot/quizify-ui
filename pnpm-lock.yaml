@@ -107,6 +107,9 @@ importers:
       isomorphic-dompurify:
         specifier: ^2.28.0
         version: 2.28.0
+      katex:
+        specifier: ^0.16.11
+        version: 0.16.22
       lucide-react:
         specifier: ^0.525.0
         version: 0.525.0(react@19.1.1)
