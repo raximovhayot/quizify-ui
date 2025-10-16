@@ -17,7 +17,7 @@ export function useQuestions(filter: QuestionFilter) {
     return useQuery<IPageableList<QuestionDataDto>>({
         queryKey: questionKeys.list(filter),
         queryFn: async ({signal}) => {
-            return QuestionService.getQuestions(filter, signal);
+            return await QuestionService.getQuestions(filter, signal);
         },
         enabled: !!filter?.quizId,
         staleTime: 5 * 60 * 1000,
@@ -63,7 +63,7 @@ export function useUpdateQuestion() {
             fallback: 'Question updated successfully',
         }),
         invalidateQueries: [questionKeys.lists(), questionKeys.details()],
-        onSuccess: async (dto, { questionId, data }) => {
+        onSuccess: async (dto, {questionId, data}) => {
             // Keep detail cache in sync for the edited question
             if (data?.quizId && questionId) {
                 qc.setQueryData(questionKeys.detail(data.quizId, questionId), dto);
@@ -85,10 +85,10 @@ export function useDeleteQuestion() {
             fallback: 'Question deleted successfully',
         }),
         invalidateQueries: [questionKeys.lists(), questionKeys.details()],
-        onSuccess: async (_void, { quizId, questionId }) => {
+        onSuccess: async (_void, {quizId, questionId}) => {
             // Drop the deleted question detail cache entry, if any
             if (quizId && questionId) {
-                qc.removeQueries({ queryKey: questionKeys.detail(quizId, questionId) });
+                qc.removeQueries({queryKey: questionKeys.detail(quizId, questionId)});
             }
         },
     })();
