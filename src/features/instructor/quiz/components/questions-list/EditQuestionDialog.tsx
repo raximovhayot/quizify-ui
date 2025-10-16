@@ -4,11 +4,12 @@ import { useTranslations } from 'next-intl';
 
 import { useResponsive } from '@/components/shared/hooks/useResponsive';
 import {
-  ResizableSheet,
-  ResizableSheetContent,
-  ResizableSheetHeader,
-  ResizableSheetTitle,
-} from '@/components/shared/ui/ResizableSheet';
+  FormDrawer,
+  FormDrawerContent,
+  FormDrawerHeader,
+  FormDrawerTitle,
+  FormDrawerBody,
+} from '@/components/shared/ui/FormDrawer';
 import {
   Dialog,
   DialogHeader,
@@ -51,26 +52,21 @@ export function EditQuestionDialog({
     />
   ) : null;
 
-  // Mobile: Use Sheet (bottom drawer)
+  // Mobile: Use full-screen Form Drawer
   if (isMobile) {
     return (
-      <ResizableSheet open={open} onOpenChange={(next) => !next && onClose()}>
-        <ResizableSheetContent
-          side="bottom"
-          resizable
-          snapPoints={['40vh', '65vh', '85vh']}
-          className="overflow-y-auto px-4 pb-safe rounded-t-2xl"
-        >
-          <ResizableSheetHeader className="pb-4" hasResizeHandle>
-            <ResizableSheetTitle>
+      <FormDrawer open={open} onOpenChange={(next) => !next && onClose()}>
+        <FormDrawerContent side="bottom" open={open} className="rounded-t-2xl">
+          <FormDrawerHeader className="pb-4">
+            <FormDrawerTitle>
               {t('common.editQuestion', {
                 fallback: 'Edit Question',
               })}
-            </ResizableSheetTitle>
-          </ResizableSheetHeader>
-          <div className="pb-8">{formContent}</div>
-        </ResizableSheetContent>
-      </ResizableSheet>
+            </FormDrawerTitle>
+          </FormDrawerHeader>
+          <FormDrawerBody className="pb-8">{formContent}</FormDrawerBody>
+        </FormDrawerContent>
+      </FormDrawer>
     );
   }
 

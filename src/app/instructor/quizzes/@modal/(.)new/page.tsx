@@ -9,11 +9,12 @@ import { CreateQuizContainer } from '@/features/instructor/quiz/components/Creat
 import { ROUTES_APP } from '@/features/instructor/routes';
 import { useResponsive } from '@/components/shared/hooks/useResponsive';
 import {
-  ResizableSheet,
-  ResizableSheetContent,
-  ResizableSheetHeader,
-  ResizableSheetTitle,
-} from '@/components/shared/ui/ResizableSheet';
+  FormDrawer,
+  FormDrawerContent,
+  FormDrawerHeader,
+  FormDrawerTitle,
+  FormDrawerBody,
+} from '@/components/shared/ui/FormDrawer';
 import { Dialog, DialogTitle } from '@/components/ui/dialog';
 import { ScrollableDialogContent } from '@/components/shared/ui/ScrollableDialogContent';
 
@@ -51,26 +52,21 @@ export default function CreateQuizModalPage() {
     />
   );
 
-  // Mobile: Use Sheet (bottom drawer)
+  // Mobile: Use full-screen Form Drawer
   if (isMobile) {
     return (
-      <ResizableSheet open={open} onOpenChange={handleOpenChange}>
-        <ResizableSheetContent
-          side="bottom"
-          resizable
-          snapPoints={['40vh', '65vh', '85vh']}
-          className="overflow-y-auto px-4 pb-safe rounded-t-2xl"
-        >
-          <ResizableSheetHeader className="pb-4" hasResizeHandle>
-            <ResizableSheetTitle>
+      <FormDrawer open={open} onOpenChange={handleOpenChange}>
+        <FormDrawerContent side="bottom" open={open} className="rounded-t-2xl">
+          <FormDrawerHeader className="pb-4">
+            <FormDrawerTitle>
               {t('instructor.quiz.create.dialogTitle', {
                 fallback: 'Create Quiz',
               })}
-            </ResizableSheetTitle>
-          </ResizableSheetHeader>
-          <div className="pb-8">{content}</div>
-        </ResizableSheetContent>
-      </ResizableSheet>
+            </FormDrawerTitle>
+          </FormDrawerHeader>
+          <FormDrawerBody className="pb-8">{content}</FormDrawerBody>
+        </FormDrawerContent>
+      </FormDrawer>
     );
   }
 

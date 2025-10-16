@@ -67,23 +67,37 @@ export function MatchingQuestionForm(props: MatchingQuestionFormProps) {
                 key={index}
                 className="grid grid-cols-1 sm:grid-cols-5 gap-2 items-end"
               >
-                <div className="sm:col-span-2 space-y-1">
-                  <span className="text-xs text-muted-foreground sm:hidden">
-                    {t('common.left', { fallback: 'Left' })}
-                  </span>
-                  <Input
-                    placeholder={t('common.left', { fallback: 'Left' })}
-                    {...register(`matchingPairs.${index}.left` as const)}
-                  />
+                <div className="sm:col-span-2">
+                  <Field>
+                    <FieldLabel htmlFor={`matchingPairs-${index}-left`} className="text-xs">
+                      {t('common.left', { fallback: 'Left' })}
+                    </FieldLabel>
+                    <FieldContent>
+                      <Input
+                        id={`matchingPairs-${index}-left`}
+                        placeholder={t('common.left', { fallback: 'Left' })}
+                        aria-invalid={!!matchingErrorMsg}
+                        aria-describedby={matchingErrorMsg ? `matchingPairs-error` : undefined}
+                        {...register(`matchingPairs.${index}.left` as const)}
+                      />
+                    </FieldContent>
+                  </Field>
                 </div>
-                <div className="sm:col-span-2 space-y-1">
-                  <span className="text-xs text-muted-foreground sm:hidden">
-                    {t('common.right', { fallback: 'Right' })}
-                  </span>
-                  <Input
-                    placeholder={t('common.right', { fallback: 'Right' })}
-                    {...register(`matchingPairs.${index}.right` as const)}
-                  />
+                <div className="sm:col-span-2">
+                  <Field>
+                    <FieldLabel htmlFor={`matchingPairs-${index}-right`} className="text-xs">
+                      {t('common.right', { fallback: 'Right' })}
+                    </FieldLabel>
+                    <FieldContent>
+                      <Input
+                        id={`matchingPairs-${index}-right`}
+                        placeholder={t('common.right', { fallback: 'Right' })}
+                        aria-invalid={!!matchingErrorMsg}
+                        aria-describedby={matchingErrorMsg ? `matchingPairs-error` : undefined}
+                        {...register(`matchingPairs.${index}.right` as const)}
+                      />
+                    </FieldContent>
+                  </Field>
                 </div>
                 <Button
                   type="button"

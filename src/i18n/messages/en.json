@@ -61,6 +61,10 @@
       "info": "Page {current} of {total}"
     },
     "close": "Close",
+    "formDrawer": {
+      "label": "Form drawer",
+      "description": "Form actions and fields"
+    },
     "questions": "Questions",
     "showAnswers": "Show answers",
     "hideAnswers": "Hide answers",

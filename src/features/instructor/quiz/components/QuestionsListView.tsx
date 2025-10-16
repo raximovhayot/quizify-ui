@@ -3,6 +3,7 @@
 import { AlertTriangle, Plus } from 'lucide-react';
 import React from 'react';
 import { useTranslations } from 'next-intl';
+import { useResponsive } from '@/components/shared/hooks/useResponsive';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -60,6 +61,7 @@ export function QuestionsListView({
   isDeletePending,
 }: Readonly<QuestionsListViewProps>) {
   const t = useTranslations();
+  const { isMobile } = useResponsive();
   const [liveNode, setLiveNode] = React.useState<HTMLDivElement | null>(null);
 
   const announce = (message: string) => {
@@ -168,7 +170,7 @@ export function QuestionsListView({
           onAddQuestion={onAddQuestion}
         />
         <div
-          className="space-y-4"
+          className="space-y-4 touch-pan-y overscroll-contain"
           role="list"
           aria-label={t('common.reorderQuestions.ariaList', {
             fallback: 'Questions (drag to reorder)',
@@ -178,7 +180,7 @@ export function QuestionsListView({
             <div
               key={question.id}
               role="listitem"
-              draggable={!isReorderPending}
+              draggable={!isReorderPending && !isMobile}
               aria-grabbed={false}
               aria-label={t('common.dragToReorder', { fallback: 'Drag to reorder' })}
               onDragStart={(e) => onDragStart(e, index)}

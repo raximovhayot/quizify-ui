@@ -54,6 +54,10 @@
       "info": "Страница {current} из {total}"
     },
     "close": "Закрыть",
+    "formDrawer": {
+      "label": "Панель формы",
+      "description": "Поля и действия формы"
+    },
     "questions": "Вопросы",
     "showAnswers": "Показать ответы",
     "hideAnswers": "Скрыть ответы",

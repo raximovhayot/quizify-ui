@@ -68,11 +68,20 @@ export function RankingQuestionForm(props: RankingQuestionFormProps) {
                 key={index}
                 className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2"
               >
-                <Input
-                  className="flex-1"
-                  placeholder={t('common.item', { fallback: 'Item' })}
-                  {...register(`rankingItems.${index}` as const)}
-                />
+                <Field className="flex-1">
+                  <FieldLabel htmlFor={`rankingItems-${index}`} className="text-xs">
+                    {t('common.item', { fallback: 'Item' })} {index + 1}
+                  </FieldLabel>
+                  <FieldContent>
+                    <Input
+                      id={`rankingItems-${index}`}
+                      placeholder={t('common.item', { fallback: 'Item' })}
+                      aria-invalid={!!rankingErrorMsg}
+                      aria-describedby={rankingErrorMsg ? `rankingItems-error` : undefined}
+                      {...register(`rankingItems.${index}` as const)}
+                    />
+                  </FieldContent>
+                </Field>
                 <div className="flex gap-2">
                   <Button
                     type="button"

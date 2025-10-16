@@ -5,11 +5,12 @@ import { useTranslations } from 'next-intl';
 import { QuizDataDTO } from '@/features/instructor/quiz/types';
 import { useResponsive } from '@/components/shared/hooks/useResponsive';
 import {
-  ResizableSheet,
-  ResizableSheetContent,
-  ResizableSheetHeader,
-  ResizableSheetTitle,
-} from '@/components/shared/ui/ResizableSheet';
+  FormDrawer,
+  FormDrawerContent,
+  FormDrawerHeader,
+  FormDrawerTitle,
+  FormDrawerBody,
+} from '@/components/shared/ui/FormDrawer';
 import {
   Dialog,
   DialogDescription,
@@ -36,24 +37,21 @@ export function AssignmentDialog({
 
   if (isMobile) {
     return (
-      <ResizableSheet open={open} onOpenChange={onOpenChange}>
-        <ResizableSheetContent
-          side="bottom"
-          resizable
-          snapPoints={['40vh', '65vh', '85vh']}
-          className="overflow-y-auto px-4 pb-safe rounded-t-2xl"
-        >
-          <ResizableSheetHeader className="pb-4" hasResizeHandle>
-            <ResizableSheetTitle>
+      <FormDrawer open={open} onOpenChange={onOpenChange}>
+        <FormDrawerContent side="bottom" open={open} className="rounded-t-2xl">
+          <FormDrawerHeader className="pb-4">
+            <FormDrawerTitle>
               {t('instructor.assignment.create.title', {
                 default: 'Start Quiz',
               })}
-            </ResizableSheetTitle>
-          </ResizableSheetHeader>
+            </FormDrawerTitle>
+          </FormDrawerHeader>
 
-          <AssignmentForm quiz={quiz} onSuccess={() => onOpenChange(false)} />
-        </ResizableSheetContent>
-      </ResizableSheet>
+          <FormDrawerBody>
+            <AssignmentForm quiz={quiz} onSuccess={() => onOpenChange(false)} />
+          </FormDrawerBody>
+        </FormDrawerContent>
+      </FormDrawer>
     );
   }
 

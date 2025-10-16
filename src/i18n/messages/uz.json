@@ -54,6 +54,10 @@
       "info": "{current}-sahifa, jami {total}"
     },
     "close": "Yopish",
+    "formDrawer": {
+      "label": "Forma tortmasi",
+      "description": "Forma maydonlari va amallar"
+    },
     "questions": "Savollar",
     "showAnswers": "Javoblarni ko'rsatish",
     "hideAnswers": "Javoblarni yashirish",
