@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 
-import { ResetPasswordForm } from '@/components/features/auth/components/ResetPasswordForm';
+import { ResetPasswordForm } from '@/features/auth/components/ResetPasswordForm';
 import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
 
 export default async function ResetPasswordPage() {

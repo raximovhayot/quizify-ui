@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 
-import { QuizViewPage } from '@/components/features/instructor/quiz/components/QuizViewPage';
+import { QuizViewPage } from '@/features/instructor/quiz/components/QuizViewPage';
 
 export default function QuizDetailsPage() {
   const params = useParams<{ quizId: string }>();

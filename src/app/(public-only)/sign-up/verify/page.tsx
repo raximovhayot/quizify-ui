@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 
-import { SignUpVerifyForm } from '@/components/features/auth/components/SignUpVerifyForm';
+import { SignUpVerifyForm } from '@/features/auth/components/SignUpVerifyForm';
 import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
 
 export default async function SignUpVerifyPage() {

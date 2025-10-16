@@ -5,13 +5,13 @@ import { Suspense, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
-import { ProfileCompleteForm } from '@/components/features/profile/components/ProfileCompleteForm';
-import { useProfileComplete } from '@/components/features/profile/hooks/useProfileComplete';
+import { ProfileCompleteForm } from '@/features/profile/components/ProfileCompleteForm';
+import { useProfileComplete } from '@/features/profile/hooks/useProfileComplete';
 import {
   AccountDTO,
   UserState,
   hasRole,
-} from '@/components/features/profile/types/account';
+} from '@/features/profile/types/account';
 import { AppPublicOnlyLayout } from '@/components/shared/layouts/AppLayout';
 import { Form } from '@/components/ui/form';
 import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';

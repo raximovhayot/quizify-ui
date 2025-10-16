@@ -3,9 +3,9 @@ import React from 'react';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 
-import GuardAuthenticated from '@/components/features/auth/guards/GuardAuthenticated';
-import { UserRole } from '@/components/features/profile/types/account';
-import { StudentHeader } from '@/components/features/student/header/StudentHeader';
+import GuardAuthenticated from '@/features/auth/guards/GuardAuthenticated';
+import { UserRole } from '@/features/profile/types/account';
+import { StudentHeader } from '@/features/student/header/StudentHeader';
 import { ClientProviders } from '@/components/shared/providers/ClientProviders';
 import { env } from '@/env.mjs';
 

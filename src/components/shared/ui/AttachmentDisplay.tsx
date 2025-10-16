@@ -13,7 +13,7 @@ import { useState } from 'react';
 
 import { useTranslations } from 'next-intl';
 
-import { AttachmentDTO } from '@/components/features/attachment/attachmentService';
+import { AttachmentDTO } from '@/features/attachment/attachmentService';
 import {
   AlertDialog,
   AlertDialogAction,

@@ -2,7 +2,7 @@
  * API endpoint type definitions for enhanced type safety
  * Provides strict typing for all API endpoints and their request/response types
  */
-import { AttachmentDTO } from '@/components/features/attachment/attachmentService';
+import { AttachmentDTO } from '@/features/attachment/attachmentService';
 import {
   ForgotPasswordPrepareRequest,
   ForgotPasswordUpdateRequest,
@@ -13,15 +13,15 @@ import {
   SignInRequest,
   SignUpPrepareRequest,
   SignUpVerifyRequest,
-} from '@/components/features/auth/types/auth';
+} from '@/features/auth/types/auth';
 import {
   InstructorQuizCreateRequest,
   InstructorQuizUpdateRequest,
   InstructorQuizUpdateStatusRequest,
   QuizDataDTO,
   QuizFilter,
-} from '@/components/features/instructor/quiz/types/quiz';
-import { AccountDTO } from '@/components/features/profile/types/account';
+} from '@/features/instructor/quiz/types/quiz';
+import { AccountDTO } from '@/features/profile/types/account';
 
 import { IApiResponse } from './api';
 import { IPageableList } from './common';

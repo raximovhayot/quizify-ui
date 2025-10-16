@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 
-import { ForgotPasswordForm } from '@/components/features/auth/components/ForgotPasswordForm';
+import { ForgotPasswordForm } from '@/features/auth/components/ForgotPasswordForm';
 import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
 
 export default async function ForgotPasswordPage() {

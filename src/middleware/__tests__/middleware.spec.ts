@@ -1,13 +1,13 @@
 /* @jest-environment node */
 import { middleware } from '../../../middleware';
 
-jest.mock('@/components/features/auth/config/next-auth.config', () => ({
+jest.mock('@/features/auth/config/next-auth.config', () => ({
   auth: jest.fn(),
 }));
 
 // Types are not required at runtime; we keep shapes minimal
 const { auth } = jest.requireMock(
-  '@/components/features/auth/config/next-auth.config'
+  '@/features/auth/config/next-auth.config'
 ) as { auth: jest.Mock };
 
 function makeReq(path: string) {

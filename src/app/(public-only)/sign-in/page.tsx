@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 
-import { SignInForm } from '@/components/features/auth/components/SignInForm';
+import { SignInForm } from '@/features/auth/components/SignInForm';
 import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
 
 export default async function SignInPage() {

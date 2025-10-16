@@ -2,7 +2,7 @@ import React, { JSX } from 'react';
 
 import { DataCard } from '@/components/shared/ui/DataCard';
 import { RegistrationSimpleList } from '@/features/student/home/components/RegistrationSimpleList';
-import { ListSkeleton } from '@/components/atomic/molecules';
+import { ListRowsSkeleton } from '@/components/shared/ui/ListRowsSkeleton';
 import { AssignmentRegistrationItem } from '@/features/student/assignment/services/studentAssignmentService';
 
 interface RegistrationListCardProps {
@@ -27,7 +27,7 @@ export function RegistrationListCard({
   return (
     <DataCard title={title} icon={icon} isLoading={isLoading} error={hasError ? errorText : undefined}>
       {isLoading ? (
-        <ListSkeleton />
+        <ListRowsSkeleton />
       ) : (
         <RegistrationSimpleList items={items || []} emptyLabel={emptyLabel} icon={icon} />
       )}

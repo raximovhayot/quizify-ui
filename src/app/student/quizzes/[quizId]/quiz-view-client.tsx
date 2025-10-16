@@ -4,8 +4,8 @@ import { Loader2 } from 'lucide-react';
 
 import { useTranslations } from 'next-intl';
 
-import { QuizView } from '@/components/features/student/quiz/components/QuizView';
-import { useStudentQuiz } from '@/components/features/student/quiz/hooks/useStudentQuiz';
+import { QuizView } from '@/features/student/quiz/components/QuizView';
+import { useStudentQuiz } from '@/features/student/quiz/hooks/useStudentQuiz';
 
 export function QuizViewClient({ quizId }: { quizId: number }) {
   const t = useTranslations();

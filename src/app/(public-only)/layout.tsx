@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 
-import { GuardPublicOnly } from '@/components/features/auth/guards';
+import { GuardPublicOnly } from '@/features/auth/guards';
 import { AppPublicOnlyLayout } from '@/components/shared/layouts/AppLayout';
 import { PublicClientProviders } from '@/components/shared/providers/PublicClientProviders';
 import { env } from '@/env.mjs';

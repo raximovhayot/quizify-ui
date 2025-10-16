@@ -1,11 +1,12 @@
 import React from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
-export interface ListSkeletonProps {
-  /** Prefer `rows`; `count` is kept for backward compatibility. */
+export interface IListRowsSkeletonProps {
+  /** Number of skeleton rows to render */
   rows?: number;
   /** @deprecated use `rows` */
   count?: number;
+  /** Use tighter vertical spacing */
   dense?: boolean;
   /** Show a right-side action skeleton (e.g., button) */
   showAction?: boolean;
@@ -13,12 +14,22 @@ export interface ListSkeletonProps {
 }
 
 /**
- * Molecule: ListSkeleton
- * Presents a vertical list of skeleton rows that roughly match `ListItem` shape.
+ * ListRowsSkeleton
+ *
+ * A small helper built from shadcn/ui primitives to render a vertical list of
+ * skeleton rows that roughly match a list item. This replaces the legacy
+ * atomic `ListSkeleton` while keeping the same defaults and visual appearance.
  */
-export function ListSkeleton({ rows, count, dense = false, showAction = true, className = '' }: Readonly<ListSkeletonProps>) {
+export function ListRowsSkeleton({
+  rows,
+  count,
+  dense = false,
+  showAction = true,
+  className = '',
+}: Readonly<IListRowsSkeletonProps>) {
   const n = typeof rows === 'number' ? rows : typeof count === 'number' ? count : 3;
   const spacing = dense ? 'space-y-1' : 'space-y-2';
+
   return (
     <div className={[spacing, className].filter(Boolean).join(' ')}>
       {Array.from({ length: n }).map((_, i) => (
@@ -34,4 +45,4 @@ export function ListSkeleton({ rows, count, dense = false, showAction = true, cl
   );
 }
 
-export default ListSkeleton;
+export default ListRowsSkeleton;

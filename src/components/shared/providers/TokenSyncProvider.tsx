@@ -4,8 +4,8 @@ import { useEffect } from 'react';
 
 import { signOut, useSession } from 'next-auth/react';
 
-import { ROUTES_AUTH } from '@/components/features/auth/routes';
-import { AuthService } from '@/components/features/auth/services/authService';
+import { ROUTES_AUTH } from '@/features/auth/routes';
+import { AuthService } from '@/features/auth/services/authService';
 import { apiClient } from '@/lib/api';
 
 /**

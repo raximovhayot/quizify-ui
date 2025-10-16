@@ -5,11 +5,11 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 
-import { QuizForm } from '@/components/features/instructor/quiz/components/QuizForm';
-import { useQuiz } from '@/components/features/instructor/quiz/hooks/useQuiz';
-import { useUpdateQuiz } from '@/components/features/instructor/quiz/hooks/useQuizzes';
-import { InstructorQuizUpdateRequest } from '@/components/features/instructor/quiz/types/quiz';
-import { ROUTES_APP } from '@/components/features/instructor/routes';
+import { QuizForm } from '@/features/instructor/quiz/components/QuizForm';
+import { useQuiz } from '@/features/instructor/quiz/hooks/useQuiz';
+import { useUpdateQuiz } from '@/features/instructor/quiz/hooks/useQuizzes';
+import { InstructorQuizUpdateRequest } from '@/features/instructor/quiz/types/quiz';
+import { ROUTES_APP } from '@/features/instructor/routes';
 import { useResponsive } from '@/components/shared/hooks/useResponsive';
 import { ContentPlaceholder } from '@/components/shared/ui/ContentPlaceholder';
 import {

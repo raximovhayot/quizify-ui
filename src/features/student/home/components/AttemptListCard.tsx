@@ -3,7 +3,7 @@ import React, {JSX} from 'react';
 import {DataCard} from '@/components/shared/ui/DataCard';
 import {AttemptListingData} from '@/features/student/quiz/types/attempt';
 import {AttemptSimpleList} from './AttemptSimpleList';
-import { ListSkeleton } from '@/components/atomic/molecules';
+import { ListRowsSkeleton } from '@/components/shared/ui/ListRowsSkeleton';
 
 interface AttemptListCardProps {
     title: string;
@@ -27,7 +27,7 @@ export function AttemptListCard({
     return (
         <DataCard title={title} icon={icon} isLoading={isLoading} error={hasError ? errorText : undefined}>
             {isLoading ? (
-                <ListSkeleton/>
+                <ListRowsSkeleton/>
             ) : (
                 <AttemptSimpleList items={items || []} emptyLabel={emptyLabel} icon={icon}/>
             )}

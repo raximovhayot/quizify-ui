@@ -5,7 +5,7 @@ import { LogOut, Settings, User } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
-import { useNextAuth } from '@/components/features/auth/hooks/useNextAuth';
+import { useNextAuth } from '@/features/auth/hooks/useNextAuth';
 import Logo from '@/components/shared/brand/Logo';
 import { useResponsive } from '@/components/shared/hooks/useResponsive';
 import { Button } from '@/components/ui/button';

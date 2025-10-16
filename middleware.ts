@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-import { auth } from '@/components/features/auth/config/next-auth.config';
-import { UserState } from '@/components/features/profile/types/account';
+import { auth } from '@/features/auth/config/next-auth.config';
+import { UserState } from '@/features/profile/types/account';
 
 import { normalizeDashboard, pickDashboard } from '@/lib/auth/dashboardUtils';
 import { sanitizeRedirect } from '@/lib/auth/redirectUtils';

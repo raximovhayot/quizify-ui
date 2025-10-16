@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
 
-import { CreateQuizContainer } from '@/components/features/instructor/quiz/components/CreateQuizContainer';
-import { ROUTES_APP } from '@/components/features/instructor/routes';
+import { CreateQuizContainer } from '@/features/instructor/quiz/components/CreateQuizContainer';
+import { ROUTES_APP } from '@/features/instructor/routes';
 import { useResponsive } from '@/components/shared/hooks/useResponsive';
 import {
   ResizableSheet,

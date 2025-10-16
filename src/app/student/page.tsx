@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 
-import { StudentHomePage } from '@/components/features/student/home/StudentHomePage';
+import { StudentHomePage } from '@/features/student/home/StudentHomePage';
 import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
 
 export default async function Page() {

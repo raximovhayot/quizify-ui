@@ -3,7 +3,7 @@ import React, { JSX } from 'react';
 import { QuizDataDTO } from '@/features/instructor/quiz/types/quiz';
 import { DataCard } from '@/components/shared/ui/DataCard';
 
-import { ListSkeleton } from '@/components/atomic/molecules';
+import { ListRowsSkeleton } from '@/components/shared/ui/ListRowsSkeleton';
 import { QuizSimpleList } from './QuizSimpleList';
 
 interface QuizListCardProps {
@@ -33,7 +33,7 @@ export function QuizListCard({
       error={hasError ? errorText : undefined}
     >
       {isLoading ? (
-        <ListSkeleton />
+        <ListRowsSkeleton />
       ) : (
         <QuizSimpleList
           items={items || []}
