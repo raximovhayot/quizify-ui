@@ -1,6 +1,6 @@
 'use client';
 
-import { Edit, Eye, FileText, MoreHorizontal, Trash2 } from 'lucide-react';
+import { Edit, Eye, FileText, MoreHorizontal, Play, Trash2 } from 'lucide-react';
 
 import { memo, useState } from 'react';
 
@@ -19,6 +19,7 @@ import {
 
 import { QuizDataDTO, QuizStatus } from '../types/quiz';
 import { DeleteQuizDialog } from './DeleteQuizDialog';
+import { AssignmentDialog } from './AssignmentDialog';
 
 export interface QuizTableActionsProps {
   quiz: QuizDataDTO;
@@ -38,6 +39,7 @@ function QuizTableActionsComponent({
   const t = useTranslations();
   const router = useRouter();
   const [deleteOpen, setDeleteOpen] = useState(false);
+    const [startOpen, setStartOpen] = useState(false);
 
   const handleStatusToggle = () => {
     const newStatus =
@@ -80,6 +82,15 @@ function QuizTableActionsComponent({
             <Edit className="mr-2 h-4 w-4" />
             {t('common.edit', { fallback: 'Edit' })}
           </DropdownMenuItem>
+          {quiz.status === QuizStatus.PUBLISHED && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setStartOpen(true)}>
+                <Play className="mr-2 h-4 w-4" />
+                {t('instructor.quiz.startQuiz', { fallback: 'Start Quiz' })}
+              </DropdownMenuItem>
+            </>
+          )}
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleStatusToggle}>
             {quiz.status === QuizStatus.PUBLISHED ? (
@@ -118,6 +129,8 @@ function QuizTableActionsComponent({
           setDeleteOpen(false);
         }}
       />
+
+      <AssignmentDialog quiz={quiz} open={startOpen} onOpenChange={setStartOpen} />
     </>
   );
 }

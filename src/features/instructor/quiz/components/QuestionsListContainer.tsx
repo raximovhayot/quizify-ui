@@ -1,7 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 
 import { useReorderQuestions } from '../hooks/useReorderQuestions';
 import {
@@ -23,14 +22,12 @@ export function QuestionsListContainer({
   quizId,
   onAddQuestion,
 }: Readonly<QuestionsListContainerProps>) {
-  const t = useTranslations();
   const [editingQuestion, setEditingQuestion] = useState<QuestionDataDto | null>(
     null
   );
   const [deletingQuestion, setDeletingQuestion] =
     useState<QuestionDataDto | null>(null);
   const [showAnswers, setShowAnswers] = useState(false);
-  const liveRef = useRef<HTMLDivElement | null>(null);
 
   const filter = { quizId, page: 0, size: 100 } as const;
   const {

@@ -1,4 +1,7 @@
+'use client';
+
 import * as React from 'react';
+import { useTranslations } from 'next-intl';
 
 import { cn } from '@/lib/utils';
 import { DialogContent } from '@/components/ui/dialog';
@@ -26,13 +29,21 @@ export function ScrollableDialogContent({
   bodyClassName,
   children,
   ...props
-}: Readonly<ScrollableDialogContentProps>) {
+}: Readonly<ScrollableDialogContentProps>): React.JSX.Element {
+  const t = useTranslations('common.formDrawer');
+  const contentDomId = React.useId();
+
+  // Compute default aria-describedby; allow override via props
+  const ariaDescribedByProp = (props as { ['aria-describedby']?: string })['aria-describedby'];
+  const describedById = ariaDescribedByProp ?? `${contentDomId}-desc`;
+
   return (
     <DialogContent
       // Keep close (X) static; make inner body scrollable. Use an edge-to-edge scroll container
       // so the scrollbar hugs the right border.
       className={cn(className)}
       {...props}
+      aria-describedby={describedById}
     >
       <div className="-m-6 rounded-[inherit]">
         <div
@@ -44,6 +55,11 @@ export function ScrollableDialogContent({
           <div className="p-6">{children}</div>
         </div>
       </div>
+      {!ariaDescribedByProp && (
+        <span id={`${contentDomId}-desc`} className="sr-only">
+          {t('description', { fallback: 'Dialog content and actions' })}
+        </span>
+      )}
     </DialogContent>
   );
 }

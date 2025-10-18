@@ -80,6 +80,7 @@ export function AssignmentForm({
   });
 
   const isSubmitting = createAssignment.isPending;
+  const startImmediately = form.watch('startImmediately');
 
   return (
     <Form {...form}>
@@ -168,6 +169,37 @@ export function AssignmentForm({
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                <Controller
+                  control={form.control}
+                  name="startImmediately"
+                  render={({ field, fieldState }) => (
+                    <Field className="flex items-center justify-between rounded-lg border px-3 py-3 min-h-12">
+                      <div className="space-y-0.5 min-w-0">
+                        <FieldLabel htmlFor="startImmediately" className="text-sm">
+                          {t('instructor.assignment.create.startImmediately', {
+                            default: 'Start immediately',
+                          })}
+                        </FieldLabel>
+                        <p className="text-xs text-muted-foreground">
+                          {t('instructor.assignment.create.startImmediatelyHelp', {
+                            default: 'Start as soon as you create the assignment. Start time will be set automatically.',
+                          })}
+                        </p>
+                      </div>
+                      <FieldContent>
+                        <Switch
+                          id="startImmediately"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          aria-invalid={!!fieldState.error}
+                          aria-describedby={fieldState.error ? 'startImmediately-error' : undefined}
+                        />
+                        <FieldError id="startImmediately-error">{fieldState.error?.message}</FieldError>
+                      </FieldContent>
+                    </Field>
+                  )}
+                />
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Controller
                     control={form.control}
@@ -180,7 +212,7 @@ export function AssignmentForm({
                           })}
                         </FieldLabel>
                         <FieldContent>
-                          <Input id="startTimeLocal" type="datetime-local" className="h-10 w-full" aria-invalid={!!fieldState.error} aria-describedby={fieldState.error ? 'startTimeLocal-error' : undefined} {...field} />
+                          <Input id="startTimeLocal" type="datetime-local" className="h-10 w-full" min={now.toISOString().slice(0, 16)} disabled={startImmediately || isSubmitting} aria-invalid={!!fieldState.error} aria-describedby={fieldState.error ? 'startTimeLocal-error' : undefined} {...field} />
                           <FieldError id="startTimeLocal-error">{fieldState.error?.message}</FieldError>
                         </FieldContent>
                       </Field>
@@ -318,14 +350,14 @@ export function AssignmentForm({
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
+                              <SelectItem value={AssignmentResultShowType.IMMEDIATELY}>
+                                {t('instructor.assignment.settings.resultShowType.immediately', {
+                                  default: 'Immediately',
+                                })}
+                              </SelectItem>
                               <SelectItem value={AssignmentResultShowType.AFTER_ASSIGNMENT}>
                                 {t('instructor.assignment.settings.resultShowType.afterAssignment', {
                                   default: 'After assignment',
-                                })}
-                              </SelectItem>
-                              <SelectItem value={AssignmentResultShowType.AFTER_EACH_ATTEMPT}>
-                                {t('instructor.assignment.settings.resultShowType.afterEachAttempt', {
-                                  default: 'After each attempt',
                                 })}
                               </SelectItem>
                               <SelectItem value={AssignmentResultShowType.NEVER}>
@@ -336,6 +368,13 @@ export function AssignmentForm({
                             </SelectContent>
                           </Select>
                           <FieldError id="resultShowType-error">{fieldState.error?.message}</FieldError>
+                          {field.value === AssignmentResultShowType.NEVER && (
+                            <p className="mt-2 text-xs text-muted-foreground">
+                              {t('instructor.assignment.settings.resultShowType.helper.never', {
+                                default: 'Students will not see their results for this assignment.',
+                              })}
+                            </p>
+                          )}
                         </FieldContent>
                       </Field>
                     )}
@@ -360,17 +399,22 @@ export function AssignmentForm({
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value={AssignmentResultType.ONLY_CORRECT}>
-                                {t('instructor.assignment.settings.resultType.onlyCorrect', {
-                                  default: 'Only correct answers',
-                                })}
-                              </SelectItem>
-                              <SelectItem value={AssignmentResultType.ALL_ANSWERS}>
-                                {t('instructor.assignment.settings.resultType.allAnswers', {
-                                  default: 'All answers',
-                                })}
-                              </SelectItem>
-                            </SelectContent>
+                                <SelectItem value={AssignmentResultType.ONLY_RESULT}>
+                                  {t('instructor.assignment.settings.resultType.onlyResult', {
+                                    default: 'Only result',
+                                  })}
+                                </SelectItem>
+                                <SelectItem value={AssignmentResultType.ONLY_CORRECT}>
+                                  {t('instructor.assignment.settings.resultType.onlyCorrect', {
+                                    default: 'Only correct answers',
+                                  })}
+                                </SelectItem>
+                                <SelectItem value={AssignmentResultType.FULL}>
+                                  {t('instructor.assignment.settings.resultType.full', {
+                                    default: 'Full details',
+                                  })}
+                                </SelectItem>
+                              </SelectContent>
                           </Select>
                           <FieldError id="resultType-error">{fieldState.error?.message}</FieldError>
                         </FieldContent>

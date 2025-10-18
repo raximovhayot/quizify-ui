@@ -660,7 +660,9 @@
         "endTimeLabel": "End Time",
         "submit": "Create Assignment",
         "details": "Details",
-        "settings": "Settings"
+             "settings": "Settings",
+             "startImmediately": "Start immediately",
+             "startImmediatelyHelp": "Start as soon as you create the assignment. Start time will be set automatically."
       },
       "settings": {
         "attempts": "Max attempts (0 = unlimited)",
@@ -670,16 +672,20 @@
         "shuffleAnswers": "Shuffle answers",
         "shuffleAnswersHelp": "Randomize the order of answer choices",
         "resultShowType": {
-          "label": "When to show results",
-          "afterAssignment": "After assignment",
-          "afterEachAttempt": "After each attempt",
-          "never": "Never"
-        },
-        "resultType": {
-          "label": "Result details",
-          "onlyCorrect": "Only correct answers",
-          "allAnswers": "All answers"
-        }
+             "label": "When to show results",
+             "immediately": "Immediately",
+             "afterAssignment": "After assignment",
+             "never": "Never",
+             "helper": {
+               "never": "Students will not see their results for this assignment."
+             }
+           },
+          "resultType": {
+            "label": "Result details",
+            "onlyResult": "Only result",
+            "onlyCorrect": "Only correct answers",
+            "full": "Full details"
+          }
       }
     },
     "grading": {

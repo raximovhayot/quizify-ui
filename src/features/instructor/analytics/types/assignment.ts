@@ -1,17 +1,19 @@
 export enum AssignmentStatus {
+  // Note: Backend uses CREATED/STARTED/FINISHED. Keep this enum unused for now or replace when needed.
   DRAFT = 'draft',
   PUBLISHED = 'published',
 }
 
 export enum AssignmentResultShowType {
+  IMMEDIATELY = 'IMMEDIATELY',
   AFTER_ASSIGNMENT = 'AFTER_ASSIGNMENT',
-  AFTER_EACH_ATTEMPT = 'AFTER_EACH_ATTEMPT',
   NEVER = 'NEVER',
 }
 
 export enum AssignmentResultType {
+  ONLY_RESULT = 'ONLY_RESULT',
   ONLY_CORRECT = 'ONLY_CORRECT',
-  ALL_ANSWERS = 'ALL_ANSWERS',
+  FULL = 'FULL',
 }
 
 export interface AssignmentSettings {
@@ -49,4 +51,5 @@ export interface AssignmentCreateRequest {
   title: string;
   description?: string;
   settings: AssignmentSettings;
+  startImmediately?: boolean;
 }

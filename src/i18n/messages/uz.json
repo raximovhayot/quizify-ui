@@ -678,7 +678,9 @@
         "endTimeLabel": "Tugash vaqti",
         "submit": "Topshiriq yaratish",
         "details": "Tafsilotlar",
-        "settings": "Sozlamalar"
+             "settings": "Sozlamalar",
+             "startImmediately": "Darhol boshlash",
+             "startImmediatelyHelp": "Topshiriq yaratilishi bilanoq boshlanadi. Boshlanish vaqti avtomatik belgilanadi."
       },
       "settings": {
         "attempts": "Maks. urinishlar (0 = cheklanmagan)",
@@ -688,16 +690,16 @@
         "shuffleAnswers": "Javoblarni aralashtirish",
         "shuffleAnswersHelp": "Javob variantlari tartibini aralashtirish",
         "resultShowType": {
-          "label": "Natijalarni qachon ko‘rsatish",
-          "afterAssignment": "Topshiriq tugagach",
-          "afterEachAttempt": "Har bir urinishdan keyin",
-          "never": "Hech qachon"
-        },
-        "resultType": {
-          "label": "Natijalar tafsiloti",
-          "onlyCorrect": "Faqat to‘g‘ri javoblar",
-          "allAnswers": "Barcha javoblar"
-        }
+            "label": "Natijalarni qachon ko‘rsatish",
+            "immediately": "Darhol",
+            "afterAssignment": "Topshiriq tugagach"
+          },
+          "resultType": {
+            "label": "Natijalar tafsiloti",
+            "onlyResult": "Faqat natija",
+            "onlyCorrect": "Faqat to‘g‘ri javoblar",
+            "full": "To‘liq tafsilotlar"
+          }
       }
     },
     "grading": {

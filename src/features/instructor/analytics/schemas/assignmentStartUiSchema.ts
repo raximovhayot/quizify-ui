@@ -10,6 +10,7 @@ export const assignmentStartUISchema = z
   .object({
     title: z.string().trim().min(3).max(512),
     description: z.string().trim().max(1024).optional(),
+    startImmediately: z.boolean().default(false),
     startTimeLocal: z.string(),
     endTimeLocal: z.string(),
     attempt: z.coerce.number().int().min(0).default(0),
@@ -17,14 +18,18 @@ export const assignmentStartUISchema = z
     shuffleQuestions: z.boolean().default(false),
     shuffleAnswers: z.boolean().default(false),
     resultShowType: z
-      .enum(AssignmentResultShowType)
+      .nativeEnum(AssignmentResultShowType)
       .default(AssignmentResultShowType.AFTER_ASSIGNMENT),
     resultType: z
-      .enum(AssignmentResultType)
+      .nativeEnum(AssignmentResultType)
       .default(AssignmentResultType.ONLY_CORRECT),
   })
   .refine(
-    (data) => new Date(data.endTimeLocal) > new Date(data.startTimeLocal),
+    (data) => {
+      const start = data.startImmediately ? new Date() : new Date(data.startTimeLocal);
+      const end = new Date(data.endTimeLocal);
+      return end > start;
+    },
     {
       message: 'End time must be after start time',
       path: ['endTimeLocal'],
@@ -37,12 +42,16 @@ export function toAssignmentCreateRequest(
   quizId: number,
   values: TAssignmentStartUIForm
 ): AssignmentCreateRequest {
+  const start = values.startImmediately
+    ? new Date(Date.now() + 60 * 1000)
+    : new Date(values.startTimeLocal);
+
   return {
     quizId,
     title: values.title,
     description: values.description,
     settings: {
-      startTime: new Date(values.startTimeLocal).toISOString(),
+      startTime: start.toISOString(),
       endTime: new Date(values.endTimeLocal).toISOString(),
       attempt: values.attempt ?? 0,
       time: values.time ?? 0,
@@ -51,5 +60,6 @@ export function toAssignmentCreateRequest(
       resultShowType: values.resultShowType,
       resultType: values.resultType,
     },
+    startImmediately: values.startImmediately,
   };
 }

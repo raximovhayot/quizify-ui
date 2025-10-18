@@ -183,13 +183,13 @@ function editDefaults(
             return {
                 ...base,
                 questionType: QuestionType.MATCHING,
-                matchingPairs: parseMatchingPairs(undefined),
+                matchingPairs: parseMatchingPairs(),
             } satisfies TMatchingForm;
         case QuestionType.RANKING:
             return {
                 ...base,
                 questionType: QuestionType.RANKING,
-                rankingItems: parseRankingItems(undefined),
+                rankingItems: parseRankingItems(),
             } satisfies TRankingForm;
 
     }
