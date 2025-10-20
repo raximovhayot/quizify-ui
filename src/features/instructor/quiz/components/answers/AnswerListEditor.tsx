@@ -4,7 +4,7 @@ import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 import { useTranslations } from 'next-intl';
 
-import { RichTextField } from '@/components/shared/form/RichTextField';
+import { RichTextFieldLazy as RichTextField } from '@/components/shared/form/lazy';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';

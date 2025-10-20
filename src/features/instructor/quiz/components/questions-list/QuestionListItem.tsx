@@ -1,6 +1,7 @@
 'use client';
 
 import { ArrowDown, ArrowUp, Edit, MoreVertical, Trash2 } from 'lucide-react';
+import React from 'react';
 
 import { useTranslations } from 'next-intl';
 
@@ -33,7 +34,7 @@ export interface QuestionListItemProps {
   disableReorder?: boolean;
 }
 
-export function QuestionListItem({
+export const QuestionListItem = React.memo(function QuestionListItem({
   question,
   index,
   showAnswers,
@@ -139,4 +140,14 @@ export function QuestionListItem({
       </div>
     </Item>
   );
-}
+}, (prevProps, nextProps) => {
+  // Custom comparison for better performance
+  return (
+    prevProps.question.id === nextProps.question.id &&
+    prevProps.question.content === nextProps.question.content &&
+    prevProps.question.order === nextProps.question.order &&
+    prevProps.index === nextProps.index &&
+    prevProps.showAnswers === nextProps.showAnswers &&
+    prevProps.disableReorder === nextProps.disableReorder
+  );
+});

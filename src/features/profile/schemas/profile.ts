@@ -1,4 +1,4 @@
-import * as z from 'zod';
+import { z } from 'zod';
 
 import { DashboardType } from '@/features/profile/types/account';
 import { PASSWORD_MIN_LENGTH, PASSWORD_REGEX } from '@/constants/validation';
