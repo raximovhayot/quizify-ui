@@ -4,13 +4,7 @@ import { ComponentType } from 'react';
 
 import { QuestionType } from '../../types/question';
 import type { BaseQuestionFormProps } from '../forms/BaseQuestionForm';
-import { EssayQuestionForm } from '../forms/EssayQuestionForm';
-import { FillInBlankQuestionForm } from '../forms/FillInBlankQuestionForm';
-import { MatchingQuestionForm } from '../forms/MatchingQuestionForm';
 import { MultipleChoiceQuestionForm } from '../forms/MultipleChoiceQuestionForm';
-import { RankingQuestionForm } from '../forms/RankingQuestionForm';
-import { ShortAnswerQuestionForm } from '../forms/ShortAnswerQuestionForm';
-import { TrueFalseQuestionForm } from '../forms/TrueFalseQuestionForm';
 
 // Common props all specific question forms share (each is BaseQuestionForm with fixedType enforced)
 export type CommonQuestionFormProps = Omit<
@@ -23,12 +17,6 @@ export type QuestionFormComponent = ComponentType<CommonQuestionFormProps>;
 // Strategy/Abstract Factory registry for mapping QuestionType to a concrete form component
 const questionFormRegistry: Record<QuestionType, QuestionFormComponent> = {
   [QuestionType.MULTIPLE_CHOICE]: MultipleChoiceQuestionForm,
-  [QuestionType.TRUE_FALSE]: TrueFalseQuestionForm,
-  [QuestionType.SHORT_ANSWER]: ShortAnswerQuestionForm,
-  [QuestionType.FILL_IN_BLANK]: FillInBlankQuestionForm,
-  [QuestionType.ESSAY]: EssayQuestionForm,
-  [QuestionType.MATCHING]: MatchingQuestionForm,
-  [QuestionType.RANKING]: RankingQuestionForm,
 };
 
 export function getQuestionFormComponent(
@@ -64,42 +52,12 @@ const questionTypeLabelKeys: Record<
     key: 'common.questionTypes.multipleChoice',
     fallback: 'Multiple Choice',
   },
-  [QuestionType.TRUE_FALSE]: {
-    key: 'common.questionTypes.trueFalse',
-    fallback: 'True/False',
-  },
-  [QuestionType.SHORT_ANSWER]: {
-    key: 'common.questionTypes.shortAnswer',
-    fallback: 'Short Answer',
-  },
-  [QuestionType.FILL_IN_BLANK]: {
-    key: 'common.questionTypes.fillInBlank',
-    fallback: 'Fill in Blank',
-  },
-  [QuestionType.ESSAY]: {
-    key: 'common.questionTypes.essay',
-    fallback: 'Essay',
-  },
-  [QuestionType.MATCHING]: {
-    key: 'common.questionTypes.matching',
-    fallback: 'Matching',
-  },
-  [QuestionType.RANKING]: {
-    key: 'common.questionTypes.ranking',
-    fallback: 'Ranking',
-  },
 };
 
 // Canonical ordering for UI lists (Select, etc.)
 export function getAllQuestionTypes(): QuestionType[] {
   return [
     QuestionType.MULTIPLE_CHOICE,
-    QuestionType.TRUE_FALSE,
-    QuestionType.SHORT_ANSWER,
-    QuestionType.FILL_IN_BLANK,
-    QuestionType.ESSAY,
-    QuestionType.MATCHING,
-    QuestionType.RANKING,
   ];
 }
 

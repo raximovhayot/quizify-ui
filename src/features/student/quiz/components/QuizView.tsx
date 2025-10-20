@@ -106,49 +106,15 @@ function formatQuestionType(
   type: QuestionType,
   t: ReturnType<typeof useTranslations>
 ) {
-  switch (type) {
-    case QuestionType.MULTIPLE_CHOICE:
-      return t('student.quiz.types.multipleChoice', {
-        default: 'Multiple choice',
-      });
-    case QuestionType.TRUE_FALSE:
-      return t('student.quiz.types.trueFalse', { default: 'True/False' });
-    case QuestionType.SHORT_ANSWER:
-      return t('student.quiz.types.shortAnswer', { default: 'Short answer' });
-    case QuestionType.FILL_IN_BLANK:
-      return t('student.quiz.types.fillInBlank', {
-        default: 'Fill in the blank',
-      });
-    case QuestionType.ESSAY:
-      return t('student.quiz.types.essay', { default: 'Essay' });
-    case QuestionType.MATCHING:
-      return t('student.quiz.types.matching', { default: 'Matching' });
-    case QuestionType.RANKING:
-      return t('student.quiz.types.ranking', { default: 'Ranking' });
-    default:
-      return type;
-  }
+  return t('student.quiz.types.multipleChoice', {
+    default: 'Multiple choice',
+  });
 }
 
 function renderAnswers(
   q: QuestionDataDto,
   t: ReturnType<typeof useTranslations>
 ) {
-  if (q.questionType === QuestionType.TRUE_FALSE) {
-    return (
-      <div>
-        <div className="text-sm text-muted-foreground">
-          {t('student.quiz.correctAnswer', { default: 'Correct answer' })}
-        </div>
-        <div className="text-sm font-medium">
-          {q.trueFalseAnswer
-            ? t('common.true', { default: 'True' })
-            : t('common.false', { default: 'False' })}
-        </div>
-      </div>
-    );
-  }
-
   if (!q.answers || q.answers.length === 0) return null;
 
   const sortedAnswers = [...q.answers].sort((a, b) => a.order - b.order);

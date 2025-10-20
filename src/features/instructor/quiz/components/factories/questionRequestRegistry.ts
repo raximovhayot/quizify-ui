@@ -20,13 +20,7 @@ import {
  */
 
 // Variant helpers for stronger typing
-type TMCQ = Extract<TInstructorQuestionForm, { questionType: QuestionType.MULTIPLE_CHOICE }>;
-type TTF = Extract<TInstructorQuestionForm, { questionType: QuestionType.TRUE_FALSE }>;
-type TSA = Extract<TInstructorQuestionForm, { questionType: QuestionType.SHORT_ANSWER }>;
-type TFIB = Extract<TInstructorQuestionForm, { questionType: QuestionType.FILL_IN_BLANK }>;
-type TEssay = Extract<TInstructorQuestionForm, { questionType: QuestionType.ESSAY }>;
-type TMatching = Extract<TInstructorQuestionForm, { questionType: QuestionType.MATCHING }>;
-type TRanking = Extract<TInstructorQuestionForm, { questionType: QuestionType.RANKING }>;
+type TMCQ = TInstructorQuestionForm;
 
 export interface QuestionRequestBuilder<TForm extends TInstructorQuestionForm> {
   build(form: TForm): InstructorQuestionSaveRequest;
@@ -77,92 +71,9 @@ const mcqBuilder: QuestionRequestBuilder<TMCQ> = {
   },
 };
 
-const trueFalseBuilder: QuestionRequestBuilder<TTF> = {
-  build(form) {
-    return {
-      ...baseFields(form),
-      trueFalseAnswer: form.trueFalseAnswer,
-      answers: [],
-    };
-  },
-};
-
-const shortAnswerBuilder: QuestionRequestBuilder<TSA> = {
-  build(form) {
-    return {
-      ...baseFields(form),
-      answers: mapAnswers(form.answers),
-    };
-  },
-};
-
-const fillInBlankBuilder: QuestionRequestBuilder<TFIB> = {
-  build(form) {
-    return {
-      ...baseFields(form),
-      answers: mapAnswers(form.answers),
-    };
-  },
-};
-
-const essayBuilder: QuestionRequestBuilder<TEssay> = {
-  build(form) {
-    return {
-      ...baseFields(form),
-      gradingCriteria: form.gradingCriteria,
-      answers: [],
-    };
-  },
-};
-
-const matchingBuilder: QuestionRequestBuilder<TMatching> = {
-  build(form) {
-    // Build answers: for each pair, emit two answers with the same matchingKey
-    const pairs = (form.matchingPairs ?? []).filter(
-      (p) => p && p.left?.trim().length && p.right?.trim().length
-    );
-
-    const answers: InstructionAnswerSaveRequest[] = [];
-    pairs.forEach((pair, idx) => {
-      const matchingKey = `pair-${idx + 1}`; // stable readable key; can be swapped for UUIDs if needed
-      answers.push(
-        { content: pair.left, order: answers.length, matchingKey },
-        { content: pair.right, order: answers.length + 1, matchingKey }
-      );
-    });
-
-    return {
-      ...baseFields(form),
-      answers,
-    };
-  },
-};
-
-const rankingBuilder: QuestionRequestBuilder<TRanking> = {
-  build(form) {
-    const items = (form.rankingItems ?? []).filter((it) => it && it.trim().length);
-    const answers: InstructionAnswerSaveRequest[] = items.map((content, idx) => ({
-      content,
-      order: idx,
-      correctPosition: idx,
-    }));
-
-    return {
-      ...baseFields(form),
-      answers,
-    };
-  },
-};
-
 // Registry
 const builders: Record<QuestionType, QuestionRequestBuilder<TInstructorQuestionForm>> = {
-  [QuestionType.MULTIPLE_CHOICE]: mcqBuilder as unknown as QuestionRequestBuilder<TInstructorQuestionForm>,
-  [QuestionType.TRUE_FALSE]: trueFalseBuilder as unknown as QuestionRequestBuilder<TInstructorQuestionForm>,
-  [QuestionType.SHORT_ANSWER]: shortAnswerBuilder as unknown as QuestionRequestBuilder<TInstructorQuestionForm>,
-  [QuestionType.FILL_IN_BLANK]: fillInBlankBuilder as unknown as QuestionRequestBuilder<TInstructorQuestionForm>,
-  [QuestionType.ESSAY]: essayBuilder as unknown as QuestionRequestBuilder<TInstructorQuestionForm>,
-  [QuestionType.MATCHING]: matchingBuilder as unknown as QuestionRequestBuilder<TInstructorQuestionForm>,
-  [QuestionType.RANKING]: rankingBuilder as unknown as QuestionRequestBuilder<TInstructorQuestionForm>,
+  [QuestionType.MULTIPLE_CHOICE]: mcqBuilder,
 };
 
 export function getRequestBuilder(type: QuestionType): QuestionRequestBuilder<TInstructorQuestionForm> {
