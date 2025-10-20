@@ -13,6 +13,7 @@ import { ThemeProvider } from 'next-themes';
 
 import { SessionProvider } from '@/components/shared/providers/SessionProvider';
 import { TokenSyncProvider } from '@/components/shared/providers/TokenSyncProvider';
+import { WebVitals } from '@/components/shared/analytics';
 import { TopLoader } from '@/components/shared/ui/TopLoader';
 import { Toaster } from '@/components/ui/sonner';
 import { env } from '@/env.mjs';
@@ -84,6 +85,7 @@ export function ClientProviders({ children }: Readonly<ClientProvidersProps>) {
   return (
     <SessionProvider>
       <TokenSyncProvider />
+      <WebVitals />
       <QueryClientProvider client={queryClient}>
         <ThemeProvider
           attribute="class"

@@ -41,7 +41,7 @@ export interface QuizCardProps {
   className?: string;
 }
 
-export function QuizCard({
+export const QuizCard = React.memo(function QuizCard({
   quiz,
   onDelete,
   onUpdateStatus,
@@ -293,4 +293,13 @@ export function QuizCard({
       </CardContent>
     </Card>
   );
-}
+}, (prevProps, nextProps) => {
+  // Custom comparison for better performance
+  return (
+    prevProps.quiz.id === nextProps.quiz.id &&
+    prevProps.quiz.lastModifiedDate === nextProps.quiz.lastModifiedDate &&
+    prevProps.quiz.status === nextProps.quiz.status &&
+    prevProps.isDeleting === nextProps.isDeleting &&
+    prevProps.isUpdatingStatus === nextProps.isUpdatingStatus
+  );
+});
