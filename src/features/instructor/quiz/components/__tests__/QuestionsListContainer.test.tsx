@@ -12,9 +12,9 @@ jest.mock('next-intl', () => ({
   },
 }));
 
-// Mock the EditQuestionDialog to provide a simple submit button that triggers onSubmit with a valid payload
-jest.mock('../questions-list/EditQuestionDialog', () => ({
-  EditQuestionDialog: ({ open, onSubmit, onClose, quizId, question }: any) => {
+// Mock the QuestionEditorDialog to provide a simple submit button that triggers onSubmit with a valid payload
+jest.mock('../QuestionEditorDialog', () => ({
+  QuestionEditorDialog: ({ open, onSubmit, onOpenChange, quizId, question }: any) => {
     if (!open) return null;
     const handleClick = () => {
       // Minimal valid MULTIPLE_CHOICE form payload
@@ -31,7 +31,7 @@ jest.mock('../questions-list/EditQuestionDialog', () => ({
         ],
       };
       onSubmit(payload);
-      onClose?.();
+      onOpenChange?.(false);
     };
     return (
       <div data-testid="edit-dialog">
