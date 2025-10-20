@@ -10,7 +10,7 @@ import { useSaveAttemptState } from '@/features/student/attempt/hooks/useSaveAtt
 import { useCompleteAttempt } from '@/features/student/attempt/hooks/useCompleteAttempt';
 import { AttemptFullData } from '@/features/student/history/schemas/attemptSchema';
 
-type AnswerValue = number[] | string; // number[] for selection-based; string for text/boolean
+type AnswerValue = number[]; // Array of selected answer IDs for multiple choice
 
 interface AttemptPlayerClientProps {
   attemptId: number;
@@ -22,10 +22,7 @@ function buildSavePayload(
 ) {
   const answers = Object.entries(values).map(([questionId, v]) => {
     const qid = Number(questionId);
-    if (Array.isArray(v)) {
-      return { questionId: qid, answerIds: v } as const;
-    }
-    return { questionId: qid, textAnswer: v } as const;
+    return { questionId: qid, answerIds: v } as const;
   });
   return { attemptId: content.attemptId, answers };
 }
