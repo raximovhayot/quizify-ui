@@ -64,7 +64,9 @@
     "addQuestion": "Добавить вопрос",
     "answers": "Ответы",
     "createQuestion": "Создать вопрос",
+    "createQuestionDescription": "Добавьте новый вопрос в викторину",
     "editQuestion": "Редактировать вопрос",
+    "editQuestionDescription": "Обновите детали вопроса ниже",
     "deleteQuestion": "Удалить вопрос",
     "questionTypes": {
       "multipleChoice": "Множественный выбор",

@@ -71,7 +71,9 @@
     "addQuestion": "Add Question",
     "answers": "Answers",
     "createQuestion": "Create Question",
+    "createQuestionDescription": "Add a new question to your quiz",
     "editQuestion": "Edit Question",
+    "editQuestionDescription": "Update the question details below",
     "deleteQuestion": "Delete Question",
     "questionTypes": {
       "multipleChoice": "Multiple Choice",

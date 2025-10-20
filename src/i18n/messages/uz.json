@@ -64,7 +64,9 @@
     "addQuestion": "Savol qo'shish",
     "answers": "Javoblar",
     "createQuestion": "Savol yaratish",
+    "createQuestionDescription": "Viktorinangizga yangi savol qo'shing",
     "editQuestion": "Savolni tahrirlash",
+    "editQuestionDescription": "Quyida savol tafsilotlarini yangilang",
     "deleteQuestion": "Savolni o'chirish",
     "questionTypes": {
       "multipleChoice": "Bir nechta variantli",
