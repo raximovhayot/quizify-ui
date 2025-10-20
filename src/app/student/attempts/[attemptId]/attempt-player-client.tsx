@@ -8,7 +8,6 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useAttemptContent } from '@/features/student/attempt/hooks/useAttemptContent';
 import { useSaveAttemptState } from '@/features/student/attempt/hooks/useSaveAttemptState';
 import { useCompleteAttempt } from '@/features/student/attempt/hooks/useCompleteAttempt';
-import { QuestionType } from '@/features/instructor/quiz/types/question';
 import { AttemptFullData } from '@/features/student/history/schemas/attemptSchema';
 
 type AnswerValue = number[] | string; // number[] for selection-based; string for text/boolean
