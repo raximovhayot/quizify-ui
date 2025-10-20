@@ -82,12 +82,12 @@ export function QuestionEditorDialog({
       });
 
   const formContent = (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Question Type Selector - Only show in create mode */}
       {!isEditMode && (
-        <div className="pb-2">
+        <div className="rounded-lg bg-muted/50 p-4 border">
           <Field>
-            <FieldLabel htmlFor="question-type">
+            <FieldLabel htmlFor="question-type" className="text-sm font-medium">
               {t('common.question.type.label', {
                 fallback: 'Question type',
               })}
@@ -98,7 +98,7 @@ export function QuestionEditorDialog({
                 onValueChange={(val) => setSelectedType(val as QuestionType)}
                 disabled={isSubmitting}
               >
-                <SelectTrigger id="question-type" className="w-full">
+                <SelectTrigger id="question-type" className="w-full mt-2">
                   <SelectValue
                     placeholder={t('common.question.type.placeholder', {
                       fallback: 'Select question type',
@@ -120,9 +120,9 @@ export function QuestionEditorDialog({
 
       {/* Question Type Badge - Show in edit mode */}
       {isEditMode && question && (
-        <div className="flex items-center gap-2 pb-2">
-          <span className="text-sm text-muted-foreground">
-            {t('common.question.type.label', { fallback: 'Question type' })}:
+        <div className="flex items-center justify-between rounded-lg bg-muted/50 p-3 border">
+          <span className="text-sm font-medium text-muted-foreground">
+            {t('common.question.type.label', { fallback: 'Question type' })}
           </span>
           <Badge variant="secondary" className="font-medium">
             {getQuestionTypeLabel(t, question.questionType)}
@@ -131,7 +131,7 @@ export function QuestionEditorDialog({
       )}
 
       {/* Question Form */}
-      <div className="border-t pt-4">
+      <div>
         <QuestionFormRenderer
           type={isEditMode && question ? question.questionType : selectedType}
           quizId={quizId}
