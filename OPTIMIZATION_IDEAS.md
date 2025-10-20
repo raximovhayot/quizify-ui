@@ -55,7 +55,20 @@ Both components now use React.memo with custom comparison functions for optimal 
 **Files Updated:**
 - `src/components/shared/providers/ClientProviders.tsx`
 
-### 📋 5. UI Components Inventory
+### ✅ 5. Dynamic Imports for TipTap Editor
+**Status:** COMPLETED  
+**Impact:** ~150KB bundle size reduction
+
+**Files Created:**
+- `src/components/shared/form/lazy/RichTextEditorLazy.tsx`
+- `src/components/shared/form/lazy/RichTextFieldLazy.tsx`
+- `src/components/shared/form/lazy/index.ts`
+
+**Files Updated:**
+- `src/features/instructor/quiz/components/forms/BaseQuestionForm.tsx`
+- `src/features/instructor/quiz/components/answers/AnswerListEditor.tsx`
+
+### 📋 6. UI Components Inventory
 **Status:** INFORMATIONAL  
 **Note:** All shadcn/ui components kept for future development
 
@@ -78,32 +91,44 @@ These are preserved for future feature development. Tree-shaking will exclude un
 ### 1. Dynamic Import Heavy Components
 
 **Priority:** HIGH  
+**Status:** ✅ COMPLETED (TipTap Editor)
 **Estimated Impact:** 150-300KB initial bundle reduction
 
 #### a. TipTap Rich Text Editor
-The TipTap editor and its extensions are heavy. Load them dynamically:
+**Status:** ✅ COMPLETED
+
+The TipTap editor and its extensions are heavy. They are now lazy-loaded:
 
 ```typescript
-// Before: src/features/instructor/quiz/components/QuestionEditor.tsx
-import { useEditor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import Mathematics from '@tiptap/extension-mathematics';
+// Created lazy-loaded wrappers:
+// src/components/shared/form/lazy/RichTextEditorLazy.tsx
+// src/components/shared/form/lazy/RichTextFieldLazy.tsx
 
-// After: Create a lazy-loaded wrapper
-// src/features/instructor/quiz/components/QuestionEditor.tsx
-const TipTapEditor = dynamic(
-  () => import('./TipTapEditorWrapper'),
-  { 
-    loading: () => <Skeleton className="h-32" />,
-    ssr: false // Editor doesn't need SSR
-  }
-);
+// Usage in components:
+import { RichTextFieldLazy as RichTextField } from '@/components/shared/form/lazy';
+
+<RichTextField
+  control={control}
+  name="content"
+  label="Question"
+  placeholder="Enter your question..."
+/>
 ```
 
-**Files to Update:**
-- Any component using `@tiptap/*` packages
-- Quiz question editor
-- Rich text input fields
+**Files Created:**
+- ✅ `src/components/shared/form/lazy/RichTextEditorLazy.tsx`
+- ✅ `src/components/shared/form/lazy/RichTextFieldLazy.tsx`
+- ✅ `src/components/shared/form/lazy/index.ts`
+
+**Files Updated:**
+- ✅ `src/features/instructor/quiz/components/forms/BaseQuestionForm.tsx`
+- ✅ `src/features/instructor/quiz/components/answers/AnswerListEditor.tsx`
+
+**Benefits:**
+- ~150KB saved on initial bundle
+- Editor loads only when needed
+- Smooth loading skeleton provides good UX
+- No SSR overhead for editor
 
 #### b. Charts and Analytics
 Recharts is heavy (~150KB). Load charts only when needed:

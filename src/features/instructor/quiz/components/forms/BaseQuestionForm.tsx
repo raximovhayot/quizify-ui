@@ -5,7 +5,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { useTranslations } from 'next-intl';
 
-import { RichTextField } from '@/components/shared/form/RichTextField';
+import { RichTextFieldLazy as RichTextField } from '@/components/shared/form/lazy';
 import { Button } from '@/components/ui/button';
 import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from '@/components/ui/input-group';
