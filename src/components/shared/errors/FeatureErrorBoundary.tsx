@@ -39,7 +39,9 @@ export class FeatureErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Log to console in development
+    // eslint-disable-next-line no-process-env
     if (process.env.NODE_ENV === 'development') {
+      // eslint-disable-next-line no-console
       console.error(`Error in ${this.props.featureName}:`, error, errorInfo);
     }
     

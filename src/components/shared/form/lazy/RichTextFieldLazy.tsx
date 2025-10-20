@@ -68,10 +68,11 @@ function RichTextFieldSkeleton<
 export const RichTextFieldLazy = dynamic(
   () => import('../RichTextField').then((mod) => mod.RichTextField),
   {
-    loading: (props: any) => <RichTextFieldSkeleton {...props} />,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    loading: () => <RichTextFieldSkeleton label="" name="" control={null as any} required={false} />,
     ssr: false, // Editor doesn't need SSR
   }
 ) as <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
->(props: RichTextFieldProps<TFieldValues, TName>) => JSX.Element;
+>(props: RichTextFieldProps<TFieldValues, TName>) => React.ReactElement;

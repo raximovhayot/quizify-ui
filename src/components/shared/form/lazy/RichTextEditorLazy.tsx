@@ -59,8 +59,8 @@ function RichTextEditorSkeleton({
 export const RichTextEditorLazy = dynamic<RichTextEditorProps>(
   () => import('../RichTextEditor').then((mod) => mod.RichTextEditor),
   {
-    loading: ({ className, minHeight }: RichTextEditorProps) => (
-      <RichTextEditorSkeleton className={className} minHeight={minHeight} />
+    loading: () => (
+      <RichTextEditorSkeleton />
     ),
     ssr: false, // Editor doesn't need SSR
   }

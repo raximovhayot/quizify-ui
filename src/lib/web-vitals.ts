@@ -1,4 +1,13 @@
-import type { Metric } from 'web-vitals';
+/**
+ * Web Vitals metric type from Next.js
+ */
+export interface Metric {
+  id: string;
+  name: string;
+  value: number;
+  rating: 'good' | 'needs-improvement' | 'poor';
+  navigationType?: string;
+}
 
 /**
  * Report Web Vitals metrics for performance monitoring
@@ -15,7 +24,9 @@ import type { Metric } from 'web-vitals';
  */
 export function reportWebVitals(metric: Metric) {
   // Log to console in development
+  // eslint-disable-next-line no-process-env
   if (process.env.NODE_ENV === 'development') {
+    // eslint-disable-next-line no-console
     console.log(`[Web Vitals] ${metric.name}:`, {
       value: Math.round(metric.value),
       rating: metric.rating,
@@ -24,9 +35,12 @@ export function reportWebVitals(metric: Metric) {
   }
 
   // In production, send to analytics service
+  // eslint-disable-next-line no-process-env
   if (process.env.NODE_ENV === 'production') {
     // Option 1: Send to Google Analytics
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (typeof window !== 'undefined' && (window as any).gtag) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any).gtag('event', metric.name, {
         event_category: 'Web Vitals',
         value: Math.round(metric.value),
