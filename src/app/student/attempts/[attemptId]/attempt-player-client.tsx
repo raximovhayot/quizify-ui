@@ -69,13 +69,7 @@ export default function AttemptPlayerClient({ attemptId }: AttemptPlayerClientPr
   };
 
 
-  const onSetBoolean = (questionId: number, val: boolean) => {
-    setValues((prev) => ({ ...prev, [questionId]: String(val) }));
-  };
 
-  const onSetText = (questionId: number, text: string) => {
-    setValues((prev) => ({ ...prev, [questionId]: text }));
-  };
 
   const handleSaveNow = useCallback(() => {
     if (content) {
@@ -135,70 +129,25 @@ export default function AttemptPlayerClient({ attemptId }: AttemptPlayerClientPr
                 <span className="text-muted-foreground mr-2">{idx + 1}.</span>
                 {q.content}
               </div>
-              {q.questionType === QuestionType.MULTIPLE_CHOICE && (
-                <ul className="space-y-2">
-                  {q.answers?.map((ans) => {
-                    const selected = Array.isArray(values[q.id])
-                      ? (values[q.id] as number[]).includes(ans.id)
-                      : false;
-                    return (
-                      <li key={ans.id}>
-                        <label className="inline-flex items-center gap-2">
-                          <input
-                            type="checkbox"
-                            checked={selected}
-                            onChange={() => onToggleChoice(q.id, ans.id)}
-                          />
-                          <span>{ans.content}</span>
-                        </label>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-
-              {q.questionType === QuestionType.TRUE_FALSE && (
-                <div className="flex gap-6">
-                  <label className="inline-flex items-center gap-2">
-                    <input
-                      type="radio"
-                      name={`tf-${q.id}`}
-                      checked={values[q.id] === 'true'}
-                      onChange={() => onSetBoolean(q.id, true)}
-                    />
-                    <span>{t('common.true', { fallback: 'True' })}</span>
-                  </label>
-                  <label className="inline-flex items-center gap-2">
-                    <input
-                      type="radio"
-                      name={`tf-${q.id}`}
-                      checked={values[q.id] === 'false'}
-                      onChange={() => onSetBoolean(q.id, false)}
-                    />
-                    <span>{t('common.false', { fallback: 'False' })}</span>
-                  </label>
-                </div>
-              )}
-
-              {q.questionType === QuestionType.SHORT_ANSWER && (
-                <div>
-                  <input
-                    className="w-full border rounded-md p-2"
-                    type="text"
-                    value={typeof values[q.id] === 'string' ? (values[q.id] as string) : ''}
-                    onChange={(e) => onSetText(q.id, e.target.value)}
-                    placeholder={t('student.attempt.type.answer', { fallback: 'Type your answer…' })}
-                  />
-                </div>
-              )}
-
-              {q.questionType !== QuestionType.MULTIPLE_CHOICE &&
-                q.questionType !== QuestionType.TRUE_FALSE &&
-                q.questionType !== QuestionType.SHORT_ANSWER && (
-                  <div className="text-sm text-muted-foreground">
-                    {t('student.attempt.unsupported', { fallback: 'This question type is not yet supported in the player.' })}
-                  </div>
-                )}
+              <ul className="space-y-2">
+                {q.answers?.map((ans) => {
+                  const selected = Array.isArray(values[q.id])
+                    ? (values[q.id] as number[]).includes(ans.id)
+                    : false;
+                  return (
+                    <li key={ans.id}>
+                      <label className="inline-flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={selected}
+                          onChange={() => onToggleChoice(q.id, ans.id)}
+                        />
+                        <span>{ans.content}</span>
+                      </label>
+                    </li>
+                  );
+                })}
+              </ul>
             </li>
           ))}
         </ol>

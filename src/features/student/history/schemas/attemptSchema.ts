@@ -39,16 +39,10 @@ export const attemptAnswerOptionSchema = z
 export const attemptQuestionSchema = z
   .object({
     id: z.number().int().positive(),
-    questionType: z.enum(QuestionType),
+    questionType: z.nativeEnum(QuestionType),
     content: z.string(),
     // For MCQ-like questions
     answers: z.array(attemptAnswerOptionSchema).optional().default([]),
-    // Type-specific optional fields (mirroring instructor DTOs when present)
-    trueFalseAnswer: z.boolean().optional(),
-    blankTemplate: z.string().optional(),
-    gradingCriteria: z.string().optional(),
-    matchingConfig: z.string().optional(),
-    correctOrder: z.string().optional(),
     points: z.number().int().nonnegative().optional(),
     order: z.number().int().nonnegative().optional(),
   })
