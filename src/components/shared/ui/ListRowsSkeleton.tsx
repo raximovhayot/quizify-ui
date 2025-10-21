@@ -4,8 +4,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 export interface IListRowsSkeletonProps {
   /** Number of skeleton rows to render */
   rows?: number;
-  /** @deprecated use `rows` */
-  count?: number;
   /** Use tighter vertical spacing */
   dense?: boolean;
   /** Show a right-side action skeleton (e.g., button) */
@@ -21,13 +19,12 @@ export interface IListRowsSkeletonProps {
  * atomic `ListSkeleton` while keeping the same defaults and visual appearance.
  */
 export function ListRowsSkeleton({
-  rows,
-  count,
+  rows = 3,
   dense = false,
   showAction = true,
   className = '',
 }: Readonly<IListRowsSkeletonProps>) {
-  const n = typeof rows === 'number' ? rows : typeof count === 'number' ? count : 3;
+  const n = rows;
   const spacing = dense ? 'space-y-1' : 'space-y-2';
 
   return (

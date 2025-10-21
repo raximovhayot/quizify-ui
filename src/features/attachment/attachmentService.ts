@@ -105,22 +105,6 @@ export class AttachmentService {
     return details.downloadUrl;
   }
 
-  // ============================================================================
-  // BACKWARD-COMPATIBILITY SHIMS (deprecated)
-  // ============================================================================
-  /** @deprecated Use `upload(file)` — token is handled globally */
-  static async uploadAttachment(file: File, _accessToken?: string) {
-    return this.upload(file);
-  }
-  /** @deprecated Use `getDetails(id)` — token is handled globally */
-  static async getAttachment(attachmentId: number, _accessToken?: string) {
-    return this.getDetails(attachmentId);
-  }
-  /** @deprecated Use `getUrl(id)` — token is handled globally */
-  static async getDownloadUrl(attachmentId: number, _accessToken?: string) {
-    return this.getUrl(attachmentId);
-  }
-
   /**
    * Validate file before upload
    */
