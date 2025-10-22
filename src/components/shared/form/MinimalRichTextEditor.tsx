@@ -1,22 +1,33 @@
 'use client';
 
+import Mathematics from '@tiptap/extension-mathematics';
 import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import {
   Bold,
+  Code,
   Italic,
   List,
   ListOrdered,
 } from 'lucide-react';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 import { useIsHydrated } from '../hooks/useIsHydrated';
+import { MathEditorDialog } from './MathEditorDialog';
+
+// Dynamic import for KaTeX to avoid SSR issues
+let katex: typeof import('katex').default | null = null;
+if (typeof window !== 'undefined') {
+  import('katex').then((module) => {
+    katex = module.default;
+  });
+}
 
 export interface MinimalRichTextEditorProps {
   content: string;
@@ -39,17 +50,19 @@ export function MinimalRichTextEditor({
 }: MinimalRichTextEditorProps) {
   const isHydrated = useIsHydrated();
   const t = useTranslations();
+  const [mathEditorOpen, setMathEditorOpen] = useState(false);
+  const [mathEditorMode, setMathEditorMode] = useState<'inline' | 'block'>('inline');
 
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
         heading: false, // Disable headings for simplicity
-        code: false, // Disable code blocks
         codeBlock: false, // Disable code blocks
       }),
       Placeholder.configure({
         placeholder,
       }),
+      Mathematics,
     ],
     content,
     editable: !disabled,
@@ -68,6 +81,36 @@ export function MinimalRichTextEditor({
       },
     },
   });
+
+  // Render math formulas when editor updates
+  useEffect(() => {
+    if (!editor || !isHydrated) return;
+    
+    const renderMath = async () => {
+      if (!katex) return;
+      
+      const editorElement = editor.view.dom;
+      const mathElements = editorElement.querySelectorAll('.math-inline, .math-display');
+      
+      mathElements.forEach((element) => {
+        const latex = element.textContent || '';
+        const displayMode = element.classList.contains('math-display');
+        
+        try {
+          if (katex) {
+            katex.render(latex, element as HTMLElement, {
+              throwOnError: false,
+              displayMode,
+            });
+          }
+        } catch {
+          // Silently fail - KaTeX render error
+        }
+      });
+    };
+    
+    renderMath();
+  }, [editor, isHydrated, content]);
 
   // Update editor content when prop changes externally
   useEffect(() => {
@@ -97,6 +140,8 @@ export function MinimalRichTextEditor({
           <div className="h-8 w-8 bg-muted rounded animate-pulse" />
           <div className="h-8 w-8 bg-muted rounded animate-pulse" />
           <div className="h-8 w-8 bg-muted rounded animate-pulse" />
+          <div className="h-8 w-8 bg-muted rounded animate-pulse" />
+          <div className="h-8 w-8 bg-muted rounded animate-pulse" />
         </div>
         <div className="p-3" style={{ minHeight }}>
           <div className="h-4 bg-muted rounded w-1/2 animate-pulse" />
@@ -104,6 +149,26 @@ export function MinimalRichTextEditor({
       </div>
     );
   }
+
+  const insertInlineFormula = () => {
+    setMathEditorMode('inline');
+    setMathEditorOpen(true);
+  };
+
+  const insertBlockFormula = () => {
+    setMathEditorMode('block');
+    setMathEditorOpen(true);
+  };
+
+  const handleMathInsert = (latex: string) => {
+    if (!editor) return;
+    
+    if (mathEditorMode === 'inline') {
+      editor.chain().focus().insertContent(`$${latex}$`).run();
+    } else {
+      editor.chain().focus().insertContent(`$$${latex}$$`).run();
+    }
+  };
 
   return (
     <div
@@ -113,7 +178,15 @@ export function MinimalRichTextEditor({
         className
       )}
     >
-      {/* Minimal Toolbar - Only essential formatting */}
+      {/* Math Editor Dialog */}
+      <MathEditorDialog
+        open={mathEditorOpen}
+        onOpenChange={setMathEditorOpen}
+        onInsert={handleMathInsert}
+        mode={mathEditorMode}
+      />
+
+      {/* Minimal Toolbar - Essential formatting with code and math */}
       <div className="border-b bg-muted/20 px-2 py-1.5 flex items-center gap-1">
         <Button
           type="button"
@@ -155,6 +228,24 @@ export function MinimalRichTextEditor({
           type="button"
           variant="ghost"
           size="sm"
+          onClick={() => editor.chain().focus().toggleCode().run()}
+          disabled={
+            disabled || !editor.can().chain().focus().toggleCode().run()
+          }
+          className={cn(
+            'h-7 w-7 p-0',
+            editor.isActive('code') && 'bg-accent'
+          )}
+          aria-label={t('editor.toolbar.code', { fallback: 'Code' })}
+          title={t('editor.toolbar.code', { fallback: 'Code' })}
+        >
+          <Code className="h-3.5 w-3.5" />
+        </Button>
+
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           disabled={
             disabled || !editor.can().chain().focus().toggleBulletList().run()
@@ -185,6 +276,32 @@ export function MinimalRichTextEditor({
           title={t('editor.toolbar.orderedList', { fallback: 'Ordered List' })}
         >
           <ListOrdered className="h-3.5 w-3.5" />
+        </Button>
+
+        {/* Math buttons */}
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={insertInlineFormula}
+          disabled={disabled}
+          className="h-7 px-1.5 text-sm font-semibold"
+          aria-label={t('editor.toolbar.insertInlineFormula', { fallback: 'Insert inline formula' })}
+          title={t('editor.toolbar.insertInlineFormulaHint', { fallback: 'Insert inline formula $...$ (LaTeX)' })}
+        >
+          𝑥²
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={insertBlockFormula}
+          disabled={disabled}
+          className="h-7 px-1.5 text-sm font-semibold"
+          aria-label={t('editor.toolbar.insertBlockFormula', { fallback: 'Insert block formula' })}
+          title={t('editor.toolbar.insertBlockFormulaHint', { fallback: 'Insert block formula $$...$$ (LaTeX)' })}
+        >
+          ∑
         </Button>
       </div>
 

@@ -4,7 +4,7 @@ import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 import { useTranslations } from 'next-intl';
 
-import { RichTextFieldLazy as RichTextField } from '@/components/shared/form/lazy';
+import { MinimalRichTextFieldLazy as MinimalRichTextField } from '@/components/shared/form/lazy';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -93,7 +93,7 @@ export function AnswerListEditor({
             control={control}
             name={`${name}.${index}.content` as const}
             render={() => (
-              <RichTextField
+              <MinimalRichTextField
                 control={control}
                 name={`${name}.${index}.content` as const}
                 label=""
