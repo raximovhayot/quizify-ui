@@ -9,14 +9,10 @@ import {
   FormDrawer,
   FormDrawerContent,
   FormDrawerHeader,
-  FormDrawerTitle,
   FormDrawerBody,
 } from '@/components/shared/ui/FormDrawer';
 import {
   Dialog,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
 } from '@/components/ui/dialog';
 import { ScrollableDialogContent } from '@/components/shared/ui/ScrollableDialogContent';
 import { Field, FieldContent, FieldLabel } from '@/components/ui/field';
@@ -69,23 +65,12 @@ export function QuestionEditorDialog({
   };
 
   const isEditMode = mode === 'edit' || !!question;
-  const title = isEditMode
-    ? t('common.editQuestion', { fallback: 'Edit Question' })
-    : t('common.createQuestion', { fallback: 'Create Question' });
-  
-  const description = isEditMode
-    ? t('common.editQuestionDescription', {
-        fallback: 'Update the question details below',
-      })
-    : t('common.createQuestionDescription', {
-        fallback: 'Add a new question to your quiz',
-      });
 
   const formContent = (
     <div className="space-y-4">
       {/* Question Type Selector - Only show in create mode */}
       {!isEditMode && (
-        <div className="rounded-lg bg-muted/50 p-4 border">
+        <div className="pb-2">
           <Field>
             <FieldLabel htmlFor="question-type" className="text-sm font-medium">
               {t('common.question.type.label', {
@@ -120,7 +105,7 @@ export function QuestionEditorDialog({
 
       {/* Question Type Badge - Show in edit mode */}
       {isEditMode && question && (
-        <div className="flex items-center justify-between rounded-lg bg-muted/50 p-3 border">
+        <div className="flex items-center justify-between pb-2">
           <span className="text-sm font-medium text-muted-foreground">
             {t('common.question.type.label', { fallback: 'Question type' })}
           </span>
@@ -149,10 +134,60 @@ export function QuestionEditorDialog({
     return (
       <FormDrawer open={open} onOpenChange={onOpenChange}>
         <FormDrawerContent side="bottom" open={open} className="rounded-t-2xl">
-          <FormDrawerHeader className="pb-4">
-            <FormDrawerTitle>{title}</FormDrawerTitle>
+          <FormDrawerHeader className="pb-2">
+            {/* Question type selector in header for mobile */}
+            {!isEditMode && (
+              <Field>
+                <FieldLabel htmlFor="question-type-mobile" className="text-sm font-medium">
+                  {t('common.question.type.label', {
+                    fallback: 'Question type',
+                  })}
+                </FieldLabel>
+                <FieldContent>
+                  <Select
+                    value={selectedType}
+                    onValueChange={(val) => setSelectedType(val as QuestionType)}
+                    disabled={isSubmitting}
+                  >
+                    <SelectTrigger id="question-type-mobile" className="w-full mt-2">
+                      <SelectValue
+                        placeholder={t('common.question.type.placeholder', {
+                          fallback: 'Select question type',
+                        })}
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {getAllQuestionTypes().map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {getQuestionTypeLabel(t, type)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FieldContent>
+              </Field>
+            )}
+            {isEditMode && question && (
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground">
+                  {t('common.question.type.label', { fallback: 'Question type' })}
+                </span>
+                <Badge variant="secondary" className="font-medium">
+                  {getQuestionTypeLabel(t, question.questionType)}
+                </Badge>
+              </div>
+            )}
           </FormDrawerHeader>
-          <FormDrawerBody className="pb-8">{formContent}</FormDrawerBody>
+          <FormDrawerBody className="pb-8">
+            <QuestionFormRenderer
+              type={isEditMode && question ? question.questionType : selectedType}
+              quizId={quizId}
+              initialData={isEditMode ? question || undefined : undefined}
+              isSubmitting={isSubmitting}
+              onCancel={() => onOpenChange(false)}
+              onSubmit={handleSubmit}
+            />
+          </FormDrawerBody>
         </FormDrawerContent>
       </FormDrawer>
     );
@@ -162,15 +197,7 @@ export function QuestionEditorDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <ScrollableDialogContent className="w-full sm:max-w-3xl rounded-2xl">
-        <DialogHeader className="space-y-2">
-          <DialogTitle className="text-2xl font-semibold">
-            {title}
-          </DialogTitle>
-          <DialogDescription className="text-sm text-muted-foreground">
-            {description}
-          </DialogDescription>
-        </DialogHeader>
-        <div className="mt-4">{formContent}</div>
+        {formContent}
       </ScrollableDialogContent>
     </Dialog>
   );
