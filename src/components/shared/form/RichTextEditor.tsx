@@ -25,6 +25,7 @@ import { sanitizeHtml } from '@/lib/sanitize';
 import { cn } from '@/lib/utils';
 
 import { useIsHydrated } from '../hooks/useIsHydrated';
+import { MathEditorDialog } from './MathEditorDialog';
 
 // Dynamic import for KaTeX to avoid SSR issues
 let katex: typeof import('katex').default | null = null;
@@ -56,6 +57,8 @@ export function RichTextEditor({
   const isHydrated = useIsHydrated();
   const t = useTranslations();
   const [showMathSource, setShowMathSource] = useState(false);
+  const [mathEditorOpen, setMathEditorOpen] = useState(false);
+  const [mathEditorMode, setMathEditorMode] = useState<'inline' | 'block'>('inline');
 
   const editor = useEditor({
     extensions: [
@@ -155,27 +158,23 @@ export function RichTextEditor({
   }
 
   const insertInlineFormula = () => {
-    const formula = prompt(
-      t('editor.toolbar.insertFormulaPrompt', { 
-        fallback: 'Enter LaTeX formula (e.g., x^2, \\frac{a}{b}, \\sqrt{x})' 
-      }), 
-      'x^2 + y^2 = z^2'
-    );
-    if (formula == null) return;
-    // Insert inline math using $...$
-    editor.chain().focus().insertContent(`$${formula}$`).run();
+    setMathEditorMode('inline');
+    setMathEditorOpen(true);
   };
 
   const insertBlockFormula = () => {
-    const formula = prompt(
-      t('editor.toolbar.insertBlockFormulaPrompt', { 
-        fallback: 'Enter LaTeX formula for display mode' 
-      }), 
-      '\\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}'
-    );
-    if (formula == null) return;
-    // Insert block math using $$...$$
-    editor.chain().focus().insertContent(`$$${formula}$$`).run();
+    setMathEditorMode('block');
+    setMathEditorOpen(true);
+  };
+
+  const handleMathInsert = (latex: string) => {
+    if (!editor) return;
+    
+    if (mathEditorMode === 'inline') {
+      editor.chain().focus().insertContent(`$${latex}$`).run();
+    } else {
+      editor.chain().focus().insertContent(`$$${latex}$$`).run();
+    }
   };
 
   const insertSymbol = (symbol: string) => {
@@ -194,6 +193,14 @@ export function RichTextEditor({
         className
       )}
     >
+      {/* Math Editor Dialog */}
+      <MathEditorDialog
+        open={mathEditorOpen}
+        onOpenChange={setMathEditorOpen}
+        onInsert={handleMathInsert}
+        mode={mathEditorMode}
+      />
+
       {/* Toolbar */}
       <div className="border-b bg-muted/20 p-2 flex flex-wrap items-center gap-1">
         <Button
