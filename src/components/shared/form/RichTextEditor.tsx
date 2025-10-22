@@ -202,7 +202,7 @@ export function RichTextEditor({
       />
 
       {/* Toolbar */}
-      <div className="border-b bg-muted/20 p-2 flex flex-wrap items-center gap-1">
+      <div className="border-b bg-muted/20 p-1.5 sm:p-2 flex flex-wrap items-center gap-0.5 sm:gap-1">
         <Button
           type="button"
           variant="ghost"
@@ -212,13 +212,13 @@ export function RichTextEditor({
             disabled || !editor.can().chain().focus().toggleBold().run()
           }
           className={cn(
-            'h-8 w-8 p-0 rounded-lg',
+            'h-7 w-7 sm:h-8 sm:w-8 p-0 rounded-lg',
             editor.isActive('bold') && 'bg-accent'
           )}
           aria-label={t('editor.toolbar.bold', { fallback: 'Bold' })}
           title={t('editor.toolbar.bold', { fallback: 'Bold' })}
         >
-          <Bold className="h-4 w-4" />
+          <Bold className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
         </Button>
 
         <Button
@@ -230,13 +230,13 @@ export function RichTextEditor({
             disabled || !editor.can().chain().focus().toggleItalic().run()
           }
           className={cn(
-            'h-8 w-8 p-0 rounded-lg',
+            'h-7 w-7 sm:h-8 sm:w-8 p-0 rounded-lg',
             editor.isActive('italic') && 'bg-accent'
           )}
           aria-label={t('editor.toolbar.italic', { fallback: 'Italic' })}
           title={t('editor.toolbar.italic', { fallback: 'Italic' })}
         >
-          <Italic className="h-4 w-4" />
+          <Italic className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
         </Button>
 
         <Button
@@ -248,16 +248,16 @@ export function RichTextEditor({
             disabled || !editor.can().chain().focus().toggleCode().run()
           }
           className={cn(
-            'h-8 w-8 p-0 rounded-lg',
+            'h-7 w-7 sm:h-8 sm:w-8 p-0 rounded-lg',
             editor.isActive('code') && 'bg-accent'
           )}
           aria-label={t('editor.toolbar.code', { fallback: 'Code' })}
           title={t('editor.toolbar.code', { fallback: 'Code' })}
         >
-          <Code className="h-4 w-4" />
+          <Code className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
         </Button>
 
-        <Separator orientation="vertical" className="h-6 mx-1" />
+        <Separator orientation="vertical" className="h-5 sm:h-6 mx-0.5 sm:mx-1" />
 
         <Button
           type="button"
@@ -268,13 +268,13 @@ export function RichTextEditor({
             disabled || !editor.can().chain().focus().toggleBulletList().run()
           }
           className={cn(
-            'h-8 w-8 p-0 rounded-lg',
+            'h-7 w-7 sm:h-8 sm:w-8 p-0 rounded-lg',
             editor.isActive('bulletList') && 'bg-accent'
           )}
           aria-label={t('editor.toolbar.bulletList', { fallback: 'Bullet List' })}
           title={t('editor.toolbar.bulletList', { fallback: 'Bullet List' })}
         >
-          <List className="h-4 w-4" />
+          <List className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
         </Button>
 
         <Button
@@ -286,16 +286,16 @@ export function RichTextEditor({
             disabled || !editor.can().chain().focus().toggleOrderedList().run()
           }
           className={cn(
-            'h-8 w-8 p-0 rounded-lg',
+            'h-7 w-7 sm:h-8 sm:w-8 p-0 rounded-lg',
             editor.isActive('orderedList') && 'bg-accent'
           )}
           aria-label={t('editor.toolbar.orderedList', { fallback: 'Ordered List' })}
           title={t('editor.toolbar.orderedList', { fallback: 'Ordered List' })}
         >
-          <ListOrdered className="h-4 w-4" />
+          <ListOrdered className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
         </Button>
 
-        <Separator orientation="vertical" className="h-6 mx-1" />
+        <Separator orientation="vertical" className="h-5 sm:h-6 mx-0.5 sm:mx-1" />
 
         {/* Math & Symbols */}
         <Button
@@ -303,7 +303,7 @@ export function RichTextEditor({
           variant="ghost"
           size="sm"
           onClick={insertInlineFormula}
-          className="h-8 px-2 rounded-lg text-base font-semibold"
+          className="h-7 sm:h-8 px-1.5 sm:px-2 rounded-lg text-sm sm:text-base font-semibold"
           aria-label={t('editor.toolbar.insertInlineFormula', { fallback: 'Insert inline formula' })}
           title={t('editor.toolbar.insertInlineFormulaHint', { fallback: 'Insert inline formula $...$ (LaTeX)' })}
         >
@@ -314,7 +314,7 @@ export function RichTextEditor({
           variant="ghost"
           size="sm"
           onClick={insertBlockFormula}
-          className="h-8 px-2 rounded-lg text-base font-semibold"
+          className="h-7 sm:h-8 px-1.5 sm:px-2 rounded-lg text-sm sm:text-base font-semibold"
           aria-label={t('editor.toolbar.insertBlockFormula', { fallback: 'Insert block formula' })}
           title={t('editor.toolbar.insertBlockFormulaHint', { fallback: 'Insert block formula $$...$$ (LaTeX)' })}
         >
@@ -326,15 +326,15 @@ export function RichTextEditor({
           size="sm"
           onClick={toggleMathSource}
           className={cn(
-            'h-8 w-8 p-0 rounded-lg',
+            'h-7 w-7 sm:h-8 sm:w-8 p-0 rounded-lg',
             showMathSource && 'bg-accent'
           )}
           aria-label={t('editor.toolbar.toggleMathSource', { fallback: 'Toggle LaTeX source' })}
           title={t('editor.toolbar.toggleMathSourceHint', { fallback: 'Toggle between rendered and LaTeX source' })}
         >
-          {showMathSource ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          {showMathSource ? <EyeOff className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> : <Eye className="h-3.5 w-3.5 sm:h-4 sm:w-4" />}
         </Button>
-        <div className="flex items-center gap-1">
+        <div className="hidden lg:flex items-center gap-0.5 sm:gap-1">
           {['Ω','π','±','×','÷','≤','≥','≈','√','∑','∫','∞','→','↔','α','β','γ'].map((s) => (
             <Button
               key={s}
@@ -342,7 +342,7 @@ export function RichTextEditor({
               variant="ghost"
               size="sm"
               onClick={() => insertSymbol(s)}
-              className="h-8 w-8 p-0 rounded-lg"
+              className="h-7 w-7 sm:h-8 sm:w-8 p-0 rounded-lg text-sm sm:text-base"
               aria-label={t('editor.toolbar.insertSymbol', { fallback: 'Insert {symbol}', symbol: s })}
               title={t('editor.toolbar.insertSymbol', { fallback: 'Insert {symbol}', symbol: s })}
             >
@@ -351,7 +351,7 @@ export function RichTextEditor({
           ))}
         </div>
 
-        <Separator orientation="vertical" className="h-6 mx-1" />
+        <Separator orientation="vertical" className="h-5 sm:h-6 mx-0.5 sm:mx-1" />
 
         <Button
           type="button"
@@ -359,11 +359,11 @@ export function RichTextEditor({
           size="sm"
           onClick={() => editor.chain().focus().undo().run()}
           disabled={disabled || !editor.can().chain().focus().undo().run()}
-          className="h-8 w-8 p-0 rounded-lg"
+          className="h-7 w-7 sm:h-8 sm:w-8 p-0 rounded-lg"
           aria-label={t('editor.toolbar.undo', { fallback: 'Undo' })}
           title={t('editor.toolbar.undo', { fallback: 'Undo' })}
         >
-          <Undo className="h-4 w-4" />
+          <Undo className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
         </Button>
 
         <Button
@@ -372,11 +372,11 @@ export function RichTextEditor({
           size="sm"
           onClick={() => editor.chain().focus().redo().run()}
           disabled={disabled || !editor.can().chain().focus().redo().run()}
-          className="h-8 w-8 p-0 rounded-lg"
+          className="h-7 w-7 sm:h-8 sm:w-8 p-0 rounded-lg"
           aria-label={t('editor.toolbar.redo', { fallback: 'Redo' })}
           title={t('editor.toolbar.redo', { fallback: 'Redo' })}
         >
-          <Redo className="h-4 w-4" />
+          <Redo className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
         </Button>
       </div>
 
