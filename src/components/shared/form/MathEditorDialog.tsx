@@ -132,7 +132,6 @@ export function MathEditorDialog({
   const [latex, setLatex] = useState(initialLatex);
   const [previewError, setPreviewError] = useState<string | null>(null);
   const [cursorPosition, setCursorPosition] = useState<number>(0);
-  const inputRef = useState<HTMLInputElement | null>(null)[0];
 
   useEffect(() => {
     if (open) {
