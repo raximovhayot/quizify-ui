@@ -55,7 +55,7 @@ class ApiClient {
   private refreshPromise?: Promise<string | null | undefined>;
 
   constructor(baseUrl: string = env.NEXT_PUBLIC_API_BASE_URL) {
-    this.baseUrl = baseUrl;
+    this.baseUrl = baseUrl + "/api/v1";
   }
 
   /** Set or clear the current auth token used for requests */
