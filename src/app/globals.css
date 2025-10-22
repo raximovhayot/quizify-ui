@@ -251,6 +251,30 @@
     @apply text-base;
   }
 
+  /* Math rendering styles */
+  .math-node {
+    @apply inline-block align-middle;
+  }
+
+  /* KaTeX rendered formulas */
+  .katex {
+    @apply text-foreground;
+  }
+
+  .katex-display {
+    @apply my-4;
+  }
+
+  /* Math source mode - show LaTeX source instead of rendered */
+  .math-source-mode .math-node .katex {
+    display: none;
+  }
+
+  .math-source-mode .math-node::before {
+    content: attr(data-latex);
+    @apply font-mono text-sm bg-muted px-1 py-0.5 rounded;
+  }
+
   /* Mobile safe area support */
   @supports (padding-bottom: env(safe-area-inset-bottom)) {
     .pb-safe {

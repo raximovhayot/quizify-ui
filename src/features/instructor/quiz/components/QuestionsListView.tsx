@@ -11,7 +11,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import type { TInstructorQuestionForm } from '../schemas/questionSchema';
 import { QuestionDataDto } from '../types/question';
 import { DeleteQuestionDialog } from './questions-list/DeleteQuestionDialog';
-import { EditQuestionDialog } from './questions-list/EditQuestionDialog';
+import { QuestionEditorDialog } from './QuestionEditorDialog';
 import { QuestionListItem } from './questions-list/QuestionListItem';
 import { QuestionsListHeader } from './questions-list/QuestionsListHeader';
 import { QuestionsListSkeleton } from './questions-list/QuestionsListSkeleton';
@@ -203,12 +203,13 @@ export function QuestionsListView({
       </div>
 
       {/* Edit Question Modal */}
-      <EditQuestionDialog
+      <QuestionEditorDialog
+        mode="edit"
         open={!!editingQuestion}
         question={editingQuestion}
         quizId={quizId}
         isSubmitting={isUpdatePending}
-        onClose={onCloseEdit}
+        onOpenChange={(open) => !open && onCloseEdit()}
         onSubmit={onSubmitEdit}
       />
 

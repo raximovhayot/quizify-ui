@@ -7,6 +7,8 @@ import StarterKit from '@tiptap/starter-kit';
 import {
   Bold,
   Code,
+  Eye,
+  EyeOff,
   Italic,
   List,
   ListOrdered,
@@ -14,7 +16,7 @@ import {
   Undo,
 } from 'lucide-react';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
@@ -23,6 +25,14 @@ import { sanitizeHtml } from '@/lib/sanitize';
 import { cn } from '@/lib/utils';
 
 import { useIsHydrated } from '../hooks/useIsHydrated';
+
+// Dynamic import for KaTeX to avoid SSR issues
+let katex: typeof import('katex').default | null = null;
+if (typeof window !== 'undefined') {
+  import('katex').then((module) => {
+    katex = module.default;
+  });
+}
 
 export interface RichTextEditorProps {
   content: string;
@@ -45,6 +55,7 @@ export function RichTextEditor({
 }: RichTextEditorProps) {
   const isHydrated = useIsHydrated();
   const t = useTranslations();
+  const [showMathSource, setShowMathSource] = useState(false);
 
   const editor = useEditor({
     extensions: [
@@ -69,12 +80,43 @@ export function RichTextEditor({
       attributes: {
         class: cn(
           'prose prose-sm max-w-none focus:outline-none min-h-[120px] px-3 py-2',
-          disabled && 'opacity-50 cursor-not-allowed'
+          disabled && 'opacity-50 cursor-not-allowed',
+          showMathSource && 'math-source-mode'
         ),
         ...(id && { id }),
       },
     },
   });
+
+  // Render math formulas when editor updates
+  useEffect(() => {
+    if (!editor || !isHydrated || showMathSource) return;
+    
+    const renderMath = async () => {
+      if (!katex) return;
+      
+      const editorElement = editor.view.dom;
+      const mathElements = editorElement.querySelectorAll('.math-inline, .math-display');
+      
+      mathElements.forEach((element) => {
+        const latex = element.textContent || '';
+        const displayMode = element.classList.contains('math-display');
+        
+        try {
+          if (katex) {
+            katex.render(latex, element as HTMLElement, {
+              throwOnError: false,
+              displayMode,
+            });
+          }
+        } catch {
+          // Silently fail - KaTeX render error
+        }
+      });
+    };
+    
+    renderMath();
+  }, [editor, isHydrated, showMathSource, content]);
 
   // Update editor content when prop changes externally
   useEffect(() => {
@@ -113,14 +155,35 @@ export function RichTextEditor({
   }
 
   const insertInlineFormula = () => {
-    const formula = prompt('LaTeX formula (inline):', 'a^2 + b^2 = c^2');
+    const formula = prompt(
+      t('editor.toolbar.insertFormulaPrompt', { 
+        fallback: 'Enter LaTeX formula (e.g., x^2, \\frac{a}{b}, \\sqrt{x})' 
+      }), 
+      'x^2 + y^2 = z^2'
+    );
     if (formula == null) return;
     // Insert inline math using $...$
     editor.chain().focus().insertContent(`$${formula}$`).run();
   };
 
+  const insertBlockFormula = () => {
+    const formula = prompt(
+      t('editor.toolbar.insertBlockFormulaPrompt', { 
+        fallback: 'Enter LaTeX formula for display mode' 
+      }), 
+      '\\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}'
+    );
+    if (formula == null) return;
+    // Insert block math using $$...$$
+    editor.chain().focus().insertContent(`$$${formula}$$`).run();
+  };
+
   const insertSymbol = (symbol: string) => {
     editor.chain().focus().insertContent(symbol).run();
+  };
+
+  const toggleMathSource = () => {
+    setShowMathSource(!showMathSource);
   };
 
   return (
@@ -233,11 +296,36 @@ export function RichTextEditor({
           variant="ghost"
           size="sm"
           onClick={insertInlineFormula}
-          className="h-8 px-2 rounded-lg"
-          aria-label={t('editor.toolbar.insertFormula', { fallback: 'Insert formula' })}
-          title={t('editor.toolbar.insertFormulaHint', { fallback: 'Insert formula (LaTeX)' })}
+          className="h-8 px-2 rounded-lg text-base font-semibold"
+          aria-label={t('editor.toolbar.insertInlineFormula', { fallback: 'Insert inline formula' })}
+          title={t('editor.toolbar.insertInlineFormulaHint', { fallback: 'Insert inline formula $...$ (LaTeX)' })}
+        >
+          𝑥²
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={insertBlockFormula}
+          className="h-8 px-2 rounded-lg text-base font-semibold"
+          aria-label={t('editor.toolbar.insertBlockFormula', { fallback: 'Insert block formula' })}
+          title={t('editor.toolbar.insertBlockFormulaHint', { fallback: 'Insert block formula $$...$$ (LaTeX)' })}
         >
           ∑
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={toggleMathSource}
+          className={cn(
+            'h-8 w-8 p-0 rounded-lg',
+            showMathSource && 'bg-accent'
+          )}
+          aria-label={t('editor.toolbar.toggleMathSource', { fallback: 'Toggle LaTeX source' })}
+          title={t('editor.toolbar.toggleMathSourceHint', { fallback: 'Toggle between rendered and LaTeX source' })}
+        >
+          {showMathSource ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
         </Button>
         <div className="flex items-center gap-1">
           {['Ω','π','±','×','÷','≤','≥','≈','√','∑','∫','∞','→','↔','α','β','γ'].map((s) => (
