@@ -987,6 +987,24 @@
       "insertSymbol": "{symbol} ni qo'shish",
       "undo": "Bekor qilish",
       "redo": "Qaytarish"
+    },
+    "mathEditor": {
+      "title": "Formula muharriri",
+      "description": "LaTeX sintaksisi yordamida matematik ifodalar yarating",
+      "displayMode": "Ko'rsatish rejimi",
+      "latexInput": "LaTeX kiritish",
+      "placeholder": "LaTeX-ni bu yerga kiriting, masalan, x^2 + y^2 = z^2",
+      "preview": "Ko'rib chiqish",
+      "emptyPreview": "Ko'rib chiqish bu yerda paydo bo'ladi",
+      "loading": "Ko'rib chiqish yuklanmoqda...",
+      "clear": "Tozalash",
+      "insert": "Qo'shish",
+      "templates": "Shablonlar",
+      "basic": "Asosiy",
+      "greek": "Yunon",
+      "operators": "Operatorlar",
+      "arrows": "Strelkalar",
+      "sets": "To'plamlar"
     }
   }
 }

@@ -131,19 +131,23 @@ export function MathEditorDialog({
   const t = useTranslations();
   const [latex, setLatex] = useState(initialLatex);
   const [previewError, setPreviewError] = useState<string | null>(null);
+  const [cursorPosition, setCursorPosition] = useState<number>(0);
+  const inputRef = useState<HTMLInputElement | null>(null)[0];
 
   useEffect(() => {
     if (open) {
       setLatex(initialLatex);
       setPreviewError(null);
+      setCursorPosition(initialLatex.length);
     }
   }, [open, initialLatex]);
 
   const insertSymbol = (symbolLatex: string) => {
-    // Insert at cursor position or append
-    const cursorPos = latex.length;
-    const newLatex = latex.slice(0, cursorPos) + symbolLatex + latex.slice(cursorPos);
+    // Insert at current cursor position
+    const newLatex = latex.slice(0, cursorPosition) + symbolLatex + latex.slice(cursorPosition);
     setLatex(newLatex);
+    // Move cursor after inserted symbol
+    setCursorPosition(cursorPosition + symbolLatex.length);
   };
 
   const handleInsert = () => {
@@ -203,17 +207,17 @@ export function MathEditorDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col">
+      <DialogContent className="max-w-4xl max-h-[90vh] w-[95vw] sm:w-full flex flex-col">
         <DialogHeader>
-          <DialogTitle>
+          <DialogTitle className="text-base sm:text-lg">
             {t('editor.mathEditor.title', { fallback: 'Math Editor' })}
             {mode === 'block' && (
-              <span className="ml-2 text-sm font-normal text-muted-foreground">
+              <span className="ml-2 text-xs sm:text-sm font-normal text-muted-foreground">
                 ({t('editor.mathEditor.displayMode', { fallback: 'Display mode' })})
               </span>
             )}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-sm">
             {t('editor.mathEditor.description', {
               fallback: 'Create mathematical expressions using LaTeX syntax',
             })}
@@ -230,7 +234,14 @@ export function MathEditorDialog({
               <Input
                 id="latex-input"
                 value={latex}
-                onChange={(e) => setLatex(e.target.value)}
+                onChange={(e) => {
+                  setLatex(e.target.value);
+                  setCursorPosition(e.target.selectionStart || 0);
+                }}
+                onSelect={(e) => {
+                  const target = e.target as HTMLInputElement;
+                  setCursorPosition(target.selectionStart || 0);
+                }}
                 placeholder={t('editor.mathEditor.placeholder', {
                   fallback: 'Enter LaTeX here, e.g., x^2 + y^2 = z^2',
                 })}
@@ -259,23 +270,23 @@ export function MathEditorDialog({
 
           {/* Symbols and Templates */}
           <Tabs defaultValue="templates" className="flex-1 overflow-hidden flex flex-col">
-            <TabsList className="grid w-full grid-cols-6">
-              <TabsTrigger value="templates">
+            <TabsList className="grid w-full grid-cols-3 sm:grid-cols-6 gap-1">
+              <TabsTrigger value="templates" className="text-xs sm:text-sm">
                 {t('editor.mathEditor.templates', { fallback: 'Templates' })}
               </TabsTrigger>
-              <TabsTrigger value="basic">
+              <TabsTrigger value="basic" className="text-xs sm:text-sm">
                 {t('editor.mathEditor.basic', { fallback: 'Basic' })}
               </TabsTrigger>
-              <TabsTrigger value="greek">
+              <TabsTrigger value="greek" className="text-xs sm:text-sm">
                 {t('editor.mathEditor.greek', { fallback: 'Greek' })}
               </TabsTrigger>
-              <TabsTrigger value="operators">
+              <TabsTrigger value="operators" className="text-xs sm:text-sm">
                 {t('editor.mathEditor.operators', { fallback: 'Operators' })}
               </TabsTrigger>
-              <TabsTrigger value="arrows">
+              <TabsTrigger value="arrows" className="text-xs sm:text-sm">
                 {t('editor.mathEditor.arrows', { fallback: 'Arrows' })}
               </TabsTrigger>
-              <TabsTrigger value="sets">
+              <TabsTrigger value="sets" className="text-xs sm:text-sm">
                 {t('editor.mathEditor.sets', { fallback: 'Sets' })}
               </TabsTrigger>
             </TabsList>
@@ -283,17 +294,17 @@ export function MathEditorDialog({
             {/* Templates */}
             <TabsContent value="templates" className="flex-1 mt-2">
               <ScrollArea className="h-[200px]">
-                <div className="grid grid-cols-3 gap-2 pr-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 pr-4">
                   {MATH_TEMPLATES.map((template, idx) => (
                     <Button
                       key={idx}
                       type="button"
                       variant="outline"
-                      className="h-auto flex flex-col items-start p-3"
+                      className="h-auto flex flex-col items-start p-2 sm:p-3"
                       onClick={() => insertSymbol(template.latex)}
                     >
-                      <span className="text-xs font-medium mb-1">{template.label}</span>
-                      <code className="text-xs text-muted-foreground font-mono">
+                      <span className="text-xs font-medium mb-1 truncate w-full">{template.label}</span>
+                      <code className="text-xs text-muted-foreground font-mono truncate w-full">
                         {template.latex}
                       </code>
                     </Button>
@@ -306,18 +317,18 @@ export function MathEditorDialog({
             {Object.entries(MATH_SYMBOLS).map(([category, symbols]) => (
               <TabsContent key={category} value={category} className="flex-1 mt-2">
                 <ScrollArea className="h-[200px]">
-                  <div className="grid grid-cols-6 gap-2 pr-4">
+                  <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-2 pr-4">
                     {symbols.map((item, idx) => (
                       <Button
                         key={idx}
                         type="button"
                         variant="outline"
-                        className="h-16 flex flex-col items-center justify-center p-2"
+                        className="h-14 sm:h-16 flex flex-col items-center justify-center p-1 sm:p-2"
                         onClick={() => insertSymbol(item.latex)}
                         title={item.label}
                       >
-                        <span className="text-2xl mb-1">{item.symbol}</span>
-                        <code className="text-[10px] text-muted-foreground font-mono truncate w-full text-center">
+                        <span className="text-xl sm:text-2xl mb-0.5 sm:mb-1">{item.symbol}</span>
+                        <code className="text-[9px] sm:text-[10px] text-muted-foreground font-mono truncate w-full text-center">
                           {item.latex}
                         </code>
                       </Button>

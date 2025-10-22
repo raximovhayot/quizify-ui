@@ -973,6 +973,24 @@
       "insertSymbol": "Insert {symbol}",
       "undo": "Undo",
       "redo": "Redo"
+    },
+    "mathEditor": {
+      "title": "Math Editor",
+      "description": "Create mathematical expressions using LaTeX syntax",
+      "displayMode": "Display mode",
+      "latexInput": "LaTeX Input",
+      "placeholder": "Enter LaTeX here, e.g., x^2 + y^2 = z^2",
+      "preview": "Preview",
+      "emptyPreview": "Preview will appear here",
+      "loading": "Loading preview...",
+      "clear": "Clear",
+      "insert": "Insert",
+      "templates": "Templates",
+      "basic": "Basic",
+      "greek": "Greek",
+      "operators": "Operators",
+      "arrows": "Arrows",
+      "sets": "Sets"
     }
   }
 }
