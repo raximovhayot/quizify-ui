@@ -105,21 +105,62 @@ const MATH_SYMBOLS = {
   ],
 };
 
-// Math templates
-const MATH_TEMPLATES = [
-  { label: 'Fraction', latex: '\\frac{a}{b}', preview: 'a/b' },
-  { label: 'Superscript', latex: 'x^{2}', preview: 'x²' },
-  { label: 'Subscript', latex: 'x_{i}', preview: 'xᵢ' },
-  { label: 'Square root', latex: '\\sqrt{x}', preview: '√x' },
-  { label: 'Nth root', latex: '\\sqrt[n]{x}', preview: 'ⁿ√x' },
-  { label: 'Sum', latex: '\\sum_{i=1}^{n}', preview: '∑' },
-  { label: 'Integral', latex: '\\int_{a}^{b}', preview: '∫' },
-  { label: 'Limit', latex: '\\lim_{x \\to \\infty}', preview: 'lim' },
-  { label: 'Matrix 2×2', latex: '\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}', preview: '[a b; c d]' },
-  { label: 'Binomial', latex: '\\binom{n}{k}', preview: '(n k)' },
-  { label: 'Vector', latex: '\\vec{v}', preview: 'v⃗' },
-  { label: 'Absolute value', latex: '|x|', preview: '|x|' },
-];
+// Math templates organized by category
+const MATH_TEMPLATES = {
+  basic: [
+    { label: 'Fraction', latex: '\\frac{a}{b}', preview: 'a/b' },
+    { label: 'Superscript', latex: 'x^{2}', preview: 'x²' },
+    { label: 'Subscript', latex: 'x_{i}', preview: 'xᵢ' },
+    { label: 'Square root', latex: '\\sqrt{x}', preview: '√x' },
+    { label: 'Nth root', latex: '\\sqrt[n]{x}', preview: 'ⁿ√x' },
+    { label: 'Absolute value', latex: '|x|', preview: '|x|' },
+    { label: 'Binomial', latex: '\\binom{n}{k}', preview: '(n k)' },
+    { label: 'Vector', latex: '\\vec{v}', preview: 'v⃗' },
+  ],
+  calculus: [
+    { label: 'Sum', latex: '\\sum_{i=1}^{n}', preview: '∑' },
+    { label: 'Product', latex: '\\prod_{i=1}^{n}', preview: '∏' },
+    { label: 'Integral', latex: '\\int_{a}^{b}', preview: '∫' },
+    { label: 'Double integral', latex: '\\iint_{D}', preview: '∬' },
+    { label: 'Triple integral', latex: '\\iiint_{V}', preview: '∭' },
+    { label: 'Limit', latex: '\\lim_{x \\to \\infty}', preview: 'lim' },
+    { label: 'Derivative', latex: '\\frac{d}{dx}', preview: 'd/dx' },
+    { label: 'Partial derivative', latex: '\\frac{\\partial}{\\partial x}', preview: '∂/∂x' },
+  ],
+  trigonometry: [
+    { label: 'Sine', latex: '\\sin(x)', preview: 'sin(x)' },
+    { label: 'Cosine', latex: '\\cos(x)', preview: 'cos(x)' },
+    { label: 'Tangent', latex: '\\tan(x)', preview: 'tan(x)' },
+    { label: 'Arcsine', latex: '\\arcsin(x)', preview: 'arcsin(x)' },
+    { label: 'Arccosine', latex: '\\arccos(x)', preview: 'arccos(x)' },
+    { label: 'Arctangent', latex: '\\arctan(x)', preview: 'arctan(x)' },
+    { label: 'Secant', latex: '\\sec(x)', preview: 'sec(x)' },
+    { label: 'Cosecant', latex: '\\csc(x)', preview: 'csc(x)' },
+  ],
+  matrices: [
+    { label: 'Matrix 2×2', latex: '\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}', preview: '[2×2]' },
+    { label: 'Matrix 3×3', latex: '\\begin{pmatrix} a & b & c \\\\ d & e & f \\\\ g & h & i \\end{pmatrix}', preview: '[3×3]' },
+    { label: 'Determinant 2×2', latex: '\\begin{vmatrix} a & b \\\\ c & d \\end{vmatrix}', preview: '|2×2|' },
+    { label: 'Determinant 3×3', latex: '\\begin{vmatrix} a & b & c \\\\ d & e & f \\\\ g & h & i \\end{vmatrix}', preview: '|3×3|' },
+    { label: 'Bracket matrix', latex: '\\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}', preview: '[a b; c d]' },
+    { label: 'Curly matrix', latex: '\\begin{Bmatrix} a & b \\\\ c & d \\end{Bmatrix}', preview: '{a b; c d}' },
+  ],
+  equations: [
+    { label: 'System of equations', latex: '\\begin{cases} x + y = 1 \\\\ x - y = 0 \\end{cases}', preview: 'system' },
+    { label: 'Quadratic formula', latex: 'x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}', preview: 'quadratic' },
+    { label: 'Pythagorean', latex: 'a^2 + b^2 = c^2', preview: 'a²+b²=c²' },
+    { label: 'Equation alignment', latex: '\\begin{aligned} y &= mx + b \\\\ &= 2x + 3 \\end{aligned}', preview: 'aligned' },
+  ],
+  logic: [
+    { label: 'And', latex: '\\land', preview: '∧' },
+    { label: 'Or', latex: '\\lor', preview: '∨' },
+    { label: 'Not', latex: '\\neg', preview: '¬' },
+    { label: 'Implies', latex: '\\implies', preview: '⇒' },
+    { label: 'If and only if', latex: '\\iff', preview: '⇔' },
+    { label: 'Therefore', latex: '\\therefore', preview: '∴' },
+    { label: 'Because', latex: '\\because', preview: '∵' },
+  ],
+};
 
 export function MathEditorDialog({
   open,
@@ -268,53 +309,72 @@ export function MathEditorDialog({
           </div>
 
           {/* Symbols and Templates */}
-          <Tabs defaultValue="templates" className="flex-1 overflow-hidden flex flex-col">
-            <TabsList className="grid w-full grid-cols-3 sm:grid-cols-6 gap-1">
-              <TabsTrigger value="templates" className="text-xs sm:text-sm">
-                {t('editor.mathEditor.templates', { fallback: 'Templates' })}
-              </TabsTrigger>
-              <TabsTrigger value="basic" className="text-xs sm:text-sm">
-                {t('editor.mathEditor.basic', { fallback: 'Basic' })}
-              </TabsTrigger>
-              <TabsTrigger value="greek" className="text-xs sm:text-sm">
-                {t('editor.mathEditor.greek', { fallback: 'Greek' })}
-              </TabsTrigger>
-              <TabsTrigger value="operators" className="text-xs sm:text-sm">
-                {t('editor.mathEditor.operators', { fallback: 'Operators' })}
-              </TabsTrigger>
-              <TabsTrigger value="arrows" className="text-xs sm:text-sm">
-                {t('editor.mathEditor.arrows', { fallback: 'Arrows' })}
-              </TabsTrigger>
-              <TabsTrigger value="sets" className="text-xs sm:text-sm">
-                {t('editor.mathEditor.sets', { fallback: 'Sets' })}
-              </TabsTrigger>
-            </TabsList>
+          <Tabs defaultValue="basic-templates" className="flex-1 overflow-hidden flex flex-col">
+            <ScrollArea className="w-full">
+              <TabsList className="inline-flex w-full min-w-max gap-1 p-1">
+                <TabsTrigger value="basic-templates" className="text-xs sm:text-sm whitespace-nowrap">
+                  {t('editor.mathEditor.basicTemplates', { fallback: 'Basic' })}
+                </TabsTrigger>
+                <TabsTrigger value="calculus" className="text-xs sm:text-sm whitespace-nowrap">
+                  {t('editor.mathEditor.calculus', { fallback: 'Calculus' })}
+                </TabsTrigger>
+                <TabsTrigger value="trigonometry" className="text-xs sm:text-sm whitespace-nowrap">
+                  {t('editor.mathEditor.trigonometry', { fallback: 'Trig' })}
+                </TabsTrigger>
+                <TabsTrigger value="matrices" className="text-xs sm:text-sm whitespace-nowrap">
+                  {t('editor.mathEditor.matrices', { fallback: 'Matrices' })}
+                </TabsTrigger>
+                <TabsTrigger value="equations" className="text-xs sm:text-sm whitespace-nowrap">
+                  {t('editor.mathEditor.equations', { fallback: 'Equations' })}
+                </TabsTrigger>
+                <TabsTrigger value="logic" className="text-xs sm:text-sm whitespace-nowrap">
+                  {t('editor.mathEditor.logic', { fallback: 'Logic' })}
+                </TabsTrigger>
+                <TabsTrigger value="symbols-basic" className="text-xs sm:text-sm whitespace-nowrap">
+                  {t('editor.mathEditor.symbolsBasic', { fallback: 'Symbols' })}
+                </TabsTrigger>
+                <TabsTrigger value="greek" className="text-xs sm:text-sm whitespace-nowrap">
+                  {t('editor.mathEditor.greek', { fallback: 'Greek' })}
+                </TabsTrigger>
+                <TabsTrigger value="operators" className="text-xs sm:text-sm whitespace-nowrap">
+                  {t('editor.mathEditor.operators', { fallback: 'Operators' })}
+                </TabsTrigger>
+                <TabsTrigger value="arrows" className="text-xs sm:text-sm whitespace-nowrap">
+                  {t('editor.mathEditor.arrows', { fallback: 'Arrows' })}
+                </TabsTrigger>
+                <TabsTrigger value="sets" className="text-xs sm:text-sm whitespace-nowrap">
+                  {t('editor.mathEditor.sets', { fallback: 'Sets' })}
+                </TabsTrigger>
+              </TabsList>
+            </ScrollArea>
 
-            {/* Templates */}
-            <TabsContent value="templates" className="flex-1 mt-2">
-              <ScrollArea className="h-[200px]">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 pr-4">
-                  {MATH_TEMPLATES.map((template, idx) => (
-                    <Button
-                      key={idx}
-                      type="button"
-                      variant="outline"
-                      className="h-auto flex flex-col items-start p-2 sm:p-3"
-                      onClick={() => insertSymbol(template.latex)}
-                    >
-                      <span className="text-xs font-medium mb-1 truncate w-full">{template.label}</span>
-                      <code className="text-xs text-muted-foreground font-mono truncate w-full">
-                        {template.latex}
-                      </code>
-                    </Button>
-                  ))}
-                </div>
-              </ScrollArea>
-            </TabsContent>
+            {/* Template categories */}
+            {Object.entries(MATH_TEMPLATES).map(([category, templates]) => (
+              <TabsContent key={`${category}-templates`} value={category === 'basic' ? 'basic-templates' : category} className="flex-1 mt-2">
+                <ScrollArea className="h-[200px]">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 pr-4">
+                    {templates.map((template, idx) => (
+                      <Button
+                        key={idx}
+                        type="button"
+                        variant="outline"
+                        className="h-auto flex flex-col items-start p-2 sm:p-3"
+                        onClick={() => insertSymbol(template.latex)}
+                      >
+                        <span className="text-xs font-medium mb-1 truncate w-full">{template.label}</span>
+                        <code className="text-[10px] text-muted-foreground font-mono break-all w-full line-clamp-2">
+                          {template.latex}
+                        </code>
+                      </Button>
+                    ))}
+                  </div>
+                </ScrollArea>
+              </TabsContent>
+            ))}
 
             {/* Symbol categories */}
             {Object.entries(MATH_SYMBOLS).map(([category, symbols]) => (
-              <TabsContent key={category} value={category} className="flex-1 mt-2">
+              <TabsContent key={category} value={category === 'basic' ? 'symbols-basic' : category} className="flex-1 mt-2">
                 <ScrollArea className="h-[200px]">
                   <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-2 pr-4">
                     {symbols.map((item, idx) => (
