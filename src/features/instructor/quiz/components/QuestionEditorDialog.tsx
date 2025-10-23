@@ -13,6 +13,8 @@ import {
 } from '@/components/shared/ui/FormDrawer';
 import {
   Dialog,
+  DialogHeader,
+  DialogTitle,
 } from '@/components/ui/dialog';
 import { ScrollableDialogContent } from '@/components/shared/ui/ScrollableDialogContent';
 import { Field, FieldContent, FieldLabel } from '@/components/ui/field';
@@ -86,7 +88,7 @@ export function QuestionEditorDialog({
                 <SelectTrigger id="question-type" className="w-full mt-2">
                   <SelectValue
                     placeholder={t('common.question.type.placeholder', {
-                      fallback: 'Select question type',
+                      fallback: 'Select type',
                     })}
                   />
                 </SelectTrigger>
@@ -152,7 +154,7 @@ export function QuestionEditorDialog({
                     <SelectTrigger id="question-type-mobile" className="w-full mt-2">
                       <SelectValue
                         placeholder={t('common.question.type.placeholder', {
-                          fallback: 'Select question type',
+                          fallback: 'Select type',
                         })}
                       />
                     </SelectTrigger>
@@ -197,6 +199,13 @@ export function QuestionEditorDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <ScrollableDialogContent className="w-full sm:max-w-3xl rounded-2xl">
+        <DialogHeader>
+          <DialogTitle>
+            {isEditMode
+              ? t('common.editQuestion', { fallback: 'Edit Question' })
+              : t('common.createQuestion', { fallback: 'Create Question' })}
+          </DialogTitle>
+        </DialogHeader>
         {formContent}
       </ScrollableDialogContent>
     </Dialog>

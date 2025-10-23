@@ -680,9 +680,9 @@
         "endTimeLabel": "Tugash vaqti",
         "submit": "Topshiriq yaratish",
         "details": "Tafsilotlar",
-             "settings": "Sozlamalar",
-             "startImmediately": "Darhol boshlash",
-             "startImmediatelyHelp": "Topshiriq yaratilishi bilanoq boshlanadi. Boshlanish vaqti avtomatik belgilanadi."
+        "settings": "Sozlamalar",
+        "startImmediately": "Darhol boshlash",
+        "startImmediatelyHelp": "Topshiriq yaratilishi bilanoq boshlanadi. Boshlanish vaqti avtomatik belgilanadi."
       },
       "settings": {
         "attempts": "Maks. urinishlar (0 = cheklanmagan)",
@@ -692,16 +692,20 @@
         "shuffleAnswers": "Javoblarni aralashtirish",
         "shuffleAnswersHelp": "Javob variantlari tartibini aralashtirish",
         "resultShowType": {
-            "label": "Natijalarni qachon ko‘rsatish",
-            "immediately": "Darhol",
-            "afterAssignment": "Topshiriq tugagach"
-          },
-          "resultType": {
-            "label": "Natijalar tafsiloti",
-            "onlyResult": "Faqat natija",
-            "onlyCorrect": "Faqat to‘g‘ri javoblar",
-            "full": "To‘liq tafsilotlar"
+          "label": "Natijalarni qachon ko‘rsatish",
+          "immediately": "Darhol",
+          "afterAssignment": "Topshiriq tugagach",
+          "never": "Hech qachon",
+          "helper": {
+            "never": "Talabalar bu topshiriq uchun o'z natijalarini ko'ra olmaydi."
           }
+        },
+        "resultType": {
+          "label": "Natijalar tafsiloti",
+          "onlyResult": "Faqat natija",
+          "onlyCorrect": "Faqat to‘g‘ri javoblar",
+          "full": "To‘liq tafsilotlar"
+        }
       }
     },
     "grading": {
