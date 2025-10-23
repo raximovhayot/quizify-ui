@@ -17,6 +17,8 @@ export const ROUTES_APP = {
       `${ROUTES_APP.baseUrl()}/quizzes/${quizId}` as const,
     edit: (quizId: number | string) =>
       `${ROUTES_APP.baseUrl()}/quizzes/${quizId}/edit` as const,
+    start: (quizId: number | string) =>
+      `${ROUTES_APP.baseUrl()}/quizzes/${quizId}/start` as const,
   },
 
   analytics: {

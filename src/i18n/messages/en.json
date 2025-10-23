@@ -154,7 +154,19 @@
     "reorderQuestions": {
       "ariaList": "Questions (drag to reorder)"
     },
-    "dragToReorder": "Drag to reorder"
+    "dragToReorder": "Drag to reorder",
+    "title": "Title",
+    "description": "Description",
+    "settings": "Settings",
+    "details": "Details",
+    "startTime": "Start Time",
+    "endTime": "End Time",
+    "helpers": {
+      "unlimitedAttempts": "0 means unlimited attempts",
+      "noTimeLimit": "0 means no time limit",
+      "resultsAfterDeadline": "Results shown after assignment deadline",
+      "resultDetailsInfo": "What information students can see"
+    }
   },
   "auth": {
     "signIn": {
@@ -662,9 +674,9 @@
         "endTimeLabel": "End Time",
         "submit": "Create Assignment",
         "details": "Details",
-             "settings": "Settings",
-             "startImmediately": "Start immediately",
-             "startImmediatelyHelp": "Start as soon as you create the assignment. Start time will be set automatically."
+        "settings": "Settings",
+        "startImmediately": "Start immediately",
+        "startImmediatelyHelp": "Start as soon as you create the assignment. Start time will be set automatically."
       },
       "settings": {
         "attempts": "Max attempts (0 = unlimited)",
@@ -674,20 +686,20 @@
         "shuffleAnswers": "Shuffle answers",
         "shuffleAnswersHelp": "Randomize the order of answer choices",
         "resultShowType": {
-             "label": "When to show results",
-             "immediately": "Immediately",
-             "afterAssignment": "After assignment",
-             "never": "Never",
-             "helper": {
-               "never": "Students will not see their results for this assignment."
-             }
-           },
-          "resultType": {
-            "label": "Result details",
-            "onlyResult": "Only result",
-            "onlyCorrect": "Only correct answers",
-            "full": "Full details"
+          "label": "When to show results",
+          "immediately": "Immediately",
+          "afterAssignment": "After assignment",
+          "never": "Never",
+          "helper": {
+            "never": "Students will not see their results for this assignment."
           }
+        },
+        "resultType": {
+          "label": "Result details",
+          "onlyResult": "Only result",
+          "onlyCorrect": "Only correct answers",
+          "full": "Full details"
+        }
       }
     },
     "grading": {
