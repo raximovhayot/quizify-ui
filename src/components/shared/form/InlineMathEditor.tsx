@@ -91,8 +91,8 @@ export function InlineMathEditor({
             mathfieldRef.current.addEventListener('keydown', keydownHandler);
           }
         }, 0);
-      } catch (error) {
-        console.error('Failed to initialize MathLive:', error);
+      } catch {
+        // MathLive initialization failed - silently fail as the component will handle it
       }
     };
 
