@@ -8,11 +8,6 @@ jest.mock('next-intl', () => ({
     options?.fallback || key,
 }));
 
-// Mock mathlive module
-jest.mock('mathlive', () => ({
-  MathfieldElement: class MockMathfieldElement extends HTMLElement {},
-}));
-
 describe('MathLiveDialog', () => {
   const mockOnInsert = jest.fn();
   const mockOnOpenChange = jest.fn();
