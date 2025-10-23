@@ -28,8 +28,10 @@ export function QuestionsListContainer({
   const [deletingQuestion, setDeletingQuestion] =
     useState<QuestionDataDto | null>(null);
   const [showAnswers, setShowAnswers] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const pageSize = 10; // Show 10 questions per page
 
-  const filter = { quizId, page: 0, size: 100 } as const;
+  const filter = { quizId, page: currentPage, size: pageSize } as const;
   const {
     data: questionsData,
     isLoading,
@@ -114,6 +116,9 @@ export function QuestionsListContainer({
       onConfirmDelete={handleDeleteQuestion}
       isUpdatePending={updateQuestionMutation.isPending}
       isDeletePending={deleteQuestionMutation.isPending}
+      currentPage={questionsData?.page || 0}
+      totalPages={questionsData?.totalPages || 0}
+      onPageChange={setCurrentPage}
     />
   );
 }

@@ -3,6 +3,7 @@
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 import { useTranslations } from 'next-intl';
+import { ArrowUp, ArrowDown, Trash2, Plus } from 'lucide-react';
 
 import { MinimalRichTextFieldLazy as MinimalRichTextField } from '@/components/shared/form/lazy';
 import { Button } from '@/components/ui/button';
@@ -42,9 +43,9 @@ export function AnswerListEditor({
       {fields.map((field, index) => (
         <div
           key={field.id}
-          className="flex flex-col gap-3 border rounded-lg p-4 bg-card"
+          className="flex flex-col gap-2 p-3 rounded-lg border bg-muted/30"
         >
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between gap-2">
             <Label
               htmlFor={`${name}.${index}.content`}
               className="text-sm font-medium"
@@ -54,38 +55,66 @@ export function AnswerListEditor({
               })}{' '}
               {index + 1}
             </Label>
-            <div className="ml-auto flex gap-2">
+            <div className="flex items-center gap-1">
+              {!enforceCorrect && (
+                <div className="flex items-center gap-2 mr-2">
+                  <Controller
+                    name={`${name}.${index}.correct` as const}
+                    render={({ field }) => (
+                      <>
+                        <Switch
+                          id={`${name}.${index}.correct`}
+                          checked={!!field.value}
+                          onCheckedChange={field.onChange}
+                          disabled={disabled}
+                        />
+                        <Label
+                          htmlFor={`${name}.${index}.correct`}
+                          className="text-sm"
+                        >
+                          {t('common.question.correct', {
+                            fallback: 'Correct',
+                          })}
+                        </Label>
+                      </>
+                    )}
+                  />
+                </div>
+              )}
               <Button
                 type="button"
-                size="sm"
+                size="icon"
                 variant="ghost"
                 onClick={() => move(index, Math.max(0, index - 1))}
                 disabled={disabled || index === 0}
-                className="h-8"
+                className="h-8 w-8"
+                title={t('common.up', { fallback: 'Move up' })}
               >
-                {t('common.up', { fallback: 'Up' })}
+                <ArrowUp className="h-4 w-4" />
               </Button>
               <Button
                 type="button"
-                size="sm"
+                size="icon"
                 variant="ghost"
                 onClick={() =>
                   move(index, Math.min(fields.length - 1, index + 1))
                 }
                 disabled={disabled || index === fields.length - 1}
-                className="h-8"
+                className="h-8 w-8"
+                title={t('common.down', { fallback: 'Move down' })}
               >
-                {t('common.down', { fallback: 'Down' })}
+                <ArrowDown className="h-4 w-4" />
               </Button>
               <Button
                 type="button"
-                size="sm"
+                size="icon"
                 variant="ghost"
                 onClick={() => remove(index)}
                 disabled={disabled}
-                className="h-8 text-destructive hover:text-destructive"
+                className="h-8 w-8 text-destructive hover:text-destructive"
+                title={t('common.remove', { fallback: 'Remove' })}
               >
-                {t('common.remove', { fallback: 'Remove' })}
+                <Trash2 className="h-4 w-4" />
               </Button>
             </div>
           </div>
@@ -100,36 +129,11 @@ export function AnswerListEditor({
                 placeholder={t('common.question.answer.richPlaceholder', {
                   fallback: 'Enter answer text. You can use formatting...',
                 })}
-                minHeight="100px"
+                minHeight="80px"
                 disabled={disabled}
               />
             )}
           />
-          {!enforceCorrect && (
-            <div className="flex items-center gap-2">
-              <Controller
-                name={`${name}.${index}.correct` as const}
-                render={({ field }) => (
-                  <>
-                    <Switch
-                      id={`${name}.${index}.correct`}
-                      checked={!!field.value}
-                      onCheckedChange={field.onChange}
-                      disabled={disabled}
-                    />
-                    <Label
-                      htmlFor={`${name}.${index}.correct`}
-                      className="text-sm"
-                    >
-                      {t('common.question.correct', {
-                        fallback: 'Correct',
-                      })}
-                    </Label>
-                  </>
-                )}
-              />
-            </div>
-          )}
         </div>
       ))}
 
@@ -138,8 +142,10 @@ export function AnswerListEditor({
         variant="outline"
         onClick={handleAdd}
         disabled={disabled}
+        className="w-full"
       >
-        {t('common.add', { fallback: 'Add' })}
+        <Plus className="h-4 w-4 mr-2" />
+        {t('common.add', { fallback: 'Add Answer' })}
       </Button>
     </div>
   );

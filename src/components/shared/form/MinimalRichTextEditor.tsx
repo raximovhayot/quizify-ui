@@ -6,6 +6,7 @@ import StarterKit from '@tiptap/starter-kit';
 import {
   Bold,
   Code,
+  FunctionSquare,
   Italic,
   List,
   ListOrdered,
@@ -142,12 +143,6 @@ export function MinimalRichTextEditor({
 
   const insertInlineFormula = () => {
     setMathEditorMode('inline');
-    setInitialLatexForDialog('');
-    setMathEditorOpen(true);
-  };
-
-  const insertBlockFormula = () => {
-    setMathEditorMode('block');
     setInitialLatexForDialog('');
     setMathEditorOpen(true);
   };
@@ -294,30 +289,18 @@ export function MinimalRichTextEditor({
           <ListOrdered className="h-3.5 w-3.5" />
         </Button>
 
-        {/* Math buttons */}
+        {/* Math button - single button that opens dialog */}
         <Button
           type="button"
           variant="ghost"
           size="sm"
           onClick={insertInlineFormula}
           disabled={disabled}
-          className="h-7 px-1.5 text-sm font-semibold"
-          aria-label={t('editor.toolbar.insertInlineFormula', { fallback: 'Insert inline formula' })}
-          title={t('editor.toolbar.insertInlineFormulaHint', { fallback: 'Insert inline formula $...$ (LaTeX)' })}
+          className="h-7 w-7 p-0"
+          aria-label={t('editor.toolbar.insertFormula', { fallback: 'Insert formula' })}
+          title={t('editor.toolbar.insertFormulaHint', { fallback: 'Insert mathematical formula (LaTeX)' })}
         >
-          𝑥²
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={insertBlockFormula}
-          disabled={disabled}
-          className="h-7 px-1.5 text-sm font-semibold"
-          aria-label={t('editor.toolbar.insertBlockFormula', { fallback: 'Insert block formula' })}
-          title={t('editor.toolbar.insertBlockFormulaHint', { fallback: 'Insert block formula $$...$$ (LaTeX)' })}
-        >
-          ∑
+          <FunctionSquare className="h-3.5 w-3.5" />
         </Button>
       </div>
 

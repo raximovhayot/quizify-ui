@@ -5,12 +5,11 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { useTranslations } from 'next-intl';
 
-import { MinimalRichTextFieldLazy as RichTextField } from '@/components/shared/form/lazy';
+import { MinimalRichTextFieldLazy as MinimalRichTextField } from '@/components/shared/form/lazy';
 import { Button } from '@/components/ui/button';
 import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from '@/components/ui/input-group';
 import { Separator } from '@/components/ui/separator';
-import { Textarea } from '@/components/ui/textarea';
 
 import {
   TInstructorQuestionForm,
@@ -87,7 +86,7 @@ export function BaseQuestionForm({
         </div>
 
         <div>
-          <RichTextField
+          <MinimalRichTextField
             control={form.control}
             name="content"
             label={t('common.question.content.label', { fallback: 'Question' })}
@@ -100,27 +99,18 @@ export function BaseQuestionForm({
         </div>
 
         <div>
-          <Field>
-            <FieldLabel htmlFor="explanation">
-              {t('common.question.explanation.label', {
-                fallback: 'Explanation (optional)',
-              })}
-            </FieldLabel>
-            <FieldContent>
-              <Textarea
-                id="explanation"
-                rows={3}
-                placeholder={t('common.question.explanation.placeholder', {
-                  fallback:
-                    'Add an explanation or feedback shown after answering (optional)',
-                })}
-                aria-invalid={!!form.formState.errors.explanation}
-                aria-describedby={form.formState.errors.explanation ? 'explanation-error' : undefined}
-                {...form.register('explanation')}
-              />
-              <FieldError id="explanation-error" errors={[form.formState.errors.explanation]} />
-            </FieldContent>
-          </Field>
+          <MinimalRichTextField
+            control={form.control}
+            name="explanation"
+            label={t('common.question.explanation.label', {
+              fallback: 'Explanation (optional)',
+            })}
+            placeholder={t('common.question.explanation.placeholder', {
+              fallback:
+                'Add an explanation or feedback shown after answering (optional)',
+            })}
+            minHeight="100px"
+          />
         </div>
 
         {/* Type-specific fields */}
