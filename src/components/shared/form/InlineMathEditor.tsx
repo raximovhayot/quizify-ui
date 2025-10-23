@@ -51,6 +51,9 @@ export function InlineMathEditor({
   useEffect(() => {
     if (!isClient) return;
 
+    let keydownHandler: ((e: KeyboardEvent) => void) | null = null;
+    let cleanupTimeout: NodeJS.Timeout | null = null;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
@@ -72,7 +75,7 @@ export function InlineMathEditor({
         }
 
         // Wait for next tick to ensure element is in DOM
-        setTimeout(() => {
+        cleanupTimeout = setTimeout(() => {
           if (mathfieldRef.current) {
             mathfieldRef.current.value = initialLatex;
             mathfieldRef.current.mathModeSpace = '\\:';
@@ -83,8 +86,9 @@ export function InlineMathEditor({
             // Focus the mathfield
             mathfieldRef.current.focus();
 
-            // Handle keyboard shortcuts
-            mathfieldRef.current.addEventListener('keydown', handleKeyDown);
+            // Store handler reference and add event listener
+            keydownHandler = handleKeyDown;
+            mathfieldRef.current.addEventListener('keydown', keydownHandler);
           }
         }, 0);
       } catch (error) {
@@ -95,8 +99,13 @@ export function InlineMathEditor({
     initMathField();
 
     return () => {
-      if (mathfieldRef.current) {
-        mathfieldRef.current.removeEventListener('keydown', handleKeyDown);
+      // Clear timeout if component unmounts before it fires
+      if (cleanupTimeout) {
+        clearTimeout(cleanupTimeout);
+      }
+      // Remove event listener if it was added
+      if (mathfieldRef.current && keydownHandler) {
+        mathfieldRef.current.removeEventListener('keydown', keydownHandler);
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

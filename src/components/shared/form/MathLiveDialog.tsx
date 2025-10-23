@@ -47,6 +47,8 @@ export function MathLiveDialog({
   useEffect(() => {
     if (!isClient || !open) return;
 
+    let virtualKeyboardToggleHandler: ((evt: Event) => void) | null = null;
+
     const initMathLive = async () => {
       try {
         // Dynamically import MathLive to avoid SSR issues
@@ -66,13 +68,14 @@ export function MathLiveDialog({
             // Configure virtual keyboard
             mathfieldRef.current.mathVirtualKeyboardPolicy = 'manual';
             
-            // Listen for virtual keyboard visibility changes
+            // Create and store event listener for virtual keyboard visibility changes
+            virtualKeyboardToggleHandler = (evt: Event) => {
+              const customEvt = evt as CustomEvent;
+              setIsKeyboardVisible(customEvt.detail.visible);
+            };
             mathfieldRef.current.addEventListener(
               'virtual-keyboard-toggle',
-              (evt: Event) => {
-                const customEvt = evt as CustomEvent;
-                setIsKeyboardVisible(customEvt.detail.visible);
-              }
+              virtualKeyboardToggleHandler
             );
             
             // Focus the mathfield
@@ -87,10 +90,14 @@ export function MathLiveDialog({
     initMathLive();
 
     return () => {
-      // Clean up keyboard visibility listener
-      if (mathfieldRef.current) {
-        setIsKeyboardVisible(false);
+      // Clean up event listener and keyboard visibility state
+      if (mathfieldRef.current && virtualKeyboardToggleHandler) {
+        mathfieldRef.current.removeEventListener(
+          'virtual-keyboard-toggle',
+          virtualKeyboardToggleHandler
+        );
       }
+      setIsKeyboardVisible(false);
     };
   }, [open, isClient, initialLatex]);
 
