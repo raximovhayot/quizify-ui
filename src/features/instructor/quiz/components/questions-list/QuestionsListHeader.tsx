@@ -1,6 +1,6 @@
 'use client';
 
-import { Eye, EyeOff, FileText, Plus } from 'lucide-react';
+import { Eye, EyeOff, Plus } from 'lucide-react';
 
 import { useTranslations } from 'next-intl';
 
@@ -22,22 +22,23 @@ export function QuestionsListHeader({
   const t = useTranslations();
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between py-2">
-      <div className="flex items-center gap-2">
-        <FileText className="h-5 w-5" />
-        <h2 className="text-xl font-semibold">
+      <div>
+        <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
           {t('common.questions', {
             fallback: 'Questions',
-          })}{' '}
-          ({count})
+          })}
         </h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          {count} {count === 1 ? 'question' : 'questions'} in this quiz
+        </p>
       </div>
-      <div className="flex items-center gap-2 flex-wrap md:ml-auto">
+      <div className="flex items-center gap-2.5 flex-wrap md:ml-auto">
         <Button
           variant="outline"
           size="sm"
           onClick={onToggleShowAnswers}
           aria-pressed={showAnswers}
-          className="flex-1 md:flex-none"
+          className="flex-1 md:flex-none hover:bg-muted/50 transition-colors shadow-sm"
         >
           {showAnswers ? (
             <>
@@ -62,7 +63,7 @@ export function QuestionsListHeader({
         <Button
           onClick={onAddQuestion}
           size="sm"
-          className="flex-1 md:flex-none"
+          className="flex-1 md:flex-none shadow-sm hover:shadow-md transition-all"
         >
           <Plus className="h-4 w-4 mr-2" />
           {t('common.addQuestion', { fallback: 'Add Question' })}
