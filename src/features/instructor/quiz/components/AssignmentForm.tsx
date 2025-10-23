@@ -295,7 +295,7 @@ export function AssignmentForm({
                       />
                       <FieldError id="attempt-error">{fieldState.error?.message}</FieldError>
                       <p className="mt-1.5 text-xs text-muted-foreground">
-                        {t('instructor.assignment.settings.attemptsHelp', {
+                        {t('common.helpers.unlimitedAttempts', {
                           default: '0 means unlimited attempts',
                         })}
                       </p>
@@ -328,7 +328,7 @@ export function AssignmentForm({
                       />
                       <FieldError id="time-error">{fieldState.error?.message}</FieldError>
                       <p className="mt-1.5 text-xs text-muted-foreground">
-                        {t('instructor.assignment.settings.timeLimitHelp', {
+                        {t('common.helpers.noTimeLimit', {
                           default: '0 means no time limit',
                         })}
                       </p>
@@ -463,7 +463,7 @@ export function AssignmentForm({
                       )}
                       {field.value === AssignmentResultShowType.AFTER_ASSIGNMENT && (
                         <p className="mt-1.5 text-xs text-muted-foreground">
-                          {t('instructor.assignment.settings.resultShowType.helper.after', {
+                          {t('common.helpers.resultsAfterDeadline', {
                             default: 'Results shown after assignment deadline',
                           })}
                         </p>
@@ -511,7 +511,7 @@ export function AssignmentForm({
                       </Select>
                       <FieldError id="resultType-error">{fieldState.error?.message}</FieldError>
                       <p className="mt-1.5 text-xs text-muted-foreground">
-                        {t('instructor.assignment.settings.resultType.help', {
+                        {t('common.helpers.resultDetailsInfo', {
                           default: 'What information students can see',
                         })}
                       </p>

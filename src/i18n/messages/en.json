@@ -160,7 +160,13 @@
     "settings": "Settings",
     "details": "Details",
     "startTime": "Start Time",
-    "endTime": "End Time"
+    "endTime": "End Time",
+    "helpers": {
+      "unlimitedAttempts": "0 means unlimited attempts",
+      "noTimeLimit": "0 means no time limit",
+      "resultsAfterDeadline": "Results shown after assignment deadline",
+      "resultDetailsInfo": "What information students can see"
+    }
   },
   "auth": {
     "signIn": {
