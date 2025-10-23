@@ -177,28 +177,21 @@ export function QuestionsListView({
           })}
         >
           {questions.map((question, index) => (
-            <div
+            <QuestionListItem
               key={question.id}
-              role="listitem"
-              draggable={!isReorderPending && !isMobile}
-              aria-grabbed={false}
-              aria-label={t('common.dragToReorder', { fallback: 'Drag to reorder' })}
+              question={question}
+              index={index}
+              showAnswers={showAnswers}
+              onEdit={onRequestEdit}
+              onDelete={onRequestDelete}
+              onMoveUp={() => onReorder(index, index - 1)}
+              onMoveDown={() => onReorder(index, index + 1)}
+              disableReorder={isReorderPending}
               onDragStart={(e) => onDragStart(e, index)}
               onDragOver={onDragOver}
               onDrop={(e) => onDrop(e, index)}
-              className="cursor-move active:cursor-grabbing"
-            >
-              <QuestionListItem
-                question={question}
-                index={index}
-                showAnswers={showAnswers}
-                onEdit={onRequestEdit}
-                onDelete={onRequestDelete}
-                onMoveUp={() => onReorder(index, index - 1)}
-                onMoveDown={() => onReorder(index, index + 1)}
-                disableReorder={isReorderPending}
-              />
-            </div>
+              isDragDisabled={isReorderPending || isMobile}
+            />
           ))}
         </div>
       </div>

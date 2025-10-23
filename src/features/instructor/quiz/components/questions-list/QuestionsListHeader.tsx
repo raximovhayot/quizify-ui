@@ -1,6 +1,6 @@
 'use client';
 
-import { Eye, EyeOff, FileText, Plus } from 'lucide-react';
+import { Eye, EyeOff, Plus } from 'lucide-react';
 
 import { useTranslations } from 'next-intl';
 
@@ -21,21 +21,16 @@ export function QuestionsListHeader({
 }: Readonly<QuestionsListHeaderProps>) {
   const t = useTranslations();
   return (
-    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between py-3 px-1">
-      <div className="flex items-center gap-3">
-        <div className="flex items-center justify-center size-10 rounded-lg bg-primary/10 text-primary">
-          <FileText className="h-5 w-5" />
-        </div>
-        <div>
-          <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
-            {t('common.questions', {
-              fallback: 'Questions',
-            })}
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            {count} {count === 1 ? 'question' : 'questions'} in this quiz
-          </p>
-        </div>
+    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between py-2">
+      <div>
+        <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
+          {t('common.questions', {
+            fallback: 'Questions',
+          })}
+        </h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          {count} {count === 1 ? 'question' : 'questions'} in this quiz
+        </p>
       </div>
       <div className="flex items-center gap-2.5 flex-wrap md:ml-auto">
         <Button

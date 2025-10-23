@@ -32,6 +32,10 @@ export interface QuestionListItemProps {
   onMoveUp?: () => void;
   onMoveDown?: () => void;
   disableReorder?: boolean;
+  onDragStart?: (e: React.DragEvent<HTMLDivElement>, index: number) => void;
+  onDragOver?: (e: React.DragEvent<HTMLDivElement>) => void;
+  onDrop?: (e: React.DragEvent<HTMLDivElement>, index: number) => void;
+  isDragDisabled?: boolean;
 }
 
 export const QuestionListItem = React.memo(function QuestionListItem({
@@ -43,6 +47,10 @@ export const QuestionListItem = React.memo(function QuestionListItem({
   onMoveUp,
   onMoveDown,
   disableReorder = false,
+  onDragStart,
+  onDragOver,
+  onDrop,
+  isDragDisabled = false,
 }: Readonly<QuestionListItemProps>) {
   const t = useTranslations();
 
@@ -50,12 +58,21 @@ export const QuestionListItem = React.memo(function QuestionListItem({
     <Item 
       variant="outline" 
       className="sm:p-6 hover:shadow-md hover:border-primary/20 transition-all duration-200 group/card bg-card"
+      role="listitem"
+      onDragOver={onDragOver}
+      onDrop={(e) => onDrop?.(e, index)}
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 space-y-4 min-w-0">
           {/* Question metadata header */}
           <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="text-sm font-bold text-primary shrink-0 bg-primary/10 px-3 py-1 rounded-md border border-primary/20">
+            <span 
+              className="text-sm font-bold text-primary shrink-0 bg-primary/10 px-3 py-1 rounded-md border border-primary/20 cursor-grab active:cursor-grabbing select-none"
+              draggable={!isDragDisabled}
+              onDragStart={(e) => onDragStart?.(e, index)}
+              aria-grabbed={false}
+              aria-label={t('common.dragToReorder', { fallback: 'Drag to reorder' })}
+            >
               #{index + 1}
             </span>
             <Badge variant="outline" className="text-xs font-semibold border-muted-foreground/30">
@@ -74,21 +91,21 @@ export const QuestionListItem = React.memo(function QuestionListItem({
           </div>
 
           {/* Question content */}
-          <div className="text-sm sm:text-base font-medium leading-relaxed">
+          <div className="text-sm sm:text-base font-medium leading-relaxed break-words overflow-hidden">
             {question.content?.includes('<') ? (
               <RichTextDisplay
                 content={question.content}
-                className="prose-sm max-w-none [&>p]:leading-relaxed"
+                className="prose-sm max-w-none [&>p]:leading-relaxed [&>*]:break-words"
               />
             ) : (
-              <p className="text-foreground/90">{question.content}</p>
+              <p className="text-foreground/90 break-words">{question.content}</p>
             )}
           </div>
 
           {/* Explanation if exists */}
           {question.explanation && (
             <div className="pt-2 border-t border-border/50">
-              <p className="text-xs sm:text-sm text-muted-foreground/80 italic line-clamp-2 leading-relaxed">
+              <p className="text-xs sm:text-sm text-muted-foreground/80 italic line-clamp-2 leading-relaxed break-words">
                 {stripHtml(question.explanation)}
               </p>
             </div>
@@ -171,6 +188,7 @@ export const QuestionListItem = React.memo(function QuestionListItem({
     prevProps.question.order === nextProps.question.order &&
     prevProps.index === nextProps.index &&
     prevProps.showAnswers === nextProps.showAnswers &&
-    prevProps.disableReorder === nextProps.disableReorder
+    prevProps.disableReorder === nextProps.disableReorder &&
+    prevProps.isDragDisabled === nextProps.isDragDisabled
   );
 });
