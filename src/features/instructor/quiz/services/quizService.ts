@@ -126,7 +126,7 @@ export class QuizService {
     data: InstructorQuizUpdateStatusRequest
   ): Promise<void> {
     const response: IApiResponse<void> = await apiClient.patch(
-      `/instructor/quizzes/:id/status`,
+      `/instructor/quizzes/:id`,
       data,
       { params: { id: quizId } }
     );
