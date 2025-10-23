@@ -351,7 +351,7 @@ export function RichTextEditor({
           {showMathSource ? <EyeOff className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> : <Eye className="h-3.5 w-3.5 sm:h-4 sm:w-4" />}
         </Button>
         <div className="hidden lg:flex items-center gap-0.5 sm:gap-1">
-          {['Ω','π','±','×','÷','≤','≥','≈','√','∑','∫','∞','→','↔','α','β','γ'].map((s) => (
+          {['Ω','π','±','×','÷','≤','≥','≈','√','∫','∞','→','↔','α','β','γ'].map((s) => (
             <Button
               key={s}
               type="button"
