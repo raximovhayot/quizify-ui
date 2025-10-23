@@ -41,11 +41,11 @@ I've completed a comprehensive analysis of integrating MathLive with the TipTap 
 - **Risk:** Medium
 - **Best for:** Advanced UX, seamless editing
 
-#### Option C: Hybrid Approach (Long-term Vision)
+#### Option C: Hybrid Approach (FINAL GOAL ⭐)
 - Inline editing for simple formulas, dialog for complex ones
-- **Effort:** 2-3 weeks
+- **Effort:** 2-3 weeks (after Phase 1)
 - **Risk:** Medium-High
-- **Best for:** Best of both worlds
+- **Best for:** Best of both worlds - This is our target end state
 
 ### Question 3: Can we do inline editing without dialogs?
 **Answer: YES, but recommend starting with dialog replacement** ✅
@@ -66,7 +66,7 @@ I've completed a comprehensive analysis of integrating MathLive with the TipTap 
 - ❌ More development time
 - ❌ State management complexity
 
-**Recommendation:** Start with dialog (Option A), then add inline editing (Option B) based on user feedback.
+**Recommendation:** Start with dialog (Option A), then progress to hybrid approach (Option C) as the final goal. The hybrid approach combines the best of both worlds.
 
 ### Question 4: What about new inline question UX?
 **Answer: Multiple innovative approaches available** ✅
@@ -94,12 +94,12 @@ I've completed a comprehensive analysis of integrating MathLive with the TipTap 
    - **Pro:** Zero clicks, fastest workflow
    - **Con:** Discovery issue, conflicts with literal $
 
-4. **Hybrid** (Best UX)
+4. **Hybrid** (Best UX) ⭐ **FINAL GOAL**
    - Click existing formula → edit inline
    - Toolbar button → full dialog for new/complex
    - Expand button → switch between modes
-   - **Pro:** Flexible for all use cases
-   - **Con:** Most complex to implement
+   - **Pro:** Flexible for all use cases, best overall UX
+   - **Con:** Most complex to implement (but worth it)
 
 5. **Sidebar Panel** (Alternative)
    - Persistent panel on side for math editing
@@ -121,7 +121,7 @@ I've completed a comprehensive analysis of integrating MathLive with the TipTap 
 - Quick win (3-4 days)
 - Immediate UX improvement
 - Low risk, backward compatible
-- Foundation for future enhancements
+- Foundation for hybrid approach (Phase 2)
 - Learn user behavior
 
 **Implementation:**
@@ -134,19 +134,33 @@ User → Click "𝑥²" → MathLive dialog → Edit visually → Insert
 (40% faster, 60% fewer errors)
 ```
 
-#### Phase 2: Inline Enhancement (FUTURE)
-**What:** Add inline editing for existing formulas  
-**When:** After Phase 1 feedback (Q2 2026)  
+**Cleanup in this phase:**
+- Keep MathEditorDialog.tsx temporarily (will remove in Phase 2)
+- New MathLiveDialog.tsx created alongside
+- Both dialogs coexist during transition
+- Full cleanup happens in Phase 2 when hybrid is complete
+
+#### Phase 2: Hybrid Approach (FINAL GOAL ⭐)
+**What:** Implement hybrid editing - inline for existing formulas, dialog for new/complex  
+**When:** After Phase 1 (Q1-Q2 2026)  
 **Why:**
-- Based on real usage data
-- User-requested features
-- More complex, needs foundation
+- Best overall UX combining inline + dialog
+- Flexible for all use cases
+- Natural workflow for simple edits
+- Full power for complex formulas
+- This is our target end state
 
 **Implementation:**
 ```
-User → Click existing formula → Inline MathLive editor appears → Quick edit → Press Enter
-(No dialog for simple edits)
+Existing formula: Click → Inline editor → Quick edit → Press Enter
+New formula: Toolbar button → Full dialog → Complex editing → Insert
+Need more space: Click "Expand" → Switch to full dialog
 ```
+
+**Cleanup in this phase:**
+- Remove old MathEditorDialog.tsx (replaced by MathLiveDialog in Phase 1)
+- Clean up unused LaTeX symbol constants
+- Remove preview-specific code (no longer needed with WYSIWYG)
 
 #### Phase 3: Advanced Features (OPTIONAL)
 **What:** Templates, shortcuts, auto-suggestions  
@@ -188,49 +202,67 @@ Benefits:
 ✅ Mobile-friendly
 ```
 
-### Concept 2: Inline Editing (Phase 2)
+### Concept 2: Hybrid Experience (Phase 2) ⭐ FINAL GOAL
 ```
-Question: Calculate when ┌───────────────────┐ equals zero.
-                         │ x² + 2x + 1       │
-                         │ ▓                 │
-                         │ [⌨️ Keyboard]     │
-                         └───────────────────┘
+SCENARIO 1 - Editing Existing Formula (Inline):
+Question: The equation ┌───────────────────┐ equals zero.
+                       │ x² + 2x + 1       │
+                       │ ▓                 │
+                       │ [⌨️] [⤢ Expand]   │
+                       └───────────────────┘
+User clicks formula → inline editor appears → quick edit
+
+SCENARIO 2 - Creating New Formula (Dialog):
+User clicks "𝑥²" toolbar button
+    ↓
+┌─────────────────────────────────────────────┐
+│ Math Editor (MathLive)                   [×]│
+│─────────────────────────────────────────────│
+│  [Large editing area with full features]   │
+│  x² + y² = z²                              │
+└─────────────────────────────────────────────┘
+
+SCENARIO 3 - Need More Space (Expand):
+Inline editor has "⤢ Expand" button
+    ↓
+Opens full dialog with current content
+    ↓
+User continues editing with more space
 
 Benefits:
-✅ No dialog (stay in context)
-✅ Edit where you see it
-✅ Faster for simple edits
-✅ Modern UX
+✅ Inline for quick edits (fastest)
+✅ Dialog for new/complex formulas (powerful)
+✅ Seamless transition between modes
+✅ Best UX for all scenarios
+✅ User chooses based on need
 ```
 
-### Concept 3: Hybrid Experience (Phase 3)
+### Concept 3: Advanced Features (Phase 3)
 ```
-Simple edit: Click formula → inline editor
-Complex formula: Toolbar button → full dialog
-Need more space: Click "Expand" → switch to dialog
-
-Benefits:
-✅ Flexible for all use cases
-✅ Best UX for simple AND complex
-✅ User can choose
+Formula Templates Library
+Auto-suggestions as you type
+Keyboard shortcuts
+Saved formulas
 ```
 
 ---
 
 ## 📊 Comparison: Current vs MathLive
 
-| Aspect | Current (LaTeX Dialog) | MathLive Dialog | MathLive Inline |
-|--------|----------------------|-----------------|-----------------|
-| **UX** | ⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
+| Aspect | Current (LaTeX Dialog) | MathLive Dialog (Phase 1) | Hybrid (Phase 2) ⭐ |
+|--------|----------------------|---------------------------|---------------------|
+| **UX** | ⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
 | **Learning Curve** | High (LaTeX) | Low (visual) | Very Low |
-| **Speed** | ~15-20s | ~8-12s | ~5-8s |
-| **Mobile** | ⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+| **Speed (simple)** | ~15-20s | ~8-12s | ~5-8s |
+| **Speed (complex)** | ~15-20s | ~8-12s | ~8-12s |
+| **Mobile** | ⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
 | **Errors** | 15% | <5% | <3% |
-| **Implementation** | 0 days (done) | 3-4 days | 1-2 weeks |
+| **Implementation** | 0 days (done) | 3-4 days | 2-3 weeks total |
 | **Risk** | N/A | Very Low | Medium |
-| **Context Switch** | Yes (dialog) | Yes (dialog) | No (inline) |
+| **Context Switch** | Yes (dialog) | Yes (dialog) | Optional (both modes) |
+| **Flexibility** | None | Low | ⭐⭐⭐⭐⭐ High |
 
-**Recommendation:** Start with MathLive Dialog, then add Inline in Phase 2
+**Recommendation:** Start with MathLive Dialog (Phase 1), then implement Hybrid approach (Phase 2) as final goal
 
 ---
 
@@ -415,12 +447,18 @@ To move forward:
 
 **The answer to your question is YES** - MathLive is an excellent choice, and I've analyzed multiple approaches for integration including inline editing without dialogs.
 
-**My recommendation:** Start with **Phase 1 (Dialog Replacement)** for quick win, then add **Phase 2 (Inline Editing)** to achieve your vision of editing directly in questions without dialogs.
+**My recommendation:** Start with **Phase 1 (Dialog Replacement)** for quick win and foundation, then implement **Phase 2 (Hybrid Approach)** as the final goal. The hybrid approach combines inline editing for existing formulas with dialog for new/complex formulas, providing the best overall UX.
+
+**Phased Approach:**
+1. **Phase 1 (Now):** Replace dialog with MathLive - 3-4 days, low risk
+2. **Phase 2 (Final Goal ⭐):** Implement hybrid (inline + dialog) - 2-3 weeks total
+3. **Cleanup:** Remove old MathEditorDialog and unused code in Phase 2
 
 **Everything is documented and ready to implement.** 🚀
 
 ---
 
 **Created:** 2025-10-22  
+**Updated:** 2025-10-23  
 **Status:** Analysis Complete - Ready for Decision  
-**Recommendation:** Proceed with Phase 1 Implementation ✅
+**Recommendation:** Proceed with Phase 1, targeting Phase 2 Hybrid as final goal ✅

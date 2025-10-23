@@ -2,7 +2,10 @@
 
 ## TL;DR
 
-**Recommendation:** Integrate MathLive to replace current LaTeX text dialog ✅
+**Recommendation:** Integrate MathLive with phased approach to hybrid implementation ✅
+
+**Phase 1 (Now):** Replace dialog with MathLive dialog
+**Phase 2 (Final Goal ⭐):** Implement hybrid (inline + dialog)
 
 **Why:** 
 - ✅ 5x better UX (visual editing vs text input)
@@ -11,9 +14,11 @@
 - ✅ Superior mobile experience
 - ✅ Full accessibility compliance
 - ✅ Zero data migration needed
+- ✅ Hybrid approach provides best flexibility
 
 **Investment:**
-- Time: 2-3 days implementation
+- Phase 1: 3-4 days implementation
+- Phase 2: 2-3 weeks (hybrid + cleanup)
 - Bundle: +130 KB (lazy-loaded)
 - Risk: Very low
 
@@ -115,7 +120,9 @@ Rendered by KaTeX (no change)
 
 ## Implementation Plan
 
-### Week 1: Development (3 days)
+### Phase 1: MathLive Dialog (Weeks 1-2)
+
+**Week 1: Development (3-4 days)**
 **Day 1:**
 - Install MathLive package
 - Create MathLiveDialog component
@@ -126,38 +133,56 @@ Rendered by KaTeX (no change)
 - Add styling and theming
 - Write unit tests
 
-**Day 3:**
+**Day 3-4:**
 - Integration testing
 - Mobile testing
 - Accessibility testing
 
-### Week 2: Testing & Deployment
-**Days 4-5:**
+**Week 2: Testing & Deployment**
+**Days 5-7:**
 - Deploy to staging
 - Internal QA testing
-- Documentation updates
-
-**Days 6-7:**
 - Beta test with 10% users
-- Monitor feedback
-- Bug fixes if needed
+- Monitor feedback and metrics
+- Production deployment
 
-### Week 3: Rollout
-- Deploy to production
-- Monitor metrics
+### Phase 2: Hybrid Approach (Weeks 3-5) - FINAL GOAL ⭐
+
+**Week 3: Inline Editor Development**
+- Create InlineMathEditor component
+- Develop TipTap extension for inline editing
+- Implement click-to-edit functionality
+
+**Week 4: Integration & Testing**
+- Integrate inline editor with existing dialog
+- Add expand/collapse functionality
+- Comprehensive testing (unit, integration, E2E)
+- Mobile and accessibility testing
+
+**Week 5: Cleanup & Deployment**
+- Remove old MathEditorDialog component
+- Clean up unused code and imports
+- Update all tests
+- Documentation updates
+- Deploy to staging → beta test → production
+
+**Post-Phase 2: Continuous Improvement**
+- Monitor usage patterns
 - Gather user feedback
+- Plan Phase 3 (advanced features) if needed
 
 ---
 
 ## Costs
 
 ### Development Costs
-| Item | Estimate |
-|------|----------|
-| Development | 2-3 days |
-| Testing | 1 day |
-| Documentation | 0.5 days |
-| **Total** | **3.5-4.5 days** |
+| Item | Phase 1 | Phase 2 (Hybrid) | Total |
+|------|---------|------------------|-------|
+| Development | 3-4 days | 2 weeks | ~2.5 weeks |
+| Testing | 1 day | 3 days | 4 days |
+| Cleanup | - | 2 days | 2 days |
+| Documentation | 0.5 days | 1 day | 1.5 days |
+| **Total** | **4-5 days** | **3 weeks** | **~4 weeks** |
 
 ### Technical Costs
 | Item | Impact |
@@ -329,30 +354,39 @@ Based on MathLive adoption in similar applications:
 
 ### Primary Recommendation ✅
 
-**Implement MathLive - Option 1 (Dialog Replacement)**
+**Implement MathLive with Phased Approach to Hybrid Solution**
 
 **Rationale:**
 1. Clear UX superiority over current solution
-2. Low implementation cost (3-4 days)
+2. Low implementation cost for Phase 1 (3-4 days)
 3. Minimal technical risk
 4. Excellent ROI
 5. Addresses known pain points
 6. Improves accessibility
 7. Better mobile experience
 8. Backward compatible (no data migration)
+9. Hybrid approach as final goal provides best overall UX
 
 ### Implementation Strategy
 
-**Phase 1 (Now):** Basic integration
-- Replace dialog component
+**Phase 1 (Now):** Dialog Replacement
+- Replace LaTeX text dialog with MathLive dialog
 - Immediate UX improvement
 - 3-4 day effort
+- Foundation for Phase 2
 
-**Phase 2 (Q2 2026):** Advanced features
-- Inline editing
-- Formula templates
-- Keyboard shortcuts
-- Based on Phase 1 feedback
+**Phase 2 (Final Goal ⭐):** Hybrid Approach
+- Inline editing for existing formulas
+- Dialog for new/complex formulas
+- Best of both worlds
+- 2-3 weeks effort
+- Includes cleanup of old components
+
+**Cleanup in Phase 2:**
+- Remove old MathEditorDialog component
+- Clean up unused LaTeX-specific code
+- Update all tests
+- Documentation updates
 
 ### Approval Needed
 - [ ] Product approval for roadmap
@@ -381,6 +415,14 @@ Based on MathLive adoption in similar applications:
 2. User feedback collection
 3. Iterate if needed
 4. Production deployment
+
+### Medium-term (Months 2-3) - Phase 2
+1. Plan hybrid implementation
+2. Develop inline editor
+3. Integrate with dialog
+4. Clean up old components
+5. Comprehensive testing
+6. Deploy Phase 2
 
 ### Long-term (Next Quarter)
 1. Monitor metrics

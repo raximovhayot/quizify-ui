@@ -694,7 +694,165 @@ Create or update documentation in `docs/`:
 - [ ] Monitor bundle size impact
 - [ ] Track usage metrics
 - [ ] Address user feedback
-- [ ] Plan follow-up improvements
+- [ ] Plan Phase 2 (Hybrid Approach) implementation
+
+---
+
+### Phase 8: Hybrid Approach Implementation (Phase 2 - FINAL GOAL)
+
+This phase implements the hybrid approach combining inline editing with dialog, providing the best overall UX.
+
+#### Step 8.1: Create Inline Math Editor Component
+
+Create `src/components/shared/form/InlineMathEditor.tsx`:
+
+```tsx
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+import type { MathfieldElement } from 'mathlive';
+import { Button } from '@/components/ui/button';
+import 'mathlive/static.css';
+
+interface InlineMathEditorProps {
+  initialLatex: string;
+  onSave: (latex: string) => void;
+  onCancel: () => void;
+  onExpand: () => void;
+}
+
+export function InlineMathEditor({
+  initialLatex,
+  onSave,
+  onCancel,
+  onExpand,
+}: InlineMathEditorProps) {
+  const mathfieldRef = useRef<MathfieldElement | null>(null);
+  
+  useEffect(() => {
+    const initMathField = async () => {
+      const { MathfieldElement } = await import('mathlive');
+      
+      if (!customElements.get('math-field')) {
+        customElements.define('math-field', MathfieldElement);
+      }
+      
+      setTimeout(() => {
+        if (mathfieldRef.current) {
+          mathfieldRef.current.value = initialLatex;
+          mathfieldRef.current.focus();
+        }
+      }, 0);
+    };
+    
+    initMathField();
+  }, [initialLatex]);
+  
+  const handleSave = () => {
+    if (mathfieldRef.current) {
+      onSave(mathfieldRef.current.value);
+    }
+  };
+  
+  return (
+    <div className="inline-block border rounded-lg p-2 bg-background shadow-lg">
+      <math-field 
+        ref={mathfieldRef}
+        className="text-lg mb-2"
+        style={{ minWidth: '200px' }}
+      />
+      <div className="flex gap-1 justify-end">
+        <Button size="sm" variant="ghost" onClick={onExpand} title="Expand to full dialog">
+          ⤢
+        </Button>
+        <Button size="sm" variant="ghost" onClick={onCancel}>
+          Cancel
+        </Button>
+        <Button size="sm" onClick={handleSave}>
+          Save
+        </Button>
+      </div>
+    </div>
+  );
+}
+```
+
+#### Step 8.2: Create TipTap Extension for Inline Editing
+
+Create `src/components/shared/form/extensions/InlineMathExtension.ts`:
+
+```typescript
+import { Node, mergeAttributes } from '@tiptap/core';
+import { ReactNodeViewRenderer } from '@tiptap/react';
+import { InlineMathNodeView } from './InlineMathNodeView';
+
+export const InlineMathExtension = Node.create({
+  name: 'inlineMath',
+  group: 'inline',
+  inline: true,
+  atom: true,
+  
+  addAttributes() {
+    return {
+      latex: {
+        default: '',
+      },
+    };
+  },
+  
+  parseHTML() {
+    return [
+      {
+        tag: 'span.math-inline',
+      },
+    ];
+  },
+  
+  renderHTML({ HTMLAttributes }) {
+    return ['span', mergeAttributes({ class: 'math-inline' }, HTMLAttributes)];
+  },
+  
+  addNodeView() {
+    return ReactNodeViewRenderer(InlineMathNodeView);
+  },
+});
+```
+
+#### Step 8.3: Cleanup Old Components
+
+Once hybrid implementation is complete and tested:
+
+**Remove these files:**
+- `src/components/shared/form/MathEditorDialog.tsx` (old LaTeX text dialog)
+- `src/components/shared/form/__tests__/MathEditorDialog.test.tsx`
+
+**Update these files:**
+- `src/components/shared/form/RichTextEditor.tsx` - Remove old imports
+- `src/components/shared/form/MinimalRichTextEditor.tsx` - Remove old imports
+
+**Clean up unused code:**
+```bash
+# Search for remaining references to old dialog
+grep -r "MathEditorDialog" src/
+
+# Remove unused LaTeX symbol constants if any
+# Remove old preview-specific code
+```
+
+**Update tests:**
+- Ensure all tests pass with new implementation
+- Remove tests for old dialog
+- Add tests for hybrid functionality
+
+#### Step 8.4: Validation Checklist
+
+After cleanup:
+- [ ] All references to MathEditorDialog removed
+- [ ] All tests passing with new implementation
+- [ ] No unused imports or dead code
+- [ ] Documentation updated
+- [ ] Bundle size verified (should be similar, slightly lighter)
+- [ ] All features working as expected
 
 ---
 
