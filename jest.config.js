@@ -12,6 +12,8 @@ const customJestConfig = {
   testEnvironment: '<rootDir>/jest.custom-environment.js',
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^mathlive$': '<rootDir>/src/__mocks__/mathlive.js',
+    '^katex$': '<rootDir>/src/__mocks__/katex.js',
   },
   testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/', '<rootDir>/tests/e2e/'],
   collectCoverageFrom: [
