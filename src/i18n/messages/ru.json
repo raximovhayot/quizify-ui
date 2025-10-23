@@ -154,7 +154,13 @@
     "reorderQuestions": {
       "ariaList": "Вопросы (перетащите для изменения порядка)"
     },
-    "dragToReorder": "Перетащите для изменения порядка"
+    "dragToReorder": "Перетащите для изменения порядка",
+    "title": "Title",
+    "description": "Description",
+    "settings": "Settings",
+    "details": "Details",
+    "startTime": "Start Time",
+    "endTime": "End Time"
   },
   "auth": {
     "signIn": {
@@ -666,9 +672,9 @@
         "endTimeLabel": "Время окончания",
         "submit": "Создать задание",
         "details": "Детали",
-             "settings": "Настройки",
-             "startImmediately": "Начать сразу",
-             "startImmediatelyHelp": "Начать сразу после создания задания. Время начала будет установлено автоматически."
+        "settings": "Настройки",
+        "startImmediately": "Начать сразу",
+        "startImmediatelyHelp": "Начать сразу после создания задания. Время начала будет установлено автоматически."
       },
       "settings": {
         "attempts": "Макс. попыток (0 = без ограничений)",
@@ -678,20 +684,20 @@
         "shuffleAnswers": "Перемешивать ответы",
         "shuffleAnswersHelp": "Случайный порядок вариантов ответа",
         "resultShowType": {
-             "label": "Когда показывать результаты",
-             "immediately": "Сразу",
-             "afterAssignment": "После завершения задания",
-             "never": "Никогда",
-             "helper": {
-               "never": "Студенты не увидят свои результаты для этого задания."
-             }
-           },
-          "resultType": {
-            "label": "Детали результата",
-            "onlyResult": "Только результат",
-            "onlyCorrect": "Только правильные ответы",
-            "full": "Полные детали"
+          "label": "Когда показывать результаты",
+          "immediately": "Сразу",
+          "afterAssignment": "После завершения задания",
+          "never": "Никогда",
+          "helper": {
+            "never": "Студенты не увидят свои результаты для этого задания."
           }
+        },
+        "resultType": {
+          "label": "Детали результата",
+          "onlyResult": "Только результат",
+          "onlyCorrect": "Только правильные ответы",
+          "full": "Полные детали"
+        }
       }
     },
     "grading": {

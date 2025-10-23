@@ -92,7 +92,7 @@ export function AssignmentForm({
         <Card>
           <CardHeader>
             <CardTitle>
-              {t('instructor.assignment.create.details', {
+              {t('common.details', {
                 default: 'Details',
               })}
             </CardTitle>
@@ -104,7 +104,7 @@ export function AssignmentForm({
               render={({ field, fieldState }) => (
                 <Field>
                   <FieldLabel htmlFor="title" className="text-sm font-medium">
-                    {t('instructor.assignment.create.titleLabel', {
+                    {t('common.title', {
                       default: 'Title',
                     })}
                   </FieldLabel>
@@ -132,8 +132,8 @@ export function AssignmentForm({
               render={({ field, fieldState }) => (
                 <Field>
                   <FieldLabel htmlFor="description" className="text-sm font-medium">
-                    {t('instructor.assignment.create.descriptionLabel', {
-                      default: 'Description (optional)',
+                    {t('common.description', {
+                      default: 'Description',
                     })}
                   </FieldLabel>
                   <FieldContent>
@@ -160,7 +160,7 @@ export function AssignmentForm({
         <Card>
           <CardHeader>
             <CardTitle>
-              {t('instructor.assignment.create.settings', {
+              {t('common.settings', {
                 default: 'Settings',
               })}
             </CardTitle>
@@ -204,7 +204,7 @@ export function AssignmentForm({
                 render={({ field, fieldState }) => (
                   <Field>
                     <FieldLabel htmlFor="startTimeLocal" className="text-sm font-medium">
-                      {t('instructor.assignment.create.startTimeLabel', {
+                      {t('common.startTime', {
                         default: 'Start Time',
                       })}
                     </FieldLabel>
@@ -231,7 +231,7 @@ export function AssignmentForm({
                 render={({ field, fieldState }) => (
                   <Field>
                     <FieldLabel htmlFor="endTimeLocal" className="text-sm font-medium">
-                      {t('instructor.assignment.create.endTimeLabel', {
+                      {t('common.endTime', {
                         default: 'End Time',
                       })}
                     </FieldLabel>
@@ -264,7 +264,7 @@ export function AssignmentForm({
         <Card>
           <CardHeader>
             <CardTitle>
-              {t('instructor.assignment.create.settings', {
+              {t('common.settings', {
                 default: 'Settings',
               })}
             </CardTitle>
@@ -410,7 +410,7 @@ export function AssignmentForm({
         <Card>
           <CardHeader>
             <CardTitle>
-              {t('instructor.assignment.create.settings', {
+              {t('common.settings', {
                 default: 'Settings',
               })}
             </CardTitle>

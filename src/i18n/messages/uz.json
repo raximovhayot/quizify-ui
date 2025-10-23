@@ -154,7 +154,13 @@
     "reorderQuestions": {
       "ariaList": "Savollar (tartibni o'zgartirish uchun sudrang)"
     },
-    "dragToReorder": "Tartibni o'zgartirish uchun sudrang"
+    "dragToReorder": "Tartibni o'zgartirish uchun sudrang",
+    "title": "Title",
+    "description": "Description",
+    "settings": "Settings",
+    "details": "Details",
+    "startTime": "Start Time",
+    "endTime": "End Time"
   },
   "auth": {
     "signIn": {
