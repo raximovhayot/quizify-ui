@@ -282,3 +282,50 @@
     }
   }
 }
+
+/* MathLive Editor Customization */
+math-field {
+  --ml-keyboard-background: hsl(var(--background));
+  --ml-keyboard-text: hsl(var(--foreground));
+  --ml-contains-highlight: hsl(var(--primary) / 0.2);
+  --ml-placeholder-color: hsl(var(--muted-foreground));
+  
+  border: none;
+  outline: none;
+  font-family: inherit;
+}
+
+math-field:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+  border-radius: 0.375rem;
+}
+
+/* Dark mode support */
+.dark math-field {
+  --ml-keyboard-background: hsl(var(--background));
+  --ml-keyboard-text: hsl(var(--foreground));
+}
+
+/* Virtual keyboard styling */
+.ML__keyboard {
+  background: hsl(var(--background));
+  border-top: 1px solid hsl(var(--border));
+  box-shadow: 0 -4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.ML__keyboard .ML__keycap {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.25rem;
+}
+
+.ML__keyboard .ML__keycap:hover {
+  background: hsl(var(--accent));
+}
+
+.ML__keyboard .ML__keycap.is-pressed {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
