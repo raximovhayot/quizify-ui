@@ -8,6 +8,7 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 
 import { QuizDataDTO } from '@/features/instructor/quiz/types';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
 import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
@@ -37,11 +38,13 @@ import {
 export interface AssignmentFormProps {
   quiz: QuizDataDTO;
   onSuccess?: () => void;
+  onCancel?: () => void;
 }
 
 export function AssignmentForm({
   quiz,
   onSuccess,
+  onCancel,
 }: Readonly<AssignmentFormProps>) {
   const t = useTranslations();
   const createAssignment = useCreateAssignment();
@@ -84,17 +87,17 @@ export function AssignmentForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={onSubmit} className="space-y-6">
+      <form onSubmit={onSubmit} className="space-y-4">
         {/* Main details card */}
         <Card>
           <CardHeader>
             <CardTitle>
               {t('instructor.assignment.create.details', {
-                default: 'Assignment Details',
+                default: 'Details',
               })}
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-4">
             <Controller
               control={form.control}
               name="title"
@@ -102,7 +105,7 @@ export function AssignmentForm({
                 <Field>
                   <FieldLabel htmlFor="title" className="text-sm font-medium">
                     {t('instructor.assignment.create.titleLabel', {
-                      default: 'Assignment Title',
+                      default: 'Title',
                     })}
                   </FieldLabel>
                   <FieldContent>
@@ -157,12 +160,12 @@ export function AssignmentForm({
         <Card>
           <CardHeader>
             <CardTitle>
-              {t('instructor.assignment.create.timing', {
-                default: 'Timing',
+              {t('instructor.assignment.create.settings', {
+                default: 'Settings',
               })}
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-4">
             <Controller
               control={form.control}
               name="startImmediately"
@@ -261,12 +264,12 @@ export function AssignmentForm({
         <Card>
           <CardHeader>
             <CardTitle>
-              {t('instructor.assignment.create.quizSettings', {
-                default: 'Quiz Settings',
+              {t('instructor.assignment.create.settings', {
+                default: 'Settings',
               })}
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Controller
                 control={form.control}
@@ -407,12 +410,12 @@ export function AssignmentForm({
         <Card>
           <CardHeader>
             <CardTitle>
-              {t('instructor.assignment.create.resultsSettings', {
-                default: 'Results Settings',
+              {t('instructor.assignment.create.settings', {
+                default: 'Settings',
               })}
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Controller
                 control={form.control}
@@ -520,8 +523,17 @@ export function AssignmentForm({
           </CardContent>
         </Card>
 
-        {/* Submit button - prominently placed at the bottom */}
-        <div className="flex justify-end pt-2">
+        {/* Submit and Cancel buttons - prominently placed at the bottom */}
+        <div className="flex justify-end gap-3 pt-2">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+            disabled={isSubmitting}
+            className="w-full sm:w-auto px-8 h-11"
+          >
+            {t('common.cancel', { default: 'Cancel' })}
+          </Button>
           <SubmitButton
             isSubmitting={isSubmitting}
             submitText={t('instructor.assignment.create.submit', { default: 'Create Assignment' })}
