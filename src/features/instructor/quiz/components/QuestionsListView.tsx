@@ -107,16 +107,18 @@ export function QuestionsListView({
 
   if (error) {
     return (
-      <Card>
+      <Card className="border-destructive/20 bg-destructive/5">
         <CardContent className="pt-6">
-          <div className="text-center py-8">
-            <AlertTriangle className="h-12 w-12 text-destructive mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">
+          <div className="text-center py-12 px-4">
+            <div className="mx-auto w-16 h-16 bg-destructive/10 rounded-2xl flex items-center justify-center mb-6">
+              <AlertTriangle className="h-8 w-8 text-destructive" />
+            </div>
+            <h3 className="text-lg font-semibold mb-3 text-foreground">
               {t('common.error.title', {
                 fallback: 'Something went wrong',
               })}
             </h3>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground leading-relaxed">
               {t('common.error.description', {
                 fallback:
                   'There was a problem loading the data. Please try again.',
@@ -130,25 +132,25 @@ export function QuestionsListView({
 
   if (!questions || questions.length === 0) {
     return (
-      <Card>
+      <Card className="border-dashed border-2 border-border/50">
         <CardContent className="pt-6">
-          <div className="text-center py-12">
-            <div className="mx-auto w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-4">
-              <Plus className="h-12 w-12 text-muted-foreground" />
+          <div className="text-center py-16 px-4">
+            <div className="mx-auto w-20 h-20 bg-gradient-to-br from-primary/20 to-primary/5 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+              <Plus className="h-10 w-10 text-primary" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">
+            <h3 className="text-xl font-semibold mb-3 text-foreground">
               {t('common.questionsEmpty.title', {
                 fallback: 'No questions yet',
               })}
             </h3>
-            <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+            <p className="text-muted-foreground mb-8 max-w-md mx-auto leading-relaxed">
               {t('common.questionsEmpty.description', {
                 fallback:
                   'Start building your quiz by creating engaging questions that will challenge and educate your students.',
               })}
             </p>
-            <Button onClick={onAddQuestion} size="lg">
-              <Plus className="h-4 w-4 mr-2" />
+            <Button onClick={onAddQuestion} size="lg" className="shadow-sm hover:shadow-md transition-shadow">
+              <Plus className="h-5 w-5 mr-2" />
               {t('common.addQuestion', { fallback: 'Add Question' })}
             </Button>
           </div>
@@ -162,7 +164,7 @@ export function QuestionsListView({
       {/* Live region for announcements */}
       <div ref={setLiveNode} aria-live="polite" className="sr-only" />
 
-      <div className="space-y-4">
+      <div className="space-y-5">
         <QuestionsListHeader
           count={questions.length}
           showAnswers={showAnswers}
@@ -170,7 +172,7 @@ export function QuestionsListView({
           onAddQuestion={onAddQuestion}
         />
         <div
-          className="space-y-4 touch-pan-y overscroll-contain"
+          className="space-y-3 touch-pan-y overscroll-contain"
           role="list"
           aria-label={t('common.reorderQuestions.ariaList', {
             fallback: 'Questions (drag to reorder)',
