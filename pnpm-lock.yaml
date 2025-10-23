@@ -116,6 +116,9 @@ importers:
       lucide-react:
         specifier: ^0.525.0
         version: 0.525.0(react@19.1.1)
+      mathlive:
+        specifier: ^0.107.1
+        version: 0.107.1
       next:
         specifier: 15.4.7
         version: 15.4.7(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.56.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -516,6 +519,10 @@ packages:
 
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
+
+  '@cortex-js/compute-engine@0.29.1':
+    resolution: {integrity: sha512-bCpaGW+Th+6lrTEDom3mNInfu3hu2N79FpUuqdVyvhE1Np4O447O/1gsgqLAFqVjg58cGN0FCAxf8gXkQNF4CQ==}
+    engines: {node: '>=21.7.3', npm: '>=10.5.0'}
 
   '@date-fns/tz@1.4.1':
     resolution: {integrity: sha512-P5LUNhtbj6YfI3iJjw5EL9eUAG6OitD0W3fWQcpQjDRc/QIsL0tRNuO1PcDvPccWL1fSTXXdE1ds+l95DV/OFA==}
@@ -2549,6 +2556,10 @@ packages:
     resolution: {integrity: sha512-OkTL9umf+He2DZkUq8f8J9of7yL6RJKI24dVITBmNfZBmri9zYZQrKkuXiKhyfPSu8tUhnVBB1iKXevvnlR4Ww==}
     engines: {node: '>= 12'}
 
+  complex-esm@2.1.1-esm1:
+    resolution: {integrity: sha512-IShBEWHILB9s7MnfyevqNGxV0A1cfcSnewL/4uPFiSxkcQL4Mm3FxJ0pXMtCXuWLjYz3lRRyk6OfkeDZcjD6nw==}
+    engines: {node: '>=16.14.2', npm: '>=8.5.0'}
+
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
@@ -4028,6 +4039,9 @@ packages:
   math-intrinsics@1.1.0:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
     engines: {node: '>= 0.4'}
+
+  mathlive@0.107.1:
+    resolution: {integrity: sha512-CaE2eTwXLGXyOu1d+dIv10Vx98qNfHv9g4pBmqOtDJRPyELxbk9RZ2pT69cTRmOk7Yai/mpSBXQT2HwD/S32uQ==}
 
   mdurl@2.0.0:
     resolution: {integrity: sha512-Lf+9+2r+Tdp5wXDXC4PcIBjTDtq4UKjCPMQhKIuzpJNW0b96kVqSwW0bT7FhRSfmAiFYgP+SCRvdrDozfh0U5w==}
@@ -5726,6 +5740,11 @@ snapshots:
       '@babel/helper-validator-identifier': 7.27.1
 
   '@bcoe/v8-coverage@0.2.3': {}
+
+  '@cortex-js/compute-engine@0.29.1':
+    dependencies:
+      complex-esm: 2.1.1-esm1
+      decimal.js: 10.6.0
 
   '@date-fns/tz@1.4.1': {}
 
@@ -7867,6 +7886,8 @@ snapshots:
 
   commander@8.3.0: {}
 
+  complex-esm@2.1.1-esm1: {}
+
   concat-map@0.0.1: {}
 
   content-disposition@1.0.0:
@@ -9673,6 +9694,10 @@ snapshots:
       uc.micro: 2.1.0
 
   math-intrinsics@1.1.0: {}
+
+  mathlive@0.107.1:
+    dependencies:
+      '@cortex-js/compute-engine': 0.29.1
 
   mdurl@2.0.0: {}
 
