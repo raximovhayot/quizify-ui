@@ -32,9 +32,9 @@ export interface QuestionListItemProps {
   onMoveUp?: () => void;
   onMoveDown?: () => void;
   disableReorder?: boolean;
-  onDragStart?: (e: React.DragEvent<HTMLDivElement>, index: number) => void;
-  onDragOver?: (e: React.DragEvent<HTMLDivElement>) => void;
-  onDrop?: (e: React.DragEvent<HTMLDivElement>, index: number) => void;
+  onDragStart?: (e: React.DragEvent<HTMLElement>, index: number) => void;
+  onDragOver?: (e: React.DragEvent<HTMLElement>) => void;
+  onDrop?: (e: React.DragEvent<HTMLElement>, index: number) => void;
   isDragDisabled?: boolean;
 }
 

@@ -73,19 +73,19 @@ export function QuestionsListView({
     }
   };
 
-  const onDragStart = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+  const onDragStart = (e: React.DragEvent<HTMLElement>, index: number) => {
     if (isReorderPending) return;
     e.dataTransfer.setData('text/plain', String(index));
     e.dataTransfer.effectAllowed = 'move';
   };
 
-  const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+  const onDragOver = (e: React.DragEvent<HTMLElement>) => {
     if (isReorderPending) return;
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
   };
 
-  const onDrop = (e: React.DragEvent<HTMLDivElement>, toIndex: number) => {
+  const onDrop = (e: React.DragEvent<HTMLElement>, toIndex: number) => {
     if (isReorderPending) return;
     e.preventDefault();
     const fromStr = e.dataTransfer.getData('text/plain');
