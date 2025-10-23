@@ -78,7 +78,7 @@ This document outlines the comprehensive UI/UX improvements made to the quiz-tak
 - Added new state management for current question
 
 ### New Dependencies
-- `lucide-react` icons: Check, ChevronLeft, ChevronRight, Save, CheckCircle2
+- Additional `lucide-react` icons: Check, ChevronLeft, ChevronRight, Save, CheckCircle2
 - Existing UI components: Progress, Badge, Card
 - Utility function: `cn` for conditional classNames
 

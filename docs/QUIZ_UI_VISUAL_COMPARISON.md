@@ -44,9 +44,9 @@
 ```
 ┌─────────────────────────────────────────────────┐
 │  Quiz Attempt                                   │
-│  3 of 10 answered              [💾 Save] [✓ Complete]│
+│  3 of 10 answered            [💾 Save] [✓ Complete]│
 │                                                 │
-│  Overall Progress                          30% │
+│  Overall Progress                          30%  │
 │  ▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░      │
 └─────────────────────────────────────────────────┘
 
@@ -189,7 +189,7 @@
 ## ICONS USED
 
 - ✓ (Check): Selected answers, answered question pills
-- 💾 (Save): Save button
-- ✓ (CheckCircle2): Complete button
+- 💾 (Save): Save button  
+- ✓✓ (CheckCircle2): Complete button
 - ← (ChevronLeft): Previous button
 - → (ChevronRight): Next button
