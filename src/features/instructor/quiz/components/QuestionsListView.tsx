@@ -130,25 +130,25 @@ export function QuestionsListView({
 
   if (!questions || questions.length === 0) {
     return (
-      <Card>
+      <Card className="border-dashed border-2">
         <CardContent className="pt-6">
-          <div className="text-center py-12">
-            <div className="mx-auto w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-4">
-              <Plus className="h-12 w-12 text-muted-foreground" />
+          <div className="text-center py-16">
+            <div className="mx-auto w-28 h-28 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+              <Plus className="h-14 w-14 text-primary" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">
+            <h3 className="text-2xl font-bold mb-3">
               {t('common.questionsEmpty.title', {
                 fallback: 'No questions yet',
               })}
             </h3>
-            <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+            <p className="text-muted-foreground mb-8 max-w-md mx-auto text-base leading-relaxed">
               {t('common.questionsEmpty.description', {
                 fallback:
                   'Start building your quiz by creating engaging questions that will challenge and educate your students.',
               })}
             </p>
-            <Button onClick={onAddQuestion} size="lg">
-              <Plus className="h-4 w-4 mr-2" />
+            <Button onClick={onAddQuestion} size="lg" className="shadow-md hover:shadow-lg transition-shadow">
+              <Plus className="h-5 w-5 mr-2" />
               {t('common.addQuestion', { fallback: 'Add Question' })}
             </Button>
           </div>
@@ -162,7 +162,7 @@ export function QuestionsListView({
       {/* Live region for announcements */}
       <div ref={setLiveNode} aria-live="polite" className="sr-only" />
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         <QuestionsListHeader
           count={questions.length}
           showAnswers={showAnswers}
@@ -186,6 +186,7 @@ export function QuestionsListView({
               onDragStart={(e) => onDragStart(e, index)}
               onDragOver={onDragOver}
               onDrop={(e) => onDrop(e, index)}
+              className="cursor-move active:cursor-grabbing"
             >
               <QuestionListItem
                 question={question}

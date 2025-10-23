@@ -47,17 +47,25 @@ export const QuestionListItem = React.memo(function QuestionListItem({
   const t = useTranslations();
 
   return (
-    <Item variant="outline" className="sm:p-5">
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 space-y-3 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-sm font-semibold text-muted-foreground shrink-0 bg-muted px-2 py-0.5 rounded">
+    <Item 
+      variant="outline" 
+      className="sm:p-6 hover:shadow-md hover:border-primary/20 transition-all duration-200 group/card bg-card"
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1 space-y-4 min-w-0">
+          {/* Question metadata header */}
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <span className="text-sm font-bold text-primary shrink-0 bg-primary/10 px-3 py-1 rounded-md border border-primary/20">
               #{index + 1}
             </span>
-            <Badge variant="outline" className="text-xs">
+            <Badge variant="outline" className="text-xs font-semibold border-muted-foreground/30">
               {getQuestionTypeLabel(t, question.questionType)}
             </Badge>
-            <Badge variant="secondary" className="text-xs" title={t('common.points.short', { count: question.points, fallback: '{count} pts' })}>
+            <Badge 
+              variant="secondary" 
+              className="text-xs font-medium bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800" 
+              title={t('common.points.short', { count: question.points, fallback: '{count} pts' })}
+            >
               {t('common.points.short', {
                 count: question.points,
                 fallback: '{count} pts',
@@ -65,37 +73,47 @@ export const QuestionListItem = React.memo(function QuestionListItem({
             </Badge>
           </div>
 
-          {/* Display rich text content */}
-          <div className="text-sm sm:text-base font-medium line-clamp-3 break-words">
+          {/* Question content */}
+          <div className="text-sm sm:text-base font-medium leading-relaxed">
             {question.content?.includes('<') ? (
               <RichTextDisplay
                 content={question.content}
-                className="prose-sm max-w-none"
+                className="prose-sm max-w-none [&>p]:leading-relaxed"
               />
             ) : (
-              <p>{question.content}</p>
+              <p className="text-foreground/90">{question.content}</p>
             )}
           </div>
 
+          {/* Explanation if exists */}
           {question.explanation && (
-            <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
-              {stripHtml(question.explanation)}
-            </p>
+            <div className="pt-2 border-t border-border/50">
+              <p className="text-xs sm:text-sm text-muted-foreground/80 italic line-clamp-2 leading-relaxed">
+                {stripHtml(question.explanation)}
+              </p>
+            </div>
           )}
+          
+          {/* Answer options */}
           <QuestionOptionsPreview
             q={question}
             showCorrect={showAnswers}
             t={t}
           />
         </div>
-        <div className="flex items-start gap-1">
+        
+        {/* Action buttons */}
+        <div className="flex items-start gap-1.5">
           {/* Accessible reorder controls */}
-          <div className="flex flex-col gap-1 mr-1" aria-label={t('common.reorder', { fallback: 'Reorder' })}>
+          <div 
+            className="flex flex-col gap-1 mr-1 p-1 rounded-md bg-muted/30 group-hover/card:bg-muted/50 transition-colors" 
+            aria-label={t('common.reorder', { fallback: 'Reorder' })}
+          >
             <Button
               type="button"
               variant="ghost"
               size="icon"
-              className="h-8 w-8"
+              className="h-8 w-8 hover:bg-background/80 hover:text-primary transition-colors"
               title={t('common.up', { fallback: 'Up' })}
               aria-label={t('common.up', { fallback: 'Up' })}
               onClick={onMoveUp}
@@ -107,7 +125,7 @@ export const QuestionListItem = React.memo(function QuestionListItem({
               type="button"
               variant="ghost"
               size="icon"
-              className="h-8 w-8"
+              className="h-8 w-8 hover:bg-background/80 hover:text-primary transition-colors"
               title={t('common.down', { fallback: 'Down' })}
               aria-label={t('common.down', { fallback: 'Down' })}
               onClick={onMoveDown}
@@ -118,18 +136,23 @@ export const QuestionListItem = React.memo(function QuestionListItem({
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 shrink-0" aria-label={t('common.actions', { fallback: 'Actions' })}>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-8 w-8 p-0 shrink-0 hover:bg-muted hover:text-primary transition-colors" 
+                aria-label={t('common.actions', { fallback: 'Actions' })}
+              >
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onEdit(question)}>
+            <DropdownMenuContent align="end" className="w-40">
+              <DropdownMenuItem onClick={() => onEdit(question)} className="cursor-pointer">
                 <Edit className="h-4 w-4 mr-2" />
                 {t('common.edit', { fallback: 'Edit' })}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => onDelete(question)}
-                className="text-destructive"
+                className="text-destructive cursor-pointer focus:text-destructive"
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 {t('common.delete', { fallback: 'Delete' })}
