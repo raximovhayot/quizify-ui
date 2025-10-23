@@ -206,7 +206,16 @@ export function AssignmentForm({
                       })}
                     </FieldLabel>
                     <FieldContent>
-                      <Input id="startTimeLocal" type="datetime-local" className="h-11 w-full" min={now.toISOString().slice(0, 16)} disabled={startImmediately || isSubmitting} aria-invalid={!!fieldState.error} aria-describedby={fieldState.error ? 'startTimeLocal-error' : undefined} {...field} />
+                      <Input
+                        id="startTimeLocal"
+                        type="datetime-local"
+                        className="h-11 w-full"
+                        min={now.toISOString().slice(0, 16)}
+                        disabled={startImmediately || isSubmitting}
+                        aria-invalid={!!fieldState.error}
+                        aria-describedby={fieldState.error ? 'startTimeLocal-error' : undefined}
+                        {...field}
+                      />
                       <FieldError id="startTimeLocal-error">{fieldState.error?.message}</FieldError>
                     </FieldContent>
                   </Field>
@@ -224,7 +233,14 @@ export function AssignmentForm({
                       })}
                     </FieldLabel>
                     <FieldContent>
-                      <Input id="endTimeLocal" type="datetime-local" className="h-11 w-full" aria-invalid={!!fieldState.error} aria-describedby={fieldState.error ? 'endTimeLocal-error' : undefined} {...field} />
+                      <Input
+                        id="endTimeLocal"
+                        type="datetime-local"
+                        className="h-11 w-full"
+                        aria-invalid={!!fieldState.error}
+                        aria-describedby={fieldState.error ? 'endTimeLocal-error' : undefined}
+                        {...field}
+                      />
                       <FieldError id="endTimeLocal-error">{fieldState.error?.message}</FieldError>
                       {fieldState.error && (
                         <p className="mt-1.5 text-xs text-muted-foreground">
@@ -263,7 +279,17 @@ export function AssignmentForm({
                       })}
                     </FieldLabel>
                     <FieldContent>
-                      <Input id="attempt" type="number" min={0} step={1} className="h-11 w-full" placeholder="0 = unlimited" aria-invalid={!!fieldState.error} aria-describedby={fieldState.error ? 'attempt-error' : undefined} {...field} />
+                      <Input
+                        id="attempt"
+                        type="number"
+                        min={0}
+                        step={1}
+                        className="h-11 w-full"
+                        placeholder="0 = unlimited"
+                        aria-invalid={!!fieldState.error}
+                        aria-describedby={fieldState.error ? 'attempt-error' : undefined}
+                        {...field}
+                      />
                       <FieldError id="attempt-error">{fieldState.error?.message}</FieldError>
                       <p className="mt-1.5 text-xs text-muted-foreground">
                         {t('instructor.assignment.settings.attemptsHelp', {
@@ -286,7 +312,17 @@ export function AssignmentForm({
                       })}
                     </FieldLabel>
                     <FieldContent>
-                      <Input id="time" type="number" min={0} step={1} className="h-11 w-full" placeholder="0 = unlimited" aria-invalid={!!fieldState.error} aria-describedby={fieldState.error ? 'time-error' : undefined} {...field} />
+                      <Input
+                        id="time"
+                        type="number"
+                        min={0}
+                        step={1}
+                        className="h-11 w-full"
+                        placeholder="0 = unlimited"
+                        aria-invalid={!!fieldState.error}
+                        aria-describedby={fieldState.error ? 'time-error' : undefined}
+                        {...field}
+                      />
                       <FieldError id="time-error">{fieldState.error?.message}</FieldError>
                       <p className="mt-1.5 text-xs text-muted-foreground">
                         {t('instructor.assignment.settings.timeLimitHelp', {
@@ -492,8 +528,7 @@ export function AssignmentForm({
             loadingText={t('common.creating', {
               default: 'Creating...',
             })}
-            className="w-full sm:w-auto px-8"
-            size="lg"
+            className="w-full sm:w-auto px-8 h-11"
           />
         </div>
       </form>
