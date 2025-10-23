@@ -37,7 +37,7 @@ const defaultAnswersPreview: OptionsPreviewFn = ({ q, showCorrect }) => {
               key={a.id ?? a.order ?? idx}
               className={`text-sm flex items-start gap-2 ${isCorrect ? 'bg-green-100 dark:bg-green-900/20 rounded-md p-1.5' : 'p-0.5'}`}
             >
-              <span className="inline-flex items-center justify-center size-5 rounded-full text-[0.7rem] font-medium bg-muted text-muted-foreground shrink-0 mt-0.5">
+              <span className="inline-flex items-center justify-center size-5 rounded-full text-[0.7rem] font-medium bg-muted text-muted-foreground shrink-0">
                 {marker}
               </span>
               <div className="flex-1 min-w-0">
