@@ -1,6 +1,5 @@
 'use client';
 
-import Mathematics from '@tiptap/extension-mathematics';
 import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -12,7 +11,7 @@ import {
   ListOrdered,
 } from 'lucide-react';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
@@ -20,14 +19,7 @@ import { cn } from '@/lib/utils';
 
 import { useIsHydrated } from '../hooks/useIsHydrated';
 import { MathLiveDialogLazy as MathLiveDialog } from './lazy';
-
-// Dynamic import for KaTeX to avoid SSR issues
-let katex: typeof import('katex').default | null = null;
-if (typeof window !== 'undefined') {
-  import('katex').then((module) => {
-    katex = module.default;
-  });
-}
+import { MathInlineWithEditing, MathDisplayWithEditing } from './extensions';
 
 export interface MinimalRichTextEditorProps {
   content: string;
@@ -52,6 +44,8 @@ export function MinimalRichTextEditor({
   const t = useTranslations();
   const [mathEditorOpen, setMathEditorOpen] = useState(false);
   const [mathEditorMode, setMathEditorMode] = useState<'inline' | 'block'>('inline');
+  const [initialLatexForDialog, setInitialLatexForDialog] = useState('');
+  const editorRef = useRef<HTMLDivElement>(null);
 
   const editor = useEditor({
     extensions: [
@@ -62,7 +56,8 @@ export function MinimalRichTextEditor({
       Placeholder.configure({
         placeholder,
       }),
-      Mathematics,
+      MathInlineWithEditing,
+      MathDisplayWithEditing,
     ],
     content,
     editable: !disabled,
@@ -82,35 +77,30 @@ export function MinimalRichTextEditor({
     },
   });
 
-  // Render math formulas when editor updates
+  // Listen for expand events from inline math editor
   useEffect(() => {
-    if (!editor || !isHydrated) return;
-    
-    const renderMath = async () => {
-      if (!katex) return;
+    const currentRef = editorRef.current;
+    if (!currentRef) return;
+
+    const handleExpandMath = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const { latex, mode, updateAttributes } = customEvent.detail;
       
-      const editorElement = editor.view.dom;
-      const mathElements = editorElement.querySelectorAll('.math-inline, .math-display');
-      
-      mathElements.forEach((element) => {
-        const latex = element.textContent || '';
-        const displayMode = element.classList.contains('math-display');
-        
-        try {
-          if (katex) {
-            katex.render(latex, element as HTMLElement, {
-              throwOnError: false,
-              displayMode,
-            });
-          }
-        } catch {
-          // Silently fail - KaTeX render error
-        }
-      });
+      setInitialLatexForDialog(latex);
+      setMathEditorMode(mode);
+      setMathEditorOpen(true);
+
+      // Store the updateAttributes function for when the dialog saves
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (currentRef as any).__mathUpdateAttributes = updateAttributes;
     };
-    
-    renderMath();
-  }, [editor, isHydrated, content]);
+
+    currentRef.addEventListener('expandMathEditor', handleExpandMath);
+
+    return () => {
+      currentRef.removeEventListener('expandMathEditor', handleExpandMath);
+    };
+  }, []);
 
   // Update editor content when prop changes externally
   useEffect(() => {
@@ -152,26 +142,51 @@ export function MinimalRichTextEditor({
 
   const insertInlineFormula = () => {
     setMathEditorMode('inline');
+    setInitialLatexForDialog('');
     setMathEditorOpen(true);
   };
 
   const insertBlockFormula = () => {
     setMathEditorMode('block');
+    setInitialLatexForDialog('');
     setMathEditorOpen(true);
   };
 
   const handleMathInsert = (latex: string) => {
     if (!editor) return;
+
+    // Check if this is an update from expanded inline editor
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const updateAttributes = (editorRef.current as any)?.__mathUpdateAttributes;
     
-    if (mathEditorMode === 'inline') {
-      editor.chain().focus().insertContent(`$${latex}$`).run();
+    if (updateAttributes) {
+      // Update existing formula
+      updateAttributes({ latex });
+      // Clear the stored function
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      delete (editorRef.current as any).__mathUpdateAttributes;
     } else {
-      editor.chain().focus().insertContent(`$$${latex}$$`).run();
+      // Insert new formula
+      if (mathEditorMode === 'inline') {
+        editor.chain().focus().insertContent({
+          type: 'mathInline',
+          attrs: { latex },
+        }).run();
+      } else {
+        editor.chain().focus().insertContent({
+          type: 'mathDisplay',
+          attrs: { latex },
+        }).run();
+      }
     }
+    
+    // Clear initial latex
+    setInitialLatexForDialog('');
   };
 
   return (
     <div
+      ref={editorRef}
       className={cn(
         'border rounded-lg overflow-hidden bg-background transition-all',
         disabled && 'opacity-60',
@@ -184,6 +199,7 @@ export function MinimalRichTextEditor({
         onOpenChange={setMathEditorOpen}
         onInsert={handleMathInsert}
         mode={mathEditorMode}
+        initialLatex={initialLatexForDialog}
       />
 
       {/* Minimal Toolbar - Essential formatting with code and math */}
