@@ -77,6 +77,9 @@ importers:
       '@tanstack/react-query-devtools':
         specifier: ^5.83.1
         version: 5.84.1(@tanstack/react-query@5.84.1(react@19.1.1))(react@19.1.1)
+      '@tiptap/core':
+        specifier: ^3.6.2
+        version: 3.6.2(@tiptap/pm@3.6.2)
       '@tiptap/extension-mathematics':
         specifier: ^3.6.2
         version: 3.6.2(@tiptap/core@3.6.2(@tiptap/pm@3.6.2))(@tiptap/pm@3.6.2)(katex@0.16.22)
