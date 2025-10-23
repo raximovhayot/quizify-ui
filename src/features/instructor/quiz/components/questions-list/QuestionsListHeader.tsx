@@ -29,7 +29,10 @@ export function QuestionsListHeader({
           })}
         </h2>
         <p className="text-sm text-muted-foreground mt-1">
-          {count} {count === 1 ? 'question' : 'questions'} in this quiz
+          {t('common.questionsInQuiz', {
+            count,
+            fallback: '{count} {count, plural, one {question} other {questions}} in this quiz',
+          })}
         </p>
       </div>
       <div className="flex items-center gap-2.5 flex-wrap md:ml-auto">

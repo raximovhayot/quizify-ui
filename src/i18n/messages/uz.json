@@ -154,7 +154,8 @@
     "reorderQuestions": {
       "ariaList": "Savollar (tartibni o'zgartirish uchun sudrang)"
     },
-    "dragToReorder": "Tartibni o'zgartirish uchun sudrang"
+    "dragToReorder": "Tartibni o'zgartirish uchun sudrang",
+    "questionsInQuiz": "{count} {count, plural, one {savol} other {savollar}} ushbu testda"
   },
   "auth": {
     "signIn": {
