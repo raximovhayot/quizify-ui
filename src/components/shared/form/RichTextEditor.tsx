@@ -25,7 +25,7 @@ import { sanitizeHtml } from '@/lib/sanitize';
 import { cn } from '@/lib/utils';
 
 import { useIsHydrated } from '../hooks/useIsHydrated';
-import { MathEditorDialog } from './MathEditorDialog';
+import { MathLiveDialogLazy as MathLiveDialog } from './lazy';
 
 // Dynamic import for KaTeX to avoid SSR issues
 let katex: typeof import('katex').default | null = null;
@@ -193,8 +193,8 @@ export function RichTextEditor({
         className
       )}
     >
-      {/* Math Editor Dialog */}
-      <MathEditorDialog
+      {/* Math Editor Dialog - Now with MathLive! */}
+      <MathLiveDialog
         open={mathEditorOpen}
         onOpenChange={setMathEditorOpen}
         onInsert={handleMathInsert}
