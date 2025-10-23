@@ -62,30 +62,34 @@ export function InlineMathEditor({
     };
 
     const initMathField = async () => {
-      // Dynamically import MathLive to avoid SSR issues
-      const { MathfieldElement } = await import('mathlive');
+      try {
+        // Dynamically import MathLive to avoid SSR issues
+        const { MathfieldElement } = await import('mathlive');
 
-      // Register custom element if not already registered
-      if (!customElements.get('math-field')) {
-        customElements.define('math-field', MathfieldElement);
-      }
-
-      // Wait for next tick to ensure element is in DOM
-      setTimeout(() => {
-        if (mathfieldRef.current) {
-          mathfieldRef.current.value = initialLatex;
-          mathfieldRef.current.mathModeSpace = '\\:';
-          
-          // Configure virtual keyboard
-          mathfieldRef.current.mathVirtualKeyboardPolicy = 'manual';
-          
-          // Focus the mathfield
-          mathfieldRef.current.focus();
-
-          // Handle keyboard shortcuts
-          mathfieldRef.current.addEventListener('keydown', handleKeyDown);
+        // Register custom element if not already registered
+        if (!customElements.get('math-field')) {
+          customElements.define('math-field', MathfieldElement);
         }
-      }, 0);
+
+        // Wait for next tick to ensure element is in DOM
+        setTimeout(() => {
+          if (mathfieldRef.current) {
+            mathfieldRef.current.value = initialLatex;
+            mathfieldRef.current.mathModeSpace = '\\:';
+            
+            // Configure virtual keyboard
+            mathfieldRef.current.mathVirtualKeyboardPolicy = 'manual';
+            
+            // Focus the mathfield
+            mathfieldRef.current.focus();
+
+            // Handle keyboard shortcuts
+            mathfieldRef.current.addEventListener('keydown', handleKeyDown);
+          }
+        }, 0);
+      } catch (error) {
+        console.error('Failed to initialize MathLive:', error);
+      }
     };
 
     initMathField();

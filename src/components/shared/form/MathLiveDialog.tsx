@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import type { MathfieldElement } from 'mathlive';
+import { X } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -35,6 +36,7 @@ export function MathLiveDialog({
   const t = useTranslations();
   const mathfieldRef = useRef<MathfieldElement | null>(null);
   const [isClient, setIsClient] = useState(false);
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
   // Ensure we're on the client side
   useEffect(() => {
@@ -46,30 +48,50 @@ export function MathLiveDialog({
     if (!isClient || !open) return;
 
     const initMathLive = async () => {
-      // Dynamically import MathLive to avoid SSR issues
-      const { MathfieldElement } = await import('mathlive');
+      try {
+        // Dynamically import MathLive to avoid SSR issues
+        const { MathfieldElement } = await import('mathlive');
 
-      // Register custom element if not already registered
-      if (!customElements.get('math-field')) {
-        customElements.define('math-field', MathfieldElement);
-      }
-
-      // Wait for next tick to ensure element is in DOM
-      setTimeout(() => {
-        if (mathfieldRef.current) {
-          mathfieldRef.current.value = initialLatex;
-          mathfieldRef.current.mathModeSpace = '\\:';
-          
-          // Configure virtual keyboard
-          mathfieldRef.current.mathVirtualKeyboardPolicy = 'manual';
-          
-          // Focus the mathfield
-          mathfieldRef.current.focus();
+        // Register custom element if not already registered
+        if (!customElements.get('math-field')) {
+          customElements.define('math-field', MathfieldElement);
         }
-      }, 0);
+
+        // Wait for next tick to ensure element is in DOM
+        setTimeout(() => {
+          if (mathfieldRef.current) {
+            mathfieldRef.current.value = initialLatex;
+            mathfieldRef.current.mathModeSpace = '\\:';
+            
+            // Configure virtual keyboard
+            mathfieldRef.current.mathVirtualKeyboardPolicy = 'manual';
+            
+            // Listen for virtual keyboard visibility changes
+            mathfieldRef.current.addEventListener(
+              'virtual-keyboard-toggle',
+              (evt: Event) => {
+                const customEvt = evt as CustomEvent;
+                setIsKeyboardVisible(customEvt.detail.visible);
+              }
+            );
+            
+            // Focus the mathfield
+            mathfieldRef.current.focus();
+          }
+        }, 0);
+      } catch (error) {
+        console.error('Failed to initialize MathLive:', error);
+      }
     };
 
     initMathLive();
+
+    return () => {
+      // Clean up keyboard visibility listener
+      if (mathfieldRef.current) {
+        setIsKeyboardVisible(false);
+      }
+    };
   }, [open, isClient, initialLatex]);
 
   const handleInsert = () => {
@@ -92,6 +114,13 @@ export function MathLiveDialog({
   const showVirtualKeyboard = () => {
     if (mathfieldRef.current) {
       mathfieldRef.current.executeCommand('showVirtualKeyboard');
+    }
+  };
+
+  const hideVirtualKeyboard = () => {
+    if (mathfieldRef.current) {
+      mathfieldRef.current.executeCommand('hideVirtualKeyboard');
+      setIsKeyboardVisible(false);
     }
   };
 
@@ -139,15 +168,27 @@ export function MathLiveDialog({
           </div>
 
           {/* Virtual Keyboard Button */}
-          <div className="flex justify-center">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={showVirtualKeyboard}
-            >
-              ⌨️ {t('editor.mathEditor.showKeyboard', { fallback: 'Show Virtual Keyboard' })}
-            </Button>
+          <div className="flex justify-center gap-2">
+            {!isKeyboardVisible ? (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={showVirtualKeyboard}
+              >
+                ⌨️ {t('editor.mathEditor.showKeyboard', { fallback: 'Show Virtual Keyboard' })}
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={hideVirtualKeyboard}
+              >
+                <X className="h-4 w-4 mr-1" />
+                {t('editor.mathEditor.hideKeyboard', { fallback: 'Hide Virtual Keyboard' })}
+              </Button>
+            )}
           </div>
 
           {/* Quick Help */}
