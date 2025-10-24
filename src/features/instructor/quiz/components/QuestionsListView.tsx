@@ -48,6 +48,7 @@ export interface QuestionsListViewProps {
   // Pagination
   currentPage: number;
   totalPages: number;
+  totalElements: number;
   onPageChange: (page: number) => void;
 }
 
@@ -73,6 +74,7 @@ export function QuestionsListView({
   isDeletePending,
   currentPage,
   totalPages,
+  totalElements,
   onPageChange,
 }: Readonly<QuestionsListViewProps>) {
   const t = useTranslations();
@@ -179,7 +181,7 @@ export function QuestionsListView({
 
       <div className="space-y-6">
         <QuestionsListHeader
-          count={questions.length}
+          count={totalElements}
           showAnswers={showAnswers}
           onToggleShowAnswers={onToggleShowAnswers}
           onAddQuestion={onAddQuestion}
