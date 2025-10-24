@@ -57,20 +57,18 @@ function AssignmentsTableComponent({
     );
   }
 
+  // Use totalElements if available, otherwise fall back to current page size
+  const displayCount = totalElements ?? assignments.length;
+
   return (
     <div className={`space-y-4 ${className || ''}`}>
       {/* Results count */}
       <div className="flex items-center justify-between">
         <div className="text-sm text-muted-foreground">
-          {totalElements !== undefined
-            ? t('instructor.analytics.results.count', {
-                fallback: '{count} assignment(s)',
-                count: totalElements,
-              })
-            : t('instructor.analytics.results.count', {
-                fallback: '{count} assignment(s)',
-                count: assignments.length,
-              })}
+          {t('instructor.analytics.results.count', {
+            fallback: '{count} assignment(s)',
+            count: displayCount,
+          })}
         </div>
       </div>
 
