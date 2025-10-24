@@ -48,7 +48,11 @@ export function AssignmentDialog({
           </FormDrawerHeader>
 
           <FormDrawerBody>
-            <AssignmentForm quiz={quiz} onSuccess={() => onOpenChange(false)} />
+            <AssignmentForm 
+              quiz={quiz} 
+              onSuccess={() => onOpenChange(false)}
+              onCancel={() => onOpenChange(false)}
+            />
           </FormDrawerBody>
         </FormDrawerContent>
       </FormDrawer>
@@ -72,7 +76,11 @@ export function AssignmentDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <AssignmentForm quiz={quiz} onSuccess={() => onOpenChange(false)} />
+        <AssignmentForm 
+          quiz={quiz} 
+          onSuccess={() => onOpenChange(false)}
+          onCancel={() => onOpenChange(false)}
+        />
       </ScrollableDialogContent>
     </Dialog>
   );
