@@ -15,6 +15,7 @@ import { AssignmentsTableRow } from './AssignmentsTableRow';
 
 export interface AssignmentsTableProps {
   assignments: AssignmentDTO[];
+  totalElements?: number;
   searchQuery?: string;
   className?: string;
   onDelete?: (id: number) => void;
@@ -25,6 +26,7 @@ export interface AssignmentsTableProps {
 
 function AssignmentsTableComponent({
   assignments,
+  totalElements,
   searchQuery = '',
   className,
   onDelete,
@@ -60,10 +62,15 @@ function AssignmentsTableComponent({
       {/* Results count */}
       <div className="flex items-center justify-between">
         <div className="text-sm text-muted-foreground">
-          {t('instructor.analytics.results.count', {
-            fallback: '{count} assignment(s)',
-            count: assignments.length,
-          })}
+          {totalElements !== undefined
+            ? t('instructor.analytics.results.count', {
+                fallback: '{count} assignment(s)',
+                count: totalElements,
+              })
+            : t('instructor.analytics.results.count', {
+                fallback: '{count} assignment(s)',
+                count: assignments.length,
+              })}
         </div>
       </div>
 

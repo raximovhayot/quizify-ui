@@ -11,6 +11,7 @@ import { AssignmentsTableSkeleton } from './AssignmentsTableSkeleton';
 interface AnalyticsListSectionProps {
   loading: boolean;
   assignments: AssignmentDTO[] | undefined;
+  totalElements?: number;
   searchQuery: string;
   currentPage: number;
   totalPages: number;
@@ -20,6 +21,7 @@ interface AnalyticsListSectionProps {
 export function AnalyticsListSection({
   loading,
   assignments,
+  totalElements,
   searchQuery,
   currentPage,
   totalPages,
@@ -33,6 +35,7 @@ export function AnalyticsListSection({
     <div className="space-y-4">
       <AssignmentsTable
         assignments={assignments || []}
+        totalElements={totalElements}
         searchQuery={searchQuery}
       />
 
