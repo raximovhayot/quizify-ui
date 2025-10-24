@@ -55,6 +55,7 @@ export function InstructorAnalyticsPage() {
       <AnalyticsListSection
         loading={isLoading}
         assignments={data?.content}
+        totalElements={data?.totalElements}
         searchQuery={filter.search || ''}
         currentPage={data?.page || 0}
         totalPages={data?.totalPages || 0}

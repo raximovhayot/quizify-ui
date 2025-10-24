@@ -15,6 +15,7 @@ import { AssignmentsTableRow } from './AssignmentsTableRow';
 
 export interface AssignmentsTableProps {
   assignments: AssignmentDTO[];
+  totalElements?: number;
   searchQuery?: string;
   className?: string;
   onDelete?: (id: number) => void;
@@ -25,6 +26,7 @@ export interface AssignmentsTableProps {
 
 function AssignmentsTableComponent({
   assignments,
+  totalElements,
   searchQuery = '',
   className,
   onDelete,
@@ -55,6 +57,9 @@ function AssignmentsTableComponent({
     );
   }
 
+  // Use totalElements if available, otherwise fall back to current page size
+  const displayCount = totalElements ?? assignments.length;
+
   return (
     <div className={`space-y-4 ${className || ''}`}>
       {/* Results count */}
@@ -62,7 +67,7 @@ function AssignmentsTableComponent({
         <div className="text-sm text-muted-foreground">
           {t('instructor.analytics.results.count', {
             fallback: '{count} assignment(s)',
-            count: assignments.length,
+            count: displayCount,
           })}
         </div>
       </div>
