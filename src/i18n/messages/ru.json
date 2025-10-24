@@ -155,7 +155,7 @@
       "ariaList": "Вопросы (перетащите для изменения порядка)"
     },
     "dragToReorder": "Перетащите для изменения порядка",
-    "questionsInQuiz": "{count} {count, plural, one {вопрос} other {вопросов}} в этом тесте"
+    "questionsInQuiz": "{count} {count, plural, one {вопрос} other {вопросов}} в этом тесте",
     "title": "Title",
     "description": "Description",
     "settings": "Settings",
