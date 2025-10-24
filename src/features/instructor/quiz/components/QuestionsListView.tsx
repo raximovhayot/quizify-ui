@@ -7,6 +7,14 @@ import { useResponsive } from '@/components/shared/hooks/useResponsive';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 
 import type { TInstructorQuestionForm } from '../schemas/questionSchema';
 import { QuestionDataDto } from '../types/question';
@@ -37,6 +45,10 @@ export interface QuestionsListViewProps {
   onConfirmDelete: () => Promise<void> | void;
   isUpdatePending: boolean;
   isDeletePending: boolean;
+  // Pagination
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
 }
 
 export function QuestionsListView({
@@ -59,6 +71,9 @@ export function QuestionsListView({
   onConfirmDelete,
   isUpdatePending,
   isDeletePending,
+  currentPage,
+  totalPages,
+  onPageChange,
 }: Readonly<QuestionsListViewProps>) {
   const t = useTranslations();
   const { isMobile } = useResponsive();
@@ -194,6 +209,39 @@ export function QuestionsListView({
             />
           ))}
         </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center pt-4">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={() => onPageChange(Math.max(0, currentPage - 1))}
+                    className={currentPage === 0 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                  />
+                </PaginationItem>
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <PaginationItem key={i}>
+                    <PaginationLink
+                      onClick={() => onPageChange(i)}
+                      isActive={currentPage === i}
+                      className="cursor-pointer"
+                    >
+                      {i + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={() => onPageChange(Math.min(totalPages - 1, currentPage + 1))}
+                    className={currentPage === totalPages - 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
       </div>
 
       {/* Edit Question Modal */}

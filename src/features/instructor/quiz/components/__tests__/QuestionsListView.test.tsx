@@ -42,6 +42,9 @@ describe('QuestionsListView', () => {
     onConfirmDelete: jest.fn(),
     isUpdatePending: false,
     isDeletePending: false,
+    currentPage: 0,
+    totalPages: 1,
+    onPageChange: jest.fn(),
   } as const;
 
   it('renders loading skeleton', () => {

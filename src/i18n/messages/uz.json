@@ -155,6 +155,7 @@
       "ariaList": "Savollar (tartibni o'zgartirish uchun sudrang)"
     },
     "dragToReorder": "Tartibni o'zgartirish uchun sudrang",
+    "questionsInQuiz": "{count} {count, plural, one {savol} other {savollar}} ushbu testda",
     "title": "Title",
     "description": "Description",
     "settings": "Settings",

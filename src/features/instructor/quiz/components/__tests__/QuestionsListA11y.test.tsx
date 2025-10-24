@@ -46,6 +46,9 @@ describe('QuestionsListView accessibility', () => {
     onConfirmDelete: jest.fn(),
     isUpdatePending: false,
     isDeletePending: false,
+    currentPage: 0,
+    totalPages: 1,
+    onPageChange: jest.fn(),
   } as const;
 
   it('renders an aria-live polite region for announcements', () => {

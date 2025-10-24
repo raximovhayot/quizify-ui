@@ -155,6 +155,7 @@
       "ariaList": "Questions (drag to reorder)"
     },
     "dragToReorder": "Drag to reorder",
+    "questionsInQuiz": "{count} {count, plural, one {question} other {questions}} in this quiz",
     "title": "Title",
     "description": "Description",
     "settings": "Settings",
