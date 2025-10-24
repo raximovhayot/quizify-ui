@@ -11,7 +11,7 @@ jest.mock('next-intl', () => ({
         let result = params.fallback.replace(/\{count\}/g, String(params.count));
         // Handle plural forms: {count, plural, one {question} other {questions}}
         const pluralMatch = result.match(/\{count,\s*plural,\s*one\s*\{([^}]+)\}\s*other\s*\{([^}]+)\}\}/);
-        if (pluralMatch) {
+        if (pluralMatch && pluralMatch[1] && pluralMatch[2]) {
           const pluralForm = params.count === 1 ? pluralMatch[1] : pluralMatch[2];
           result = result.replace(/\{count,\s*plural,\s*one\s*\{[^}]+\}\s*other\s*\{[^}]+\}\}/, pluralForm);
         }

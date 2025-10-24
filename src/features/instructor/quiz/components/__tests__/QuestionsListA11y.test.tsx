@@ -48,6 +48,7 @@ describe('QuestionsListView accessibility', () => {
     isDeletePending: false,
     currentPage: 0,
     totalPages: 1,
+    totalElements: 0,
     onPageChange: jest.fn(),
   } as const;
 
