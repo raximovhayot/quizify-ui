@@ -28,12 +28,27 @@ export function AssignmentCard({ assignment }: AssignmentCardProps) {
 
   const getStatusVariant = (status: AssignmentStatus | string | undefined) => {
     switch (status) {
-      case AssignmentStatus.PUBLISHED:
+      case AssignmentStatus.STARTED:
         return 'default' as const;
-      case AssignmentStatus.DRAFT:
+      case AssignmentStatus.FINISHED:
         return 'secondary' as const;
+      case AssignmentStatus.CREATED:
+        return 'outline' as const;
       default:
         return 'outline' as const;
+    }
+  };
+
+  const getStatusLabel = (status: AssignmentStatus | string | undefined) => {
+    switch (status) {
+      case AssignmentStatus.CREATED:
+        return t('instructor.analytics.status.created', { fallback: 'Created' });
+      case AssignmentStatus.STARTED:
+        return t('instructor.analytics.status.started', { fallback: 'Started' });
+      case AssignmentStatus.FINISHED:
+        return t('instructor.analytics.status.finished', { fallback: 'Finished' });
+      default:
+        return status || '—';
     }
   };
 
@@ -52,9 +67,7 @@ export function AssignmentCard({ assignment }: AssignmentCardProps) {
             )}
           </div>
           <Badge variant={getStatusVariant(assignment.status)}>
-            {assignment.status === AssignmentStatus.PUBLISHED
-              ? t('common.published', { fallback: 'Published' })
-              : t('common.draft', { fallback: 'Draft' })}
+            {getStatusLabel(assignment.status)}
           </Badge>
         </div>
       </CardHeader>

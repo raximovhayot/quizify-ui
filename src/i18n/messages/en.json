@@ -589,8 +589,9 @@
           "all": "All Status"
         },
         "status": {
-          "published": "Published",
-          "draft": "Draft"
+          "created": "Created",
+          "started": "Started",
+          "finished": "Finished"
         },
         "empty": "No assignments found.",
         "no": {
@@ -646,7 +647,12 @@
       "noAttempts": "No attempts yet",
       "student": "Student",
       "attempt": "Attempt",
-      "status": "Status",
+      "status": {
+        "label": "Status",
+        "created": "Created",
+        "started": "Started",
+        "finished": "Finished"
+      },
       "statusInProgress": "In Progress",
       "statusSubmitted": "Submitted",
       "statusGraded": "Graded",
@@ -913,10 +919,6 @@
     }
   },
   "notFound": {
-    "title": "Page not found",
-    "description": "The page you’re looking for doesn’t exist or has been moved.",
-    "goHome": "Go to Home",
-    "goToDashboard": "Go to Dashboard",
     "403": {
       "title": "Access Denied",
       "message": "You don't have permission to access this resource"
@@ -929,6 +931,10 @@
       "title": "Server Error",
       "message": "Something went wrong on our end"
     },
+    "title": "Page not found",
+    "description": "The page you’re looking for doesn’t exist or has been moved.",
+    "goHome": "Go to Home",
+    "goToDashboard": "Go to Dashboard",
     "generic": {
       "title": "Error",
       "message": "An error occurred"

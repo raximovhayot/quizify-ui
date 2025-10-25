@@ -48,11 +48,8 @@ export type TAssignmentCreateForm = z.infer<typeof assignmentCreateSchema>;
 // DTO Schemas (service boundaries)
 // -------------------------------
 
-// Normalize backend enum values (accept 'DRAFT'/'PUBLISHED' or lowercase)
-export const assignmentStatusSchema = z.preprocess(
-  (val) => (typeof val === 'string' ? val.toLowerCase() : val),
-  z.nativeEnum(AssignmentStatus)
-);
+// Backend enum values (uppercase: CREATED, STARTED, FINISHED)
+export const assignmentStatusSchema = z.nativeEnum(AssignmentStatus);
 
 export const assignmentSettingsDTOSchema = z.object({
   startTime: z.string(), // ISO string

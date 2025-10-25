@@ -607,8 +607,9 @@
           "all": "Barcha holatlar"
         },
         "status": {
-          "published": "Nashr etilgan",
-          "draft": "Qoralama"
+          "created": "Yaratilgan",
+          "started": "Boshlangan",
+          "finished": "Tugatilgan"
         },
         "empty": "Topshiriqlar topilmadi.",
         "no": {
@@ -664,7 +665,12 @@
       "noAttempts": "Hali urinishlar yo'q",
       "student": "Talaba",
       "attempt": "Urinish",
-      "status": "Holat",
+      "status": {
+        "label": "Holat",
+        "created": "Yaratilgan",
+        "started": "Boshlangan",
+        "finished": "Tugatilgan"
+      },
       "statusInProgress": "Jarayonda",
       "statusSubmitted": "Yuborildi",
       "statusGraded": "Baholandi",
@@ -931,10 +937,6 @@
     }
   },
   "notFound": {
-    "title": "Sahifa topilmadi",
-    "description": "Siz izlayotgan sahifa mavjud emas yoki ko'chirilgan.",
-    "goHome": "Bosh sahifaga o'tish",
-    "goToDashboard": "Panelga o'tish",
     "403": {
       "title": "Kirish rad etildi",
       "message": "Sizda ushbu resursga kirish huquqi yo'q"
@@ -947,6 +949,10 @@
       "title": "Server xatosi",
       "message": "Serverda xatolik yuz berdi"
     },
+    "title": "Sahifa topilmadi",
+    "description": "Siz izlayotgan sahifa mavjud emas yoki ko'chirilgan.",
+    "goHome": "Bosh sahifaga o'tish",
+    "goToDashboard": "Panelga o'tish",
     "generic": {
       "title": "Xatolik",
       "message": "Xatolik yuz berdi"
