@@ -41,11 +41,6 @@ export default function Page() {
     setOpen(Boolean(pathname?.endsWith('/start')));
   }, [pathname]);
 
-  const handleSuccess = () => {
-    // Close modal after successful creation
-    router.push(ROUTES_APP.quizzes.detail(quizId));
-  };
-
   const handleCancel = () => {
     router.back();
   };
@@ -149,7 +144,7 @@ export default function Page() {
   ) : null;
 
   const formContent = quiz ? (
-    <AssignmentForm quiz={quiz} onSuccess={handleSuccess} onCancel={handleCancel} />
+    <AssignmentForm quiz={quiz} onCancel={handleCancel} />
   ) : null;
 
   const content = isLoading
