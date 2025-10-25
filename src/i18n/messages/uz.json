@@ -684,7 +684,19 @@
       "attempts": "Urinishlar",
       "correctRate": "To'g'ri %",
       "distribution": "Taqsimot",
-      "questionNumber": "S{{number}}"
+      "questionNumber": "S{{number}}",
+      "overview": {
+        "totalRegistrations": "Jami ro'yxatdan o'tganlar",
+        "studentsEnrolled": "talabalar ro'yxatdan o'tgan",
+        "totalAttempts": "Jami urinishlar",
+        "attemptsSubmitted": "urinishlar yuborildi",
+        "averageScore": "O'rtacha ball",
+        "range": "Oraliq",
+        "averageTime": "O'rtacha vaqt",
+        "timeSpent": "har bir urinish uchun",
+        "completedAttempts": "Yakunlangan",
+        "inProgress": "Jarayonda"
+      }
     },
     "assignment": {
       "defaultSuffix": "Topshiriq",
@@ -725,6 +737,41 @@
           "onlyCorrect": "Faqat to‘g‘ri javoblar",
           "full": "To‘liq tafsilotlar"
         }
+      },
+      "view": {
+        "title": "Topshiriq tafsilotlari",
+        "backToList": "Topshiriqlarga qaytish",
+        "error": {
+          "title": "Topshiriq topilmadi",
+          "description": "Siz qidirayotgan topshiriq mavjud emas yoki o'chirilgan."
+        }
+      },
+      "attempts": {
+        "title": "Talabalar urinishlari",
+        "loading": "Urinishlar yuklanmoqda...",
+        "empty": "Hozircha urinishlar yo'q",
+        "student": "Talaba",
+        "attempt": "Urinish",
+        "status": "Holat",
+        "score": "Ball",
+        "percentage": "%",
+        "submitted": "Yuborildi"
+      },
+      "attempt": {
+        "status": {
+          "graded": "Baholangan",
+          "submitted": "Yuborildi",
+          "inProgress": "Jarayonda"
+        }
+      },
+      "questions": {
+        "title": "Savollar",
+        "loading": "Savollar yuklanmoqda...",
+        "empty": "Savollar mavjud emas",
+        "question": "Savol",
+        "type": "Turi",
+        "points": "Ballar",
+        "correctRate": "To'g'ri %"
       }
     },
     "grading": {

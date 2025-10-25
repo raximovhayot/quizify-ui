@@ -666,7 +666,19 @@
       "attempts": "Attempts",
       "correctRate": "Correct %",
       "distribution": "Distribution",
-      "questionNumber": "Q{{number}}"
+      "questionNumber": "Q{{number}}",
+      "overview": {
+        "totalRegistrations": "Total Registrations",
+        "studentsEnrolled": "students enrolled",
+        "totalAttempts": "Total Attempts",
+        "attemptsSubmitted": "attempts submitted",
+        "averageScore": "Average Score",
+        "range": "Range",
+        "averageTime": "Average Time",
+        "timeSpent": "per attempt",
+        "completedAttempts": "Completed",
+        "inProgress": "In Progress"
+      }
     },
     "assignment": {
       "defaultSuffix": "Assignment",
@@ -707,6 +719,41 @@
           "onlyCorrect": "Only correct answers",
           "full": "Full details"
         }
+      },
+      "view": {
+        "title": "Assignment Details",
+        "backToList": "Back to Assignments",
+        "error": {
+          "title": "Assignment not found",
+          "description": "The assignment you are looking for does not exist or has been deleted."
+        }
+      },
+      "attempts": {
+        "title": "Student Attempts",
+        "loading": "Loading attempts...",
+        "empty": "No attempts yet",
+        "student": "Student",
+        "attempt": "Attempt",
+        "status": "Status",
+        "score": "Score",
+        "percentage": "%",
+        "submitted": "Submitted"
+      },
+      "attempt": {
+        "status": {
+          "graded": "Graded",
+          "submitted": "Submitted",
+          "inProgress": "In Progress"
+        }
+      },
+      "questions": {
+        "title": "Questions",
+        "loading": "Loading questions...",
+        "empty": "No questions available",
+        "question": "Question",
+        "type": "Type",
+        "points": "Points",
+        "correctRate": "Correct %"
       }
     },
     "grading": {

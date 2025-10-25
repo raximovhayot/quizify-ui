@@ -670,7 +670,19 @@
       "attempts": "Попытки",
       "correctRate": "Правильно %",
       "distribution": "Распределение",
-      "questionNumber": "В{{number}}"
+      "questionNumber": "В{{number}}",
+      "overview": {
+        "totalRegistrations": "Всего регистраций",
+        "studentsEnrolled": "студентов записано",
+        "totalAttempts": "Всего попыток",
+        "attemptsSubmitted": "попыток отправлено",
+        "averageScore": "Средний балл",
+        "range": "Диапазон",
+        "averageTime": "Среднее время",
+        "timeSpent": "на попытку",
+        "completedAttempts": "Завершено",
+        "inProgress": "В процессе"
+      }
     },
     "assignment": {
       "defaultSuffix": "Задание",
@@ -711,6 +723,41 @@
           "onlyCorrect": "Только правильные ответы",
           "full": "Полные детали"
         }
+      },
+      "view": {
+        "title": "Детали задания",
+        "backToList": "Вернуться к заданиям",
+        "error": {
+          "title": "Задание не найдено",
+          "description": "Задание, которое вы ищете, не существует или было удалено."
+        }
+      },
+      "attempts": {
+        "title": "Попытки студентов",
+        "loading": "Загрузка попыток...",
+        "empty": "Пока нет попыток",
+        "student": "Студент",
+        "attempt": "Попытка",
+        "status": "Статус",
+        "score": "Балл",
+        "percentage": "%",
+        "submitted": "Отправлено"
+      },
+      "attempt": {
+        "status": {
+          "graded": "Оценено",
+          "submitted": "Отправлено",
+          "inProgress": "В процессе"
+        }
+      },
+      "questions": {
+        "title": "Вопросы",
+        "loading": "Загрузка вопросов...",
+        "empty": "Нет доступных вопросов",
+        "question": "Вопрос",
+        "type": "Тип",
+        "points": "Баллы",
+        "correctRate": "Правильных %"
       }
     },
     "grading": {

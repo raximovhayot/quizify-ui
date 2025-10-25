@@ -7,7 +7,8 @@ import { useRouter } from 'next/navigation';
 
 import { ContentPlaceholder } from '@/components/shared/ui/ContentPlaceholder';
 
-import { useAssignment } from '../hooks';
+import { useAssignment, useAssignmentAnalytics } from '../hooks';
+import { AnalyticsOverview } from './AnalyticsOverview';
 import { AssignmentViewActions } from './AssignmentViewActions';
 import { AssignmentViewAttempts } from './AssignmentViewAttempts';
 import { AssignmentViewConfiguration } from './AssignmentViewConfiguration';
@@ -25,6 +26,10 @@ export function AssignmentViewPage({
   const t = useTranslations();
   const router = useRouter();
   const { data: assignment, isLoading, error } = useAssignment(assignmentId);
+  const {
+    data: analytics,
+    isLoading: analyticsLoading,
+  } = useAssignmentAnalytics(assignmentId);
 
   if (isLoading) {
     return <AssignmentViewSkeleton />;
@@ -60,6 +65,11 @@ export function AssignmentViewPage({
         <div className="space-y-6 sm:space-y-8">
           {/* Header with back button and status */}
           <AssignmentViewHeader assignment={assignment} />
+
+          {/* Analytics Overview */}
+          {!analyticsLoading && analytics && (
+            <AnalyticsOverview analytics={analytics} />
+          )}
 
           {/* Main content grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">

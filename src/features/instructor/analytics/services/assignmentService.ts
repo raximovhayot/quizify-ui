@@ -3,6 +3,8 @@ import { IApiResponse, extractApiData } from '@/types/api';
 import { IPageableList } from '@/types/common';
 
 import {
+  assignmentAnalyticsSchema,
+  questionAnalyticsSchema,
   studentRegistrationSchema,
 } from '../schemas/analyticsSchema';
 import {
@@ -10,6 +12,8 @@ import {
   assignmentListResponseSchema,
 } from '../schemas/assignmentSchema';
 import {
+  AssignmentAnalytics,
+  QuestionAnalytics,
   StudentRegistration,
 } from '../types/analytics';
 import {
@@ -136,5 +140,49 @@ export class AssignmentService {
     );
     const data = extractApiData(response);
     return studentRegistrationSchema.array().parse(data);
+  }
+
+  /**
+   * Get analytics overview for an assignment
+   *
+   * @param assignmentId - ID of the assignment
+   * @param signal - AbortSignal for request cancellation
+   * @returns Promise resolving to assignment analytics data
+   */
+  static async getAssignmentAnalytics(
+    assignmentId: number,
+    signal?: AbortSignal
+  ): Promise<AssignmentAnalytics> {
+    const response: IApiResponse<AssignmentAnalytics> = await apiClient.get(
+      `/instructor/assignments/:id/analytics`,
+      {
+        signal,
+        params: { id: assignmentId },
+      }
+    );
+    const data = extractApiData(response);
+    return assignmentAnalyticsSchema.parse(data);
+  }
+
+  /**
+   * Get question-level analytics for an assignment
+   *
+   * @param assignmentId - ID of the assignment
+   * @param signal - AbortSignal for request cancellation
+   * @returns Promise resolving to array of question analytics
+   */
+  static async getQuestionAnalytics(
+    assignmentId: number,
+    signal?: AbortSignal
+  ): Promise<QuestionAnalytics[]> {
+    const response: IApiResponse<QuestionAnalytics[]> = await apiClient.get(
+      `/instructor/assignments/:id/questions/analytics`,
+      {
+        signal,
+        params: { id: assignmentId },
+      }
+    );
+    const data = extractApiData(response);
+    return questionAnalyticsSchema.array().parse(data);
   }
 }
