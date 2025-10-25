@@ -37,7 +37,6 @@ import {
 
 export interface AssignmentFormProps {
   quiz: QuizDataDTO;
-  onSuccess?: () => void;
   onCancel?: () => void;
 }
 
