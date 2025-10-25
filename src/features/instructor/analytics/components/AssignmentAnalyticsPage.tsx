@@ -4,10 +4,7 @@ import { useParams } from 'next/navigation';
 
 import { ContentPlaceholder } from '@/components/shared/ui/ContentPlaceholder';
 
-import {
-  useAssignmentAnalytics,
-  useQuestionAnalytics,
-} from '../hooks/useAssignments';
+import { useAssignmentAnalytics, useQuestionAnalytics } from '../hooks';
 import { AnalyticsOverview } from './AnalyticsOverview';
 import { AttemptsTable } from './AttemptsTable';
 import { QuestionAnalyticsTable } from './QuestionAnalyticsTable';

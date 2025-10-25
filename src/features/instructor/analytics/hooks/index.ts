@@ -1,9 +1,6 @@
 export * from './useAssignments';
+export * from './useAssignment';
 export * from './useCreateAssignment';
-
-// Re-export analytics hooks from useAssignments
-export {
-  useAssignmentAnalytics,
-  useQuestionAnalytics,
-  useStudentRegistrations,
-} from './useAssignments';
+export * from './useAssignmentAnalytics';
+export * from './useQuestionAnalytics';
+export * from './useStudentRegistrations';

@@ -6,7 +6,7 @@ import { useUrlFilter } from '@/components/shared/hooks/useUrlFilter';
 
 import { AnalyticsHeader } from './components/AnalyticsHeader';
 import { AnalyticsListSection } from './components/AnalyticsListSection';
-import { useAssignments } from './hooks/useAssignments';
+import { useAssignments } from './hooks';
 import { AssignmentFilter, AssignmentStatus } from './types/assignment';
 
 export function InstructorAnalyticsPage() {
