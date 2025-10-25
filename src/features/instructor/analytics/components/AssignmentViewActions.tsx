@@ -64,8 +64,7 @@ export function AssignmentViewActions({
           fallback: 'Analytics exported successfully',
         })
       );
-    } catch (error) {
-      console.error('Export failed:', error);
+    } catch (_error) {
       toast.error(
         t('instructor.analytics.export.error', {
           fallback: 'Failed to export analytics',
@@ -93,8 +92,7 @@ export function AssignmentViewActions({
           fallback: 'Question analytics exported successfully',
         })
       );
-    } catch (error) {
-      console.error('Export failed:', error);
+    } catch (_error) {
       toast.error(
         t('instructor.analytics.export.error', {
           fallback: 'Failed to export analytics',

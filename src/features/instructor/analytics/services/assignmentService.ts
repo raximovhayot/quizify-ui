@@ -2,11 +2,7 @@ import { apiClient } from '@/lib/api';
 import { IApiResponse, extractApiData } from '@/types/api';
 import { IPageableList } from '@/types/common';
 
-import {
-  assignmentAnalyticsSchema,
-  questionAnalyticsSchema,
-  studentRegistrationSchema,
-} from '../schemas/analyticsSchema';
+import { studentRegistrationSchema } from '../schemas/analyticsSchema';
 import {
   assignmentDataDTOSchema,
   assignmentListResponseSchema,
@@ -218,7 +214,7 @@ export class AssignmentService {
 
       // Safety check to prevent infinite loops
       if (page > 100) {
-        console.warn('Reached maximum page limit (100) when fetching attempts');
+        // Reached maximum page limit when fetching attempts
         break;
       }
     }
@@ -253,22 +249,19 @@ export class AssignmentService {
    * Note: This requires detailed attempt data which is not available in summary
    * Returns empty array for now - would need individual attempt details
    *
-   * @param assignmentId - ID of the assignment
-   * @param signal - AbortSignal for request cancellation
+   * @param _assignmentId - ID of the assignment (unused, reserved for future use)
+   * @param _signal - AbortSignal for request cancellation (unused, reserved for future use)
    * @returns Promise resolving to array of question analytics
    */
   static async getQuestionAnalytics(
-    assignmentId: number,
-    signal?: AbortSignal
+    _assignmentId: number,
+    _signal?: AbortSignal
   ): Promise<QuestionAnalytics[]> {
     // Question analytics requires detailed answer data from each attempt
     // The summary endpoint doesn't provide this information
     // Would need to fetch detailed data for each attempt which could be expensive
     // For now, return empty array
     // TODO: Implement by fetching individual attempt details if needed
-    console.warn(
-      'Question analytics not available with current backend implementation'
-    );
     return [];
   }
 
