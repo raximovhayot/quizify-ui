@@ -5,14 +5,10 @@ export const assignmentKeys = {
     [...assignmentKeys.lists(), filter] as const,
   details: () => [...assignmentKeys.all, 'detail'] as const,
   detail: (id: number) => [...assignmentKeys.details(), id] as const,
-} as const;
-
-export const analyticsKeys = {
-  all: ['analytics'] as const,
-  assignment: (assignmentId: number) =>
-    [...analyticsKeys.all, 'assignment', assignmentId] as const,
-  questions: (assignmentId: number) =>
-    [...analyticsKeys.all, 'questions', assignmentId] as const,
+  analytics: (assignmentId: number) =>
+    [...assignmentKeys.all, 'analytics', assignmentId] as const,
+  questionAnalytics: (assignmentId: number) =>
+    [...assignmentKeys.all, 'questions', 'analytics', assignmentId] as const,
   registrations: (assignmentId: number) =>
-    [...analyticsKeys.all, 'registrations', assignmentId] as const,
+    [...assignmentKeys.all, 'registrations', assignmentId] as const,
 } as const;
