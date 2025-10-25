@@ -818,6 +818,29 @@
       "regrade": "Qayta baholash",
       "totalEssayQuestions": "Insho savollari",
       "totalAnswers": "Jami javoblar"
+    },
+    "attempt": {
+      "detail": {
+        "title": "Urinish tafsilotlari",
+        "student": "Talaba",
+        "attemptNumber": "Urinish №{number}",
+        "score": "Ball",
+        "notGraded": "Baholanmagan",
+        "duration": "Davomiyligi",
+        "timeSpent": "Sarflangan vaqt",
+        "submitted": "Yuborildi",
+        "started": "Boshlandi",
+        "questions": {
+          "title": "Savol natijalari",
+          "question": "Savol {number}",
+          "points": "ballar",
+          "graderComment": "Baholovchining izohi:"
+        },
+        "error": {
+          "title": "Urinish topilmadi",
+          "description": "Siz qidirayotgan urinish mavjud emas yoki o'chirilgan."
+        }
+      }
     }
   },
   "student": {

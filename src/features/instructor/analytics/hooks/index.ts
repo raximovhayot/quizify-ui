@@ -5,3 +5,4 @@ export * from './useStudentRegistrations';
 export * from './useUpdateAssignment';
 export * from './useAssignmentAnalytics';
 export * from './useQuestionAnalytics';
+export * from './useAttemptDetail';

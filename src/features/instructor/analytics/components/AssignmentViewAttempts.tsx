@@ -5,6 +5,7 @@ import { ArrowUpDown } from 'lucide-react';
 import { useState, useMemo } from 'react';
 
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -37,6 +38,7 @@ export function AssignmentViewAttempts({
   assignmentId,
 }: Readonly<AssignmentViewAttemptsProps>) {
   const t = useTranslations();
+  const router = useRouter();
   const { data: analytics, isLoading } = useAssignmentAnalytics(assignmentId);
 
   // Filter and sort state
@@ -314,7 +316,15 @@ export function AssignmentViewAttempts({
               </TableHeader>
               <TableBody>
                 {filteredAndSortedAttempts.map((attempt) => (
-                  <TableRow key={attempt.id}>
+                  <TableRow
+                    key={attempt.id}
+                    className="cursor-pointer hover:bg-muted/50"
+                    onClick={() =>
+                      router.push(
+                        `/instructor/analytics/${assignmentId}/attempts/${attempt.id}`
+                      )
+                    }
+                  >
                     <TableCell>
                       <div>
                         <div className="font-medium">{attempt.studentName}</div>

@@ -800,6 +800,29 @@
       "regrade": "Regrade",
       "totalEssayQuestions": "Essay Questions",
       "totalAnswers": "Total Answers"
+    },
+    "attempt": {
+      "detail": {
+        "title": "Attempt Details",
+        "student": "Student",
+        "attemptNumber": "Attempt #{number}",
+        "score": "Score",
+        "notGraded": "Not graded",
+        "duration": "Duration",
+        "timeSpent": "Time spent",
+        "submitted": "Submitted",
+        "started": "Started",
+        "questions": {
+          "title": "Question Results",
+          "question": "Question {number}",
+          "points": "points",
+          "graderComment": "Grader Comment:"
+        },
+        "error": {
+          "title": "Attempt not found",
+          "description": "The attempt you are looking for does not exist or has been deleted."
+        }
+      }
     }
   },
   "student": {

@@ -11,7 +11,10 @@ import {
   assignmentDataDTOSchema,
   assignmentListResponseSchema,
 } from '../schemas/assignmentSchema';
-import { attemptSummaryListResponseSchema } from '../schemas/attemptSchema';
+import {
+  attemptSummaryListResponseSchema,
+  instructorAttemptDetailSchema,
+} from '../schemas/attemptSchema';
 import { computeAnalyticsFromAttempts } from '../lib/analyticsCompute';
 import {
   AssignmentAnalytics,
@@ -24,6 +27,7 @@ import {
   AssignmentFilter,
 } from '../types/assignment';
 import {
+  InstructorAttemptDetail,
   InstructorAttemptFilter,
   InstructorAttemptSummary,
 } from '../types/attempt';
@@ -266,5 +270,31 @@ export class AssignmentService {
       'Question analytics not available with current backend implementation'
     );
     return [];
+  }
+
+  /**
+   * Get detailed attempt information
+   * Uses backend endpoint: GET /instructor/assignments/:assignmentId/attempts/:attemptId
+   *
+   * @param assignmentId - ID of the assignment
+   * @param attemptId - ID of the attempt
+   * @param signal - AbortSignal for request cancellation
+   * @returns Promise resolving to detailed attempt information
+   */
+  static async getAttemptDetail(
+    assignmentId: number,
+    attemptId: number,
+    signal?: AbortSignal
+  ): Promise<InstructorAttemptDetail> {
+    const response: IApiResponse<InstructorAttemptDetail> =
+      await apiClient.get(
+        `/instructor/assignments/:assignmentId/attempts/:attemptId`,
+        {
+          signal,
+          params: { assignmentId, attemptId },
+        }
+      );
+    const data = extractApiData(response);
+    return instructorAttemptDetailSchema.parse(data);
   }
 }

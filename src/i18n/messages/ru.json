@@ -804,6 +804,29 @@
       "regrade": "Переоценить",
       "totalEssayQuestions": "Вопросы эссе",
       "totalAnswers": "Всего ответов"
+    },
+    "attempt": {
+      "detail": {
+        "title": "Детали попытки",
+        "student": "Студент",
+        "attemptNumber": "Попытка №{number}",
+        "score": "Балл",
+        "notGraded": "Не оценено",
+        "duration": "Длительность",
+        "timeSpent": "Затраченное время",
+        "submitted": "Отправлено",
+        "started": "Начато",
+        "questions": {
+          "title": "Результаты вопросов",
+          "question": "Вопрос {number}",
+          "points": "баллы",
+          "graderComment": "Комментарий оценивающего:"
+        },
+        "error": {
+          "title": "Попытка не найдена",
+          "description": "Попытка, которую вы ищете, не существует или была удалена."
+        }
+      }
     }
   },
   "student": {
