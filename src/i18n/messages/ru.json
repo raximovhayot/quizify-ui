@@ -28,7 +28,11 @@
     "yes": "Да",
     "no": "Нет",
     "all": "Все",
-    "status": "Статус",
+    "status": {
+      "active": "Активно",
+      "finished": "Завершено",
+      "draft": "Черновик"
+    },
     "add": "Добавить",
     "remove": "Удалить",
     "up": "Вверх",
@@ -197,11 +201,7 @@
     "questionAnalytics": "Аналитика вопросов",
     "questionAnalyticsNotAvailable": "Аналитика вопросов пока недоступна. Эта функция будет добавлена в будущем обновлении.",
     "backToList": "Вернуться к списку",
-    "status": {
-      "active": "Активно",
-      "finished": "Завершено",
-      "draft": "Черновик"
-    }
+    "statusLabel": "Статус"
   },
   "auth": {
     "signIn": {
@@ -705,7 +705,9 @@
       "noQuestionData": "Данные по вопросам недоступны",
       "question": "Вопрос",
       "type": "Тип",
-      "attempts": "Попытки",
+      "attempts": {
+        "title": "Попытки"
+      },
       "correctRate": "Правильно %",
       "distribution": "Распределение",
       "questionNumber": "В{{number}}",

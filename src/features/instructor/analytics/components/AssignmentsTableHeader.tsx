@@ -14,7 +14,7 @@ export function AssignmentsTableHeader() {
           {t('instructor.analytics.table.title', { fallback: 'Title' })}
         </TableHead>
         <TableHead className="w-[15%]">
-          {t('common.status', { fallback: 'Status' })}
+          {t('common.statusLabel', { fallback: 'Status' })}
         </TableHead>
         <TableHead className="w-[15%]">
           {t('instructor.analytics.table.created', { fallback: 'Created' })}

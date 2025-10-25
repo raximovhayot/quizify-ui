@@ -28,7 +28,11 @@
     "yes": "Ha",
     "no": "Yo'q",
     "all": "Barchasi",
-    "status": "Holat",
+    "status": {
+      "active": "Faol",
+      "finished": "Tugagan",
+      "draft": "Qoralama"
+    },
     "add": "Qo'shish",
     "remove": "O'chirish",
     "up": "Yuqoriga",
@@ -197,11 +201,7 @@
     "questionAnalytics": "Savol analitikasi",
     "questionAnalyticsNotAvailable": "Savol analitikasi hozircha mavjud emas. Bu xususiyat keyingi yangilanishda qo'shiladi.",
     "backToList": "Ro'yxatga qaytish",
-    "status": {
-      "active": "Faol",
-      "finished": "Tugagan",
-      "draft": "Qoralama"
-    }
+    "statusLabel": "Holat"
   },
   "auth": {
     "signIn": {
@@ -719,7 +719,9 @@
       "noQuestionData": "Savollar ma'lumotlari mavjud emas",
       "question": "Savol",
       "type": "Tur",
-      "attempts": "Urinishlar",
+      "attempts": {
+        "title": "Urinishlar"
+      },
       "correctRate": "To'g'ri %",
       "distribution": "Taqsimot",
       "questionNumber": "S{{number}}",

@@ -28,7 +28,11 @@
     "yes": "Yes",
     "no": "No",
     "all": "All",
-    "status": "Status",
+    "status": {
+      "active": "Active",
+      "finished": "Finished",
+      "draft": "Draft"
+    },
     "add": "Add",
     "remove": "Remove",
     "up": "Up",
@@ -197,11 +201,7 @@
     "questionAnalytics": "Question Analytics",
     "questionAnalyticsNotAvailable": "Question analytics are not available yet. This feature will be added in a future update.",
     "backToList": "Back to List",
-    "status": {
-      "active": "Active",
-      "finished": "Finished",
-      "draft": "Draft"
-    }
+    "statusLabel": "Status"
   },
   "auth": {
     "signIn": {
@@ -701,7 +701,9 @@
       "noQuestionData": "No question data available",
       "question": "Question",
       "type": "Type",
-      "attempts": "Attempts",
+      "attempts": {
+        "title": "Attempts"
+      },
       "correctRate": "Correct %",
       "distribution": "Distribution",
       "questionNumber": "Q{{number}}",

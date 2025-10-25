@@ -197,7 +197,7 @@ export function AttemptsTabContent({
                       {t('common.attempt', { fallback: 'Attempt' })}
                     </TableHead>
                     <TableHead>
-                      {t('common.status', { fallback: 'Status' })}
+                      {t('common.statusLabel', { fallback: 'Status' })}
                     </TableHead>
                     <TableHead>
                       <Button
