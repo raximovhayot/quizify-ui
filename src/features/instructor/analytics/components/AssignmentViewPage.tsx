@@ -67,7 +67,7 @@ export function AssignmentViewPage({
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full max-w-md grid-cols-2">
               <TabsTrigger value="attempts">
-                {t('common.attempts', { fallback: 'Attempts' })}
+                {t('instructor.analytics.attempts.title', { fallback: 'Attempts' })}
               </TabsTrigger>
               <TabsTrigger value="questions">
                 {t('common.questions', { fallback: 'Questions' })}

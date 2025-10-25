@@ -121,7 +121,7 @@ export function AttemptsTabContent({
       <CardHeader>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle>
-            {t('common.attempts', { fallback: 'Attempts' })} ({data?.totalElements || 0})
+            {t('instructor.analytics.attempts.title', { fallback: 'Attempts' })} ({data?.totalElements || 0})
           </CardTitle>
         </div>
 
