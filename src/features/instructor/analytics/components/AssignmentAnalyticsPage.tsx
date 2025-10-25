@@ -7,7 +7,7 @@ import { ContentPlaceholder } from '@/components/shared/ui/ContentPlaceholder';
 import {
   useAssignmentAnalytics,
   useQuestionAnalytics,
-} from '../hooks/useAnalytics';
+} from '../hooks/useAssignments';
 import { AnalyticsOverview } from './AnalyticsOverview';
 import { AttemptsTable } from './AttemptsTable';
 import { QuestionAnalyticsTable } from './QuestionAnalyticsTable';

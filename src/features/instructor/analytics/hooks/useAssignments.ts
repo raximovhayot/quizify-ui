@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 
-
 import { IPageableList } from '@/types/common';
 
 import { assignmentKeys } from '../keys';
@@ -9,6 +8,11 @@ import {
   assignmentListResponseSchema,
 } from '../schemas/assignmentSchema';
 import { AssignmentService } from '../services/assignmentService';
+import {
+  AssignmentAnalytics,
+  QuestionAnalytics,
+  StudentRegistration,
+} from '../types/analytics';
 import { AssignmentDTO, AssignmentFilter } from '../types/assignment';
 
 /**
@@ -42,5 +46,53 @@ export function useAssignment(id: number) {
     enabled: !!id,
     staleTime: 2 * 60 * 1000, // 2 minutes (details are relatively stable)
     gcTime: 20 * 60 * 1000, // 20 minutes
+  });
+}
+
+/**
+ * useAssignmentAnalytics — fetch assignment analytics overview
+ * Fetches comprehensive analytics data for an assignment including attempts and scores
+ */
+export function useAssignmentAnalytics(assignmentId: number) {
+  return useQuery<AssignmentAnalytics>({
+    queryKey: assignmentKeys.analytics(assignmentId),
+    queryFn: ({ signal }) =>
+      AssignmentService.getAssignmentAnalytics(assignmentId, signal),
+    enabled: !!assignmentId,
+    staleTime: 60 * 1000, // 1 minute
+    gcTime: 15 * 60 * 1000, // 15 minutes
+    structuralSharing: true,
+  });
+}
+
+/**
+ * useQuestionAnalytics — fetch question-level analytics for an assignment
+ * Provides detailed statistics about each question's performance
+ */
+export function useQuestionAnalytics(assignmentId: number) {
+  return useQuery<QuestionAnalytics[]>({
+    queryKey: assignmentKeys.questionAnalytics(assignmentId),
+    queryFn: ({ signal }) =>
+      AssignmentService.getQuestionAnalytics(assignmentId, signal),
+    enabled: !!assignmentId,
+    staleTime: 60 * 1000, // 1 minute
+    gcTime: 15 * 60 * 1000, // 15 minutes
+    structuralSharing: true,
+  });
+}
+
+/**
+ * useStudentRegistrations — fetch student registrations for an assignment
+ * Lists all students registered for the assignment with their attempt history
+ */
+export function useStudentRegistrations(assignmentId: number) {
+  return useQuery<StudentRegistration[]>({
+    queryKey: assignmentKeys.registrations(assignmentId),
+    queryFn: ({ signal }) =>
+      AssignmentService.getStudentRegistrations(assignmentId, signal),
+    enabled: !!assignmentId,
+    staleTime: 60 * 1000, // 1 minute
+    gcTime: 15 * 60 * 1000, // 15 minutes
+    structuralSharing: true,
   });
 }

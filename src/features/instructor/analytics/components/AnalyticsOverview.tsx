@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
-import { AnalyticsService } from '../services/analyticsService';
+import { AssignmentService } from '../services/assignmentService';
 import { AssignmentAnalytics } from '../types/analytics';
 
 interface AnalyticsOverviewProps {
@@ -27,7 +27,7 @@ export function AnalyticsOverview({
 
   const handleExport = async () => {
     try {
-      const blob = await AnalyticsService.exportAnalytics(
+      const blob = await AssignmentService.exportAnalytics(
         analytics.assignmentId
       );
       const url = window.URL.createObjectURL(blob);
