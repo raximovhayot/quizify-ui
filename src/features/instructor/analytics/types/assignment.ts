@@ -33,6 +33,7 @@ export interface AssignmentDTO {
   title: string;
   description?: string | null;
   status?: AssignmentStatus | string; // keep flexible if backend returns string
+  code?: string; // Assignment access code
   createdDate?: string;
   dueDate?: string | null;
   quizId?: number;

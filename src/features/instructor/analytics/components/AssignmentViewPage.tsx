@@ -1,20 +1,20 @@
 'use client';
 
 import { FileText } from 'lucide-react';
+import { useState } from 'react';
 
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
 import { ContentPlaceholder } from '@/components/shared/ui/ContentPlaceholder';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-import { useAssignment, useAssignmentAnalytics } from '../hooks';
+import { useAssignment, useAttempts } from '../hooks';
 import { AnalyticsOverview } from './AnalyticsOverview';
-import { AssignmentViewActions } from './AssignmentViewActions';
-import { AssignmentViewAttempts } from './AssignmentViewAttempts';
-import { AssignmentViewConfiguration } from './AssignmentViewConfiguration';
-import { AssignmentViewHeader } from './AssignmentViewHeader';
-import { AssignmentViewQuestions } from './AssignmentViewQuestions';
+import { AssignmentDetailHeader } from './AssignmentDetailHeader';
 import { AssignmentViewSkeleton } from './AssignmentViewSkeleton';
+import { AttemptsTabContent } from './AttemptsTabContent';
+import { QuestionsTabContent } from './QuestionsTabContent';
 
 export interface AssignmentViewPageProps {
   assignmentId: number;
@@ -26,10 +26,11 @@ export function AssignmentViewPage({
   const t = useTranslations();
   const router = useRouter();
   const { data: assignment, isLoading, error } = useAssignment(assignmentId);
-  const {
-    data: analytics,
-    isLoading: analyticsLoading,
-  } = useAssignmentAnalytics(assignmentId);
+  
+  // Fetch first page of attempts for statistics
+  const { data: attemptsData } = useAttempts(assignmentId, { page: 0, size: 100 });
+  
+  const [activeTab, setActiveTab] = useState('attempts');
 
   if (isLoading) {
     return <AssignmentViewSkeleton />;
@@ -48,7 +49,7 @@ export function AssignmentViewPage({
         })}
         actions={[
           {
-            label: t('instructor.assignment.view.backToList', {
+            label: t('common.backToList', {
               fallback: 'Back to Assignments',
             }),
             onClick: () => router.push('/instructor/analytics'),
@@ -59,32 +60,59 @@ export function AssignmentViewPage({
     );
   }
 
+  // Compute basic analytics from attempts
+  const attempts = attemptsData?.content || [];
+  const completedAttempts = attempts.filter((a) => a.completed);
+  const scores = completedAttempts
+    .map((a) => a.score)
+    .filter((s): s is number => s !== null);
+  
+  const analytics = {
+    assignmentId: assignment.id,
+    assignmentTitle: assignment.title,
+    quizTitle: '',
+    totalRegistrations: new Set(attempts.map(a => a.studentId)).size,
+    totalAttempts: attempts.length,
+    completedAttempts: completedAttempts.length,
+    inProgressAttempts: attempts.length - completedAttempts.length,
+    averageScore: scores.length > 0 
+      ? scores.reduce((sum, s) => sum + s, 0) / scores.length 
+      : null,
+    highestScore: scores.length > 0 ? Math.max(...scores) : null,
+    lowestScore: scores.length > 0 ? Math.min(...scores) : null,
+    averageTimeSpent: null,
+    attempts: [],
+  };
+
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto">
-        <div className="space-y-6 sm:space-y-8">
-          {/* Header with back button and status */}
-          <AssignmentViewHeader assignment={assignment} />
+      <div className="container mx-auto px-4 py-6">
+        <div className="space-y-6">
+          {/* Assignment Details Header */}
+          <AssignmentDetailHeader assignment={assignment} />
 
           {/* Analytics Overview */}
-          {!analyticsLoading && analytics && (
-            <AnalyticsOverview analytics={analytics} />
-          )}
+          {attemptsData && <AnalyticsOverview analytics={analytics} />}
 
-          {/* Main content grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
-            {/* Sidebar (Settings + Actions) - first on mobile, right column on desktop */}
-            <div className="order-1 lg:order-2 lg:col-span-1 space-y-6">
-              <AssignmentViewConfiguration assignment={assignment} />
-              <AssignmentViewActions assignment={assignment} />
-            </div>
+          {/* Tabs for Attempts and Questions */}
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-full max-w-md grid-cols-2">
+              <TabsTrigger value="attempts">
+                {t('common.attempts', { fallback: 'Attempts' })}
+              </TabsTrigger>
+              <TabsTrigger value="questions">
+                {t('common.questions', { fallback: 'Questions' })}
+              </TabsTrigger>
+            </TabsList>
 
-            {/* Main content - attempts and questions */}
-            <div className="order-2 lg:order-1 lg:col-span-2 space-y-6">
-              <AssignmentViewAttempts assignmentId={assignmentId} />
-              <AssignmentViewQuestions assignmentId={assignmentId} />
-            </div>
-          </div>
+            <TabsContent value="attempts" className="mt-6">
+              <AttemptsTabContent assignmentId={assignmentId} />
+            </TabsContent>
+
+            <TabsContent value="questions" className="mt-6">
+              <QuestionsTabContent assignmentId={assignmentId} />
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>

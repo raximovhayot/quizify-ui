@@ -6,3 +6,4 @@ export * from './useUpdateAssignment';
 export * from './useAssignmentAnalytics';
 export * from './useQuestionAnalytics';
 export * from './useAttemptDetail';
+export * from './useAttempts';
