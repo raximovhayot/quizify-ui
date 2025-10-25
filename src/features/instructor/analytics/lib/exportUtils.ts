@@ -107,9 +107,19 @@ function formatDate(dateString: string | null | undefined): string {
 
 /**
  * Strip HTML tags from text
+ * Uses multiple passes to prevent incomplete sanitization
  */
 function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+  let text = html;
+  let previousText = '';
+  
+  // Keep removing tags until no more tags are found
+  while (text !== previousText) {
+    previousText = text;
+    text = text.replace(/<[^>]*>/g, '');
+  }
+  
+  return text.replace(/\s+/g, ' ').trim();
 }
 
 /**
