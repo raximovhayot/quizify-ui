@@ -9,8 +9,7 @@ import { useRouter } from 'next/navigation';
 import { ContentPlaceholder } from '@/components/shared/ui/ContentPlaceholder';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-import { useAssignment, useAttempts } from '../hooks';
-import { AnalyticsOverview } from './AnalyticsOverview';
+import { useAssignment } from '../hooks';
 import { AssignmentDetailHeader } from './AssignmentDetailHeader';
 import { AssignmentViewSkeleton } from './AssignmentViewSkeleton';
 import { AttemptsTabContent } from './AttemptsTabContent';
@@ -26,9 +25,6 @@ export function AssignmentViewPage({
   const t = useTranslations();
   const router = useRouter();
   const { data: assignment, isLoading, error } = useAssignment(assignmentId);
-  
-  // Fetch first page of attempts for statistics
-  const { data: attemptsData } = useAttempts(assignmentId, { page: 0, size: 100 });
   
   const [activeTab, setActiveTab] = useState('attempts');
 
@@ -60,39 +56,12 @@ export function AssignmentViewPage({
     );
   }
 
-  // Compute basic analytics from attempts
-  const attempts = attemptsData?.content || [];
-  const completedAttempts = attempts.filter((a) => a.completed);
-  const scores = completedAttempts
-    .map((a) => a.score)
-    .filter((s): s is number => s !== null);
-  
-  const analytics = {
-    assignmentId: assignment.id,
-    assignmentTitle: assignment.title,
-    quizTitle: '',
-    totalRegistrations: new Set(attempts.map(a => a.studentId)).size,
-    totalAttempts: attempts.length,
-    completedAttempts: completedAttempts.length,
-    inProgressAttempts: attempts.length - completedAttempts.length,
-    averageScore: scores.length > 0 
-      ? scores.reduce((sum, s) => sum + s, 0) / scores.length 
-      : null,
-    highestScore: scores.length > 0 ? Math.max(...scores) : null,
-    lowestScore: scores.length > 0 ? Math.min(...scores) : null,
-    averageTimeSpent: null,
-    attempts: [],
-  };
-
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-6">
         <div className="space-y-6">
           {/* Assignment Details Header */}
           <AssignmentDetailHeader assignment={assignment} />
-
-          {/* Analytics Overview */}
-          {attemptsData && <AnalyticsOverview analytics={analytics} />}
 
           {/* Tabs for Attempts and Questions */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
