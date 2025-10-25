@@ -635,7 +635,11 @@
       "averageScore": "Average Score",
       "inProgress": "In Progress",
       "quiz": "Quiz",
-      "export": "Export CSV",
+      "export": {
+        "success": "Analytics exported successfully",
+        "error": "Failed to export analytics",
+        "noData": "No data available to export"
+      },
       "exportSuccess": "Analytics exported successfully",
       "exportError": "Failed to export analytics",
       "scoreRange": "Score Range",
@@ -754,6 +758,13 @@
         "type": "Type",
         "points": "Points",
         "correctRate": "Correct %"
+      },
+      "actions": {
+        "title": "Actions",
+        "grade": "Grade Essays",
+        "exportAttempts": "Export Attempts (CSV)",
+        "exportQuestions": "Export Questions (CSV)",
+        "editSettings": "Edit Settings"
       }
     },
     "grading": {

@@ -653,7 +653,11 @@
       "averageScore": "O'rtacha ball",
       "inProgress": "Jarayonda",
       "quiz": "Test",
-      "export": "CSV eksport qilish",
+      "export": {
+        "success": "Tahlil muvaffaqiyatli eksport qilindi",
+        "error": "Tahlilni eksport qilishda xatolik",
+        "noData": "Eksport qilish uchun ma'lumot yo'q"
+      },
       "exportSuccess": "Analitika muvaffaqiyatli eksport qilindi",
       "exportError": "Analitikani eksport qilishda xatolik",
       "scoreRange": "Ball oralig'i",
@@ -772,6 +776,13 @@
         "type": "Turi",
         "points": "Ballar",
         "correctRate": "To'g'ri %"
+      },
+      "actions": {
+        "title": "Harakatlar",
+        "grade": "Insho baholash",
+        "exportAttempts": "Urinishlarni eksport qilish (CSV)",
+        "exportQuestions": "Savollarni eksport qilish (CSV)",
+        "editSettings": "Sozlamalarni tahrirlash"
       }
     },
     "grading": {
