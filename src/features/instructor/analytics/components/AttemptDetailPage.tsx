@@ -224,7 +224,9 @@ export function AttemptDetailPage({
         <CardContent>
           <div className="space-y-4">
             {attempt.questions.map((question, index) => (
-              <Card key={question.questionId} className="border-l-4"
+              <Card
+                key={question.questionId}
+                className="border-l-4"
                 style={{
                   borderLeftColor:
                     question.correct === true
