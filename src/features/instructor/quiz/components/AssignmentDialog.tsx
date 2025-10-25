@@ -50,7 +50,6 @@ export function AssignmentDialog({
           <FormDrawerBody>
             <AssignmentForm 
               quiz={quiz} 
-              onSuccess={() => onOpenChange(false)}
               onCancel={() => onOpenChange(false)}
             />
           </FormDrawerBody>
@@ -78,7 +77,6 @@ export function AssignmentDialog({
 
         <AssignmentForm 
           quiz={quiz} 
-          onSuccess={() => onOpenChange(false)}
           onCancel={() => onOpenChange(false)}
         />
       </ScrollableDialogContent>

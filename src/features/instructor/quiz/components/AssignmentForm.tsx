@@ -37,13 +37,11 @@ import {
 
 export interface AssignmentFormProps {
   quiz: QuizDataDTO;
-  onSuccess?: () => void;
   onCancel?: () => void;
 }
 
 export function AssignmentForm({
   quiz,
-  onSuccess,
   onCancel,
 }: Readonly<AssignmentFormProps>) {
   const t = useTranslations();
@@ -79,7 +77,8 @@ export function AssignmentForm({
     const payload = toAssignmentCreateRequest(quiz.id, values);
     await createAssignment.mutateAsync(payload);
     form.reset();
-    onSuccess?.();
+    // Don't call onSuccess here - let the mutation's redirectTo handle navigation
+    // onSuccess?.();
   });
 
   const isSubmitting = createAssignment.isPending;

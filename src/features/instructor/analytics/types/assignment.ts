@@ -1,7 +1,8 @@
 export enum AssignmentStatus {
-  // Note: Backend uses CREATED/STARTED/FINISHED. Keep this enum unused for now or replace when needed.
-  DRAFT = 'draft',
-  PUBLISHED = 'published',
+  // Backend status values (uppercase)
+  CREATED = 'CREATED',
+  STARTED = 'STARTED',
+  FINISHED = 'FINISHED',
 }
 
 export enum AssignmentResultShowType {
