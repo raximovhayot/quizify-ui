@@ -49,6 +49,7 @@ export interface QuestionsListViewProps {
   currentPage: number;
   totalPages: number;
   totalElements: number;
+  pageSize: number;
   onPageChange: (page: number) => void;
 }
 
@@ -75,6 +76,7 @@ export function QuestionsListView({
   currentPage,
   totalPages,
   totalElements,
+  pageSize,
   onPageChange,
 }: Readonly<QuestionsListViewProps>) {
   const t = useTranslations();
@@ -213,7 +215,7 @@ export function QuestionsListView({
         </div>
 
         {/* Pagination */}
-        {totalPages > 1 && (
+        {(totalPages > 1 || totalElements > pageSize) && (
           <div className="flex justify-center pt-4">
             <Pagination>
               <PaginationContent>
@@ -223,7 +225,7 @@ export function QuestionsListView({
                     className={currentPage === 0 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
                   />
                 </PaginationItem>
-                {Array.from({ length: totalPages }, (_, i) => (
+                {Array.from({ length: Math.max(1, totalPages) }, (_, i) => (
                   <PaginationItem key={i}>
                     <PaginationLink
                       onClick={() => onPageChange(i)}
@@ -236,8 +238,8 @@ export function QuestionsListView({
                 ))}
                 <PaginationItem>
                   <PaginationNext
-                    onClick={() => onPageChange(Math.min(totalPages - 1, currentPage + 1))}
-                    className={currentPage === totalPages - 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    onClick={() => onPageChange(Math.min(Math.max(0, totalPages - 1), currentPage + 1))}
+                    className={currentPage >= totalPages - 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
                   />
                 </PaginationItem>
               </PaginationContent>

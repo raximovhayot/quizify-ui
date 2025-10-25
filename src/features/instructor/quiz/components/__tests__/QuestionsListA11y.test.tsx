@@ -49,6 +49,7 @@ describe('QuestionsListView accessibility', () => {
     currentPage: 0,
     totalPages: 1,
     totalElements: 0,
+    pageSize: 10,
     onPageChange: jest.fn(),
   } as const;
 

@@ -58,6 +58,7 @@ describe('QuestionsListView', () => {
     currentPage: 0,
     totalPages: 1,
     totalElements: 0,
+    pageSize: 10,
     onPageChange: jest.fn(),
   } as const;
 
@@ -177,7 +178,7 @@ describe('QuestionsListView', () => {
     expect(screen.getByRole('navigation')).toBeInTheDocument();
   });
 
-  it('hides pagination when totalPages <= 1', () => {
+  it('hides pagination when totalPages <= 1 and totalElements <= pageSize', () => {
     const questions = [createQuestion(1), createQuestion(2)];
 
     render(
@@ -187,6 +188,7 @@ describe('QuestionsListView', () => {
         totalElements={2}
         currentPage={0}
         totalPages={1}
+        pageSize={10}
         isLoading={false}
         error={undefined}
         showAnswers={false}
@@ -195,5 +197,27 @@ describe('QuestionsListView', () => {
 
     // Pagination should not be visible
     expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
+  });
+
+  it('shows pagination when totalElements > pageSize even if totalPages is incorrect', () => {
+    // Simulate backend not returning correct totalPages but we have totalElements
+    const questions = Array.from({ length: 10 }, (_, i) => createQuestion(i + 1));
+
+    render(
+      <QuestionsListView
+        {...commonProps}
+        questions={questions}
+        totalElements={25}
+        currentPage={0}
+        totalPages={1} // Backend incorrectly reports 1 page
+        pageSize={10}
+        isLoading={false}
+        error={undefined}
+        showAnswers={false}
+      />
+    );
+
+    // Pagination should still be visible because totalElements > pageSize
+    expect(screen.getByRole('navigation')).toBeInTheDocument();
   });
 });

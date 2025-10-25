@@ -119,6 +119,7 @@ export function QuestionsListContainer({
       currentPage={questionsData?.page || 0}
       totalPages={questionsData?.totalPages || 0}
       totalElements={questionsData?.totalElements || 0}
+      pageSize={pageSize}
       onPageChange={setCurrentPage}
     />
   );
