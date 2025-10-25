@@ -43,7 +43,6 @@ export interface AssignmentFormProps {
 
 export function AssignmentForm({
   quiz,
-  onSuccess,
   onCancel,
 }: Readonly<AssignmentFormProps>) {
   const t = useTranslations();
