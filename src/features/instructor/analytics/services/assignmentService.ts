@@ -3,8 +3,6 @@ import { IApiResponse, extractApiData } from '@/types/api';
 import { IPageableList } from '@/types/common';
 
 import {
-  assignmentAnalyticsSchema,
-  questionAnalyticsSchema,
   studentRegistrationSchema,
 } from '../schemas/analyticsSchema';
 import {
@@ -12,8 +10,6 @@ import {
   assignmentListResponseSchema,
 } from '../schemas/assignmentSchema';
 import {
-  AssignmentAnalytics,
-  QuestionAnalytics,
   StudentRegistration,
 } from '../types/analytics';
 import {
@@ -116,64 +112,9 @@ export class AssignmentService {
     return assignmentDataDTOSchema.parse(data);
   }
 
-  /**
-   * Delete an assignment by ID
-   */
-  static async deleteAssignment(id: number): Promise<void> {
-    const response: IApiResponse<void> = await apiClient.delete(
-      '/instructor/assignments/:id',
-      { params: { id } }
-    );
-    extractApiData(response);
-  }
-
   // ============================================================================
   // ASSIGNMENT ANALYTICS METHODS
   // ============================================================================
-
-  /**
-   * Get analytics overview for an assignment
-   *
-   * @param assignmentId - ID of the assignment
-   * @param signal - AbortSignal for request cancellation
-   * @returns Promise resolving to assignment analytics data
-   */
-  static async getAssignmentAnalytics(
-    assignmentId: number,
-    signal?: AbortSignal
-  ): Promise<AssignmentAnalytics> {
-    const response: IApiResponse<AssignmentAnalytics> = await apiClient.get(
-      `/instructor/assignments/:id/analytics`,
-      {
-        signal,
-        params: { id: assignmentId },
-      }
-    );
-    const data = extractApiData(response);
-    return assignmentAnalyticsSchema.parse(data);
-  }
-
-  /**
-   * Get question-level analytics for an assignment
-   *
-   * @param assignmentId - ID of the assignment
-   * @param signal - AbortSignal for request cancellation
-   * @returns Promise resolving to question analytics array
-   */
-  static async getQuestionAnalytics(
-    assignmentId: number,
-    signal?: AbortSignal
-  ): Promise<QuestionAnalytics[]> {
-    const response: IApiResponse<QuestionAnalytics[]> = await apiClient.get(
-      `/instructor/assignments/:id/questions/analytics`,
-      {
-        signal,
-        params: { id: assignmentId },
-      }
-    );
-    const data = extractApiData(response);
-    return questionAnalyticsSchema.array().parse(data);
-  }
 
   /**
    * Get student registrations for an assignment
@@ -195,40 +136,5 @@ export class AssignmentService {
     );
     const data = extractApiData(response);
     return studentRegistrationSchema.array().parse(data);
-  }
-
-  /**
-   * Export assignment analytics to Excel
-   *
-   * @param assignmentId - ID of the assignment
-   * @param signal - AbortSignal for request cancellation
-   * @returns Promise resolving to Excel file blob
-   */
-  static async exportAnalytics(
-    assignmentId: number,
-    signal?: AbortSignal
-  ): Promise<Blob> {
-    // Use apiClient to ensure auth headers and consistent error handling.
-    // Expect Excel output from backend.
-    const excelMime =
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-    const res = await apiClient.request<Blob>(
-      `/instructor/assignments/:id/analytics/export`,
-      {
-        method: 'GET',
-        parseAs: 'blob',
-        params: { id: assignmentId },
-        signal,
-        headers: {
-          Accept: excelMime,
-        },
-      }
-    );
-
-    if (res.errors?.length) {
-      throw new Error(res.errors[0]?.message || 'Failed to export analytics');
-    }
-
-    return res.data;
   }
 }

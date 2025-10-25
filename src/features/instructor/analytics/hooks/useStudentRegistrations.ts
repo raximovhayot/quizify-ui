@@ -11,8 +11,7 @@ import { StudentRegistration } from '../types/analytics';
 export function useStudentRegistrations(assignmentId: number) {
   return useQuery<StudentRegistration[]>({
     queryKey: assignmentKeys.registrations(assignmentId),
-    queryFn: ({ signal }) =>
-      AssignmentService.getStudentRegistrations(assignmentId, signal),
+    queryFn: ({ signal }) => AssignmentService.getStudentRegistrations(assignmentId, signal),
     enabled: !!assignmentId,
     staleTime: 60 * 1000, // 1 minute
     gcTime: 15 * 60 * 1000, // 15 minutes

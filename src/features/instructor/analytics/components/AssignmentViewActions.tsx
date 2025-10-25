@@ -22,32 +22,6 @@ export function AssignmentViewActions({
   const t = useTranslations();
   const router = useRouter();
 
-  const handleExport = async () => {
-    try {
-      const blob = await AssignmentService.exportAnalytics(assignment.id);
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `assignment-${assignment.id}-analytics.xlsx`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-
-      toast.success(
-        t('instructor.assignment.exportSuccess', {
-          fallback: 'Analytics exported successfully',
-        })
-      );
-    } catch {
-      toast.error(
-        t('instructor.assignment.exportError', {
-          fallback: 'Failed to export analytics',
-        })
-      );
-    }
-  };
-
   const handleGrade = () => {
     router.push(`/instructor/grading/${assignment.id}`);
   };
@@ -73,13 +47,6 @@ export function AssignmentViewActions({
           <FileEdit className="mr-2 h-4 w-4" />
           {t('instructor.assignment.actions.grade', {
             fallback: 'Grade Essays',
-          })}
-        </Button>
-
-        <Button variant="outline" className="w-full justify-start" onClick={handleExport}>
-          <Download className="mr-2 h-4 w-4" />
-          {t('instructor.assignment.actions.export', {
-            fallback: 'Export Analytics',
           })}
         </Button>
 
