@@ -118,6 +118,8 @@ export function QuestionsListContainer({
       isDeletePending={deleteQuestionMutation.isPending}
       currentPage={questionsData?.page || 0}
       totalPages={questionsData?.totalPages || 0}
+      totalElements={questionsData?.totalElements || 0}
+      pageSize={pageSize}
       onPageChange={setCurrentPage}
     />
   );
