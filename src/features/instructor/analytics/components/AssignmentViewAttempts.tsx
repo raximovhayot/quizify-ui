@@ -125,16 +125,23 @@ export function AssignmentViewAttempts({
           comparison = a.studentName.localeCompare(b.studentName);
           break;
         case 'score':
-          comparison =
-            (a.percentage || 0) - (b.percentage || 0);
+          // Use actual score for sorting, but handle null values
+          const aScore = a.score !== null ? a.score : -1;
+          const bScore = b.score !== null ? b.score : -1;
+          comparison = aScore - bScore;
           break;
         case 'submitted':
+          // Place unsubmitted attempts at the end by using extreme values
           const aDate = a.submittedAt
             ? new Date(a.submittedAt).getTime()
-            : 0;
+            : sortOrder === 'asc'
+              ? Number.MAX_SAFE_INTEGER
+              : Number.MIN_SAFE_INTEGER;
           const bDate = b.submittedAt
             ? new Date(b.submittedAt).getTime()
-            : 0;
+            : sortOrder === 'asc'
+              ? Number.MAX_SAFE_INTEGER
+              : Number.MIN_SAFE_INTEGER;
           comparison = aDate - bDate;
           break;
       }
