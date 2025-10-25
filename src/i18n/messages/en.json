@@ -741,7 +741,10 @@
         "status": "Status",
         "score": "Score",
         "percentage": "%",
-        "submitted": "Submitted"
+        "submitted": "Submitted",
+        "search": "Search students...",
+        "allStatus": "All Status",
+        "noResults": "No attempts match your filters"
       },
       "attempt": {
         "status": {

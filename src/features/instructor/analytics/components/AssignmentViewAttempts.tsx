@@ -1,11 +1,22 @@
 'use client';
 
 import { format } from 'date-fns';
+import { ArrowUpDown } from 'lucide-react';
+import { useState, useMemo } from 'react';
 
 import { useTranslations } from 'next-intl';
 
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -27,6 +38,14 @@ export function AssignmentViewAttempts({
 }: Readonly<AssignmentViewAttemptsProps>) {
   const t = useTranslations();
   const { data: analytics, isLoading } = useAssignmentAnalytics(assignmentId);
+
+  // Filter and sort state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<'student' | 'score' | 'submitted'>(
+    'submitted'
+  );
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   const getStatusBadge = (status: StudentAttempt['status']) => {
     switch (status) {
@@ -76,6 +95,65 @@ export function AssignmentViewAttempts({
     return `${percentage.toFixed(1)}%`;
   };
 
+  // Filter and sort attempts
+  const filteredAndSortedAttempts = useMemo(() => {
+    if (!analytics?.attempts) return [];
+
+    let filtered = analytics.attempts;
+
+    // Filter by search query (student name or email)
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (attempt) =>
+          attempt.studentName.toLowerCase().includes(query) ||
+          attempt.studentEmail.toLowerCase().includes(query)
+      );
+    }
+
+    // Filter by status
+    if (statusFilter !== 'all') {
+      filtered = filtered.filter((attempt) => attempt.status === statusFilter);
+    }
+
+    // Sort
+    const sorted = [...filtered].sort((a, b) => {
+      let comparison = 0;
+
+      switch (sortBy) {
+        case 'student':
+          comparison = a.studentName.localeCompare(b.studentName);
+          break;
+        case 'score':
+          comparison =
+            (a.percentage || 0) - (b.percentage || 0);
+          break;
+        case 'submitted':
+          const aDate = a.submittedAt
+            ? new Date(a.submittedAt).getTime()
+            : 0;
+          const bDate = b.submittedAt
+            ? new Date(b.submittedAt).getTime()
+            : 0;
+          comparison = aDate - bDate;
+          break;
+      }
+
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
+
+    return sorted;
+  }, [analytics?.attempts, searchQuery, statusFilter, sortBy, sortOrder]);
+
+  const toggleSort = (column: 'student' | 'score' | 'submitted') => {
+    if (sortBy === column) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(column);
+      setSortOrder('desc');
+    }
+  };
+
   if (isLoading) {
     return (
       <Card>
@@ -102,23 +180,69 @@ export function AssignmentViewAttempts({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>
-          {t('instructor.assignment.attempts.title', {
-            fallback: 'Student Attempts',
-          })}{' '}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <CardTitle>
+            {t('instructor.assignment.attempts.title', {
+              fallback: 'Student Attempts',
+            })}{' '}
+            {attempts.length > 0 && (
+              <span className="text-muted-foreground font-normal">
+                ({filteredAndSortedAttempts.length}/{attempts.length})
+              </span>
+            )}
+          </CardTitle>
+
           {attempts.length > 0 && (
-            <span className="text-muted-foreground font-normal">
-              ({attempts.length})
-            </span>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Input
+                placeholder={t('instructor.assignment.attempts.search', {
+                  fallback: 'Search students...',
+                })}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full sm:w-64"
+              />
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-full sm:w-40">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">
+                    {t('instructor.assignment.attempts.allStatus', {
+                      fallback: 'All Status',
+                    })}
+                  </SelectItem>
+                  <SelectItem value="IN_PROGRESS">
+                    {t('instructor.assignment.attempt.status.inProgress', {
+                      fallback: 'In Progress',
+                    })}
+                  </SelectItem>
+                  <SelectItem value="SUBMITTED">
+                    {t('instructor.assignment.attempt.status.submitted', {
+                      fallback: 'Submitted',
+                    })}
+                  </SelectItem>
+                  <SelectItem value="GRADED">
+                    {t('instructor.assignment.attempt.status.graded', {
+                      fallback: 'Graded',
+                    })}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           )}
-        </CardTitle>
+        </div>
       </CardHeader>
       <CardContent>
-        {attempts.length === 0 ? (
+        {filteredAndSortedAttempts.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            {t('instructor.assignment.attempts.empty', {
-              fallback: 'No attempts yet',
-            })}
+            {attempts.length === 0
+              ? t('instructor.assignment.attempts.empty', {
+                  fallback: 'No attempts yet',
+                })
+              : t('instructor.assignment.attempts.noResults', {
+                  fallback: 'No attempts match your filters',
+                })}
           </p>
         ) : (
           <div className="rounded-md border">
@@ -126,9 +250,17 @@ export function AssignmentViewAttempts({
               <TableHeader>
                 <TableRow>
                   <TableHead>
-                    {t('instructor.assignment.attempts.student', {
-                      fallback: 'Student',
-                    })}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="-ml-3 h-8"
+                      onClick={() => toggleSort('student')}
+                    >
+                      {t('instructor.assignment.attempts.student', {
+                        fallback: 'Student',
+                      })}
+                      <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
                   </TableHead>
                   <TableHead>
                     {t('instructor.assignment.attempts.attempt', {
@@ -141,9 +273,17 @@ export function AssignmentViewAttempts({
                     })}
                   </TableHead>
                   <TableHead>
-                    {t('instructor.assignment.attempts.score', {
-                      fallback: 'Score',
-                    })}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="-ml-3 h-8"
+                      onClick={() => toggleSort('score')}
+                    >
+                      {t('instructor.assignment.attempts.score', {
+                        fallback: 'Score',
+                      })}
+                      <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
                   </TableHead>
                   <TableHead>
                     {t('instructor.assignment.attempts.percentage', {
@@ -151,14 +291,22 @@ export function AssignmentViewAttempts({
                     })}
                   </TableHead>
                   <TableHead>
-                    {t('instructor.assignment.attempts.submitted', {
-                      fallback: 'Submitted',
-                    })}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="-ml-3 h-8"
+                      onClick={() => toggleSort('submitted')}
+                    >
+                      {t('instructor.assignment.attempts.submitted', {
+                        fallback: 'Submitted',
+                      })}
+                      <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
                   </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {attempts.map((attempt) => (
+                {filteredAndSortedAttempts.map((attempt) => (
                   <TableRow key={attempt.id}>
                     <TableCell>
                       <div>

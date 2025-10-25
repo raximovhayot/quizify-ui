@@ -745,7 +745,10 @@
         "status": "Статус",
         "score": "Балл",
         "percentage": "%",
-        "submitted": "Отправлено"
+        "submitted": "Отправлено",
+        "search": "Поиск студентов...",
+        "allStatus": "Все статусы",
+        "noResults": "Нет попыток, соответствующих фильтрам"
       },
       "attempt": {
         "status": {

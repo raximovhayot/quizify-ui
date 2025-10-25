@@ -759,7 +759,10 @@
         "status": "Holat",
         "score": "Ball",
         "percentage": "%",
-        "submitted": "Yuborildi"
+        "submitted": "Yuborildi",
+        "search": "Talabalarni qidirish...",
+        "allStatus": "Barcha holatlar",
+        "noResults": "Filtrga mos keladigan urinishlar yo'q"
       },
       "attempt": {
         "status": {
