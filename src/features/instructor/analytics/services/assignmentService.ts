@@ -209,7 +209,8 @@ export class AssignmentService {
 
       allAttempts.push(...pageData.content);
 
-      hasMore = !pageData.last;
+      // Determine if there are more pages based on totalPages and current page (0-based)
+      hasMore = page + 1 < pageData.totalPages;
       page++;
 
       // Safety check to prevent infinite loops
