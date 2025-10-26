@@ -4,7 +4,7 @@ import { useParams } from 'next/navigation';
 
 import { AssignmentViewPage } from '@/features/instructor/analytics/components/AssignmentViewPage';
 
-export default function Page() {
+export default function AssignmentAnalyticsPage() {
   const params = useParams();
   const assignmentId = Number(params?.id);
 
