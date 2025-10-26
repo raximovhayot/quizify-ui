@@ -1,13 +1,10 @@
 'use client';
 
-import { AlertCircle, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { AlertCircle, CheckCircle2 } from 'lucide-react';
 
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
 
-import { ROUTES_APP } from '@/features/instructor/routes';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 
 import { QuizDataDTO, QuizStatus } from '../types/quiz';
 
@@ -17,7 +14,6 @@ export interface QuizViewHeaderProps {
 
 export function QuizViewHeader({ quiz }: QuizViewHeaderProps) {
   const t = useTranslations();
-  const router = useRouter();
 
   const getStatusColor = (status: QuizStatus) => {
     switch (status) {
@@ -46,14 +42,6 @@ export function QuizViewHeader({ quiz }: QuizViewHeaderProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3 flex-wrap">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => router.push(ROUTES_APP.quizzes.list())}
-          className="p-2 h-auto shrink-0"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
         <Badge
           variant={getStatusColor(quiz.status)}
           className="flex items-center gap-1.5 text-sm px-3 py-1.5"

@@ -28,7 +28,6 @@ import {
 } from '@/components/ui/table';
 
 import { useAttempts } from '../hooks';
-import { InstructorAttemptSummary } from '../types/attempt';
 
 interface AttemptsTabContentProps {
   assignmentId: number;
@@ -54,7 +53,7 @@ export function AttemptsTabContent({
     sort: `${sortBy},${sortOrder}`,
   });
 
-  const attempts = data?.content || [];
+  const attempts = useMemo(() => data?.content ?? [], [data?.content]);
 
   // Client-side filtering by search
   const filteredAttempts = useMemo(() => {
@@ -139,7 +138,7 @@ export function AttemptsTabContent({
             />
           </div>
 
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v === 'ALL' ? '' : v)}>
             <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue
                 placeholder={t('common.allStatuses', {
@@ -148,7 +147,7 @@ export function AttemptsTabContent({
               />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">
+              <SelectItem value="ALL">
                 {t('common.allStatuses', { fallback: 'All Statuses' })}
               </SelectItem>
               <SelectItem value="IN_PROGRESS">

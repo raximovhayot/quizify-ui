@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  ArrowLeft,
   Calendar,
   CheckCircle2,
   Clock,
@@ -20,7 +19,7 @@ import { useRouter } from 'next/navigation';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { toast } from 'sonner';
 
 import { AssignmentDTO, AssignmentStatus } from '../types/assignment';
@@ -116,16 +115,6 @@ export function AssignmentDetailHeader({
 
   return (
     <div className="space-y-4">
-      {/* Back button */}
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => router.push('/instructor/analytics')}
-        className="gap-2"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        {t('common.back', { fallback: 'Back' })}
-      </Button>
 
       {/* Main header card */}
       <Card>
