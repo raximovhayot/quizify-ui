@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Card, CardContent } from '@/components/ui/card';
@@ -21,6 +22,7 @@ export function AssignmentViewQuestions({
 }: Readonly<AssignmentViewQuestionsProps>) {
   const t = useTranslations();
   const { data: questions, isLoading } = useQuestionAnalytics(assignmentId);
+  const [showAnswers, setShowAnswers] = useState(false);
 
   if (isLoading) {
     return (
@@ -65,11 +67,13 @@ export function AssignmentViewQuestions({
               fallback: '{count} {count, plural, one {question} other {questions}} in this assignment',
             })
           : t('instructor.assignment.questions.empty', { fallback: 'No questions available' })}
+        showAnswers={showAnswers}
+        onToggleShowAnswers={() => setShowAnswers(!showAnswers)}
       />
       
       <QuestionsDisplayList
         questions={displayQuestions}
-        showAnswers={false}
+        showAnswers={showAnswers}
         showOrder={true}
         emptyTitle={t('instructor.assignment.questions.empty', {
           fallback: 'No questions available',
