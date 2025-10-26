@@ -207,13 +207,19 @@ export const QuestionDisplayItem = React.memo(function QuestionDisplayItem({
   );
 }, (prevProps, nextProps) => {
   // Custom comparison for better performance
+  // We compare all props that could affect rendering
   return (
     prevProps.question.id === nextProps.question.id &&
     prevProps.question.content === nextProps.question.content &&
     prevProps.question.order === nextProps.question.order &&
+    prevProps.question.points === nextProps.question.points &&
     prevProps.index === nextProps.index &&
     prevProps.showAnswers === nextProps.showAnswers &&
     prevProps.disableReorder === nextProps.disableReorder &&
-    prevProps.isDragDisabled === nextProps.isDragDisabled
+    prevProps.isDragDisabled === nextProps.isDragDisabled &&
+    prevProps.showOrder === nextProps.showOrder &&
+    prevProps.onEdit === nextProps.onEdit &&
+    prevProps.onDelete === nextProps.onDelete &&
+    prevProps.additionalBadges === nextProps.additionalBadges
   );
 });

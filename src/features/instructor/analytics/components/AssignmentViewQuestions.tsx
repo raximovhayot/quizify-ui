@@ -50,7 +50,6 @@ export function AssignmentViewQuestions({
     order: 0,
     explanation: '',
     answers: [], // Analytics questions don't include options
-    correctAnswer: null,
   }));
 
   return (
@@ -61,7 +60,10 @@ export function AssignmentViewQuestions({
           fallback: 'Questions',
         })}
         subtitle={questionsList.length > 0 
-          ? `${questionsList.length} ${questionsList.length === 1 ? 'question' : 'questions'} in this assignment`
+          ? t('common.questionsInQuiz', {
+              count: questionsList.length,
+              fallback: '{count} {count, plural, one {question} other {questions}} in this assignment',
+            })
           : t('instructor.assignment.questions.empty', { fallback: 'No questions available' })}
       />
       

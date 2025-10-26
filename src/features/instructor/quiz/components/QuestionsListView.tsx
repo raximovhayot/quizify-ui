@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { useResponsive } from '@/components/shared/hooks/useResponsive';
 
 import type { TInstructorQuestionForm } from '../schemas/questionSchema';
 import { QuestionDataDto } from '../types/question';
