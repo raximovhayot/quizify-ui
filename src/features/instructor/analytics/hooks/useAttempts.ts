@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { assignmentKeys } from '../keys';
 import { AssignmentService } from '../services/assignmentService';
@@ -17,7 +17,8 @@ export function useAttempts(
     queryFn: ({ signal }) =>
       AssignmentService.getAttempts(assignmentId, filter, signal),
     enabled: !!assignmentId,
-    staleTime: 30 * 1000, // 30 seconds
-    gcTime: 5 * 60 * 1000, // 5 minutes
+    placeholderData: keepPreviousData,
+    staleTime: 10 * 60 * 1000, // 10 minutes
+    gcTime: 60 * 60 * 1000, // 60 minutes
   });
 }

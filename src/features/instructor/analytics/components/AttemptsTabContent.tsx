@@ -2,15 +2,16 @@
 
 import { format } from 'date-fns';
 import { ArrowUpDown, Search } from 'lucide-react';
-import { useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { AppPagination } from '@/components/shared/ui/AppPagination';
 import {
   Select,
   SelectContent,
@@ -38,13 +39,34 @@ export function AttemptsTabContent({
 }: Readonly<AttemptsTabContentProps>) {
   const t = useTranslations();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('');
-  const [page, setPage] = useState(0);
+
+  const urlPageParam = parseInt(searchParams.get('apage') ?? '1', 10);
+  const initialPage = Number.isFinite(urlPageParam) && urlPageParam > 0 ? urlPageParam - 1 : 0;
+  const [page, setPage] = useState(initialPage);
   const [sortBy, setSortBy] = useState<'studentName' | 'score' | 'startedAt'>(
     'startedAt'
   );
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+
+  const updateSearchParam = (key: string, value?: string) => {
+    const params = new URLSearchParams(searchParams);
+    if (value === undefined || value === '' || value === null) {
+      params.delete(key);
+    } else {
+      params.set(key, value);
+    }
+    const query = params.toString();
+    router.replace(`${pathname}${query ? `?${query}` : ''}`, { scroll: false });
+  };
+
+  const setPageAndUrl = (p: number) => {
+    setPage(p);
+    updateSearchParam('apage', String(p + 1));
+  };
 
   const { data, isLoading } = useAttempts(assignmentId, {
     page,
@@ -52,6 +74,24 @@ export function AttemptsTabContent({
     status: statusFilter || undefined,
     sort: `${sortBy},${sortOrder}`,
   });
+
+  // Sync page from URL (back/forward navigation)
+  useEffect(() => {
+    const ap = parseInt(searchParams.get('apage') ?? '1', 10);
+    const zero = Number.isFinite(ap) && ap > 0 ? ap - 1 : 0;
+    setPage((prev) => (prev !== zero ? zero : prev));
+  }, [searchParams]);
+
+  // Clamp page to available totalPages when data is available
+  useEffect(() => {
+    if (!data) return;
+    const tp = data.totalPages ?? 1;
+    if (tp > 0 && page > tp - 1) {
+      const clamped = tp - 1;
+      setPage(clamped);
+      updateSearchParam('apage', String(clamped + 1));
+    }
+  }, [data, page]);
 
   const attempts = useMemo(() => data?.content ?? [], [data?.content]);
 
@@ -71,7 +111,7 @@ export function AttemptsTabContent({
       setSortBy(column);
       setSortOrder('desc');
     }
-    setPage(0); // Reset to first page
+    setPageAndUrl(0); // Reset to first page
   };
 
   const formatDate = (dateString: string | null) => {
@@ -138,7 +178,13 @@ export function AttemptsTabContent({
             />
           </div>
 
-          <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v === 'ALL' ? '' : v)}>
+          <Select
+            value={statusFilter}
+            onValueChange={(v) => {
+              setStatusFilter(v === 'ALL' ? '' : v);
+              setPageAndUrl(0);
+            }}
+          >
             <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue
                 placeholder={t('common.allStatuses', {
@@ -256,29 +302,13 @@ export function AttemptsTabContent({
 
             {/* Pagination */}
             {data && data.totalPages > 1 && (
-              <div className="flex items-center justify-between mt-4">
-                <div className="text-sm text-muted-foreground">
-                  {t('common.page', { fallback: 'Page' })} {page + 1} {t('common.of', { fallback: 'of' })} {data.totalPages}
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setPage(page - 1)}
-                    disabled={page === 0}
-                  >
-                    {t('common.previous', { fallback: 'Previous' })}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setPage(page + 1)}
-                    disabled={page >= data.totalPages - 1}
-                  >
-                    {t('common.next', { fallback: 'Next' })}
-                  </Button>
-                </div>
-              </div>
+              <AppPagination
+                className="mt-4"
+                currentPage={page}
+                totalPages={data.totalPages}
+                onPageChange={setPageAndUrl}
+                showInfo
+              />
             )}
           </>
         )}

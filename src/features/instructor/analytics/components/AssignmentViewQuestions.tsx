@@ -1,19 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { Card, CardContent } from '@/components/ui/card';
 import { AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { AppPagination } from '@/components/shared/ui/AppPagination';
 
-import { useQuestionAnalytics } from '../hooks';
-import { 
-  QuestionsDisplayList, 
-  QuestionsDisplayHeader 
+import { useAssignmentQuestions } from '../hooks';
+import {
+  QuestionsDisplayList,
+  QuestionsDisplayHeader,
 } from '@/features/instructor/shared/components/questions';
-import { Badge } from '@/components/ui/badge';
-import { QuestionType } from '@/features/instructor/quiz/types/question';
 
 interface AssignmentViewQuestionsProps {
   assignmentId: number;
@@ -23,8 +23,44 @@ export function AssignmentViewQuestions({
   assignmentId,
 }: Readonly<AssignmentViewQuestionsProps>) {
   const t = useTranslations();
-  const { data: questions, isLoading, error, refetch } = useQuestionAnalytics(assignmentId);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  const urlPageParam = parseInt(searchParams.get('qpage') ?? '1', 10);
+  const initialPage = Number.isFinite(urlPageParam) && urlPageParam > 0 ? urlPageParam - 1 : 0;
+  const [page, setPage] = useState(initialPage);
+  const { data, isLoading, error, refetch } = useAssignmentQuestions(assignmentId, page, 10);
   const [showAnswers, setShowAnswers] = useState(false);
+
+  const updateSearchParam = (key: string, value?: string) => {
+    const params = new URLSearchParams(searchParams);
+    if (value === undefined || value === '' || value === null) {
+      params.delete(key);
+    } else {
+      params.set(key, value);
+    }
+    const query = params.toString();
+    router.replace(`${pathname}${query ? `?${query}` : ''}`, { scroll: false });
+  };
+
+  // Sync from URL (back/forward navigation)
+  useEffect(() => {
+    const qp = parseInt(searchParams.get('qpage') ?? '1', 10);
+    const zero = Number.isFinite(qp) && qp > 0 ? qp - 1 : 0;
+    setPage((prev) => (prev !== zero ? zero : prev));
+  }, [searchParams]);
+
+  // Clamp page when data loads and page is out of range
+  useEffect(() => {
+    if (!data) return;
+    const tp = data.totalPages ?? 1;
+    if (tp > 0 && page > tp - 1) {
+      const clamped = tp - 1;
+      setPage(clamped);
+      updateSearchParam('qpage', String(clamped + 1));
+    }
+  }, [data, page]);
 
   if (isLoading) {
     return (
@@ -68,32 +104,31 @@ export function AssignmentViewQuestions({
     );
   }
 
-  const questionsList = questions || [];
+  const questionsList = data?.content ?? [];
+  const total = data?.totalElements ?? 0;
+  const totalPages = data?.totalPages ?? 1;
 
-  // Convert analytics questions to QuestionDataDto format
-  const displayQuestions = questionsList.map((q) => ({
-    id: q.questionId,
+  // Map QuestionDataDto items directly for display
+  const displayQuestions = questionsList.map((q, idx) => ({
+    id: q.id,
     quizId: 0, // Not needed for display
-    content: q.questionText,
-    questionType: q.questionType as QuestionType,
+    content: q.content,
+    questionType: q.questionType,
     points: q.points,
-    order: 0,
-    explanation: '',
-    answers: [], // Analytics questions don't include options
+    order: q.order ?? idx,
+    explanation: q.explanation ?? '',
+    answers: q.answers ?? [],
   }));
 
   return (
     <div className="space-y-6">
       <QuestionsDisplayHeader
-        count={questionsList.length}
+        count={total}
         title={t('instructor.assignment.questions.title', {
           fallback: 'Questions',
         })}
-        subtitle={questionsList.length > 0 
-          ? t('common.questionsInQuiz', {
-              count: questionsList.length,
-              fallback: '{count} {count, plural, one {question} other {questions}} in this assignment',
-            })
+        subtitle={total > 0
+          ? `${t('common.page', { fallback: 'Page' })} ${page + 1} ${t('common.of', { fallback: 'of' })} ${totalPages}`
           : t('instructor.assignment.questions.empty', { fallback: 'No questions available' })}
         showAnswers={showAnswers}
         onToggleShowAnswers={() => setShowAnswers(!showAnswers)}
@@ -107,31 +142,21 @@ export function AssignmentViewQuestions({
           fallback: 'No questions available',
         })}
         emptyDescription=""
-        renderAdditionalBadges={(question, index) => {
-          const analyticsData = questionsList[index];
-          if (!analyticsData) return null;
-          
-          return (
-            <Badge
-              variant="secondary"
-              className={`text-xs font-medium ${
-                analyticsData.correctPercentage >= 70
-                  ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800'
-                  : analyticsData.correctPercentage >= 40
-                    ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800'
-                    : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-800'
-              }`}
-              title={t('instructor.assignment.questions.correctRate', {
-                fallback: 'Correct %',
-              })}
-            >
-              {analyticsData.correctPercentage.toFixed(1)}% {t('instructor.assignment.questions.correctRate', {
-                fallback: 'Correct',
-              })}
-            </Badge>
-          );
-        }}
       />
+
+      {/* Pagination */}
+      {data && data.totalPages > 1 && (
+        <AppPagination
+          className="mt-2"
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={(p) => {
+            setPage(p);
+            updateSearchParam('qpage', String(p + 1));
+          }}
+          showInfo
+        />
+      )}
     </div>
   );
 }

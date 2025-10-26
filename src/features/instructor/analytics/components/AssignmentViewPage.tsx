@@ -1,10 +1,10 @@
 'use client';
 
 import { FileText } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { ContentPlaceholder } from '@/components/shared/ui/ContentPlaceholder';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -25,8 +25,30 @@ export function AssignmentViewPage({
 }: Readonly<AssignmentViewPageProps>) {
   const t = useTranslations();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
   const { data: assignment, isLoading, error } = useAssignment(assignmentId);
-  const [activeTab, setActiveTab] = useState('attempts');
+
+  const tabParam = searchParams.get('tab');
+  const initialTab = tabParam === 'questions' ? 'questions' : 'attempts';
+  const [activeTab, setActiveTab] = useState(initialTab);
+
+  const updateSearchParam = (key: string, value?: string) => {
+    const params = new URLSearchParams(searchParams);
+    if (value === undefined || value === '' || value === null) {
+      params.delete(key);
+    } else {
+      params.set(key, value);
+    }
+    const query = params.toString();
+    router.replace(`${pathname}${query ? `?${query}` : ''}` , { scroll: false });
+  };
+
+  useEffect(() => {
+    const tp = searchParams.get('tab');
+    const normalized = tp === 'questions' ? 'questions' : 'attempts';
+    setActiveTab((prev) => (prev !== normalized ? normalized : prev));
+  }, [searchParams]);
 
   if (isLoading) {
     return <AssignmentViewSkeleton />;
@@ -72,7 +94,14 @@ export function AssignmentViewPage({
 
             {/* Main content (Tabs) - main content on desktop, last on mobile */}
             <div className="order-2 lg:order-1 lg:col-span-2">
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <Tabs
+                value={activeTab}
+                onValueChange={(val) => {
+                  setActiveTab(val);
+                  updateSearchParam('tab', val);
+                }}
+                className="w-full"
+              >
                 <TabsList className="grid w-full max-w-md grid-cols-2">
                   <TabsTrigger value="attempts">
                     {t('instructor.analytics.attempts.title', { fallback: 'Attempts' })}
