@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Card, CardContent } from '@/components/ui/card';
+import { AlertTriangle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 import { useQuestionAnalytics } from '../hooks';
 import { 
@@ -21,7 +23,7 @@ export function AssignmentViewQuestions({
   assignmentId,
 }: Readonly<AssignmentViewQuestionsProps>) {
   const t = useTranslations();
-  const { data: questions, isLoading } = useQuestionAnalytics(assignmentId);
+  const { data: questions, isLoading, error, refetch } = useQuestionAnalytics(assignmentId);
   const [showAnswers, setShowAnswers] = useState(false);
 
   if (isLoading) {
@@ -34,6 +36,32 @@ export function AssignmentViewQuestions({
                 fallback: 'Loading questions...',
               })}
             </p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card>
+        <CardContent className="py-12">
+          <div className="flex flex-col items-center justify-center text-center space-y-3">
+            <AlertTriangle className="h-12 w-12 text-destructive mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">
+              {t('common.error.title', {
+                fallback: 'Something went wrong',
+              })}
+            </h3>
+            <p className="text-muted-foreground mb-4">
+              {t('common.error.description', {
+                fallback:
+                  'There was a problem loading the data. Please try again.',
+              })}
+            </p>
+            <Button onClick={() => refetch()}>
+              {t('common.retry', { fallback: 'Try Again' })}
+            </Button>
           </div>
         </CardContent>
       </Card>

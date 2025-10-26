@@ -201,7 +201,8 @@
     "questionAnalytics": "Аналитика вопросов",
     "questionAnalyticsNotAvailable": "Аналитика вопросов пока недоступна. Эта функция будет добавлена в будущем обновлении.",
     "backToList": "Вернуться к списку",
-    "statusLabel": "Статус"
+    "statusLabel": "Статус",
+    "noAttempts": "Попыток пока нет"
   },
   "auth": {
     "signIn": {

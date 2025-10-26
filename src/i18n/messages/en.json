@@ -201,7 +201,8 @@
     "questionAnalytics": "Question Analytics",
     "questionAnalyticsNotAvailable": "Question analytics are not available yet. This feature will be added in a future update.",
     "backToList": "Back to List",
-    "statusLabel": "Status"
+    "statusLabel": "Status",
+    "noAttempts": "No attempts yet"
   },
   "auth": {
     "signIn": {

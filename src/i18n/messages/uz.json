@@ -201,7 +201,8 @@
     "questionAnalytics": "Savol analitikasi",
     "questionAnalyticsNotAvailable": "Savol analitikasi hozircha mavjud emas. Bu xususiyat keyingi yangilanishda qo'shiladi.",
     "backToList": "Ro'yxatga qaytish",
-    "statusLabel": "Holat"
+    "statusLabel": "Holat",
+    "noAttempts": "Hali urinishlar yo'q"
   },
   "auth": {
     "signIn": {
