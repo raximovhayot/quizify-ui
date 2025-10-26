@@ -1,11 +1,13 @@
 'use client';
 
 import { FileText } from 'lucide-react';
+import { useState } from 'react';
 
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
 import { ContentPlaceholder } from '@/components/shared/ui/ContentPlaceholder';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import { useAssignment } from '../hooks';
 import { AssignmentViewConfiguration } from './AssignmentViewConfiguration';
@@ -24,6 +26,7 @@ export function AssignmentViewPage({
   const t = useTranslations();
   const router = useRouter();
   const { data: assignment, isLoading, error } = useAssignment(assignmentId);
+  const [activeTab, setActiveTab] = useState('attempts');
 
   if (isLoading) {
     return <AssignmentViewSkeleton />;
@@ -67,20 +70,26 @@ export function AssignmentViewPage({
               <AssignmentViewConfiguration assignment={assignment} />
             </div>
 
-            {/* Main content (Attempts and Questions) - main content on desktop, last on mobile */}
-            <div className="order-2 lg:order-1 lg:col-span-2 space-y-6">
-              {/* Attempts */}
-              <div>
-                <h2 className="text-xl font-semibold mb-4">
-                  {t('instructor.analytics.attempts.title', { fallback: 'Attempts' })}
-                </h2>
-                <AttemptsTabContent assignmentId={assignmentId} />
-              </div>
+            {/* Main content (Tabs) - main content on desktop, last on mobile */}
+            <div className="order-2 lg:order-1 lg:col-span-2">
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                <TabsList className="grid w-full max-w-md grid-cols-2">
+                  <TabsTrigger value="attempts">
+                    {t('instructor.analytics.attempts.title', { fallback: 'Attempts' })}
+                  </TabsTrigger>
+                  <TabsTrigger value="questions">
+                    {t('common.questions', { fallback: 'Questions' })}
+                  </TabsTrigger>
+                </TabsList>
 
-              {/* Questions */}
-              <div>
-                <QuestionsTabContent assignmentId={assignmentId} />
-              </div>
+                <TabsContent value="attempts" className="mt-6">
+                  <AttemptsTabContent assignmentId={assignmentId} />
+                </TabsContent>
+
+                <TabsContent value="questions" className="mt-6">
+                  <QuestionsTabContent assignmentId={assignmentId} />
+                </TabsContent>
+              </Tabs>
             </div>
           </div>
         </div>
