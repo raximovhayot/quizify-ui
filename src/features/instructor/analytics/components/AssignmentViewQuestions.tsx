@@ -2,18 +2,15 @@
 
 import { useTranslations } from 'next-intl';
 
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Card, CardContent } from '@/components/ui/card';
 
 import { useQuestionAnalytics } from '../hooks';
+import { 
+  QuestionsDisplayList, 
+  QuestionsDisplayHeader 
+} from '@/features/instructor/shared/components/questions';
+import { Badge } from '@/components/ui/badge';
+import { QuestionType } from '@/features/instructor/quiz/types/question';
 
 interface AssignmentViewQuestionsProps {
   assignmentId: number;
@@ -28,19 +25,14 @@ export function AssignmentViewQuestions({
   if (isLoading) {
     return (
       <Card>
-        <CardHeader>
-          <CardTitle>
-            {t('instructor.assignment.questions.title', {
-              fallback: 'Questions',
-            })}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            {t('instructor.assignment.questions.loading', {
-              fallback: 'Loading questions...',
-            })}
-          </p>
+        <CardContent className="py-12">
+          <div className="flex flex-col items-center justify-center text-center space-y-3">
+            <p className="text-sm text-muted-foreground">
+              {t('instructor.assignment.questions.loading', {
+                fallback: 'Loading questions...',
+              })}
+            </p>
+          </div>
         </CardContent>
       </Card>
     );
@@ -48,93 +40,64 @@ export function AssignmentViewQuestions({
 
   const questionsList = questions || [];
 
+  // Convert analytics questions to QuestionDataDto format
+  const displayQuestions = questionsList.map((q) => ({
+    id: q.questionId,
+    quizId: 0, // Not needed for display
+    content: q.questionText,
+    questionType: q.questionType as QuestionType,
+    points: q.points,
+    order: 0,
+    explanation: '',
+    answers: [], // Analytics questions don't include options
+    correctAnswer: null,
+  }));
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          {t('instructor.assignment.questions.title', {
-            fallback: 'Questions',
-          })}{' '}
-          {questionsList.length > 0 && (
-            <span className="text-muted-foreground font-normal">
-              ({questionsList.length})
-            </span>
-          )}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {questionsList.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
-            {t('instructor.assignment.questions.empty', {
-              fallback: 'No questions available',
-            })}
-          </p>
-        ) : (
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-12">#</TableHead>
-                  <TableHead>
-                    {t('instructor.assignment.questions.question', {
-                      fallback: 'Question',
-                    })}
-                  </TableHead>
-                  <TableHead>
-                    {t('instructor.assignment.questions.type', {
-                      fallback: 'Type',
-                    })}
-                  </TableHead>
-                  <TableHead className="text-right">
-                    {t('instructor.assignment.questions.points', {
-                      fallback: 'Points',
-                    })}
-                  </TableHead>
-                  <TableHead className="text-right">
-                    {t('instructor.assignment.questions.correctRate', {
-                      fallback: 'Correct %',
-                    })}
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {questionsList.map((question, index) => (
-                  <TableRow key={question.questionId}>
-                    <TableCell className="font-medium">{index + 1}</TableCell>
-                    <TableCell>
-                      <div
-                        className="line-clamp-2"
-                        dangerouslySetInnerHTML={{
-                          __html: question.questionText,
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline">{question.questionType}</Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {question.points}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <span
-                        className={
-                          question.correctPercentage >= 70
-                            ? 'text-green-600 font-medium'
-                            : question.correctPercentage >= 40
-                              ? 'text-yellow-600 font-medium'
-                              : 'text-red-600 font-medium'
-                        }
-                      >
-                        {question.correctPercentage.toFixed(1)}%
-                      </span>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+    <div className="space-y-6">
+      <QuestionsDisplayHeader
+        count={questionsList.length}
+        title={t('instructor.assignment.questions.title', {
+          fallback: 'Questions',
+        })}
+        subtitle={questionsList.length > 0 
+          ? `${questionsList.length} ${questionsList.length === 1 ? 'question' : 'questions'} in this assignment`
+          : t('instructor.assignment.questions.empty', { fallback: 'No questions available' })}
+      />
+      
+      <QuestionsDisplayList
+        questions={displayQuestions}
+        showAnswers={false}
+        showOrder={true}
+        emptyTitle={t('instructor.assignment.questions.empty', {
+          fallback: 'No questions available',
+        })}
+        emptyDescription=""
+        renderAdditionalBadges={(question, index) => {
+          const analyticsData = questionsList[index];
+          if (!analyticsData) return null;
+          
+          return (
+            <Badge
+              variant="secondary"
+              className={`text-xs font-medium ${
+                analyticsData.correctPercentage >= 70
+                  ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800'
+                  : analyticsData.correctPercentage >= 40
+                    ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800'
+                    : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-800'
+              }`}
+              title={t('instructor.assignment.questions.correctRate', {
+                fallback: 'Correct %',
+              })}
+            >
+              {analyticsData.correctPercentage.toFixed(1)}% {t('instructor.assignment.questions.correctRate', {
+                fallback: 'Correct',
+              })}
+            </Badge>
+          );
+        }}
+      />
+    </div>
   );
 }
