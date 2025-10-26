@@ -736,7 +736,11 @@
         "timeSpent": "har bir urinish uchun",
         "completedAttempts": "Yakunlangan",
         "inProgress": "Jarayonda"
-      }
+      },
+      "row": {
+        "aria": "Topshiriqni ochish {title}"
+      },
+      "untitled": "Nomsiz"
     },
     "assignment": {
       "defaultSuffix": "Topshiriq",

@@ -718,7 +718,11 @@
         "timeSpent": "per attempt",
         "completedAttempts": "Completed",
         "inProgress": "In Progress"
-      }
+      },
+      "row": {
+        "aria": "Open assignment {title}"
+      },
+      "untitled": "Untitled"
     },
     "assignment": {
       "defaultSuffix": "Assignment",
