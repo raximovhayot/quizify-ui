@@ -28,7 +28,11 @@
     "yes": "Ha",
     "no": "Yo'q",
     "all": "Barchasi",
-    "status": "Holat",
+    "status": {
+      "active": "Faol",
+      "finished": "Tugagan",
+      "draft": "Qoralama"
+    },
     "add": "Qo'shish",
     "remove": "O'chirish",
     "up": "Yuqoriga",
@@ -167,7 +171,37 @@
       "noTimeLimit": "0 means no time limit",
       "resultsAfterDeadline": "Results shown after assignment deadline",
       "resultDetailsInfo": "What information students can see"
-    }
+    },
+    "back": "Orqaga",
+    "copy": "Nusxalash",
+    "copied": "Nusxa olindi",
+    "comingSoon": "Tez kunda",
+    "startNow": "Hozir boshlash",
+    "endNow": "Hozir tugatish",
+    "accessCode": "Kirish kodi",
+    "timeLimit": "Vaqt cheklovi",
+    "maxAttempts": "Maks. urinishlar",
+    "shuffle": "Aralashtirish",
+    "questionsAndAnswers": "Savollar va javoblar",
+    "questionsOnly": "Faqat savollar",
+    "answersOnly": "Faqat javoblar",
+    "none": "Yo'q",
+    "graded": "Baholangan",
+    "submitted": "Topshirilgan",
+    "inProgress": "Jarayonda",
+    "searchByStudent": "Talaba nomi bo'yicha qidirish...",
+    "allStatuses": "Barcha statuslar",
+    "student": "Talaba",
+    "score": "Ball",
+    "duration": "Davomiyligi",
+    "page": "Sahifa",
+    "of": "dan",
+    "previous": "Oldingi",
+    "next": "Keyingi",
+    "questionAnalytics": "Savol analitikasi",
+    "questionAnalyticsNotAvailable": "Savol analitikasi hozircha mavjud emas. Bu xususiyat keyingi yangilanishda qo'shiladi.",
+    "backToList": "Ro'yxatga qaytish",
+    "statusLabel": "Holat"
   },
   "auth": {
     "signIn": {
@@ -653,7 +687,11 @@
       "averageScore": "O'rtacha ball",
       "inProgress": "Jarayonda",
       "quiz": "Test",
-      "export": "CSV eksport qilish",
+      "export": {
+        "success": "Tahlil muvaffaqiyatli eksport qilindi",
+        "error": "Tahlilni eksport qilishda xatolik",
+        "noData": "Eksport qilish uchun ma'lumot yo'q"
+      },
       "exportSuccess": "Analitika muvaffaqiyatli eksport qilindi",
       "exportError": "Analitikani eksport qilishda xatolik",
       "scoreRange": "Ball oralig'i",
@@ -681,10 +719,24 @@
       "noQuestionData": "Savollar ma'lumotlari mavjud emas",
       "question": "Savol",
       "type": "Tur",
-      "attempts": "Urinishlar",
+      "attempts": {
+        "title": "Urinishlar"
+      },
       "correctRate": "To'g'ri %",
       "distribution": "Taqsimot",
-      "questionNumber": "S{{number}}"
+      "questionNumber": "S{{number}}",
+      "overview": {
+        "totalRegistrations": "Jami ro'yxatdan o'tganlar",
+        "studentsEnrolled": "talabalar ro'yxatdan o'tgan",
+        "totalAttempts": "Jami urinishlar",
+        "attemptsSubmitted": "urinishlar yuborildi",
+        "averageScore": "O'rtacha ball",
+        "range": "Oraliq",
+        "averageTime": "O'rtacha vaqt",
+        "timeSpent": "har bir urinish uchun",
+        "completedAttempts": "Yakunlangan",
+        "inProgress": "Jarayonda"
+      }
     },
     "assignment": {
       "defaultSuffix": "Topshiriq",
@@ -725,6 +777,51 @@
           "onlyCorrect": "Faqat to‘g‘ri javoblar",
           "full": "To‘liq tafsilotlar"
         }
+      },
+      "view": {
+        "title": "Topshiriq tafsilotlari",
+        "backToList": "Topshiriqlarga qaytish",
+        "error": {
+          "title": "Topshiriq topilmadi",
+          "description": "Siz qidirayotgan topshiriq mavjud emas yoki o'chirilgan."
+        }
+      },
+      "attempts": {
+        "title": "Talabalar urinishlari",
+        "loading": "Urinishlar yuklanmoqda...",
+        "empty": "Hozircha urinishlar yo'q",
+        "student": "Talaba",
+        "attempt": "Urinish",
+        "status": "Holat",
+        "score": "Ball",
+        "percentage": "%",
+        "submitted": "Yuborildi",
+        "search": "Talabalarni qidirish...",
+        "allStatus": "Barcha holatlar",
+        "noResults": "Filtrga mos keladigan urinishlar yo'q"
+      },
+      "attempt": {
+        "status": {
+          "graded": "Baholangan",
+          "submitted": "Yuborildi",
+          "inProgress": "Jarayonda"
+        }
+      },
+      "questions": {
+        "title": "Savollar",
+        "loading": "Savollar yuklanmoqda...",
+        "empty": "Savollar mavjud emas",
+        "question": "Savol",
+        "type": "Turi",
+        "points": "Ballar",
+        "correctRate": "To'g'ri %"
+      },
+      "actions": {
+        "title": "Harakatlar",
+        "grade": "Insho baholash",
+        "exportAttempts": "Urinishlarni eksport qilish (CSV)",
+        "exportQuestions": "Savollarni eksport qilish (CSV)",
+        "editSettings": "Sozlamalarni tahrirlash"
       }
     },
     "grading": {
@@ -757,6 +854,29 @@
       "regrade": "Qayta baholash",
       "totalEssayQuestions": "Insho savollari",
       "totalAnswers": "Jami javoblar"
+    },
+    "attempt": {
+      "detail": {
+        "title": "Urinish tafsilotlari",
+        "student": "Talaba",
+        "attemptNumber": "Urinish №{number}",
+        "score": "Ball",
+        "notGraded": "Baholanmagan",
+        "duration": "Davomiyligi",
+        "timeSpent": "Sarflangan vaqt",
+        "submitted": "Yuborildi",
+        "started": "Boshlandi",
+        "questions": {
+          "title": "Savol natijalari",
+          "question": "Savol {number}",
+          "points": "ballar",
+          "graderComment": "Baholovchining izohi:"
+        },
+        "error": {
+          "title": "Urinish topilmadi",
+          "description": "Siz qidirayotgan urinish mavjud emas yoki o'chirilgan."
+        }
+      }
     }
   },
   "student": {

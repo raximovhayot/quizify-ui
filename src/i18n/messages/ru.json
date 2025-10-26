@@ -28,7 +28,11 @@
     "yes": "Да",
     "no": "Нет",
     "all": "Все",
-    "status": "Статус",
+    "status": {
+      "active": "Активно",
+      "finished": "Завершено",
+      "draft": "Черновик"
+    },
     "add": "Добавить",
     "remove": "Удалить",
     "up": "Вверх",
@@ -167,7 +171,37 @@
       "noTimeLimit": "0 means no time limit",
       "resultsAfterDeadline": "Results shown after assignment deadline",
       "resultDetailsInfo": "What information students can see"
-    }
+    },
+    "back": "Назад",
+    "copy": "Копировать",
+    "copied": "Скопировано в буфер обмена",
+    "comingSoon": "Скоро",
+    "startNow": "Начать сейчас",
+    "endNow": "Завершить сейчас",
+    "accessCode": "Код доступа",
+    "timeLimit": "Ограничение времени",
+    "maxAttempts": "Макс. попыток",
+    "shuffle": "Перемешивание",
+    "questionsAndAnswers": "Вопросы и ответы",
+    "questionsOnly": "Только вопросы",
+    "answersOnly": "Только ответы",
+    "none": "Нет",
+    "graded": "Оценено",
+    "submitted": "Отправлено",
+    "inProgress": "В процессе",
+    "searchByStudent": "Поиск по имени студента...",
+    "allStatuses": "Все статусы",
+    "student": "Студент",
+    "score": "Баллы",
+    "duration": "Продолжительность",
+    "page": "Страница",
+    "of": "из",
+    "previous": "Предыдущая",
+    "next": "Следующая",
+    "questionAnalytics": "Аналитика вопросов",
+    "questionAnalyticsNotAvailable": "Аналитика вопросов пока недоступна. Эта функция будет добавлена в будущем обновлении.",
+    "backToList": "Вернуться к списку",
+    "statusLabel": "Статус"
   },
   "auth": {
     "signIn": {
@@ -639,7 +673,11 @@
       "averageScore": "Средний балл",
       "inProgress": "В процессе",
       "quiz": "Тест",
-      "export": "Экспорт CSV",
+      "export": {
+        "success": "Аналитика успешно экспортирована",
+        "error": "Не удалось экспортировать аналитику",
+        "noData": "Нет данных для экспорта"
+      },
       "exportSuccess": "Аналитика экспортирована успешно",
       "exportError": "Не удалось экспортировать аналитику",
       "scoreRange": "Диапазон баллов",
@@ -667,10 +705,24 @@
       "noQuestionData": "Данные по вопросам недоступны",
       "question": "Вопрос",
       "type": "Тип",
-      "attempts": "Попытки",
+      "attempts": {
+        "title": "Попытки"
+      },
       "correctRate": "Правильно %",
       "distribution": "Распределение",
-      "questionNumber": "В{{number}}"
+      "questionNumber": "В{{number}}",
+      "overview": {
+        "totalRegistrations": "Всего регистраций",
+        "studentsEnrolled": "студентов записано",
+        "totalAttempts": "Всего попыток",
+        "attemptsSubmitted": "попыток отправлено",
+        "averageScore": "Средний балл",
+        "range": "Диапазон",
+        "averageTime": "Среднее время",
+        "timeSpent": "на попытку",
+        "completedAttempts": "Завершено",
+        "inProgress": "В процессе"
+      }
     },
     "assignment": {
       "defaultSuffix": "Задание",
@@ -711,6 +763,51 @@
           "onlyCorrect": "Только правильные ответы",
           "full": "Полные детали"
         }
+      },
+      "view": {
+        "title": "Детали задания",
+        "backToList": "Вернуться к заданиям",
+        "error": {
+          "title": "Задание не найдено",
+          "description": "Задание, которое вы ищете, не существует или было удалено."
+        }
+      },
+      "attempts": {
+        "title": "Попытки студентов",
+        "loading": "Загрузка попыток...",
+        "empty": "Пока нет попыток",
+        "student": "Студент",
+        "attempt": "Попытка",
+        "status": "Статус",
+        "score": "Балл",
+        "percentage": "%",
+        "submitted": "Отправлено",
+        "search": "Поиск студентов...",
+        "allStatus": "Все статусы",
+        "noResults": "Нет попыток, соответствующих фильтрам"
+      },
+      "attempt": {
+        "status": {
+          "graded": "Оценено",
+          "submitted": "Отправлено",
+          "inProgress": "В процессе"
+        }
+      },
+      "questions": {
+        "title": "Вопросы",
+        "loading": "Загрузка вопросов...",
+        "empty": "Нет доступных вопросов",
+        "question": "Вопрос",
+        "type": "Тип",
+        "points": "Баллы",
+        "correctRate": "Правильных %"
+      },
+      "actions": {
+        "title": "Действия",
+        "grade": "Оценить эссе",
+        "exportAttempts": "Экспортировать попытки (CSV)",
+        "exportQuestions": "Экспортировать вопросы (CSV)",
+        "editSettings": "Редактировать настройки"
       }
     },
     "grading": {
@@ -743,6 +840,29 @@
       "regrade": "Переоценить",
       "totalEssayQuestions": "Вопросы эссе",
       "totalAnswers": "Всего ответов"
+    },
+    "attempt": {
+      "detail": {
+        "title": "Детали попытки",
+        "student": "Студент",
+        "attemptNumber": "Попытка №{number}",
+        "score": "Балл",
+        "notGraded": "Не оценено",
+        "duration": "Длительность",
+        "timeSpent": "Затраченное время",
+        "submitted": "Отправлено",
+        "started": "Начато",
+        "questions": {
+          "title": "Результаты вопросов",
+          "question": "Вопрос {number}",
+          "points": "баллы",
+          "graderComment": "Комментарий оценивающего:"
+        },
+        "error": {
+          "title": "Попытка не найдена",
+          "description": "Попытка, которую вы ищете, не существует или была удалена."
+        }
+      }
     }
   },
   "student": {

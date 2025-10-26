@@ -2,14 +2,19 @@ import { apiClient } from '@/lib/api';
 import { IApiResponse, extractApiData } from '@/types/api';
 import { IPageableList } from '@/types/common';
 
-import {
-  studentRegistrationSchema,
-} from '../schemas/analyticsSchema';
+import { studentRegistrationSchema } from '../schemas/analyticsSchema';
 import {
   assignmentDataDTOSchema,
   assignmentListResponseSchema,
 } from '../schemas/assignmentSchema';
 import {
+  attemptSummaryListResponseSchema,
+  instructorAttemptDetailSchema,
+} from '../schemas/attemptSchema';
+import { computeAnalyticsFromAttempts } from '../lib/analyticsCompute';
+import {
+  AssignmentAnalytics,
+  QuestionAnalytics,
   StudentRegistration,
 } from '../types/analytics';
 import {
@@ -17,6 +22,11 @@ import {
   AssignmentDTO,
   AssignmentFilter,
 } from '../types/assignment';
+import {
+  InstructorAttemptDetail,
+  InstructorAttemptFilter,
+  InstructorAttemptSummary,
+} from '../types/attempt';
 
 /**
  * AssignmentService - Handles assignment-related operations for instructors
@@ -136,5 +146,149 @@ export class AssignmentService {
     );
     const data = extractApiData(response);
     return studentRegistrationSchema.array().parse(data);
+  }
+
+  /**
+   * Get instructor attempt summaries for an assignment
+   * Uses backend endpoint: GET /instructor/assignments/:assignmentId/attempts
+   *
+   * @param assignmentId - ID of the assignment
+   * @param filter - Filter parameters for attempts
+   * @param signal - AbortSignal for request cancellation
+   * @returns Promise resolving to pageable list of attempt summaries
+   */
+  static async getAttempts(
+    assignmentId: number,
+    filter: InstructorAttemptFilter = {},
+    signal?: AbortSignal
+  ): Promise<IPageableList<InstructorAttemptSummary>> {
+    const response: IApiResponse<IPageableList<InstructorAttemptSummary>> =
+      await apiClient.get(`/instructor/assignments/:assignmentId/attempts`, {
+        signal,
+        params: { assignmentId },
+        query: {
+          status: filter.status,
+          studentId: filter.studentId,
+          startedFrom: filter.startedFrom,
+          startedTo: filter.startedTo,
+          attemptNumber: filter.attemptNumber,
+          minScore: filter.minScore,
+          maxScore: filter.maxScore,
+          page: filter.page,
+          size: filter.size,
+          sort: filter.sort,
+        },
+      });
+    const data = extractApiData(response);
+    return attemptSummaryListResponseSchema.parse(data);
+  }
+
+  /**
+   * Get all attempts for an assignment (fetches all pages)
+   * Used for computing analytics client-side
+   *
+   * @param assignmentId - ID of the assignment
+   * @param signal - AbortSignal for request cancellation
+   * @returns Promise resolving to array of all attempt summaries
+   */
+  static async getAllAttempts(
+    assignmentId: number,
+    signal?: AbortSignal
+  ): Promise<InstructorAttemptSummary[]> {
+    const allAttempts: InstructorAttemptSummary[] = [];
+    let page = 0;
+    const size = 100; // Fetch in chunks of 100
+    let hasMore = true;
+
+    while (hasMore) {
+      const pageData = await this.getAttempts(
+        assignmentId,
+        { page, size },
+        signal
+      );
+
+      allAttempts.push(...pageData.content);
+
+      // Determine if there are more pages based on totalPages and current page (0-based)
+      hasMore = page + 1 < pageData.totalPages;
+      page++;
+
+      // Safety check to prevent infinite loops
+      if (page > 100) {
+        // Reached maximum page limit when fetching attempts
+        break;
+      }
+    }
+
+    return allAttempts;
+  }
+
+  /**
+   * Get analytics overview for an assignment
+   * Computes analytics from attempts fetched from backend
+   *
+   * @param assignmentId - ID of the assignment
+   * @param signal - AbortSignal for request cancellation
+   * @returns Promise resolving to assignment analytics data
+   */
+  static async getAssignmentAnalytics(
+    assignmentId: number,
+    signal?: AbortSignal
+  ): Promise<AssignmentAnalytics> {
+    // Fetch assignment details and all attempts in parallel
+    const [assignment, attempts] = await Promise.all([
+      this.getAssignment(assignmentId, signal),
+      this.getAllAttempts(assignmentId, signal),
+    ]);
+
+    // Compute analytics from attempts
+    return computeAnalyticsFromAttempts(assignment, attempts);
+  }
+
+  /**
+   * Get question-level analytics for an assignment
+   * Note: This requires detailed attempt data which is not available in summary
+   * Returns empty array for now - would need individual attempt details
+   *
+   * @param _assignmentId - ID of the assignment (unused, reserved for future use)
+   * @param _signal - AbortSignal for request cancellation (unused, reserved for future use)
+   * @returns Promise resolving to array of question analytics
+   */
+  static async getQuestionAnalytics(
+    _assignmentId: number,
+    _signal?: AbortSignal
+  ): Promise<QuestionAnalytics[]> {
+    // Question analytics requires detailed answer data from each attempt
+    // The summary endpoint doesn't provide this information
+    // Would need to fetch detailed data for each attempt which could be expensive
+    // For now, return empty array
+    // TODO: Implement by fetching individual attempt details if needed
+    return [];
+  }
+
+  /**
+   * Get detailed attempt information
+   * Uses backend endpoint: GET /instructor/assignments/:assignmentId/attempts/:attemptId
+   *
+   * @param assignmentId - ID of the assignment
+   * @param attemptId - ID of the attempt
+   * @param signal - AbortSignal for request cancellation
+   * @returns Promise resolving to detailed attempt information
+   */
+  static async getAttemptDetail(
+    assignmentId: number,
+    attemptId: number,
+    signal?: AbortSignal
+  ): Promise<InstructorAttemptDetail> {
+    const response: IApiResponse<InstructorAttemptDetail> =
+      await apiClient.get(
+        `/instructor/assignments/:assignmentId/attempts/:attemptId`,
+        {
+          signal,
+          params: { assignmentId, attemptId },
+        }
+      );
+    const data = extractApiData(response);
+    return instructorAttemptDetailSchema.parse(data);
   }
 }
