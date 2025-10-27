@@ -68,12 +68,15 @@ export function AttemptsTabContent({
     updateSearchParam('apage', String(p + 1));
   };
 
-  const { data, isLoading } = useAttempts(assignmentId, {
+  // Memoize filter to prevent unnecessary refetches
+  const filter = useMemo(() => ({
     page,
     size: 20,
     status: statusFilter || undefined,
     sort: `${sortBy},${sortOrder}`,
-  });
+  }), [page, statusFilter, sortBy, sortOrder]);
+
+  const { data, isLoading } = useAttempts(assignmentId, filter);
 
   // Sync page from URL (back/forward navigation)
   useEffect(() => {
