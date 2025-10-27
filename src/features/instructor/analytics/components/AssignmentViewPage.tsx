@@ -29,12 +29,12 @@ export function AssignmentViewPage({
   const pathname = usePathname();
   const { data: assignment, isLoading, error } = useAssignment(assignmentId);
 
-  const tabParam = searchParams.get('tab');
+  const tabParam = searchParams?.get('tab') ?? null;
   const initialTab = tabParam === 'questions' ? 'questions' : 'attempts';
   const [activeTab, setActiveTab] = useState(initialTab);
 
   const updateSearchParam = (key: string, value?: string) => {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams?.toString() ?? '');
     if (value === undefined || value === '' || value === null) {
       params.delete(key);
     } else {
@@ -45,7 +45,7 @@ export function AssignmentViewPage({
   };
 
   useEffect(() => {
-    const tp = searchParams.get('tab');
+    const tp = searchParams?.get('tab') ?? null;
     const normalized = tp === 'questions' ? 'questions' : 'attempts';
     setActiveTab((prev) => (prev !== normalized ? normalized : prev));
   }, [searchParams]);
