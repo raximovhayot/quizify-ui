@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { useReorderQuestions } from '../hooks/useReorderQuestions';
 import {
@@ -31,7 +31,12 @@ export function QuestionsListContainer({
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 10; // Show 10 questions per page
 
-  const filter = { quizId, page: currentPage, size: pageSize } as const;
+  // Memoize filter to prevent unnecessary refetches
+  const filter = useMemo(
+    () => ({ quizId, page: currentPage, size: pageSize }),
+    [quizId, currentPage, pageSize]
+  );
+
   const {
     data: questionsData,
     isLoading,
