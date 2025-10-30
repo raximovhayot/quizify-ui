@@ -32,7 +32,7 @@ export interface AssignmentDTO {
   id: number;
   title: string;
   description?: string | null;
-  status: AssignmentStatus; // keep flexible if backend returns string
+  status?: AssignmentStatus; // optional because backend may omit status in list DTOs
   code?: string; // Assignment access code
   createdDate?: string;
   dueDate?: string | null;

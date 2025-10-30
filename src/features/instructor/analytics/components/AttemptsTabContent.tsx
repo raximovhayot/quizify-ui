@@ -44,7 +44,7 @@ export function AttemptsTabContent({
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('');
 
-  const urlPageParam = parseInt(searchParams.get('apage') ?? '1', 10);
+  const urlPageParam = parseInt(searchParams?.get('apage') ?? '1', 10);
   const initialPage = Number.isFinite(urlPageParam) && urlPageParam > 0 ? urlPageParam - 1 : 0;
   const [page, setPage] = useState(initialPage);
   const [sortBy, setSortBy] = useState<'studentName' | 'score' | 'startedAt'>(
@@ -53,7 +53,7 @@ export function AttemptsTabContent({
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   const updateSearchParam = (key: string, value?: string) => {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams?.toString() ?? '');
     if (value === undefined || value === '' || value === null) {
       params.delete(key);
     } else {
@@ -80,7 +80,7 @@ export function AttemptsTabContent({
 
   // Sync page from URL (back/forward navigation)
   useEffect(() => {
-    const ap = parseInt(searchParams.get('apage') ?? '1', 10);
+    const ap = parseInt(searchParams?.get('apage') ?? '1', 10);
     const zero = Number.isFinite(ap) && ap > 0 ? ap - 1 : 0;
     setPage((prev) => (prev !== zero ? zero : prev));
   }, [searchParams]);

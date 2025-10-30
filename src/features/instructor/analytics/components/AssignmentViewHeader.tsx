@@ -50,17 +50,18 @@ export function AssignmentViewHeader({ assignment }: Readonly<AssignmentViewHead
     }
   };
 
-  const StatusIcon = getStatusIcon(assignment.status);
+  const status = assignment.status ?? AssignmentStatus.CREATED;
+  const StatusIcon = getStatusIcon(status);
 
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3 flex-wrap">
         <Badge
-          variant={getStatusColor(assignment.status)}
+          variant={getStatusColor(status)}
           className="flex items-center gap-1.5 text-sm px-3 py-1.5"
         >
           <StatusIcon className="h-4 w-4" />
-          {getStatusLabel(assignment.status)}
+          {getStatusLabel(status)}
         </Badge>
         {assignment.code && (
           <span className="text-sm text-muted-foreground">

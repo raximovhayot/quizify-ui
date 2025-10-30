@@ -27,14 +27,14 @@ export function AssignmentViewQuestions({
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  const urlPageParam = parseInt(searchParams.get('qpage') ?? '1', 10);
+  const urlPageParam = parseInt(searchParams?.get('qpage') ?? '1', 10);
   const initialPage = Number.isFinite(urlPageParam) && urlPageParam > 0 ? urlPageParam - 1 : 0;
   const [page, setPage] = useState(initialPage);
   const { data, isLoading, error, refetch } = useAssignmentQuestions(assignmentId, page, 10);
   const [showAnswers, setShowAnswers] = useState(false);
 
   const updateSearchParam = (key: string, value?: string) => {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams?.toString() ?? '');
     if (value === undefined || value === '' || value === null) {
       params.delete(key);
     } else {
@@ -46,7 +46,7 @@ export function AssignmentViewQuestions({
 
   // Sync from URL (back/forward navigation)
   useEffect(() => {
-    const qp = parseInt(searchParams.get('qpage') ?? '1', 10);
+    const qp = parseInt(searchParams?.get('qpage') ?? '1', 10);
     const zero = Number.isFinite(qp) && qp > 0 ? qp - 1 : 0;
     setPage((prev) => (prev !== zero ? zero : prev));
   }, [searchParams]);
