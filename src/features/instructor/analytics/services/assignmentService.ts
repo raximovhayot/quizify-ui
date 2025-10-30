@@ -14,7 +14,6 @@ import {
 import { computeAnalyticsFromAttempts } from '../lib/analyticsCompute';
 import {
   AssignmentAnalytics,
-  QuestionAnalytics,
   StudentRegistration,
 } from '../types/analytics';
 import {
@@ -245,26 +244,6 @@ export class AssignmentService {
     return computeAnalyticsFromAttempts(assignment, attempts);
   }
 
-  /**
-   * Get question-level analytics for an assignment
-   * Note: This requires detailed attempt data which is not available in summary
-   * Returns empty array for now - would need individual attempt details
-   *
-   * @param _assignmentId - ID of the assignment (unused, reserved for future use)
-   * @param _signal - AbortSignal for request cancellation (unused, reserved for future use)
-   * @returns Promise resolving to array of question analytics
-   */
-  static async getQuestionAnalytics(
-    _assignmentId: number,
-    _signal?: AbortSignal
-  ): Promise<QuestionAnalytics[]> {
-    // Question analytics requires detailed answer data from each attempt
-    // The summary endpoint doesn't provide this information
-    // Would need to fetch detailed data for each attempt which could be expensive
-    // For now, return empty array
-    // TODO: Implement by fetching individual attempt details if needed
-    return [];
-  }
 
   /**
    * Get detailed attempt information

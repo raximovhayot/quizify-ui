@@ -3,6 +3,7 @@
 import { format } from 'date-fns';
 
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 
 import { Badge } from '@/components/ui/badge';
 import { TableCell, TableRow } from '@/components/ui/table';
@@ -27,6 +28,7 @@ export function AssignmentsTableRow({
   disabled = false,
 }: Readonly<AssignmentsTableRowProps>) {
   const t = useTranslations();
+  const router = useRouter();
 
   const formatDate = (dateString: string | undefined | null) => {
     if (!dateString) return '—';
@@ -64,16 +66,26 @@ export function AssignmentsTableRow({
   };
 
   return (
-    <TableRow>
+    <TableRow className="hover:bg-muted/50 transition-colors">
       <TableCell className="font-medium">
-        <div className="flex flex-col gap-1">
-          <span className="truncate">{assignment.title}</span>
-          {assignment.description && (
-            <span className="text-xs text-muted-foreground truncate">
-              {assignment.description}
-            </span>
-          )}
-        </div>
+        <button
+          type="button"
+          onClick={() => router.push(ROUTES_APP.analytics.detail(assignment.id))}
+          className="w-full text-left rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          aria-label={t('instructor.analytics.row.aria', {
+            fallback: 'Open assignment {title}',
+            title: assignment.title || t('instructor.analytics.untitled', { fallback: 'Untitled' }),
+          })}
+        >
+          <div className="flex flex-col gap-1">
+            <span className="truncate">{assignment.title}</span>
+            {assignment.description && (
+              <span className="text-xs text-muted-foreground truncate">
+                {assignment.description}
+              </span>
+            )}
+          </div>
+        </button>
       </TableCell>
       <TableCell>
         <Badge variant={getStatusVariant(assignment.status)}>

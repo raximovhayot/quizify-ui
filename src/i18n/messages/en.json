@@ -201,7 +201,8 @@
     "questionAnalytics": "Question Analytics",
     "questionAnalyticsNotAvailable": "Question analytics are not available yet. This feature will be added in a future update.",
     "backToList": "Back to List",
-    "statusLabel": "Status"
+    "statusLabel": "Status",
+    "noAttempts": "No attempts yet"
   },
   "auth": {
     "signIn": {
@@ -718,7 +719,11 @@
         "timeSpent": "per attempt",
         "completedAttempts": "Completed",
         "inProgress": "In Progress"
-      }
+      },
+      "row": {
+        "aria": "Open assignment {title}"
+      },
+      "untitled": "Untitled"
     },
     "assignment": {
       "defaultSuffix": "Assignment",

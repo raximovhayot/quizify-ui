@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -21,12 +21,15 @@ export function InstructorQuizzesPage() {
   const router = useRouter();
   const t = useTranslations();
 
+  // Memoize parseFilter to prevent unnecessary filter object recreation
+  const parseFilter = useCallback((params: URLSearchParams): Partial<QuizFilter> => ({
+    status: params.get('status') as QuizStatus | undefined,
+  }), []);
+
   // Use URL-based state management
   const { filter, setPage, setSearch } = useUrlFilter<QuizFilter>({
     defaultSize: 10,
-    parseFilter: (params) => ({
-      status: params.get('status') as QuizStatus | undefined,
-    }),
+    parseFilter,
   });
 
   // Local state for search input (before debounce)

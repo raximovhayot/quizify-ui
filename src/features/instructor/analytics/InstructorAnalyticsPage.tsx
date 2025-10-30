@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { useUrlFilter } from '@/components/shared/hooks/useUrlFilter';
 
@@ -10,12 +10,15 @@ import { useAssignments } from './hooks';
 import { AssignmentFilter, AssignmentStatus } from './types/assignment';
 
 export function InstructorAnalyticsPage() {
+  // Memoize parseFilter to prevent unnecessary filter object recreation
+  const parseFilter = useCallback((params: URLSearchParams): Partial<AssignmentFilter> => ({
+    status: params.get('status') as AssignmentStatus | string | undefined,
+  }), []);
+
   // Use URL-based state management
   const { filter, setPage, setSearch } = useUrlFilter<AssignmentFilter>({
     defaultSize: 10,
-    parseFilter: (params) => ({
-      status: params.get('status') as AssignmentStatus | string | undefined,
-    }),
+    parseFilter,
   });
 
   // Local state for search input (before debounce)

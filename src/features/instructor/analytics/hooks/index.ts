@@ -4,6 +4,6 @@ export * from './useCreateAssignment';
 export * from './useStudentRegistrations';
 export * from './useUpdateAssignment';
 export * from './useAssignmentAnalytics';
-export * from './useQuestionAnalytics';
+export * from './useAssignmentQuestions';
 export * from './useAttemptDetail';
 export * from './useAttempts';

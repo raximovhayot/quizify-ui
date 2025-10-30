@@ -201,7 +201,8 @@
     "questionAnalytics": "Аналитика вопросов",
     "questionAnalyticsNotAvailable": "Аналитика вопросов пока недоступна. Эта функция будет добавлена в будущем обновлении.",
     "backToList": "Вернуться к списку",
-    "statusLabel": "Статус"
+    "statusLabel": "Статус",
+    "noAttempts": "Попыток пока нет"
   },
   "auth": {
     "signIn": {
@@ -722,7 +723,11 @@
         "timeSpent": "на попытку",
         "completedAttempts": "Завершено",
         "inProgress": "В процессе"
-      }
+      },
+      "row": {
+        "aria": "Открыть задание {title}"
+      },
+      "untitled": "Без названия"
     },
     "assignment": {
       "defaultSuffix": "Задание",

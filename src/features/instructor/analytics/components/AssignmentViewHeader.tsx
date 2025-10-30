@@ -1,77 +1,83 @@
 'use client';
 
-import { ArrowLeft } from 'lucide-react';
+import { AlertCircle, CheckCircle2 } from 'lucide-react';
 
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
 
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 
 import { AssignmentDTO, AssignmentStatus } from '../types/assignment';
 
-interface AssignmentViewHeaderProps {
+export interface AssignmentViewHeaderProps {
   assignment: AssignmentDTO;
 }
 
-export function AssignmentViewHeader({
-  assignment,
-}: Readonly<AssignmentViewHeaderProps>) {
+export function AssignmentViewHeader({ assignment }: Readonly<AssignmentViewHeaderProps>) {
   const t = useTranslations();
-  const router = useRouter();
 
-  const getStatusBadge = (status?: AssignmentStatus | string) => {
+  const getStatusColor = (status: AssignmentStatus) => {
     switch (status) {
       case AssignmentStatus.STARTED:
-        return (
-          <Badge variant="default" className="bg-green-600">
-            {t('instructor.assignment.status.started', { fallback: 'Active' })}
-          </Badge>
-        );
+        return 'default';
       case AssignmentStatus.FINISHED:
-        return (
-          <Badge variant="secondary">
-            {t('instructor.assignment.status.finished', {
-              fallback: 'Finished',
-            })}
-          </Badge>
-        );
+        return 'secondary';
       case AssignmentStatus.CREATED:
       default:
-        return (
-          <Badge variant="outline">
-            {t('instructor.assignment.status.created', { fallback: 'Draft' })}
-          </Badge>
-        );
+        return 'outline';
     }
   };
 
+  const getStatusIcon = (status: AssignmentStatus) => {
+    switch (status) {
+      case AssignmentStatus.STARTED:
+        return CheckCircle2;
+      case AssignmentStatus.FINISHED:
+      case AssignmentStatus.CREATED:
+      default:
+        return AlertCircle;
+    }
+  };
+
+  const getStatusLabel = (status: AssignmentStatus) => {
+    switch (status) {
+      case AssignmentStatus.STARTED:
+        return t('common.status.active', { fallback: 'Active' });
+      case AssignmentStatus.FINISHED:
+        return t('common.status.finished', { fallback: 'Finished' });
+      case AssignmentStatus.CREATED:
+      default:
+        return t('common.status.draft', { fallback: 'Draft' });
+    }
+  };
+
+  const status = assignment.status ?? AssignmentStatus.CREATED;
+  const StatusIcon = getStatusIcon(status);
+
   return (
     <div className="space-y-4">
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => router.push('/instructor/analytics')}
-        className="gap-2"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        {t('instructor.assignment.view.backToList', {
-          fallback: 'Back to Assignments',
-        })}
-      </Button>
-
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-bold tracking-tight">
-              {assignment.title}
-            </h1>
-            {getStatusBadge(assignment.status)}
-          </div>
-          {assignment.description && (
-            <p className="text-muted-foreground">{assignment.description}</p>
-          )}
-        </div>
+      <div className="flex items-center gap-3 flex-wrap">
+        <Badge
+          variant={getStatusColor(status)}
+          className="flex items-center gap-1.5 text-sm px-3 py-1.5"
+        >
+          <StatusIcon className="h-4 w-4" />
+          {getStatusLabel(status)}
+        </Badge>
+        {assignment.code && (
+          <span className="text-sm text-muted-foreground">
+            {t('common.accessCode', { fallback: 'Code' })}: <span className="font-mono font-semibold text-foreground">{assignment.code}</span>
+          </span>
+        )}
+      </div>
+      <div>
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight break-words">
+          {assignment.title || t('instructor.analytics.untitled', { fallback: 'Untitled Assignment' })}
+        </h1>
+        {assignment.description && (
+          <p className="mt-2 text-base text-muted-foreground leading-relaxed whitespace-pre-wrap">
+            {assignment.description}
+          </p>
+        )}
       </div>
     </div>
   );

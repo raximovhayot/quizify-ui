@@ -7,8 +7,8 @@ export const assignmentKeys = {
   detail: (id: number) => [...assignmentKeys.details(), id] as const,
   analytics: (assignmentId: number) =>
     [...assignmentKeys.all, 'analytics', assignmentId] as const,
-  questionAnalytics: (assignmentId: number) =>
-    [...assignmentKeys.all, 'questions', 'analytics', assignmentId] as const,
+  questions: (assignmentId: number, filter?: { page?: number; size?: number }) =>
+    [...assignmentKeys.detail(assignmentId), 'questions', filter ?? {}] as const,
   registrations: (assignmentId: number) =>
     [...assignmentKeys.all, 'registrations', assignmentId] as const,
 } as const;
