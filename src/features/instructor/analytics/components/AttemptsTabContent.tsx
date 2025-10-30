@@ -2,7 +2,7 @@
 
 import { format } from 'date-fns';
 import { ArrowUpDown, Search } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useTranslations } from 'next-intl';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -52,7 +52,7 @@ export function AttemptsTabContent({
   );
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-  const updateSearchParam = (key: string, value?: string) => {
+  const updateSearchParam = useCallback((key: string, value?: string) => {
     const params = new URLSearchParams(searchParams?.toString() ?? '');
     if (value === undefined || value === '' || value === null) {
       params.delete(key);
@@ -61,7 +61,7 @@ export function AttemptsTabContent({
     }
     const query = params.toString();
     router.replace(`${pathname}${query ? `?${query}` : ''}`, { scroll: false });
-  };
+  }, [pathname, router, searchParams]);
 
   const setPageAndUrl = (p: number) => {
     setPage(p);
@@ -94,7 +94,7 @@ export function AttemptsTabContent({
       setPage(clamped);
       updateSearchParam('apage', String(clamped + 1));
     }
-  }, [data, page]);
+  }, [data, page, updateSearchParam]);
 
   const attempts = useMemo(() => data?.content ?? [], [data?.content]);
 
