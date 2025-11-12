@@ -1,33 +1,34 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useDeleteQuiz as useDeleteQuizBase } from '@/lib/api/hooks/quizzes';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-
 import { useTranslations } from 'next-intl';
 
 import { quizKeys } from '@/features/instructor/quiz/keys';
+import type { TQuizListResponse } from '../schemas/quizSchema';
+import type { QuizDataDTO } from '../types/quiz';
 
-import { TQuizListResponse } from '../schemas/quizSchema';
-import { QuizService } from '../services/quizService';
-import { QuizDataDTO } from '../types/quiz';
-
-// Hook for deleting quiz
+/**
+ * Feature-specific wrapper around centralized useDeleteQuiz hook
+ * Adds optimistic updates and translations
+ */
 export function useDeleteQuiz() {
   const queryClient = useQueryClient();
   const t = useTranslations();
+  const baseDelete = useDeleteQuizBase();
 
-  return useMutation({
-    mutationFn: async (quizId: number): Promise<void> => {
-      await QuizService.deleteQuiz(quizId);
-    },
-    onMutate: async (quizId) => {
-      // Cancel outgoing refetches so we don't overwrite our optimistic update
-      await queryClient.cancelQueries({ queryKey: quizKeys.lists() });
-
-      // Snapshot previous lists
+  return {
+    ...baseDelete,
+    mutate: (quizId: number, options?: any) => {
+      // Optimistic update logic
       const previousLists = queryClient.getQueriesData<TQuizListResponse>({
         queryKey: quizKeys.lists(),
       });
 
-      // Optimistically update lists by removing the quiz
+      const previousDetail = queryClient.getQueryData<QuizDataDTO>(
+        quizKeys.detail(quizId)
+      );
+
+      // Optimistically update lists
       previousLists.forEach(([key, data]) => {
         if (!data) return;
         const content = data.content.filter((q) => q.id !== quizId);
@@ -38,46 +39,35 @@ export function useDeleteQuiz() {
         });
       });
 
-      // Snapshot detail and optimistically remove it
-      const previousDetail = queryClient.getQueryData<QuizDataDTO>(
-        quizKeys.detail(quizId)
-      );
       queryClient.removeQueries({ queryKey: quizKeys.detail(quizId) });
 
-      return { previousLists, previousDetail, quizId };
-    },
-    onSuccess: (_, quizId) => {
-      // Invalidate and refetch quiz lists
-      queryClient.invalidateQueries({ queryKey: quizKeys.lists() });
+      baseDelete.mutate(quizId, {
+        ...options,
+        onSuccess: (data, variables, context) => {
+          toast.success(
+            t('instructor.quiz.delete.success', {
+              fallback: 'Quiz deleted successfully',
+            })
+          );
+          options?.onSuccess?.(data, variables, context);
+        },
+        onError: (error, variables, context) => {
+          // Rollback on error
+          previousLists.forEach(([key, data]) => {
+            queryClient.setQueryData(key, data);
+          });
+          if (previousDetail) {
+            queryClient.setQueryData(quizKeys.detail(quizId), previousDetail);
+          }
 
-      // Ensure the quiz detail is removed from cache
-      queryClient.removeQueries({ queryKey: quizKeys.detail(quizId) });
-
-      toast.success(
-        t('instructor.quiz.delete.success', {
-          fallback: 'Quiz deleted successfully',
-        })
-      );
+          toast.error(
+            t('instructor.quiz.delete.error', {
+              fallback: 'Failed to delete quiz',
+            })
+          );
+          options?.onError?.(error, variables, context);
+        },
+      });
     },
-    onError: (error, quizId, context) => {
-      // Rollback on error
-      if (context?.previousLists) {
-        context.previousLists.forEach(([key, data]) => {
-          queryClient.setQueryData(key, data);
-        });
-      }
-      if (context?.previousDetail) {
-        queryClient.setQueryData(
-          quizKeys.detail(context.quizId),
-          context.previousDetail
-        );
-      }
-
-      toast.error(
-        t('instructor.quiz.delete.error', {
-          fallback: 'Failed to delete quiz',
-        })
-      );
-    },
-  });
+  };
 }
