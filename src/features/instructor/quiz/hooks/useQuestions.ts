@@ -1,21 +1,14 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuestions as useQuestionsBase } from '@/lib/api/hooks/questions';
 
-import { questionKeys } from '@/features/instructor/quiz/keys';
-import { IPageableList } from '@/types/common';
+import type { QuestionFilter } from '../types/question';
 
-import { QuestionService } from '../services/questionService';
-import type { QuestionDataDto, QuestionFilter } from '../types/question';
-
+/**
+ * Feature-specific wrapper around centralized useQuestions hook
+ */
 export function useQuestions(filter: QuestionFilter) {
-  return useQuery<IPageableList<QuestionDataDto>>({
-    queryKey: questionKeys.list(filter),
-    queryFn: async ({ signal }) => {
-      return await QuestionService.getQuestions(filter, signal);
-    },
-    enabled: !!filter?.quizId,
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
-  });
+  const quizId = filter?.quizId;
+  
+  return useQuestionsBase(quizId!, !!quizId);
 }
 
 // Re-exports for backward compatibility after splitting hooks into separate files
