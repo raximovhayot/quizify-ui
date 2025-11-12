@@ -45,6 +45,7 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-switch": "^1.2.5",
     "@radix-ui/react-tabs": "^1.1.13",
+    "@stomp/stompjs": "^7.2.1",
     "@t3-oss/env-nextjs": "^0.13.8",
     "@tanstack/react-query": "^5.83.1",
     "@tanstack/react-query-devtools": "^5.83.1",
@@ -53,6 +54,7 @@
     "@tiptap/extension-placeholder": "^3.6.2",
     "@tiptap/react": "^3.6.2",
     "@tiptap/starter-kit": "^3.6.2",
+    "axios": "^1.13.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
@@ -73,9 +75,11 @@
     "react-dropzone": "^14.3.8",
     "react-hook-form": "^7.60.0",
     "recharts": "^3.1.0",
+    "sockjs-client": "^1.6.1",
     "sonner": "^2.0.6",
     "tailwind-merge": "^3.3.1",
-    "zod": "^4.1.11"
+    "zod": "^4.1.11",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -89,6 +93,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/sockjs-client": "^1.5.4",
     "eslint": "^9",
     "eslint-config-next": "15.3.5",
     "husky": "^9.1.7",
