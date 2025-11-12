@@ -24,7 +24,7 @@ import {
   DashboardType,
 } from '@/features/profile/types/account';
 import { apiClient } from '@/lib/api';
-import { handleApiResponse } from '@/lib/api-utils';
+import { handleApiResponse } from '@/lib/api/utils';
 
 export type { ProfileCompleteFormData } from '@/features/profile/schemas/profile';
 

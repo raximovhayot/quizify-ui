@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { getErrorMessage } from '@/lib/api-utils';
+import { getErrorMessage } from '@/lib/api/utils';
 
 import { AttemptList } from './components/AttemptList';
 import { HistoryCard } from './components/HistoryCard';

@@ -16,7 +16,7 @@ import {
   SignUpPrepareRequest,
   SignUpVerifyRequest,
 } from '@/features/auth/types/auth';
-import { showErrorToast, showSuccessToast } from '@/lib/api-utils';
+import { showErrorToast, showSuccessToast } from '@/lib/api/utils';
 import { createAuthMutation, createMutation } from '@/lib/mutation-utils';
 
 /**
