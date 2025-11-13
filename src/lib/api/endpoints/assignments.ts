@@ -23,6 +23,15 @@ export interface AssignmentListParams {
   status?: 'PUBLISHED' | 'STARTED' | 'FINISHED';
 }
 
+export interface AssignmentAnalytics {
+  assignmentId: number;
+  totalStudents: number;
+  completedAttempts: number;
+  averageScore: number;
+  highestScore: number;
+  lowestScore: number;
+}
+
 export const assignmentsApi = {
   // Instructor endpoints
   getAll: (params?: AssignmentListParams) =>
@@ -36,6 +45,9 @@ export const assignmentsApi = {
   
   delete: (id: number) =>
     apiClient.delete(`/instructor/assignments/${id}`),
+  
+  getAnalytics: (assignmentId: number) =>
+    apiClient.get<AssignmentAnalytics>(`/instructor/assignments/${assignmentId}/analytics`),
   
   // Student endpoints
   getStudentAssignments: (params?: AssignmentListParams) =>

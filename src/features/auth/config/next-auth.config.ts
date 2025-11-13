@@ -2,7 +2,7 @@ import NextAuth from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import Credentials from 'next-auth/providers/credentials';
 
-import { AuthService } from '@/features/auth/services/authService';
+import { authApi } from '@/lib/api/endpoints/auth';
 import {
   AccountDTO,
   UserState,
@@ -97,16 +97,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const phone = credentials.phone as string;
 
         try {
-          const response = await AuthService.signIn(
+          const jwtToken = await authApi.signIn({
             phone,
-            credentials.password as string
-          );
-
-          if (Array.isArray(response.errors) && response.errors.length > 0) {
-            return null;
-          }
-
-          const jwtToken = response.data;
+            password: credentials.password as string
+          });
           if (
             !jwtToken?.accessToken ||
             !jwtToken?.refreshToken ||
@@ -207,9 +201,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
  */
 async function refreshAccessToken(token: JWT): Promise<JWT> {
   try {
-    const refreshedTokens = await AuthService.refreshToken(token.refreshToken);
-    const newAccess = refreshedTokens?.data?.accessToken;
-    const newRefresh = refreshedTokens?.data?.refreshToken;
+    const refreshedTokens = await authApi.refreshToken({ refreshToken: token.refreshToken });
+    const newAccess = refreshedTokens?.accessToken;
+    const newRefresh = refreshedTokens?.refreshToken;
     if (!newAccess || !newRefresh) {
       throw new Error('Invalid refresh token response');
     }

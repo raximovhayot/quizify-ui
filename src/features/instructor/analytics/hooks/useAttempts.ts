@@ -1,24 +1,20 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-
-import { assignmentKeys } from '../keys';
-import { AssignmentService } from '../services/assignmentService';
+import { useAssignmentAttempts } from '@/lib/api/hooks/attempts';
+import type { AttemptListParams } from '@/lib/api/endpoints/attempts';
 import { InstructorAttemptFilter } from '../types/attempt';
 
 /**
  * useAttempts — fetch pageable attempts for an assignment
- * Provides direct access to attempts without computing analytics
+ * Delegates to centralized hook
  */
 export function useAttempts(
   assignmentId: number,
   filter: InstructorAttemptFilter = {}
 ) {
-  return useQuery({
-    queryKey: [...assignmentKeys.detail(assignmentId), 'attempts', filter],
-    queryFn: ({ signal }) =>
-      AssignmentService.getAttempts(assignmentId, filter, signal),
-    enabled: !!assignmentId,
-    placeholderData: keepPreviousData,
-    staleTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 60 * 60 * 1000, // 60 minutes
-  });
+  // Map filter to params
+  const params: AttemptListParams = {
+    page: filter.page,
+    size: filter.size,
+  };
+  
+  return useAssignmentAttempts(assignmentId, params, !!assignmentId);
 }

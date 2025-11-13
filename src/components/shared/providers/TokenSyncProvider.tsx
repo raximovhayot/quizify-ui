@@ -5,8 +5,8 @@ import { useEffect } from 'react';
 import { signOut, useSession } from 'next-auth/react';
 
 import { ROUTES_AUTH } from '@/features/auth/routes';
-import { AuthService } from '@/features/auth/services/authService';
-import { apiClient } from '@/lib/api';
+import { authApi } from '@/lib/api/endpoints/auth';
+import { apiClient } from '@/lib/api/client';
 
 /**
  * TokenSyncProvider — Why we need it and what it does
@@ -41,7 +41,7 @@ export function TokenSyncProvider() {
       const refreshToken = session?.refreshToken;
       if (!refreshToken) return null;
       try {
-        const resp = await AuthService.refreshToken(refreshToken);
+        const resp = await authApi.refreshToken({ refreshToken });
         // If refresh itself failed with 401, redirect to login
         const isUnauthorized = Array.isArray(resp?.errors)
           ? resp.errors.some((err) => err.code === 'HTTP_401')
