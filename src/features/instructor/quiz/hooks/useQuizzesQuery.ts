@@ -1,6 +1,7 @@
 import { useQuizzes as useQuizzesBase } from '@/lib/api/hooks/quizzes';
 import type { QuizListParams } from '@/lib/api/endpoints/quizzes';
 
+import { QuizStatus } from '../types/quiz';
 import type { QuizFilter } from '../types/quiz';
 
 /**
@@ -13,7 +14,7 @@ export function useQuizzes(filter: QuizFilter = {}) {
     page: filter.page,
     size: filter.size,
     search: filter.search,
-    status: filter.status,
+    status: filter.status ? (filter.status === QuizStatus.DRAFT ? 'DRAFT' : 'PUBLISHED') : undefined,
   };
 
   return useQuizzesBase(params);

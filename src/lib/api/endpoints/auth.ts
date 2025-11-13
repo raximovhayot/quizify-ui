@@ -7,6 +7,9 @@ import type {
   RefreshTokenRequest,
 } from '../types';
 
+// Re-export types for use in hooks
+export type { SignInRequest, SignUpPrepareRequest, SignUpVerifyRequest };
+
 export const authApi = {
   signIn: (data: SignInRequest) =>
     apiClient.post<JWTTokenResponse>('/auth/sign-in', data),

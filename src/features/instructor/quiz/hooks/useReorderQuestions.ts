@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { QuestionService } from '../services/questionService';
+import { useReorderQuestions as useReorderQuestionsBase } from '@/lib/api/hooks/questions';
 import { questionKeys } from '../keys';
 import type { IPageableList } from '@/types/common';
 import type { QuestionDataDto, QuestionReorderItem, QuestionFilter } from '../types/question';
@@ -16,11 +16,12 @@ export interface QuestionsFilter {
  */
 export function useReorderQuestions(quizId: number, filter: QuestionFilter) {
   const qc = useQueryClient();
+  const baseReorder = useReorderQuestionsBase(quizId);
 
   return useMutation({
     mutationFn: async (next: QuestionDataDto[]) => {
       const items: QuestionReorderItem[] = next.map((q, index) => ({ id: q.id, order: index }));
-      await QuestionService.reorderQuestions(quizId, items);
+      await baseReorder.mutateAsync(items);
     },
     onMutate: async (next) => {
       const key = questionKeys.list(filter);

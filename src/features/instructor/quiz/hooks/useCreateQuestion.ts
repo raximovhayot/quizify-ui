@@ -1,30 +1,27 @@
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack:react-query';
 import { useTranslations } from 'next-intl';
 
 import { questionKeys } from '@/features/instructor/quiz/keys';
-import { createMutation } from '@/lib/mutation-utils';
+import { useCreateQuestion as useCreateQuestionBase } from '@/lib/api/hooks/questions';
 
-import { QuestionService } from '../services/questionService';
-import type { InstructorQuestionSaveRequest, QuestionDataDto } from '../types/question';
+import type { InstructorQuestionSaveRequest } from '../types/question';
 
 export function useCreateQuestion() {
   const t = useTranslations();
   const qc = useQueryClient();
+  const baseCreateQuestion = useCreateQuestionBase();
 
-  return createMutation<QuestionDataDto, InstructorQuestionSaveRequest>({
-    mutationFn: async (data) => {
-      const dto = await QuestionService.createQuestion(data);
-      return { data: dto, errors: [] };
-    },
-    successMessage: t('common.entities.question.createSuccess', {
-      fallback: 'Question created successfully',
-    }),
-    invalidateQueries: [questionKeys.lists(), questionKeys.details()],
-    onSuccess: async (dto, variables) => {
+  return {
+    ...baseCreateQuestion,
+    mutateAsync: async (data: InstructorQuestionSaveRequest) => {
+      const dto = await baseCreateQuestion.mutateAsync(data);
+      
       // Prime detail cache for newly created question
-      if (dto?.id && variables?.quizId) {
-        qc.setQueryData(questionKeys.detail(variables.quizId, dto.id), dto);
+      if (dto?.id && data?.quizId) {
+        qc.setQueryData(questionKeys.detail(data.quizId, dto.id), dto);
       }
+      
+      return dto;
     },
-  })();
+  };
 }

@@ -121,9 +121,9 @@ export function QuestionsListContainer({
       onConfirmDelete={handleDeleteQuestion}
       isUpdatePending={updateQuestionMutation.isPending}
       isDeletePending={deleteQuestionMutation.isPending}
-      currentPage={questionsData?.page || 0}
-      totalPages={questionsData?.totalPages || 0}
-      totalElements={questionsData?.totalElements || 0}
+      currentPage={0}
+      totalPages={1}
+      totalElements={questions.length}
       pageSize={pageSize}
       onPageChange={setCurrentPage}
     />
