@@ -18,13 +18,11 @@ import {
   profileCompleteFormDefaults,
 } from '@/features/profile/schemas/profile';
 import type { ProfileCompleteFormData } from '@/features/profile/schemas/profile';
-import { AccountService } from '@/features/profile/services/accountService';
 import {
   AccountCompleteRequest,
   DashboardType,
 } from '@/features/profile/types/account';
-import { apiClient } from '@/lib/api';
-import { handleApiResponse } from '@/lib/api-utils';
+import { useCompleteProfile } from '@/lib/api/hooks/profile';
 
 export type { ProfileCompleteFormData } from '@/features/profile/schemas/profile';
 
@@ -37,6 +35,7 @@ export function useProfileComplete() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const t = useTranslations();
+  const completeProfileMutation = useCompleteProfile();
 
   // Create validation schema with localized messages
   const profileCompleteSchema = profileCompleteDetailsSchema(t);
@@ -56,7 +55,6 @@ export function useProfileComplete() {
 
     try {
       let userPhone: string;
-      let tempToken: string | null = null;
 
       // Check if we have a NextAuth session (existing user) or signup token (new user)
       if (session?.accessToken) {
@@ -77,8 +75,10 @@ export function useProfileComplete() {
         }
 
         const signupToken = JSON.parse(signupTokenData);
-        tempToken = signupToken.accessToken as string;
         userPhone = signupToken.user.phone as string;
+        
+        // Set token for this request
+        localStorage.setItem('accessToken', signupToken.accessToken);
       }
 
       // Prepare account completion request
@@ -89,22 +89,8 @@ export function useProfileComplete() {
         dashboardType: data.dashboardType,
       };
 
-      // Temporarily set auth token if needed (signup flow without session)
-      const previousToken = apiClient.getAuthToken();
-      if (tempToken) {
-        apiClient.setAuthToken(tempToken);
-      }
-
-      // Complete account using AccountService (throws on error via handleApiResponse)
-      const completeResp = await AccountService.completeAccount(
-        accountCompleteRequest
-      );
-      handleApiResponse(completeResp);
-
-      // Restore previous token
-      if (tempToken) {
-        apiClient.setAuthToken(previousToken ?? null);
-      }
+      // Complete account using centralized hook
+      await completeProfileMutation.mutateAsync(accountCompleteRequest);
 
       // Clear the signup token from sessionStorage
       sessionStorage.removeItem('signupToken');

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { QuestionService } from '../services/questionService';
+import { useReorderQuestions as useReorderQuestionsBase } from '@/lib/api/hooks/questions';
 import { questionKeys } from '../keys';
 import type { IPageableList } from '@/types/common';
 import type { QuestionDataDto, QuestionReorderItem, QuestionFilter } from '../types/question';
@@ -16,24 +16,21 @@ export interface QuestionsFilter {
  */
 export function useReorderQuestions(quizId: number, filter: QuestionFilter) {
   const qc = useQueryClient();
+  const baseReorder = useReorderQuestionsBase(quizId);
 
   return useMutation({
     mutationFn: async (next: QuestionDataDto[]) => {
-      const items: QuestionReorderItem[] = next.map((q, index) => ({ id: q.id, order: index }));
-      await QuestionService.reorderQuestions(quizId, items);
+      const orderArray = next.map((q, index) => q.id);
+      await baseReorder.mutateAsync(orderArray);
     },
     onMutate: async (next) => {
       const key = questionKeys.list(filter);
       await qc.cancelQueries({ queryKey: key });
-      const previous = qc.getQueryData<IPageableList<QuestionDataDto>>(key);
+      const previous = qc.getQueryData<QuestionDataDto[]>(key);
 
       // Optimistically update current page content order
-      qc.setQueryData<IPageableList<QuestionDataDto>>(key, (old) => {
-        if (!old) return old;
-        return {
-          ...old,
-          content: next.map((q, index) => ({ ...q, order: index })),
-        };
+      qc.setQueryData<QuestionDataDto[]>(key, () => {
+        return next.map((q, index) => ({ ...q, order: index }));
       });
 
       return { previous } as const;

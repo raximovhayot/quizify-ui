@@ -3,7 +3,7 @@ import React, { JSX } from 'react';
 import { DataCard } from '@/components/shared/ui/DataCard';
 import { RegistrationSimpleList } from '@/features/student/home/components/RegistrationSimpleList';
 import { ListRowsSkeleton } from '@/components/shared/ui/ListRowsSkeleton';
-import { AssignmentRegistrationItem } from '@/features/student/assignment/services/studentAssignmentService';
+import { AssignmentRegistrationItem } from '@/lib/api/hooks/assignments';
 
 interface RegistrationListCardProps {
   title: string;

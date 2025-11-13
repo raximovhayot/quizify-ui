@@ -1,35 +1,33 @@
-import { useQueryClient } from '@tanstack/react-query';
-
+import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
+import { toast } from 'sonner';
 
 import { assignmentKeys } from '../keys';
 import { assignmentDataDTOSchema } from '../schemas/assignmentSchema';
-import { AssignmentService } from '../services/assignmentService';
 import { AssignmentDTO } from '../types/assignment';
-import { createMutation } from '@/lib/mutation-utils';
+import { queryKeys } from '@/lib/query/keys';
 
 // Hook for updating an assignment
 export function useUpdateAssignment() {
   const queryClient = useQueryClient();
   const t = useTranslations();
 
-  return createMutation<AssignmentDTO, Partial<AssignmentDTO> & { id: number }>({
-    mutationFn: async (data) => {
-      if (!data.id) {
-        throw new Error('Assignment ID is required for update');
-      }
-      const { id, ...payload } = data;
-      const updated = await AssignmentService.updateAssignment(id, payload);
-      return { data: updated, errors: [] };
+  return useMutation({
+    mutationFn: async (data: Partial<AssignmentDTO> & { id: number }) => {
+      // TODO: Implement update endpoint in centralized API when backend supports it
+      throw new Error('Update assignment endpoint not yet implemented');
     },
-    successMessage: t('common.entities.assignment.updateSuccess', {
-      fallback: 'Assignment updated successfully',
-    }),
-    invalidateQueries: [assignmentKeys.lists()],
-    onSuccess: (updated) => {
+    onSuccess: (updated: AssignmentDTO) => {
       // Validate and prime the detail cache for consistency
       const validated = assignmentDataDTOSchema.parse(updated);
       queryClient.setQueryData(assignmentKeys.detail(validated.id), validated);
+      queryClient.invalidateQueries({ queryKey: queryKeys.assignments.all });
+      toast.success(t('common.entities.assignment.updateSuccess', {
+        fallback: 'Assignment updated successfully',
+      }));
     },
-  })();
+    onError: (error: any) => {
+      toast.error(error.message || 'Failed to update assignment');
+    },
+  });
 }

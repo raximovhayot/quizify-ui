@@ -3,7 +3,7 @@ import React, { JSX } from 'react';
 import { useTranslations } from 'next-intl';
 import { FileQuestion } from 'lucide-react';
 
-import { AssignmentRegistrationItem } from '@/features/student/assignment/services/studentAssignmentService';
+import { AssignmentRegistrationItem } from '@/lib/api/hooks/assignments';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Item, ItemContent, ItemGroup, ItemTitle } from '@/components/ui/item';
 

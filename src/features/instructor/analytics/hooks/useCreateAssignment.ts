@@ -1,22 +1,22 @@
 import { useQueryClient } from '@tanstack/react-query';
-
 import { useTranslations } from 'next-intl';
 
 import { ROUTES_APP } from '@/features/instructor/routes';
 import { createMutation } from '@/lib/mutation-utils';
+import { useCreateAssignment as useCreateAssignmentBase } from '@/lib/api/hooks/assignments';
 
 import { assignmentKeys } from '../keys';
 import { assignmentDataDTOSchema } from '../schemas/assignmentSchema';
-import { AssignmentService } from '../services/assignmentService';
 import { AssignmentCreateRequest, AssignmentDTO } from '../types/assignment';
 
 export function useCreateAssignment() {
   const queryClient = useQueryClient();
   const t = useTranslations();
+  const baseCreate = useCreateAssignmentBase();
 
   return createMutation<AssignmentDTO, AssignmentCreateRequest>({
     mutationFn: async (request) => {
-      const created = await AssignmentService.createAssignment(request);
+      const created = await baseCreate.mutateAsync(request);
       return { data: created, errors: [] };
     },
     successMessage: t('common.entities.assignment.createSuccess', {

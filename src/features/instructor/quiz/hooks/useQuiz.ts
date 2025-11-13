@@ -1,23 +1,17 @@
-import {useQuery} from '@tanstack/react-query';
+import { useQuiz as useQuizBase } from '@/lib/api/hooks/quizzes';
 
+import { quizDataDTOSchema } from '../schemas/quizSchema';
+import type { QuizDataDTO } from '../types/quiz';
 
-import {quizKeys} from '@/features/instructor/quiz/keys';
-
-import {quizDataDTOSchema} from '../schemas/quizSchema';
-import {QuizService} from '../services/quizService';
-import {QuizDataDTO} from '../types/quiz';
-
-// Hook for fetching single quiz
+/**
+ * Feature-specific wrapper around centralized useQuiz hook
+ * Adds Zod validation
+ */
 export function useQuiz(quizId: number) {
-    return useQuery({
-        queryKey: quizKeys.detail(quizId),
-        queryFn: async ({signal}): Promise<QuizDataDTO> => {
-            const response = await QuizService.getQuiz(quizId, signal);
-            // Validate response with Zod schema
-            return quizDataDTOSchema.parse(response);
-        },
-        enabled: !!quizId,
-        staleTime: 2 * 60 * 1000, // 2 minutes
-        gcTime: 20 * 60 * 1000, // 20 minutes (quiz details are stable)
-    });
+  const result = useQuizBase(quizId, !!quizId);
+
+  return {
+    ...result,
+    data: result.data ? quizDataDTOSchema.parse(result.data) as QuizDataDTO : undefined,
+  };
 }

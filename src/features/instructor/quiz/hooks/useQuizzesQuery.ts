@@ -1,18 +1,21 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuizzes as useQuizzesBase } from '@/lib/api/hooks/quizzes';
+import type { QuizListParams } from '@/lib/api/endpoints/quizzes';
 
-import { quizKeys } from '@/features/instructor/quiz/keys';
+import { QuizStatus } from '../types/quiz';
+import type { QuizFilter } from '../types/quiz';
 
-import { QuizService } from '../services/quizService';
-import { QuizFilter } from '../types/quiz';
-
+/**
+ * Feature-specific wrapper around centralized useQuizzes hook
+ * Maps local QuizFilter type to QuizListParams
+ */
 export function useQuizzes(filter: QuizFilter = {}) {
-  return useQuery({
-    queryKey: quizKeys.list(filter),
-    queryFn: async ({ signal }) => {
-      return QuizService.getQuizzes(filter, signal);
-    },
-    staleTime: 60 * 1000, // 1 minute (more responsive)
-    gcTime: 15 * 60 * 1000, // 15 minutes (keep longer in cache)
-    structuralSharing: true,
-  });
+  // Map filter to API params
+  const params: QuizListParams = {
+    page: filter.page,
+    size: filter.size,
+    search: filter.search,
+    status: filter.status ? (filter.status === QuizStatus.DRAFT ? 'DRAFT' : 'PUBLISHED') : undefined,
+  };
+
+  return useQuizzesBase(params);
 }

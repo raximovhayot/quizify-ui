@@ -4,22 +4,23 @@ import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 
 import { quizKeys } from '@/features/instructor/quiz/keys';
-import { getErrorMessage } from '@/lib/api-utils';
+import { getErrorMessage } from '@/lib/api/utils';
+import { useUpdateQuizStatus as useUpdateQuizStatusBase } from '@/lib/api/hooks/quizzes';
 
 import { TQuizListResponse } from '../schemas/quizSchema';
-import { QuizService } from '../services/quizService';
 import { InstructorQuizUpdateStatusRequest, QuizDataDTO } from '../types/quiz';
 
 // Hook for updating quiz status
 export function useUpdateQuizStatus() {
   const queryClient = useQueryClient();
   const t = useTranslations();
+  const baseUpdateStatus = useUpdateQuizStatusBase();
 
   return useMutation({
     mutationFn: async (
       data: InstructorQuizUpdateStatusRequest
     ): Promise<void> => {
-      await QuizService.updateQuizStatus(data.id, data);
+      await baseUpdateStatus.mutateAsync({ quizId: data.id, status: data.status });
     },
     onMutate: async (variables) => {
       // Cancel outgoing refetches so we don't overwrite our optimistic update

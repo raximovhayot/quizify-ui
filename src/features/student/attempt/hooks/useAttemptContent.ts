@@ -1,16 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
-
-import { StudentAttemptService } from '@/features/student/history/services/studentAttemptService';
-import { AttemptFullData } from '@/features/student/history/schemas/attemptSchema';
+import { useAttemptContent as useAttemptContentBase } from '@/lib/api/hooks/attempts';
 
 export function useAttemptContent(attemptId: number) {
-  return useQuery<AttemptFullData>({
-    queryKey: ['student', 'attempts', 'content', attemptId],
-    queryFn: async ({ signal }) => {
-      return StudentAttemptService.getContent(attemptId, signal);
-    },
-    enabled: Number.isFinite(attemptId) && attemptId > 0,
-    staleTime: 15_000,
-    refetchOnWindowFocus: false,
-  });
+  return useAttemptContentBase(attemptId);
 }

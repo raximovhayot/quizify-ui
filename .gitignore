@@ -44,6 +44,5 @@ next-env.d.ts
 /.idea/modules.xml
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/quizify-ui.iml
-/README.md
 /.idea/vcs.xml
 .env.local
