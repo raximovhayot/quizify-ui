@@ -67,8 +67,9 @@ export function JoinAssignmentDialog({
       await onJoin(code);
       setCode('');
       setError('');
-    } catch (err: any) {
-      setError(err.message || 'Failed to join assignment. Please check the code and try again.');
+    } catch (err) {
+      const error = err as Error;
+      setError(error.message || 'Failed to join assignment. Please check the code and try again.');
     }
   };
 

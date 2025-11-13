@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useWebSocket, type WebSocketMessage } from '@/lib/websocket/hooks';
 import { toast } from 'sonner';
 import { Bell, AlertTriangle, XCircle, Check } from 'lucide-react';
@@ -45,12 +45,15 @@ export function LiveNotifications({
   const unreadCount = notifications.filter(n => !n.read).length;
 
   // Play sound alert
-  const playSound = (type: 'warning' | 'error') => {
+  const playSound = useCallback((type: 'warning' | 'error') => {
     if (!enableSoundAlerts) return;
     
     try {
       // Create simple beep sound
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const AudioContextClass = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      if (!AudioContextClass) return;
+      
+      const audioContext = new AudioContextClass();
       const oscillator = audioContext.createOscillator();
       const gainNode = audioContext.createGain();
       
@@ -66,9 +69,9 @@ export function LiveNotifications({
       oscillator.start(audioContext.currentTime);
       oscillator.stop(audioContext.currentTime + 0.5);
     } catch (error) {
-      console.error('Failed to play sound:', error);
+      // Silently fail - sound is optional
     }
-  };
+  }, [enableSoundAlerts]);
 
   // Handle incoming WebSocket messages
   useEffect(() => {
@@ -111,7 +114,7 @@ export function LiveNotifications({
     });
 
     return unsubscribe;
-  }, [subscribe, maxHistorySize, enableSoundAlerts]);
+  }, [subscribe, maxHistorySize, playSound]);
 
   const markAsRead = (id: string) => {
     setNotifications(prev =>

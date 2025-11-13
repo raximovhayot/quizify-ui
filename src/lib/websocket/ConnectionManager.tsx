@@ -22,8 +22,8 @@ export function ConnectionManager() {
   useEffect(() => {
     if (status === 'authenticated' && session?.user) {
       // Auto-connect when user is authenticated
-      const userId = (session.user as any).id;
-      const accessToken = (session as any).accessToken;
+      const userId = (session.user as { id?: number }).id;
+      const accessToken = (session as { accessToken?: string }).accessToken;
 
       if (userId && accessToken) {
         setConnectionStatus('connecting');

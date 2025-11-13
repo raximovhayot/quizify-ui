@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { useAssignmentAttempts } from '@/lib/api/hooks/attempts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
@@ -80,8 +79,12 @@ export function LiveAttemptControls({
       setSelectedAttempt(null);
       // Refresh the list
       refetch();
-    } catch (error) {
-      console.error('Failed to stop attempt:', error);
+    } catch (err) {
+      // Error handling - log for development only
+      if (process.env.NODE_ENV === 'development') {
+        // eslint-disable-next-line no-console
+        console.error('Failed to stop attempt:', err);
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -96,8 +99,12 @@ export function LiveAttemptControls({
       setShowWarningDialog(false);
       setSelectedAttempt(null);
       setWarningMessage('');
-    } catch (error) {
-      console.error('Failed to send warning:', error);
+    } catch (err) {
+      // Error handling - log for development only
+      if (process.env.NODE_ENV === 'development') {
+        // eslint-disable-next-line no-console
+        console.error('Failed to send warning:', err);
+      }
     } finally {
       setIsSubmitting(false);
     }

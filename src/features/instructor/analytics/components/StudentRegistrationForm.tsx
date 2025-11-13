@@ -8,10 +8,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
 
 interface StudentRegistrationFormProps {
-  assignmentId: number;
   onRegister: (phoneNumbers: string[]) => Promise<void>;
   isLoading?: boolean;
 }
@@ -25,7 +23,6 @@ interface StudentRegistrationFormProps {
  * - Phone number validation
  */
 export function StudentRegistrationForm({
-  assignmentId,
   onRegister,
   isLoading = false,
 }: StudentRegistrationFormProps) {
@@ -159,7 +156,8 @@ export function StudentRegistrationForm({
       await onRegister(phoneNumbers);
       setPhoneNumbers([]);
       setErrors([]);
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as Error;
       setErrors([error.message || 'Failed to register students']);
     }
   };
