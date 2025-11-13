@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
 
 import { useTranslations } from 'next-intl';
@@ -12,7 +13,7 @@ export interface QuizViewHeaderProps {
   quiz: QuizDataDTO;
 }
 
-export function QuizViewHeader({ quiz }: QuizViewHeaderProps) {
+export const QuizViewHeader = memo(function QuizViewHeader({ quiz }: QuizViewHeaderProps) {
   const t = useTranslations();
 
   const getStatusColor = (status: QuizStatus) => {
@@ -78,4 +79,4 @@ export function QuizViewHeader({ quiz }: QuizViewHeaderProps) {
       </div>
     </div>
   );
-}
+});

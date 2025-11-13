@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
@@ -33,7 +33,7 @@ export function AssignmentViewQuestions({
   const { data, isLoading, error, refetch } = useAssignmentQuestions(assignmentId, page, 10);
   const [showAnswers, setShowAnswers] = useState(false);
 
-  const updateSearchParam = (key: string, value?: string) => {
+  const updateSearchParam = useCallback((key: string, value?: string) => {
     const params = new URLSearchParams(searchParams?.toString() ?? '');
     if (value === undefined || value === '' || value === null) {
       params.delete(key);
@@ -42,7 +42,7 @@ export function AssignmentViewQuestions({
     }
     const query = params.toString();
     router.replace(`${pathname}${query ? `?${query}` : ''}`, { scroll: false });
-  };
+  }, [pathname, router, searchParams]);
 
   // Sync from URL (back/forward navigation)
   useEffect(() => {
@@ -60,7 +60,7 @@ export function AssignmentViewQuestions({
       setPage(clamped);
       updateSearchParam('qpage', String(clamped + 1));
     }
-  }, [data, page]);
+  }, [data, page, updateSearchParam]);
 
   if (isLoading) {
     return (

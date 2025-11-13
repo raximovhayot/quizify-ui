@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { Clock, RotateCcw, Settings, Shuffle } from 'lucide-react';
 
 import { useTranslations } from 'next-intl';
@@ -13,7 +14,7 @@ export interface QuizViewConfigurationProps {
   quiz: QuizDataDTO;
 }
 
-export function QuizViewConfiguration({ quiz }: QuizViewConfigurationProps) {
+export const QuizViewConfiguration = memo(function QuizViewConfiguration({ quiz }: QuizViewConfigurationProps) {
   const t = useTranslations();
 
   const formatTimeLimit = (minutes: number) => {
@@ -123,4 +124,4 @@ export function QuizViewConfiguration({ quiz }: QuizViewConfigurationProps) {
       </CardContent>
     </Card>
   );
-}
+});
