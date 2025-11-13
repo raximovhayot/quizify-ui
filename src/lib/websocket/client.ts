@@ -5,7 +5,7 @@ export interface WebSocketMessage {
   attemptId: number;
   action: 'STOP' | 'WARNING';
   message: string;
-  data?: any;
+  data?: unknown;
 }
 
 type MessageCallback = (message: WebSocketMessage) => void;
@@ -24,16 +24,19 @@ class WebSocketClient {
     this.disconnect(); // Disconnect previous connection
     this.userId = userId;
 
+    // eslint-disable-next-line no-process-env
     const wsUrl = process.env.NEXT_PUBLIC_WS_URL || 'http://localhost:8080/ws';
     const socket = new SockJS(wsUrl);
     
     this.client = new Client({
-      webSocketFactory: () => socket as any,
+      webSocketFactory: () => socket as WebSocket,
       connectHeaders: {
         Authorization: `Bearer ${accessToken}`,
       },
       debug: (str) => {
+        // eslint-disable-next-line no-process-env
         if (process.env.NODE_ENV === 'development') {
+          // eslint-disable-next-line no-console
           console.log('[WebSocket]', str);
         }
       },
@@ -43,17 +46,20 @@ class WebSocketClient {
     });
 
     this.client.onConnect = () => {
+      // eslint-disable-next-line no-console
       console.log('[WebSocket] Connected');
       this.connected = true;
       this.subscribe();
     };
 
     this.client.onStompError = (frame) => {
+      // eslint-disable-next-line no-console
       console.error('[WebSocket] Error:', frame);
       this.connected = false;
     };
 
     this.client.onDisconnect = () => {
+      // eslint-disable-next-line no-console
       console.log('[WebSocket] Disconnected');
       this.connected = false;
     };
@@ -69,6 +75,7 @@ class WebSocketClient {
         const data: WebSocketMessage = JSON.parse(message.body);
         this.callbacks.forEach((callback) => callback(data));
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('[WebSocket] Failed to parse message:', error);
       }
     });
