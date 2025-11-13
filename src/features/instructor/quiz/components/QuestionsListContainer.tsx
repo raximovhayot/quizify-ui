@@ -47,7 +47,7 @@ export function QuestionsListContainer({
   const deleteQuestionMutation = useDeleteQuestion();
   const reorderMutation = useReorderQuestions(quizId, filter);
 
-  const questions = questionsData?.content || [];
+  const questions = questionsData || [];
 
   const reorder = (fromIndex: number, toIndex: number) => {
     if (
@@ -123,7 +123,7 @@ export function QuestionsListContainer({
       isDeletePending={deleteQuestionMutation.isPending}
       currentPage={0}
       totalPages={1}
-      totalElements={questions.length}
+      totalElements={questions?.length || 0}
       pageSize={pageSize}
       onPageChange={setCurrentPage}
     />

@@ -20,21 +20,17 @@ export function useReorderQuestions(quizId: number, filter: QuestionFilter) {
 
   return useMutation({
     mutationFn: async (next: QuestionDataDto[]) => {
-      const items: QuestionReorderItem[] = next.map((q, index) => ({ id: q.id, order: index }));
-      await baseReorder.mutateAsync(items);
+      const orderArray = next.map((q, index) => q.id);
+      await baseReorder.mutateAsync(orderArray);
     },
     onMutate: async (next) => {
       const key = questionKeys.list(filter);
       await qc.cancelQueries({ queryKey: key });
-      const previous = qc.getQueryData<IPageableList<QuestionDataDto>>(key);
+      const previous = qc.getQueryData<QuestionDataDto[]>(key);
 
       // Optimistically update current page content order
-      qc.setQueryData<IPageableList<QuestionDataDto>>(key, (old) => {
-        if (!old) return old;
-        return {
-          ...old,
-          content: next.map((q, index) => ({ ...q, order: index })),
-        };
+      qc.setQueryData<QuestionDataDto[]>(key, () => {
+        return next.map((q, index) => ({ ...q, order: index }));
       });
 
       return { previous } as const;
