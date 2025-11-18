@@ -1,8 +1,9 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import { env } from '@/env.mjs';
 
 // Create axios instance
 export const apiClient = axios.create({
-  baseURL: (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080') + '/api/v1',
+  baseURL: env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -39,7 +40,7 @@ apiClient.interceptors.response.use(
         const refreshToken = localStorage.getItem('refreshToken');
         if (refreshToken) {
           const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/v1/auth/refresh-token`,
+            `${env.NEXT_PUBLIC_API_BASE_URL}/auth/refresh-token`,
             { refreshToken }
           );
 

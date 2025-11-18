@@ -1,5 +1,6 @@
 import { useCreateQuiz as useCreateQuizBase } from '@/lib/api/hooks/quizzes';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient, UseMutationOptions } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
@@ -18,7 +19,7 @@ export function useCreateQuiz() {
 
   return {
     ...baseCreate,
-    mutate: (data: InstructorQuizCreateRequest, options?: any) => {
+    mutate: (data: InstructorQuizCreateRequest, options?: UseMutationOptions<QuizDataDTO, AxiosError, InstructorQuizCreateRequest>) => {
       baseCreate.mutate(data, {
         ...options,
         onSuccess: (result, variables, context) => {

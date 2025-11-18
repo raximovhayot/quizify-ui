@@ -1,4 +1,5 @@
 /**
+import { AxiosError } from 'axios';
  * React Query hooks for attempt operations (quiz-taking)
  */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -63,7 +64,7 @@ export const useStartAttempt = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.attempts.all });
       toast.success('Attempt started successfully');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.response?.data?.message || 'Failed to start attempt');
     },
   });
@@ -85,7 +86,7 @@ export const useSubmitAttempt = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.attempts.lists() });
       toast.success('Attempt submitted successfully');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.response?.data?.message || 'Failed to submit attempt');
     },
   });
@@ -107,7 +108,6 @@ export const useSaveAttemptProgress = () => {
     },
     onError: () => {
       // Silent fail for auto-save
-      console.error('Failed to save progress');
     },
   });
 };
@@ -155,7 +155,7 @@ export const useGradeAttempt = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.attempts.detail(variables.id) });
       toast.success('Attempt graded successfully');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.response?.data?.message || 'Failed to grade attempt');
     },
   });

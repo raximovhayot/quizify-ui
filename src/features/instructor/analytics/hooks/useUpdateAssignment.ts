@@ -1,4 +1,5 @@
 import { useQueryClient, useMutation } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
@@ -26,7 +27,7 @@ export function useUpdateAssignment() {
         fallback: 'Assignment updated successfully',
       }));
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.message || 'Failed to update assignment');
     },
   });

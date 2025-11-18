@@ -3,6 +3,7 @@ import { useTranslations } from 'next-intl';
 
 import { questionKeys } from '@/features/instructor/quiz/keys';
 import { useCreateQuestion as useCreateQuestionBase } from '@/lib/api/hooks/questions';
+import type { QuestionCreateRequest } from '@/lib/api/endpoints/questions';
 
 import type { InstructorQuestionSaveRequest } from '../types/question';
 
@@ -14,7 +15,7 @@ export function useCreateQuestion(quizId: number) {
   return {
     ...baseCreateQuestion,
     mutateAsync: async (data: InstructorQuestionSaveRequest) => {
-      const dto = await baseCreateQuestion.mutateAsync(data as any);
+      const dto = await baseCreateQuestion.mutateAsync(data as unknown as QuestionCreateRequest);
       
       // Prime detail cache for newly created question
       if (dto?.id && quizId) {

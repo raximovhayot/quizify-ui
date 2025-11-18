@@ -1,5 +1,6 @@
 import { useDeleteQuiz as useDeleteQuizBase } from '@/lib/api/hooks/quizzes';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient, UseMutationOptions } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 
@@ -18,7 +19,7 @@ export function useDeleteQuiz() {
 
   return {
     ...baseDelete,
-    mutate: (quizId: number, options?: any) => {
+    mutate: (quizId: number, options?: UseMutationOptions<void, AxiosError, number>) => {
       // Optimistic update logic
       const previousLists = queryClient.getQueriesData<TQuizListResponse>({
         queryKey: quizKeys.lists(),

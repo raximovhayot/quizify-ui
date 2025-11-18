@@ -1,7 +1,8 @@
 /**
  * React Query hooks for authentication operations
  */
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { toast } from 'sonner';
 import { authApi, type SignInRequest, type SignUpPrepareRequest, type SignUpVerifyRequest } from '@/lib/api/endpoints/auth';
 
@@ -20,7 +21,7 @@ export const useSignIn = () => {
       localStorage.setItem('refreshToken', data.refreshToken);
       toast.success('Signed in successfully');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.response?.data?.message || 'Failed to sign in');
     },
   });
@@ -38,7 +39,7 @@ export const useSignUpPrepare = () => {
     onSuccess: () => {
       toast.success('OTP sent to your phone');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.response?.data?.message || 'Failed to send OTP');
     },
   });
@@ -59,7 +60,7 @@ export const useSignUpVerify = () => {
       localStorage.setItem('refreshToken', data.refreshToken);
       toast.success('Account created successfully');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.response?.data?.message || 'Failed to verify OTP');
     },
   });
@@ -81,7 +82,7 @@ export const useSignOut = () => {
       // Redirect to sign-in page
       window.location.href = '/sign-in';
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       // Even if API call fails, clear local tokens
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');

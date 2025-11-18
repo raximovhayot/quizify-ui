@@ -1,4 +1,5 @@
 /**
+import { AxiosError } from 'axios';
  * React Query hooks for question operations
  */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -50,7 +51,7 @@ export const useCreateQuestion = (quizId: number) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.quizzes.detail(quizId) });
       toast.success('Question created successfully');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.response?.data?.message || 'Failed to create question');
     },
   });
@@ -72,7 +73,7 @@ export const useUpdateQuestion = (quizId: number) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.questions.list(quizId) });
       toast.success('Question updated successfully');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.response?.data?.message || 'Failed to update question');
     },
   });
@@ -93,7 +94,7 @@ export const useDeleteQuestion = (quizId: number) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.quizzes.detail(quizId) });
       toast.success('Question deleted successfully');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.response?.data?.message || 'Failed to delete question');
     },
   });
@@ -113,7 +114,7 @@ export const useReorderQuestions = (quizId: number) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.questions.list(quizId) });
       toast.success('Questions reordered successfully');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.response?.data?.message || 'Failed to reorder questions');
     },
   });

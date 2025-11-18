@@ -3,6 +3,8 @@
  * Using centralized API hooks from @/lib/api
  */
 import { signIn } from 'next-auth/react';
+import { UseMutationOptions } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 
 import {
   useSignIn as useSignInBase,
@@ -15,15 +17,14 @@ import {
   ForgotPasswordUpdateRequest,
   ForgotPasswordVerifyRequest,
   ForgotPasswordVerifyResponse,
-  JWTToken,
   SignInPrepareResponse,
   SignInRequest,
-  SignUpPrepareRequest,
-  SignUpVerifyRequest,
 } from '@/features/auth/types/auth';
 import { showErrorToast, showSuccessToast } from '@/lib/api/utils';
 import { createMutation } from '@/lib/mutation-utils';
 import { authApi } from '@/lib/api/endpoints/auth';
+
+type SignInResponse = { accessToken: string; refreshToken: string };
 
 /**
  * Login mutation hook - wraps centralized useSignIn with NextAuth integration
@@ -33,7 +34,7 @@ export function useLoginMutation() {
 
   return {
     ...baseSignIn,
-    mutate: (variables: SignInRequest, options?: any) => {
+    mutate: (variables: SignInRequest, options?: UseMutationOptions<SignInResponse, AxiosError, SignInRequest>) => {
       baseSignIn.mutate(variables, {
         ...options,
         onSuccess: async (data, vars, context) => {

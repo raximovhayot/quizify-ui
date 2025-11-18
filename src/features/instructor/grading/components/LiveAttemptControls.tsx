@@ -25,6 +25,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
+import { env } from '@/env.mjs';
 
 interface LiveAttemptControlsProps {
   assignmentId: number;
@@ -81,7 +82,7 @@ export function LiveAttemptControls({
       refetch();
     } catch (err) {
       // Error handling - log for development only
-      if (process.env.NODE_ENV === 'development') {
+      if (env.NEXT_PUBLIC_NODE_ENV === 'development') {
         // eslint-disable-next-line no-console
         console.error('Failed to stop attempt:', err);
       }
@@ -101,7 +102,7 @@ export function LiveAttemptControls({
       setWarningMessage('');
     } catch (err) {
       // Error handling - log for development only
-      if (process.env.NODE_ENV === 'development') {
+      if (env.NEXT_PUBLIC_NODE_ENV === 'development') {
         // eslint-disable-next-line no-console
         console.error('Failed to send warning:', err);
       }
