@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { format } from 'date-fns';
 
 import { useTranslations } from 'next-intl';
@@ -20,7 +21,7 @@ export interface AssignmentsTableRowProps {
   disabled?: boolean;
 }
 
-export function AssignmentsTableRow({
+export const AssignmentsTableRow = memo(function AssignmentsTableRow({
   assignment,
   onDelete,
   onPublish,
@@ -112,4 +113,4 @@ export function AssignmentsTableRow({
       </TableCell>
     </TableRow>
   );
-}
+});
