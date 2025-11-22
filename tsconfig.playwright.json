@@ -1,10 +1,11 @@
 {
+  // Playwright TS config removed. Kept as placeholder for now.
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "noEmit": true,
-    "types": ["@playwright/test"],
+    "types": [],
     "moduleResolution": "bundler",
     "isolatedModules": true
   },
-  "include": ["playwright.config.ts", "tests/e2e/**/*.ts"]
+  "include": []
 }
