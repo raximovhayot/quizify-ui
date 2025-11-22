@@ -106,7 +106,7 @@ export default function AttemptPlayerClient({ attemptId }: AttemptPlayerClientPr
     completeMutation.mutate({ attemptId }, {
       onSuccess: () => {
         toast.success('Quiz submitted successfully');
-        router.push('/student/history');
+        router.push('/dashboard/history');
       },
     });
   }, [completeMutation, attemptId, autoSubmitted, router]);
@@ -126,7 +126,7 @@ export default function AttemptPlayerClient({ attemptId }: AttemptPlayerClientPr
     completeMutation.mutate({ attemptId }, {
       onSuccess: () => {
         toast.success('Quiz submitted successfully');
-        router.push('/student/history');
+        router.push('/dashboard/history');
       },
       onError: () => {
         setAutoSubmitted(false);

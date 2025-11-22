@@ -24,7 +24,7 @@ interface TUserMenuUser {
   phone?: string;
 }
 
-export type TUserMenuNamespace = 'student' | 'instructor';
+export type TUserMenuNamespace = 'student' | 'instructor' | 'dashboard';
 
 interface UserMenuProps {
   user: TUserMenuUser;
@@ -36,13 +36,11 @@ interface UserMenuProps {
 export function UserMenu({
   user,
   onLogout,
-  i18nNamespace = 'instructor',
+  i18nNamespace = 'dashboard',
   showNotificationsQuickActions = false,
 }: Readonly<UserMenuProps>) {
   const t = useTranslations();
-  const ns = i18nNamespace;
-  const profileHref =
-    ns === 'student' ? '/student/profile' : '/instructor/profile';
+  const profileHref = '/dashboard/profile';
 
   return (
     <DropdownMenu>
