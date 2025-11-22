@@ -7,7 +7,7 @@ import { memo, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
-import { ROUTES_APP } from '@/features/instructor/routes';
+import { ROUTES_APP } from '@/features/dashboard/routes';
 import { Badge } from '@/components/ui/badge';
 import { TableCell, TableRow } from '@/components/ui/table';
 

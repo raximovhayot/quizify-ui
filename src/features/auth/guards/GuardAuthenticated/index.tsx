@@ -73,7 +73,7 @@ function GuardAuthenticatedContent({
         // Don't redirect, component will show 403 error
         return;
       } else {
-        // Redirect based on user's actual roles
+        // Redirect to unified dashboard if user has any valid role
         const userRoles = user?.roles || [];
         const hasStudentRole = userRoles.some(
           (role) => role.name === 'STUDENT'
@@ -82,12 +82,8 @@ function GuardAuthenticatedContent({
           (role) => role.name === 'INSTRUCTOR'
         );
 
-        if (hasStudentRole && hasInstructorRole) {
-          router.replace('/student'); // Default to student dashboard
-        } else if (hasStudentRole) {
-          router.replace('/student');
-        } else if (hasInstructorRole) {
-          router.replace('/instructor');
+        if (hasStudentRole || hasInstructorRole) {
+          router.replace('/dashboard');
         } else {
           router.replace('/');
         }

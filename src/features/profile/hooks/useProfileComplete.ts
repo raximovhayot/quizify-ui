@@ -119,14 +119,8 @@ export function useProfileComplete() {
         })
       );
 
-      // Redirect based on dashboard type
-      if (data.dashboardType === DashboardType.STUDENT) {
-        router.push('/student');
-      } else if (data.dashboardType === DashboardType.INSTRUCTOR) {
-        router.push('/instructor');
-      } else {
-        router.push('/');
-      }
+      // Redirect to unified dashboard
+      router.push('/dashboard');
     } catch (error: unknown) {
       handleAuthError(error, form, t);
     } finally {

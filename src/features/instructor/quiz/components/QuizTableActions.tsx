@@ -7,7 +7,7 @@ import { memo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
-import { ROUTES_APP } from '@/features/instructor/routes';
+import { ROUTES_APP } from '@/features/dashboard/routes';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,

@@ -1,0 +1,86 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+
+import { useTranslations } from 'next-intl';
+import { usePathname, useRouter } from 'next/navigation';
+
+import { CreateQuizContainer } from '@/features/instructor/quiz/components/CreateQuizContainer';
+import { ROUTES_APP } from '@/features/dashboard/routes';
+import { useResponsive } from '@/components/shared/hooks/useResponsive';
+import {
+  FormDrawer,
+  FormDrawerContent,
+  FormDrawerHeader,
+  FormDrawerTitle,
+  FormDrawerBody,
+} from '@/components/shared/ui/FormDrawer';
+import { Dialog, DialogTitle } from '@/components/ui/dialog';
+import { ScrollableDialogContent } from '@/components/shared/ui/ScrollableDialogContent';
+
+export default function CreateQuizModalPage() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const t = useTranslations();
+  const { isMobile } = useResponsive();
+  const [open, setOpen] = useState(() =>
+    Boolean(pathname?.endsWith('/quizzes/new'))
+  );
+
+  useEffect(() => {
+    setOpen(Boolean(pathname?.endsWith('/quizzes/new')));
+  }, [pathname]);
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    setOpen(nextOpen);
+    if (!nextOpen) {
+      const isOnNew = pathname?.endsWith('/quizzes/new');
+      if (isOnNew) {
+        const canGoBack =
+          typeof window !== 'undefined' &&
+          ((window.history?.state?.idx ?? 0) > 0 || window.history.length > 1);
+        if (canGoBack) router.back();
+        else router.push(ROUTES_APP.quizzes.list());
+      }
+    }
+  };
+
+  const content = (
+    <CreateQuizContainer
+      hideTitle
+      className="border-none shadow-none rounded-none p-0 [&_[data-slot=card-header]]:px-0 [&_[data-slot=card-content]]:px-0 [&_[data-slot=card-footer]]:px-0 bg-background"
+    />
+  );
+
+  // Mobile: Use full-screen Form Drawer
+  if (isMobile) {
+    return (
+      <FormDrawer open={open} onOpenChange={handleOpenChange}>
+        <FormDrawerContent side="bottom" open={open} className="rounded-t-2xl">
+          <FormDrawerHeader className="pb-4">
+            <FormDrawerTitle>
+              {t('instructor.quiz.create.dialogTitle', {
+                fallback: 'Create Quiz',
+              })}
+            </FormDrawerTitle>
+          </FormDrawerHeader>
+          <FormDrawerBody className="pb-8">{content}</FormDrawerBody>
+        </FormDrawerContent>
+      </FormDrawer>
+    );
+  }
+
+  // Desktop: Use Dialog
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <ScrollableDialogContent className="sm:max-w-2xl rounded-2xl">
+        <DialogTitle className="sr-only">
+          {t('instructor.quiz.create.dialogTitle', {
+            fallback: 'Create Quiz',
+          })}
+        </DialogTitle>
+        {content}
+      </ScrollableDialogContent>
+    </Dialog>
+  );
+}

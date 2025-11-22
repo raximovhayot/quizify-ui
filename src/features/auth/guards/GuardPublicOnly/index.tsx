@@ -45,13 +45,9 @@ export default function GuardPublicOnly({
         (role) => role.name === 'INSTRUCTOR'
       );
 
-      if (hasStudentRole && hasInstructorRole) {
-        // User has both roles, redirect to student dashboard as default
-        router.replace('/student');
-      } else if (hasStudentRole) {
-        router.replace('/student');
-      } else if (hasInstructorRole) {
-        router.replace('/instructor');
+      if (hasStudentRole || hasInstructorRole) {
+        // Redirect to unified dashboard
+        router.replace('/dashboard');
       } else {
         // No valid roles, redirect to home
         router.replace('/');
