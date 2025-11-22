@@ -9,10 +9,10 @@ import { useStudentQuiz } from '@/features/student/quiz/hooks/useStudentQuiz';
 
 export function QuizViewClient({ quizId }: { quizId: number }) {
   const t = useTranslations();
-  const { quizQuery, questionsQuery } = useStudentQuiz(quizId);
+  const assignmentQuery = useStudentQuiz(quizId);
 
-  const isLoading = quizQuery.isLoading || questionsQuery.isLoading;
-  const isError = quizQuery.isError || questionsQuery.isError;
+  const isLoading = assignmentQuery.isLoading;
+  const isError = assignmentQuery.isError;
 
   if (isLoading) {
     return (
@@ -23,7 +23,7 @@ export function QuizViewClient({ quizId }: { quizId: number }) {
     );
   }
 
-  if (isError || !quizQuery.data || !questionsQuery.data) {
+  if (isError || !assignmentQuery.data) {
     return (
       <div className="text-destructive">
         {t('student.quiz.loadError', { default: 'Failed to load quiz' })}
@@ -31,5 +31,9 @@ export function QuizViewClient({ quizId }: { quizId: number }) {
     );
   }
 
-  return <QuizView quiz={quizQuery.data} questions={questionsQuery.data} />;
+  // Note: The assignment data includes quiz and questions information
+  // We need to extract them for the QuizView component
+  const assignment = assignmentQuery.data;
+  
+  return <QuizView quiz={assignment.quiz} questions={assignment.questions || []} />;
 }

@@ -36,7 +36,7 @@ interface UserMenuProps {
 export function UserMenu({
   user,
   onLogout,
-  i18nNamespace = 'dashboard',
+  i18nNamespace: _i18nNamespace = 'dashboard',
   showNotificationsQuickActions = false,
 }: Readonly<UserMenuProps>) {
   const t = useTranslations();
