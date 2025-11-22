@@ -1,6 +1,9 @@
 import { useCallback } from 'react';
 import { wsClient, type WebSocketMessage } from './client';
 
+// Re-export the type for convenience
+export type { WebSocketMessage };
+
 /**
  * React hook for WebSocket integration
  * 

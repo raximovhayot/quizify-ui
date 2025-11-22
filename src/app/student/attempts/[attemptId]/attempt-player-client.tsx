@@ -8,6 +8,7 @@ import { Save } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { useAttempt } from '@/lib/api/hooks/attempts';
 import { useAttemptContent } from '@/features/student/attempt/hooks/useAttemptContent';
 import { useSaveAttemptState } from '@/features/student/attempt/hooks/useSaveAttemptState';
 import { useCompleteAttempt } from '@/features/student/attempt/hooks/useCompleteAttempt';
@@ -31,13 +32,22 @@ function buildSavePayload(
     const qid = Number(questionId);
     return { questionId: qid, answerIds: v } as const;
   });
-  return { attemptId, answers };
+  return { 
+    id: attemptId, 
+    data: { 
+      answers: answers.map(a => ({ 
+        questionId: a.questionId, 
+        answerId: a.answerIds 
+      }))
+    } 
+  };
 }
 
 export default function AttemptPlayerClient({ attemptId }: AttemptPlayerClientProps) {
   const t = useTranslations();
   const router = useRouter();
   const { data: content, isLoading, isError } = useAttemptContent(attemptId);
+  const { data: attempt } = useAttempt(attemptId);
   const saveMutation = useSaveAttemptState();
   const completeMutation = useCompleteAttempt();
   const { subscribe } = useWebSocket();
@@ -53,6 +63,17 @@ export default function AttemptPlayerClient({ attemptId }: AttemptPlayerClientPr
     if (!content) return;
     // If backend provides current state, we could hydrate here. For now, keep empty.
   }, [content]);
+
+  const handleAutoSubmit = useCallback(() => {
+    if (autoSubmitted) return;
+    setAutoSubmitted(true);
+    completeMutation.mutate({ id: attemptId, data: { answers: [] } }, {
+      onSuccess: () => {
+        toast.success('Quiz submitted successfully');
+        router.push('/student/history');
+      },
+    });
+  }, [completeMutation, attemptId, autoSubmitted, router]);
 
   // WebSocket integration for real-time notifications
   useEffect(() => {
@@ -75,7 +96,7 @@ export default function AttemptPlayerClient({ attemptId }: AttemptPlayerClientPr
     if (!content || autoSubmitted) return;
     const timer = setTimeout(() => {
       const payload = buildSavePayload(attemptId, values);
-      if (payload.answers.length > 0) {
+      if (payload.data.answers.length > 0) {
         saveMutation.mutate(payload);
       }
     }, 2000); // 2 second debounce
@@ -95,21 +116,10 @@ export default function AttemptPlayerClient({ attemptId }: AttemptPlayerClientPr
 
   const handleSaveNow = useCallback(() => {
     const payload = buildSavePayload(attemptId, values);
-    if (payload.answers.length > 0) {
+    if (payload.data.answers.length > 0) {
       saveMutation.mutate(payload);
     }
   }, [attemptId, values, saveMutation]);
-
-  const handleAutoSubmit = useCallback(() => {
-    if (autoSubmitted) return;
-    setAutoSubmitted(true);
-    completeMutation.mutate({ attemptId }, {
-      onSuccess: () => {
-        toast.success('Quiz submitted successfully');
-        router.push('/student/history');
-      },
-    });
-  }, [completeMutation, attemptId, autoSubmitted, router]);
 
   const handleTimeExpired = useCallback(() => {
     toast.info('Time expired! Submitting your quiz...');
@@ -123,7 +133,7 @@ export default function AttemptPlayerClient({ attemptId }: AttemptPlayerClientPr
   const handleConfirmSubmit = useCallback(() => {
     if (autoSubmitted) return;
     setAutoSubmitted(true);
-    completeMutation.mutate({ attemptId }, {
+    completeMutation.mutate({ id: attemptId, data: { answers: [] } }, {
       onSuccess: () => {
         toast.success('Quiz submitted successfully');
         router.push('/student/history');
@@ -150,8 +160,10 @@ export default function AttemptPlayerClient({ attemptId }: AttemptPlayerClientPr
   const answeredQuestions = useMemo(() => {
     if (!content?.questions) return new Set<number>();
     const answered = new Set<number>();
-    content.questions.forEach((q, idx) => {
-      if (values[q.id]?.length > 0) {
+    const questions = content.questions;
+    questions.forEach((q, idx) => {
+      const answer = values[q.id];
+      if (answer && answer.length > 0) {
         answered.add(idx);
       }
     });
@@ -160,17 +172,17 @@ export default function AttemptPlayerClient({ attemptId }: AttemptPlayerClientPr
 
   // Calculate end time from startedAt and timeLimitSeconds
   const endTime = useMemo(() => {
-    if (!content?.startedAt || !content?.timeLimitSeconds) return null;
-    const start = new Date(content.startedAt);
-    const end = new Date(start.getTime() + content.timeLimitSeconds * 1000);
+    if (!attempt?.startedAt || !content?.duration) return null;
+    const start = new Date(attempt.startedAt);
+    const end = new Date(start.getTime() + content.duration * 1000);
     return end;
-  }, [content]);
+  }, [attempt, content]);
 
   const header = useMemo(() => {
     return (
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="text-lg font-semibold truncate">
-          {content?.title || t('student.attempt.title', { fallback: 'Attempt' })}
+          {t('student.attempt.title', { fallback: 'Attempt' })}
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {endTime && (
@@ -239,9 +251,9 @@ export default function AttemptPlayerClient({ attemptId }: AttemptPlayerClientPr
                         Question {currentQuestionIndex + 1} of {content.questions.length}
                       </span>
                     </div>
-                    <div className="mb-6 text-base">{currentQuestion.content}</div>
+                    <div className="mb-6 text-base">{currentQuestion.questionText}</div>
                     <ul className="space-y-3">
-                      {currentQuestion.answers?.map((ans) => {
+                      {currentQuestion.options?.map((ans) => {
                         const selected = Array.isArray(values[currentQuestion.id])
                           ? (values[currentQuestion.id] as number[]).includes(ans.id)
                           : false;
@@ -259,7 +271,7 @@ export default function AttemptPlayerClient({ attemptId }: AttemptPlayerClientPr
                                 onChange={() => onToggleChoice(currentQuestion.id, ans.id)}
                                 className="h-4 w-4"
                               />
-                              <span className="flex-1">{ans.content}</span>
+                              <span className="flex-1">{ans.text}</span>
                             </label>
                           </li>
                         );

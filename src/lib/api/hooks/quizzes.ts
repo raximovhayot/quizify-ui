@@ -1,4 +1,5 @@
 /**
+import { AxiosError } from 'axios';
  * React Query hooks for quiz operations
  * Uses TanStack Query for server state management
  */
@@ -49,7 +50,7 @@ export const useCreateQuiz = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.quizzes.all });
       toast.success('Quiz created successfully');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.response?.data?.message || 'Failed to create quiz');
     },
   });
@@ -71,7 +72,7 @@ export const useUpdateQuiz = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.quizzes.lists() });
       toast.success('Quiz updated successfully');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.response?.data?.message || 'Failed to update quiz');
     },
   });
@@ -93,7 +94,7 @@ export const useUpdateQuizStatus = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.quizzes.lists() });
       toast.success(`Quiz ${variables.status === 'PUBLISHED' ? 'published' : 'unpublished'} successfully`);
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.response?.data?.message || 'Failed to update quiz status');
     },
   });
@@ -113,7 +114,7 @@ export const useDeleteQuiz = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.quizzes.all });
       toast.success('Quiz deleted successfully');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.response?.data?.message || 'Failed to delete quiz');
     },
   });

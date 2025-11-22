@@ -24,8 +24,8 @@ export interface AttemptQuestion {
   questionText: string;
   questionType: 'MULTIPLE_CHOICE' | 'TRUE_FALSE' | 'FILL_IN_BLANK' | 'ESSAY';
   options?: AttemptOption[];
-  correctAnswer?: any;
-  userAnswer?: any;
+  correctAnswer?: unknown;
+  userAnswer?: unknown;
 }
 
 export interface AttemptOption {

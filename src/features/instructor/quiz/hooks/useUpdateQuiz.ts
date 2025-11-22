@@ -1,5 +1,6 @@
 import { useUpdateQuiz as useUpdateQuizBase } from '@/lib/api/hooks/quizzes';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient, UseMutationOptions } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
@@ -18,7 +19,7 @@ export function useUpdateQuiz() {
 
   return {
     ...baseUpdate,
-    mutate: (data: InstructorQuizUpdateRequest, options?: any) => {
+    mutate: (data: InstructorQuizUpdateRequest, options?: UseMutationOptions<QuizDataDTO, AxiosError, { id: number; data: InstructorQuizUpdateRequest }>) => {
       if (!data.id) {
         throw new Error('Quiz ID is required for update');
       }

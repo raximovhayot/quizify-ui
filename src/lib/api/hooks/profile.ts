@@ -2,6 +2,7 @@
  * React Query hooks for user profile operations
  */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { toast } from 'sonner';
 import { profileApi, type UpdateProfileRequest, type ChangePasswordRequest } from '@/lib/api/endpoints/profile';
 import { queryKeys } from '@/lib/query/keys';
@@ -35,7 +36,7 @@ export const useUpdateProfile = () => {
       queryClient.setQueryData(queryKeys.profile.current(), data);
       toast.success('Profile updated successfully');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.response?.data?.message || 'Failed to update profile');
     },
   });
@@ -52,7 +53,7 @@ export const useChangePassword = () => {
     onSuccess: () => {
       toast.success('Password changed successfully');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.response?.data?.message || 'Failed to change password');
     },
   });
@@ -73,7 +74,7 @@ export const useCompleteProfile = () => {
       queryClient.setQueryData(queryKeys.profile.current(), data);
       toast.success('Profile completed successfully');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.response?.data?.message || 'Failed to complete profile');
     },
   });

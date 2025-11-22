@@ -1,4 +1,5 @@
 /**
+import { AxiosError } from 'axios';
  * React Query hooks for assignment operations
  */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -75,7 +76,7 @@ export const useCreateAssignment = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.assignments.all });
       toast.success('Assignment created successfully');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.response?.data?.message || 'Failed to create assignment');
     },
   });
@@ -95,7 +96,7 @@ export const useDeleteAssignment = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.assignments.all });
       toast.success('Assignment deleted successfully');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ message?: string }>) => {
       toast.error(error.response?.data?.message || 'Failed to delete assignment');
     },
   });

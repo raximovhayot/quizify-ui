@@ -10,3 +10,11 @@ export function useStudentQuizzes() {
     attempts,
   };
 }
+
+export function useStudentUpcomingQuizzes() {
+  return useStudentAssignments();
+}
+
+export function useStudentInProgressQuizzes() {
+  return useMyAttempts({ status: 'IN_PROGRESS' });
+}
