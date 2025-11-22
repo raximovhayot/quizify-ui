@@ -38,20 +38,8 @@ export default function GuardPublicOnly({
         return;
       }
 
-      // Default redirect based on user roles
-      const userRoles = user.roles || [];
-      const hasStudentRole = userRoles.some((role) => role.name === 'STUDENT');
-      const hasInstructorRole = userRoles.some(
-        (role) => role.name === 'INSTRUCTOR'
-      );
-
-      if (hasStudentRole || hasInstructorRole) {
-        // Redirect to unified dashboard
-        router.replace('/dashboard');
-      } else {
-        // No valid roles, redirect to home
-        router.replace('/');
-      }
+      // Default redirect - all authenticated users go to dashboard
+      router.replace('/dashboard');
     }
   }, [isAuthenticated, user, searchParams, router, redirectPath]);
 

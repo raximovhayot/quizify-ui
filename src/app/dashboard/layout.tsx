@@ -5,7 +5,6 @@ import { getLocale, getMessages } from 'next-intl/server';
 
 import GuardAuthenticated from '@/features/auth/guards/GuardAuthenticated';
 import { DashboardHeader } from '@/features/dashboard/header/DashboardHeader';
-import { UserRole } from '@/features/profile/types/account';
 import { ClientProviders } from '@/components/shared/providers/ClientProviders';
 import { env } from '@/env.mjs';
 
@@ -26,9 +25,7 @@ export default async function DashboardLayout({
         locale={locale}
         timeZone={env.NEXT_PUBLIC_DEFAULT_TIME_ZONE || 'UTC'}
       >
-        <GuardAuthenticated
-          requiredRoles={[UserRole.INSTRUCTOR, UserRole.STUDENT]}
-        >
+        <GuardAuthenticated>
           <div className="min-h-screen bg-background">
             {/* Header/Navbar */}
             <DashboardHeader />

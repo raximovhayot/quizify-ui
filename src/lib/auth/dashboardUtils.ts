@@ -15,17 +15,13 @@ export function normalizeDashboard(value: unknown): TDashboard | null {
 }
 
 /**
- * Pick the most appropriate dashboard for a given user based on roles and preference.
+ * Pick the most appropriate dashboard for a given user.
  *
  * Rules:
- * - All users with STUDENT or INSTRUCTOR roles use the unified /dashboard.
- * - If no valid roles, return null.
+ * - All authenticated users use the unified /dashboard.
+ * - If no user, return null.
  */
 export function pickDashboard(user: TUserLike): TDashboard | null {
-  const roles = (user?.roles ?? []).filter(Boolean) as Array<{ name?: string | null }>;
-  const hasStudentRole = roles.some((r) => r?.name === 'STUDENT');
-  const hasInstructorRole = roles.some((r) => r?.name === 'INSTRUCTOR');
-
-  if (hasStudentRole || hasInstructorRole) return '/dashboard';
-  return null;
+  if (!user) return null;
+  return '/dashboard';
 }

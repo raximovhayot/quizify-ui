@@ -73,20 +73,8 @@ function GuardAuthenticatedContent({
         // Don't redirect, component will show 403 error
         return;
       } else {
-        // Redirect to unified dashboard if user has any valid role
-        const userRoles = user?.roles || [];
-        const hasStudentRole = userRoles.some(
-          (role) => role.name === 'STUDENT'
-        );
-        const hasInstructorRole = userRoles.some(
-          (role) => role.name === 'INSTRUCTOR'
-        );
-
-        if (hasStudentRole || hasInstructorRole) {
-          router.replace('/dashboard');
-        } else {
-          router.replace('/');
-        }
+        // All authenticated users can access dashboard
+        router.replace('/dashboard');
         return;
       }
     }
