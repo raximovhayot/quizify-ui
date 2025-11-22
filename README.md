@@ -71,7 +71,7 @@ Quizify is a comprehensive quiz management platform designed for educational set
 
 ### Developer Tools
 
-- **Testing**: Jest + React Testing Library + Playwright
+- **Testing**: React Testing Library + Playwright
 - **Linting**: ESLint 9
 - **Formatting**: Prettier
 - **Git Hooks**: Husky + lint-staged
@@ -139,9 +139,8 @@ npm run typecheck        # Type check without emitting
 npm run pretty           # Format code with Prettier
 
 # Testing
-npm test                 # Run Jest tests
-npm run test:watch       # Run tests in watch mode
-npm run test:cov         # Run tests with coverage
+Run Playwright E2E tests and local component testing with React Testing Library.
+
 npm run e2e              # Run Playwright E2E tests
 
 # Internationalization
