@@ -19,12 +19,6 @@ export enum UserRole {
   STUDENT = 'STUDENT',
 }
 
-// Dashboard type enum to match backend
-export enum DashboardType {
-  INSTRUCTOR = 'INSTRUCTOR',
-  STUDENT = 'STUDENT',
-}
-
 // Role DTO based on backend-filesystem MCP server
 export interface RoleDTO {
   id: number;
@@ -41,7 +35,6 @@ export interface AccountDTO {
   phone: string;
   state: UserState;
   language: Language;
-  dashboardType?: DashboardType;
 }
 
 // Account completion request for the final step of sign-up
@@ -49,7 +42,6 @@ export interface AccountCompleteRequest {
   firstName: string;
   lastName: string;
   password: string;
-  dashboardType: DashboardType;
 }
 
 // PUT /account - Update user details
@@ -57,7 +49,6 @@ export interface UpdateDetailsRequest {
   firstName: string;
   lastName: string;
   language: Language;
-  dashboardType: DashboardType;
 }
 
 // PUT /account/password - Update user password

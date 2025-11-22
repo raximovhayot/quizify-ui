@@ -20,7 +20,6 @@ import {
 import type { ProfileCompleteFormData } from '@/features/profile/schemas/profile';
 import {
   AccountCompleteRequest,
-  DashboardType,
 } from '@/features/profile/types/account';
 import { useCompleteProfile } from '@/lib/api/hooks/profile';
 
@@ -86,7 +85,6 @@ export function useProfileComplete() {
         firstName: data.firstName,
         lastName: data.lastName,
         password: data.password,
-        dashboardType: data.dashboardType,
       };
 
       // Complete account using centralized hook
