@@ -18,7 +18,6 @@ declare module 'next-auth' {
       lastName?: string;
       state: UserState;
       roles: Array<{ id: number; name: string }>;
-      dashboardType?: string;
       language: string;
     };
     accessToken: string;
@@ -32,7 +31,6 @@ declare module 'next-auth' {
     lastName?: string;
     state: UserState;
     roles: Array<{ id: number; name: string }>;
-    dashboardType?: string;
     language: string;
     accessToken: string;
     refreshToken: string;
@@ -116,7 +114,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             lastName: jwtToken.user.lastName,
             state: jwtToken.user.state,
             roles: jwtToken.user.roles || [],
-            dashboardType: jwtToken.user.dashboardType?.toString(),
             language: jwtToken.user.language,
             accessToken: jwtToken.accessToken,
             refreshToken: jwtToken.refreshToken,
@@ -150,7 +147,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             phone: user.phone,
             state: user.state,
             language: user.language,
-            dashboardType: user.dashboardType?.toString(),
           },
           accessTokenExpires: computedExp,
         } as JWT;
@@ -174,7 +170,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           lastName: token.user.lastName,
           state: token.user.state,
           roles: token.user.roles,
-          dashboardType: token.user.dashboardType?.toString(),
           language: token.user.language,
         } as unknown as typeof session.user;
         session.accessToken = token.accessToken;

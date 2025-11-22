@@ -17,7 +17,7 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
-import { ROUTES_APP } from '@/features/instructor/routes';
+import { ROUTES_APP } from '@/features/dashboard/routes';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';

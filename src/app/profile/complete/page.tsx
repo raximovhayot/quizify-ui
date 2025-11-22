@@ -27,10 +27,8 @@ function ProfileCompleteContent() {
         ...user,
         language: 'en' as const,
       } as unknown as AccountDTO;
-      if (hasRole(userWithLanguage, 'STUDENT')) {
-        router.replace('/student');
-      } else if (hasRole(userWithLanguage, 'INSTRUCTOR')) {
-        router.replace('/instructor');
+      if (hasRole(userWithLanguage, 'STUDENT') || hasRole(userWithLanguage, 'INSTRUCTOR')) {
+        router.replace('/dashboard');
       } else {
         router.replace('/');
       }

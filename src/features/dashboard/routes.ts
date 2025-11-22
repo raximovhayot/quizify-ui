@@ -10,6 +10,14 @@ export const ROUTES_APP = {
   // Aliases / sections
   home: () => ROUTES_APP.root(),
 
+  // Student features
+  history: () => `${ROUTES_APP.baseUrl()}/history` as const,
+  attempts: {
+    detail: (attemptId: number | string) =>
+      `${ROUTES_APP.baseUrl()}/attempts/${attemptId}` as const,
+  },
+
+  // Instructor features
   quizzes: {
     list: () => `${ROUTES_APP.baseUrl()}/quizzes` as const,
     new: () => `${ROUTES_APP.baseUrl()}/quizzes/new` as const,

@@ -24,7 +24,7 @@ interface TUserMenuUser {
   phone?: string;
 }
 
-export type TUserMenuNamespace = 'student' | 'instructor';
+export type TUserMenuNamespace = 'student' | 'instructor' | 'dashboard';
 
 interface UserMenuProps {
   user: TUserMenuUser;
@@ -36,13 +36,12 @@ interface UserMenuProps {
 export function UserMenu({
   user,
   onLogout,
-  i18nNamespace = 'instructor',
+  i18nNamespace: _i18nNamespace = 'dashboard',
   showNotificationsQuickActions = false,
 }: Readonly<UserMenuProps>) {
   const t = useTranslations();
-  const ns = i18nNamespace;
-  const profileHref =
-    ns === 'student' ? '/student/profile' : '/instructor/profile';
+  const profileHref = '/dashboard/profile';
+  const ns = _i18nNamespace; // Keep ns for template strings
 
   return (
     <DropdownMenu>
@@ -87,7 +86,7 @@ export function UserMenu({
               ) : null}
               <span className="text-xs leading-none text-muted-foreground">
                 {t(`${ns}.role`, {
-                  fallback: ns === 'student' ? 'Student' : 'Instructor',
+                  fallback: 'User',
                 })}
               </span>
             </div>

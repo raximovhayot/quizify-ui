@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 
-import { ROUTES_APP } from '@/features/instructor/routes';
+import { ROUTES_APP } from '@/features/dashboard/routes';
 import { createMutation } from '@/lib/mutation-utils';
 import { useCreateAssignment as useCreateAssignmentBase } from '@/lib/api/hooks/assignments';
 

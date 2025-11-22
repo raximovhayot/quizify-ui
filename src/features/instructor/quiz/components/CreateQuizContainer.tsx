@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { ROUTES_APP } from '@/features/instructor/routes';
+import { ROUTES_APP } from '@/features/dashboard/routes';
 
 import { useCreateQuiz } from '../hooks/useQuizzes';
 import { InstructorQuizCreateRequest } from '../types/quiz';

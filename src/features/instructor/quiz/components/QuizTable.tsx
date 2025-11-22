@@ -7,7 +7,7 @@ import { memo } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
-import { ROUTES_APP } from '@/features/instructor/routes';
+import { ROUTES_APP } from '@/features/dashboard/routes';
 import { ContentPlaceholder } from '@/components/shared/ui/ContentPlaceholder';
 import { Table, TableBody } from '@/components/ui/table';
 

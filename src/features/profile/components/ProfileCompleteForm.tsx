@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
 
-import { DefaultDashboardSelection } from './DefaultDashboardSelection';
 import { PersonalInfoSection } from './PersonalInfoSection';
 import { SecuritySection } from './SecuritySection';
 
@@ -50,10 +49,6 @@ export function ProfileCompleteForm({
           <div className="space-y-6">
             <PersonalInfoSection form={form} isSubmitting={isSubmitting} />
             <SecuritySection form={form} isSubmitting={isSubmitting} />
-            <DefaultDashboardSelection
-              form={form}
-              isSubmitting={isSubmitting}
-            />
 
             <Button
               type="button"

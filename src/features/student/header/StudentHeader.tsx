@@ -19,12 +19,12 @@ export function StudentHeader({ title: _title }: Readonly<StudentHeaderProps>) {
 
   const navItems: TNavigationItem[] = [
     {
-      href: '/student',
+      href: '/dashboard',
       icon: Home,
       label: t('student.navigation.home', { fallback: 'Home' }),
     },
     {
-      href: '/student/history',
+      href: '/dashboard/history',
       icon: History,
       label: t('student.navigation.history', { fallback: 'History' }),
     },
@@ -39,8 +39,8 @@ export function StudentHeader({ title: _title }: Readonly<StudentHeaderProps>) {
 
   return (
     <AppHeader
-      logoHref="/student"
-      rootHref="/student"
+      logoHref="/dashboard"
+      rootHref="/dashboard"
       navItems={navItems}
       mobileTitle={mobileTitle}
       toggleMenuLabel={toggleMenuLabel}
