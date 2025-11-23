@@ -8,12 +8,10 @@ import React from 'react';
 
 import { useTranslations } from 'next-intl';
 
-import { DefaultDashboardSelection } from '@/features/profile/components/DefaultDashboardSelection';
 import { useProfile } from '@/features/profile/hooks/useProfile';
 import { useUpdateProfile } from '@/features/profile/hooks/useUpdateProfile';
 import { profileDetailsUpdateSchema } from '@/features/profile/schemas/profile';
-import { DashboardType } from '@/features/profile/types/account';
-import { FormCard } from '@/components/shared/form';
+import { FormCard } from '@/components/form';
 import { Form } from '@/components/ui/form';
 import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -40,7 +38,6 @@ export function ProfileUpdateDetailsForm() {
       firstName: '',
       lastName: '',
       language: Language.EN,
-      dashboardType: DashboardType.STUDENT,
     },
   });
 
@@ -51,7 +48,6 @@ export function ProfileUpdateDetailsForm() {
         firstName: profile.firstName ?? '',
         lastName: profile.lastName ?? '',
         language: profile.language ?? Language.EN,
-        dashboardType: profile.dashboardType ?? DashboardType.STUDENT,
       });
     }
   }, [profile, form]);
@@ -144,11 +140,6 @@ export function ProfileUpdateDetailsForm() {
                 </FieldContent>
               </Field>
             )}
-          />
-
-          <DefaultDashboardSelection
-            form={form}
-            isSubmitting={updateProfile.isPending || isLoading}
           />
 
           <SubmitButton

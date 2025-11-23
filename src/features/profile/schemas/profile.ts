@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-import { DashboardType } from '@/features/profile/types/account';
 import { PASSWORD_MIN_LENGTH, PASSWORD_REGEX } from '@/constants/validation';
 import { Language } from '@/types/common';
 
@@ -77,11 +76,6 @@ export const profileCompleteDetailsSchema = (
             'Password must contain at least one uppercase letter, one lowercase letter, and one number',
         })
       ),
-    dashboardType: z.enum(DashboardType, {
-      message: t('auth.validation.dashboardTypeRequired', {
-        default: 'Please select your role',
-      }),
-    }),
   });
 };
 
@@ -116,11 +110,6 @@ export const profileDetailsUpdateSchema = (
     language: z.enum(Language, {
       message: t('profile.validation.languageRequired', {
         fallback: 'Language is required',
-      }),
-    }),
-    dashboardType: z.enum(DashboardType, {
-      message: t('auth.validation.dashboardTypeRequired', {
-        fallback: 'Please select your role',
       }),
     }),
   });
@@ -179,5 +168,4 @@ export const profileCompleteFormDefaults: Partial<ProfileCompleteFormData> = {
   firstName: '',
   lastName: '',
   password: '',
-  dashboardType: DashboardType.STUDENT, // Default to student
 };

@@ -6,8 +6,9 @@ import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { useNextAuth } from '@/features/auth/hooks/useNextAuth';
-import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
+import { FullPageLoading } from '@/components/custom-ui/FullPageLoading';
 import { Spinner } from '@/components/ui/spinner';
+import { ROUTES_APP } from '@/features/routes';
 
 interface GuardPublicOnlyProps {
   children: ReactNode;
@@ -38,24 +39,8 @@ export default function GuardPublicOnly({
         return;
       }
 
-      // Default redirect based on user roles
-      const userRoles = user.roles || [];
-      const hasStudentRole = userRoles.some((role) => role.name === 'STUDENT');
-      const hasInstructorRole = userRoles.some(
-        (role) => role.name === 'INSTRUCTOR'
-      );
-
-      if (hasStudentRole && hasInstructorRole) {
-        // User has both roles, redirect to student dashboard as default
-        router.replace('/student');
-      } else if (hasStudentRole) {
-        router.replace('/student');
-      } else if (hasInstructorRole) {
-        router.replace('/instructor');
-      } else {
-        // No valid roles, redirect to home
-        router.replace('/');
-      }
+      // Default redirect - all authenticated users go to unified dashboard root
+      router.replace(ROUTES_APP.root());
     }
   }, [isAuthenticated, user, searchParams, router, redirectPath]);
 

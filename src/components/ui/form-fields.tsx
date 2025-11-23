@@ -7,7 +7,7 @@ import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/fie
 import { Input } from '@/components/ui/input';
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from '@/components/ui/input-group';
 import { Eye, EyeOff } from 'lucide-react';
-import { PhoneField as SharedPhoneField } from '@/components/shared/form/PhoneField';
+import { PhoneField as SharedPhoneField } from '@/components/form/PhoneField';
 
 interface BaseFormFieldProps<T extends FieldValues> {
   control: Control<T>;

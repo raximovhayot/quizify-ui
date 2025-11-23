@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { useWebSocket, type WebSocketMessage } from '@/lib/websocket/hooks';
+import { useWebSocket } from '@/lib/websocket/hooks';
 import { toast } from 'sonner';
 import { Bell, AlertTriangle, XCircle, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,14 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
+
+// Local minimal type for websocket messages to avoid importing non-exported types
+// and to satisfy linting rules
+type IncomingMessage = {
+  action: 'STOP' | 'WARNING' | 'INFO';
+  message: string;
+  attemptId?: number;
+};
 
 interface Notification {
   id: string;
@@ -75,7 +83,7 @@ export function LiveNotifications({
 
   // Handle incoming WebSocket messages
   useEffect(() => {
-    const unsubscribe = subscribe((message: WebSocketMessage) => {
+    const unsubscribe = subscribe((message: IncomingMessage) => {
       const notification: Notification = {
         id: `${Date.now()}-${Math.random()}`,
         type: message.action,

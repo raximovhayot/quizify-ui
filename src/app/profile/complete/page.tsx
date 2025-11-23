@@ -12,9 +12,10 @@ import {
   UserState,
   hasRole,
 } from '@/features/profile/types/account';
-import { AppPublicOnlyLayout } from '@/components/shared/layouts/AppLayout';
+import { AppPublicOnlyLayout } from '@/components/layouts/AppLayout';
 import { Form } from '@/components/ui/form';
-import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
+import { FullPageLoading } from '@/components/custom-ui/FullPageLoading';
+import { ROUTES_APP } from '@/features/routes';
 
 function ProfileCompleteContent() {
   const router = useRouter();
@@ -27,10 +28,8 @@ function ProfileCompleteContent() {
         ...user,
         language: 'en' as const,
       } as unknown as AccountDTO;
-      if (hasRole(userWithLanguage, 'STUDENT')) {
-        router.replace('/student');
-      } else if (hasRole(userWithLanguage, 'INSTRUCTOR')) {
-        router.replace('/instructor');
+      if (hasRole(userWithLanguage, 'STUDENT') || hasRole(userWithLanguage, 'INSTRUCTOR')) {
+        router.replace(ROUTES_APP.root());
       } else {
         router.replace('/');
       }

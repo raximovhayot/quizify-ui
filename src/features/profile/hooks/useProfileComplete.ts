@@ -20,9 +20,9 @@ import {
 import type { ProfileCompleteFormData } from '@/features/profile/schemas/profile';
 import {
   AccountCompleteRequest,
-  DashboardType,
 } from '@/features/profile/types/account';
 import { useCompleteProfile } from '@/lib/api/hooks/profile';
+import { ROUTES_APP } from '@/features/routes';
 
 export type { ProfileCompleteFormData } from '@/features/profile/schemas/profile';
 
@@ -86,7 +86,6 @@ export function useProfileComplete() {
         firstName: data.firstName,
         lastName: data.lastName,
         password: data.password,
-        dashboardType: data.dashboardType,
       };
 
       // Complete account using centralized hook
@@ -119,14 +118,8 @@ export function useProfileComplete() {
         })
       );
 
-      // Redirect based on dashboard type
-      if (data.dashboardType === DashboardType.STUDENT) {
-        router.push('/student');
-      } else if (data.dashboardType === DashboardType.INSTRUCTOR) {
-        router.push('/instructor');
-      } else {
-        router.push('/');
-      }
+      // Redirect to unified dashboard root
+      router.push(ROUTES_APP.root());
     } catch (error: unknown) {
       handleAuthError(error, form, t);
     } finally {

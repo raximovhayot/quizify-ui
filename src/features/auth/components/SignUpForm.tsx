@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
 import { useSignUpForms } from '@/features/auth/hooks/useSignUpForms';
-import { FormCard, PhoneField } from '@/components/shared/form';
+import { FormCard, PhoneField } from '@/components/form';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { Spinner } from '@/components/ui/spinner';

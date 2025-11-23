@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { ReactNode, Suspense, useEffect } from 'react';
 
@@ -11,8 +11,9 @@ import {
   UserState,
 } from '@/features/profile/types/account';
 import { ErrorPage } from '@/components/ui/error-page';
-import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
+import { FullPageLoading } from '@/components/custom-ui/FullPageLoading';
 import { Spinner } from '@/components/ui/spinner';
+import { ROUTES_APP } from '@/features/routes';
 
 interface GuardAuthenticatedProps {
   children: ReactNode;
@@ -73,24 +74,8 @@ function GuardAuthenticatedContent({
         // Don't redirect, component will show 403 error
         return;
       } else {
-        // Redirect based on user's actual roles
-        const userRoles = user?.roles || [];
-        const hasStudentRole = userRoles.some(
-          (role) => role.name === 'STUDENT'
-        );
-        const hasInstructorRole = userRoles.some(
-          (role) => role.name === 'INSTRUCTOR'
-        );
-
-        if (hasStudentRole && hasInstructorRole) {
-          router.replace('/student'); // Default to student dashboard
-        } else if (hasStudentRole) {
-          router.replace('/student');
-        } else if (hasInstructorRole) {
-          router.replace('/instructor');
-        } else {
-          router.replace('/');
-        }
+        // All authenticated users go to unified dashboard root
+        router.replace(ROUTES_APP.root());
         return;
       }
     }
