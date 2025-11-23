@@ -1,13 +1,13 @@
 import { ReactNode, Suspense } from 'react';
-import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
+import { FullPageLoading } from '@/components/custom-ui/FullPageLoading';
 
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 
 import { GuardPublicOnly } from '@/features/auth/guards';
-import { AppPublicOnlyLayout } from '@/components/shared/layouts/AppLayout';
-import { PublicClientProviders } from '@/components/shared/providers/PublicClientProviders';
+import { AppPublicOnlyLayout } from '@/components/layouts/AppLayout';
+import { PublicClientProviders } from '@/components/providers/PublicClientProviders';
 import { env } from '@/env.mjs';
 
 export const metadata: Metadata = {

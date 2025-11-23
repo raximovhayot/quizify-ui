@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 
 import { SignUpVerifyForm } from '@/features/auth/components/SignUpVerifyForm';
-import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
+import { FullPageLoading } from '@/components/custom-ui/FullPageLoading';
 
 export default async function SignUpVerifyPage() {
   const t = await getTranslations('common');

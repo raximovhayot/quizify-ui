@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
 import { useForgotPasswordForm } from '@/features/auth/hooks/useForgotPasswordForm';
-import { FormCard, PasswordField } from '@/components/shared/form';
+import { FormCard, PasswordField } from '@/components/form';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { Spinner } from '@/components/ui/spinner';

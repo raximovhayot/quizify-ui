@@ -1,19 +1,3 @@
-// Common API types
-export interface PaginatedResponse<T> {
-  content: T[];
-  totalElements: number;
-  totalPages: number;
-  size: number;
-  number: number;
-}
-
-export interface ApiError {
-  message: string;
-  errorCode?: string;
-  timestamp?: string;
-  path?: string;
-}
-
 // Auth types
 export interface SignInRequest {
   phone: string;
@@ -26,7 +10,7 @@ export interface SignUpPrepareRequest {
   confirmPassword: string;
   firstName: string;
   lastName: string;
-  role: 'INSTRUCTOR' | 'STUDENT';
+  role: 'USER' | 'MANAGER';
 }
 
 export interface SignUpVerifyRequest {

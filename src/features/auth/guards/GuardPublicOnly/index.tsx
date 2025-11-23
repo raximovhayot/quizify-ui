@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { useNextAuth } from '@/features/auth/hooks/useNextAuth';
-import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
+import { FullPageLoading } from '@/components/custom-ui/FullPageLoading';
 import { Spinner } from '@/components/ui/spinner';
 import { ROUTES_APP } from '@/features/routes';
 

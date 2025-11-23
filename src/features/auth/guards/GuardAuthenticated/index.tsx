@@ -11,7 +11,7 @@ import {
   UserState,
 } from '@/features/profile/types/account';
 import { ErrorPage } from '@/components/ui/error-page';
-import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
+import { FullPageLoading } from '@/components/custom-ui/FullPageLoading';
 import { Spinner } from '@/components/ui/spinner';
 import { ROUTES_APP } from '@/features/routes';
 

@@ -5,7 +5,7 @@ import { getLocale, getMessages } from 'next-intl/server';
 
 import GuardAuthenticated from '@/features/auth/guards/GuardAuthenticated';
 import { DashboardHeader } from '@/features/header/DashboardHeader';
-import { ClientProviders } from '@/components/shared/providers/ClientProviders';
+import { ClientProviders } from '@/components/providers/ClientProviders';
 import { env } from '@/env.mjs';
 
 interface DashboardLayoutProps {

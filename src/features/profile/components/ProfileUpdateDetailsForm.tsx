@@ -11,7 +11,7 @@ import { useTranslations } from 'next-intl';
 import { useProfile } from '@/features/profile/hooks/useProfile';
 import { useUpdateProfile } from '@/features/profile/hooks/useUpdateProfile';
 import { profileDetailsUpdateSchema } from '@/features/profile/schemas/profile';
-import { FormCard } from '@/components/shared/form';
+import { FormCard } from '@/components/form';
 import { Form } from '@/components/ui/form';
 import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';

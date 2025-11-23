@@ -6,9 +6,9 @@ import { useTranslations } from 'next-intl';
 
 import { useNextAuth } from '@/features/auth/hooks/useNextAuth';
 import { ROUTES_APP } from '@/features/routes';
-import { AppHeader } from '@/components/shared/navigation/AppHeader';
-import { TNavigationItem } from '@/components/shared/navigation/AppNavigation';
-import { UserMenu } from '@/components/shared/navigation/UserMenu';
+import { AppHeader } from '@/components/navigation/AppHeader';
+import { TNavigationItem } from '@/components/navigation/AppNavigation';
+import { UserMenu } from '@/components/navigation/UserMenu';
 
 interface DashboardHeaderProps {
   title?: string;
@@ -64,7 +64,6 @@ export function DashboardHeader({
             user={user}
             onLogout={logout}
             i18nNamespace="dashboard"
-            showNotificationsQuickActions={false}
           />
         ) : null
       }

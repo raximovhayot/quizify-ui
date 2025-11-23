@@ -5,14 +5,6 @@ export type TUserLike = {
 
 export type TDashboard = '/';
 
-/**
- * Normalize dashboard preference to a known route or null.
- */
-export function normalizeDashboard(value: unknown): TDashboard | null {
-  if (value == null) return null;
-  // All users now use the unified dashboard (root)
-  return '/';
-}
 
 /**
  * Pick the most appropriate dashboard for a given user.

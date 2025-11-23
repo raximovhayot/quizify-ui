@@ -10,7 +10,7 @@ import { useTranslations } from 'next-intl';
 
 import { useChangePassword } from '@/features/profile/hooks/useChangePassword';
 import { profilePasswordUpdateSchema } from '@/features/profile/schemas/profile';
-import { FormCard, PasswordField } from '@/components/shared/form';
+import { FormCard, PasswordField } from '@/components/form';
 import { Form } from '@/components/ui/form';
 import { SubmitButton } from '@/components/ui/submit-button';
 

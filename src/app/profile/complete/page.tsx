@@ -12,9 +12,9 @@ import {
   UserState,
   hasRole,
 } from '@/features/profile/types/account';
-import { AppPublicOnlyLayout } from '@/components/shared/layouts/AppLayout';
+import { AppPublicOnlyLayout } from '@/components/layouts/AppLayout';
 import { Form } from '@/components/ui/form';
-import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
+import { FullPageLoading } from '@/components/custom-ui/FullPageLoading';
 import { ROUTES_APP } from '@/features/routes';
 
 function ProfileCompleteContent() {

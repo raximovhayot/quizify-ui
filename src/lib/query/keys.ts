@@ -25,7 +25,7 @@ export const queryKeys = {
   quizzes: {
     all: ['quizzes'] as const,
     lists: () => [...queryKeys.quizzes.all, 'list'] as const,
-    list: (params?: any) => [...queryKeys.quizzes.lists(), params] as const,
+    list: (params?: unknown) => [...queryKeys.quizzes.lists(), params] as const,
     details: () => [...queryKeys.quizzes.all, 'detail'] as const,
     detail: (id: number) => [...queryKeys.quizzes.details(), id] as const,
   },
@@ -43,7 +43,7 @@ export const queryKeys = {
   assignments: {
     all: ['assignments'] as const,
     lists: () => [...queryKeys.assignments.all, 'list'] as const,
-    list: (params?: any) => [...queryKeys.assignments.lists(), params] as const,
+    list: (params?: unknown) => [...queryKeys.assignments.lists(), params] as const,
     details: () => [...queryKeys.assignments.all, 'detail'] as const,
     detail: (id: number) => [...queryKeys.assignments.details(), id] as const,
   },
@@ -52,7 +52,7 @@ export const queryKeys = {
   attempts: {
     all: ['attempts'] as const,
     lists: () => [...queryKeys.attempts.all, 'list'] as const,
-    list: (params?: any) => [...queryKeys.attempts.lists(), params] as const,
+    list: (params?: unknown) => [...queryKeys.attempts.lists(), params] as const,
     details: () => [...queryKeys.attempts.all, 'detail'] as const,
     detail: (id: number) => [...queryKeys.attempts.details(), id] as const,
     content: (id: number) => [...queryKeys.attempts.detail(id), 'content'] as const,
