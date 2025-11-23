@@ -22,6 +22,7 @@ import {
   AccountCompleteRequest,
 } from '@/features/profile/types/account';
 import { useCompleteProfile } from '@/lib/api/hooks/profile';
+import { ROUTES_APP } from '@/features/dashboard/routes';
 
 export type { ProfileCompleteFormData } from '@/features/profile/schemas/profile';
 
@@ -117,8 +118,8 @@ export function useProfileComplete() {
         })
       );
 
-      // Redirect to unified dashboard
-      router.push('/dashboard');
+      // Redirect to unified dashboard root
+      router.push(ROUTES_APP.root());
     } catch (error: unknown) {
       handleAuthError(error, form, t);
     } finally {

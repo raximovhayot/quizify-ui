@@ -3,15 +3,15 @@ export type TUserLike = {
   defaultDashboard?: unknown;
 } | null | undefined;
 
-export type TDashboard = '/dashboard';
+export type TDashboard = '/';
 
 /**
  * Normalize dashboard preference to a known route or null.
  */
 export function normalizeDashboard(value: unknown): TDashboard | null {
   if (value == null) return null;
-  // All users now use the unified dashboard
-  return '/dashboard';
+  // All users now use the unified dashboard (root)
+  return '/';
 }
 
 /**
@@ -23,5 +23,5 @@ export function normalizeDashboard(value: unknown): TDashboard | null {
  */
 export function pickDashboard(user: TUserLike): TDashboard | null {
   if (!user) return null;
-  return '/dashboard';
+  return '/';
 }

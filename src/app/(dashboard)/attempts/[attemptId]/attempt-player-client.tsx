@@ -221,86 +221,61 @@ export default function AttemptPlayerClient({ attemptId }: AttemptPlayerClientPr
     );
   }
 
-  const currentQuestion = content.questions[currentQuestionIndex];
-
   return (
-    <>
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Main Quiz Area */}
-        <div className="lg:col-span-2">
-          <Card>
-            <CardHeader>{header}</CardHeader>
-            <CardContent>
-              {currentQuestion && (
-                <div className="space-y-6">
-                  <div className="border rounded-md p-6">
-                    <div className="font-medium mb-4 text-lg">
-                      <span className="text-muted-foreground mr-2">
-                        Question {currentQuestionIndex + 1} of {content.questions.length}
-                      </span>
-                    </div>
-                    <div className="mb-6 text-base">{currentQuestion.content}</div>
-                    <ul className="space-y-3">
-                      {currentQuestion.answers?.map((ans) => {
-                        const selected = Array.isArray(values[currentQuestion.id])
-                          ? (values[currentQuestion.id] as number[]).includes(ans.id)
-                          : false;
-                        return (
-                          <li key={ans.id}>
-                            <label 
-                              className={cn(
-                                "flex items-center gap-3 rounded-md border p-4 cursor-pointer transition-colors",
-                                selected && "border-primary bg-primary/5"
-                              )}
-                            >
-                              <input
-                                type="checkbox"
-                                checked={selected}
-                                onChange={() => onToggleChoice(currentQuestion.id, ans.id)}
-                                className="h-4 w-4"
-                              />
-                              <span className="flex-1">{ans.content}</span>
-                            </label>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
+    <div className={cn('grid grid-cols-1 lg:grid-cols-4 gap-6')}>
+      <div className="lg:col-span-3">
+        <Card>
+          <CardHeader>{header}</CardHeader>
+          <CardContent>
+            {/* Question list */}
+            <div className="space-y-6">
+              {content.questions.map((q, idx) => (
+                <div key={q.id} className="space-y-2">
+                  <QuestionNavigation
+                    question={q}
+                    index={idx}
+                    onToggleChoice={onToggleChoice}
+                    values={values[q.id] ?? []}
+                    flagged={flaggedQuestions.has(idx)}
+                    onToggleFlag={() => handleToggleFlag(idx)}
+                  />
                 </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Navigation Sidebar */}
-        <div className="lg:col-span-1">
-          <Card>
-            <CardHeader>
-              <h3 className="text-lg font-semibold">Navigation</h3>
-            </CardHeader>
-            <CardContent>
-              <QuestionNavigation
-                currentQuestion={currentQuestionIndex}
-                totalQuestions={content.questions.length}
-                answeredQuestions={answeredQuestions}
-                flaggedQuestions={flaggedQuestions}
-                onNavigate={setCurrentQuestionIndex}
-                onToggleFlag={handleToggleFlag}
-              />
-            </CardContent>
-          </Card>
-        </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      <div className="lg:col-span-1">
+        <Card>
+          <CardHeader>{t('student.attempt.side.title', { fallback: 'Overview' })}</CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div>
+                <div className="text-sm text-muted-foreground">{t('student.attempt.side.answered', { fallback: 'Answered' })}</div>
+                <div className="text-lg font-medium">{answeredQuestions.size}</div>
+              </div>
+              <div>
+                <div className="text-sm text-muted-foreground">{t('student.attempt.side.flagged', { fallback: 'Flagged' })}</div>
+                <div className="text-lg font-medium">{flaggedQuestions.size}</div>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="secondary" onClick={handleSaveNow} disabled={saveMutation.isPending || autoSubmitted}>
+                  {t('common.save', { fallback: 'Save' })}
+                </Button>
+                <Button onClick={handleSubmitClick} disabled={completeMutation.isPending || autoSubmitted}>
+                  {t('student.attempt.complete', { fallback: 'Submit' })}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Submit Confirmation Dialog */}
       <SubmitConfirmationDialog
         open={showSubmitDialog}
-        onOpenChange={setShowSubmitDialog}
+        onOpenChange={(open) => setShowSubmitDialog(open)}
         onConfirm={handleConfirmSubmit}
-        totalQuestions={content.questions.length}
-        answeredQuestions={answeredQuestions.size}
-        isSubmitting={completeMutation.isPending}
       />
-    </>
+    </div>
   );
 }

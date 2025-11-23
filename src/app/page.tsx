@@ -1,7 +1,14 @@
-import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
+import { getTranslations } from 'next-intl/server';
 
-import { ROUTES_APP } from '@/features/dashboard/routes';
+import { StudentHomePage } from '@/features/student/home/StudentHomePage';
+import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
 
-export default function Page() {
-  redirect(ROUTES_APP.root());
+export default async function Page() {
+  const t = await getTranslations('common');
+  return (
+    <Suspense fallback={<FullPageLoading text={t('loading', { default: 'Loading...' })} />}>
+      <StudentHomePage />
+    </Suspense>
+  );
 }

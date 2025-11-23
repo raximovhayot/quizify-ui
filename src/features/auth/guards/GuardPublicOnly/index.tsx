@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useNextAuth } from '@/features/auth/hooks/useNextAuth';
 import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
 import { Spinner } from '@/components/ui/spinner';
+import { ROUTES_APP } from '@/features/dashboard/routes';
 
 interface GuardPublicOnlyProps {
   children: ReactNode;
@@ -38,8 +39,8 @@ export default function GuardPublicOnly({
         return;
       }
 
-      // Default redirect - all authenticated users go to dashboard
-      router.replace('/dashboard');
+      // Default redirect - all authenticated users go to unified dashboard root
+      router.replace(ROUTES_APP.root());
     }
   }, [isAuthenticated, user, searchParams, router, redirectPath]);
 

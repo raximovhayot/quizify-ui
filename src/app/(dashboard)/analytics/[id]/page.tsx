@@ -23,4 +23,3 @@ export default function AssignmentAnalyticsPage() {
 
   return <AssignmentViewPage assignmentId={assignmentId} />;
 }
-

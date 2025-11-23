@@ -5,6 +5,7 @@ import { BarChart3, BookOpen, History, Home } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { useNextAuth } from '@/features/auth/hooks/useNextAuth';
+import { ROUTES_APP } from '@/features/dashboard/routes';
 import { AppHeader } from '@/components/shared/navigation/AppHeader';
 import { TNavigationItem } from '@/components/shared/navigation/AppNavigation';
 import { UserMenu } from '@/components/shared/navigation/UserMenu';
@@ -22,22 +23,22 @@ export function DashboardHeader({
   // All users see all navigation items
   const navItems: TNavigationItem[] = [
     {
-      href: '/dashboard',
+      href: ROUTES_APP.home(),
       icon: Home,
       label: t('dashboard.navigation.home', { default: 'Home' }),
     },
     {
-      href: '/dashboard/history',
+      href: ROUTES_APP.history(),
       icon: History,
       label: t('dashboard.navigation.history', { default: 'History' }),
     },
     {
-      href: '/dashboard/quizzes',
+      href: ROUTES_APP.quizzes.list(),
       icon: BookOpen,
       label: t('dashboard.navigation.quizzes', { default: 'Quizzes' }),
     },
     {
-      href: '/dashboard/analytics',
+      href: ROUTES_APP.analytics.root(),
       icon: BarChart3,
       label: t('dashboard.navigation.analytics', { default: 'Analytics' }),
     },
@@ -52,8 +53,8 @@ export function DashboardHeader({
 
   return (
     <AppHeader
-      logoHref="/dashboard"
-      rootHref="/dashboard"
+      logoHref={ROUTES_APP.root()}
+      rootHref={ROUTES_APP.root()}
       navItems={navItems}
       mobileTitle={mobileTitle}
       toggleMenuLabel={toggleMenuLabel}

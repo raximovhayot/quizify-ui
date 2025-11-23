@@ -15,6 +15,7 @@ import {
 import { AppPublicOnlyLayout } from '@/components/shared/layouts/AppLayout';
 import { Form } from '@/components/ui/form';
 import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
+import { ROUTES_APP } from '@/features/dashboard/routes';
 
 function ProfileCompleteContent() {
   const router = useRouter();
@@ -28,7 +29,7 @@ function ProfileCompleteContent() {
         language: 'en' as const,
       } as unknown as AccountDTO;
       if (hasRole(userWithLanguage, 'STUDENT') || hasRole(userWithLanguage, 'INSTRUCTOR')) {
-        router.replace('/dashboard');
+        router.replace(ROUTES_APP.root());
       } else {
         router.replace('/');
       }

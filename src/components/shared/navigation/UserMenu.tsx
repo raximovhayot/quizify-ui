@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
 import { ThemeSwitcher } from '@/components/ui/theme-switcher';
+import { ROUTES_APP } from '@/features/dashboard/routes';
 
 interface TUserMenuUser {
   firstName?: string;
@@ -40,7 +41,7 @@ export function UserMenu({
   showNotificationsQuickActions = false,
 }: Readonly<UserMenuProps>) {
   const t = useTranslations();
-  const profileHref = '/dashboard/profile';
+  const profileHref = ROUTES_APP.profile.root();
   const ns = _i18nNamespace; // Keep ns for template strings
 
   return (

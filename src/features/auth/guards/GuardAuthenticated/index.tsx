@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { ReactNode, Suspense, useEffect } from 'react';
 
@@ -13,6 +13,7 @@ import {
 import { ErrorPage } from '@/components/ui/error-page';
 import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
 import { Spinner } from '@/components/ui/spinner';
+import { ROUTES_APP } from '@/features/dashboard/routes';
 
 interface GuardAuthenticatedProps {
   children: ReactNode;
@@ -73,8 +74,8 @@ function GuardAuthenticatedContent({
         // Don't redirect, component will show 403 error
         return;
       } else {
-        // All authenticated users can access dashboard
-        router.replace('/dashboard');
+        // All authenticated users go to unified dashboard root
+        router.replace(ROUTES_APP.root());
         return;
       }
     }
