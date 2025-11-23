@@ -4,7 +4,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 
 import GuardAuthenticated from '@/features/auth/guards/GuardAuthenticated';
-import { DashboardHeader } from '@/features/dashboard/header/DashboardHeader';
+import { DashboardHeader } from '@/features/header/DashboardHeader';
 import { ClientProviders } from '@/components/shared/providers/ClientProviders';
 import { env } from '@/env.mjs';
 

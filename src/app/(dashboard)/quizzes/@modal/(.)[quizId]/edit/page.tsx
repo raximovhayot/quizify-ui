@@ -9,7 +9,7 @@ import { QuizForm } from '@/features/instructor/quiz/components/QuizForm';
 import { useQuiz } from '@/features/instructor/quiz/hooks/useQuiz';
 import { useUpdateQuiz } from '@/features/instructor/quiz/hooks/useQuizzes';
 import { InstructorQuizUpdateRequest } from '@/features/instructor/quiz/types/quiz';
-import { ROUTES_APP } from '@/features/dashboard/routes';
+import { ROUTES_APP } from '@/features/routes';
 import { useResponsive } from '@/components/shared/hooks/useResponsive';
 import { ContentPlaceholder } from '@/components/shared/ui/ContentPlaceholder';
 import {

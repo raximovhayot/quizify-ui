@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
 import { ThemeSwitcher } from '@/components/ui/theme-switcher';
-import { ROUTES_APP } from '@/features/dashboard/routes';
+import { ROUTES_APP } from '@/features/routes';
 
 interface TUserMenuUser {
   firstName?: string;

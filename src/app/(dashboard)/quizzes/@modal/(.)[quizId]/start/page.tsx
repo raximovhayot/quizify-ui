@@ -7,7 +7,7 @@ import { useParams, usePathname, useRouter } from 'next/navigation';
 
 import { AssignmentForm } from '@/features/instructor/quiz/components/AssignmentForm';
 import { useQuiz } from '@/features/instructor/quiz/hooks/useQuiz';
-import { ROUTES_APP } from '@/features/dashboard/routes';
+import { ROUTES_APP } from '@/features/routes';
 import { useResponsive } from '@/components/shared/hooks/useResponsive';
 import { ContentPlaceholder } from '@/components/shared/ui/ContentPlaceholder';
 import {

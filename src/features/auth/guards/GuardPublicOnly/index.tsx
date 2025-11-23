@@ -8,7 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useNextAuth } from '@/features/auth/hooks/useNextAuth';
 import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
 import { Spinner } from '@/components/ui/spinner';
-import { ROUTES_APP } from '@/features/dashboard/routes';
+import { ROUTES_APP } from '@/features/routes';
 
 interface GuardPublicOnlyProps {
   children: ReactNode;

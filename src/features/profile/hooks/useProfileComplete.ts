@@ -22,7 +22,7 @@ import {
   AccountCompleteRequest,
 } from '@/features/profile/types/account';
 import { useCompleteProfile } from '@/lib/api/hooks/profile';
-import { ROUTES_APP } from '@/features/dashboard/routes';
+import { ROUTES_APP } from '@/features/routes';
 
 export type { ProfileCompleteFormData } from '@/features/profile/schemas/profile';
 

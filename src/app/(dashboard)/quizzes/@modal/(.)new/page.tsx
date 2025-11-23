@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
 
 import { CreateQuizContainer } from '@/features/instructor/quiz/components/CreateQuizContainer';
-import { ROUTES_APP } from '@/features/dashboard/routes';
+import { ROUTES_APP } from '@/features/routes';
 import { useResponsive } from '@/components/shared/hooks/useResponsive';
 import {
   FormDrawer,

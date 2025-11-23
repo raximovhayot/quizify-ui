@@ -15,7 +15,7 @@ import {
 import { AppPublicOnlyLayout } from '@/components/shared/layouts/AppLayout';
 import { Form } from '@/components/ui/form';
 import { FullPageLoading } from '@/components/shared/ui/FullPageLoading';
-import { ROUTES_APP } from '@/features/dashboard/routes';
+import { ROUTES_APP } from '@/features/routes';
 
 function ProfileCompleteContent() {
   const router = useRouter();
